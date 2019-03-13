@@ -36,9 +36,9 @@ var view = new Marzipano.RectilinearView(null, limiter);
 var scene = viewer.createScene({ source: source, geometry: geometry, view: view, pinFirstLevel: false });
 
 var view = scene.view();
-view.offsetYaw(90 * Math.PI/180);
-view.offsetPitch(10 * Math.PI/180);
-view.offsetFov(10 * Math.PI/180);
+view.offsetYaw(-80 * Math.PI/180);
+view.offsetPitch(80 * Math.PI/180);
+view.offsetFov(90 * Math.PI/180);
 
 scene.switchTo({ transitionDuration: 0 });
 
