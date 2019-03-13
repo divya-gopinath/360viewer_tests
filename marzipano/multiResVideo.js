@@ -31,9 +31,14 @@ var asset = new VideoAsset();
 var source = new Marzipano.SingleAssetSource(asset);
 var geometry = new Marzipano.EquirectGeometry([ { width: 1 } ]);
 
-var limiter = Marzipano.RectilinearView.limit.traditional(2560, 100*Math.PI/180);
+var limiter = Marzipano.RectilinearView.limit.traditional(2880, 100*Math.PI/180);
 var view = new Marzipano.RectilinearView(null, limiter);
 var scene = viewer.createScene({ source: source, geometry: geometry, view: view, pinFirstLevel: false });
+
+var view = scene.view();
+view.offsetYaw(90 * Math.PI/180);
+view.offsetPitch(10 * Math.PI/180);
+view.offsetFov(10 * Math.PI/180);
 
 scene.switchTo({ transitionDuration: 0 });
 

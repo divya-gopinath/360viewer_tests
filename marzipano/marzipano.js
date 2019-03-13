@@ -1,23 +1,26641 @@
-// Marzipano - a 360° media viewer for the modern web (v0.8.0)
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.Marzipano = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
+/*!
+ * Bowser - a browser detector
+ * https://github.com/ded/bowser
+ * MIT License | (c) Dustin Diaz 2015
+ */
+
+!function (root, name, definition) {
+  if (typeof module != 'undefined' && module.exports) module.exports = definition()
+  else if (typeof define == 'function' && define.amd) define(name, definition)
+  else root[name] = definition()
+}(this, 'bowser', function () {
+  /**
+    * See useragents.js for examples of navigator.userAgent
+    */
+
+  var t = true
+
+  function detect(ua) {
+
+    function getFirstMatch(regex) {
+      var match = ua.match(regex);
+      return (match && match.length > 1 && match[1]) || '';
+    }
+
+    function getSecondMatch(regex) {
+      var match = ua.match(regex);
+      return (match && match.length > 1 && match[2]) || '';
+    }
+
+    var iosdevice = getFirstMatch(/(ipod|iphone|ipad)/i).toLowerCase()
+      , likeAndroid = /like android/i.test(ua)
+      , android = !likeAndroid && /android/i.test(ua)
+      , nexusMobile = /nexus\s*[0-6]\s*/i.test(ua)
+      , nexusTablet = !nexusMobile && /nexus\s*[0-9]+/i.test(ua)
+      , chromeos = /CrOS/.test(ua)
+      , silk = /silk/i.test(ua)
+      , sailfish = /sailfish/i.test(ua)
+      , tizen = /tizen/i.test(ua)
+      , webos = /(web|hpw)(o|0)s/i.test(ua)
+      , windowsphone = /windows phone/i.test(ua)
+      , samsungBrowser = /SamsungBrowser/i.test(ua)
+      , windows = !windowsphone && /windows/i.test(ua)
+      , mac = !iosdevice && !silk && /macintosh/i.test(ua)
+      , linux = !android && !sailfish && !tizen && !webos && /linux/i.test(ua)
+      , edgeVersion = getSecondMatch(/edg([ea]|ios)\/(\d+(\.\d+)?)/i)
+      , versionIdentifier = getFirstMatch(/version\/(\d+(\.\d+)?)/i)
+      , tablet = /tablet/i.test(ua) && !/tablet pc/i.test(ua)
+      , mobile = !tablet && /[^-]mobi/i.test(ua)
+      , xbox = /xbox/i.test(ua)
+      , result
+
+    if (/opera/i.test(ua)) {
+      //  an old Opera
+      result = {
+        name: 'Opera'
+      , opera: t
+      , version: versionIdentifier || getFirstMatch(/(?:opera|opr|opios)[\s\/](\d+(\.\d+)?)/i)
+      }
+    } else if (/opr\/|opios/i.test(ua)) {
+      // a new Opera
+      result = {
+        name: 'Opera'
+        , opera: t
+        , version: getFirstMatch(/(?:opr|opios)[\s\/](\d+(\.\d+)?)/i) || versionIdentifier
+      }
+    }
+    else if (/SamsungBrowser/i.test(ua)) {
+      result = {
+        name: 'Samsung Internet for Android'
+        , samsungBrowser: t
+        , version: versionIdentifier || getFirstMatch(/(?:SamsungBrowser)[\s\/](\d+(\.\d+)?)/i)
+      }
+    }
+    else if (/Whale/i.test(ua)) {
+      result = {
+        name: 'NAVER Whale browser'
+        , whale: t
+        , version: getFirstMatch(/(?:whale)[\s\/](\d+(?:\.\d+)+)/i)
+      }
+    }
+    else if (/MZBrowser/i.test(ua)) {
+      result = {
+        name: 'MZ Browser'
+        , mzbrowser: t
+        , version: getFirstMatch(/(?:MZBrowser)[\s\/](\d+(?:\.\d+)+)/i)
+      }
+    }
+    else if (/coast/i.test(ua)) {
+      result = {
+        name: 'Opera Coast'
+        , coast: t
+        , version: versionIdentifier || getFirstMatch(/(?:coast)[\s\/](\d+(\.\d+)?)/i)
+      }
+    }
+    else if (/focus/i.test(ua)) {
+      result = {
+        name: 'Focus'
+        , focus: t
+        , version: getFirstMatch(/(?:focus)[\s\/](\d+(?:\.\d+)+)/i)
+      }
+    }
+    else if (/yabrowser/i.test(ua)) {
+      result = {
+        name: 'Yandex Browser'
+      , yandexbrowser: t
+      , version: versionIdentifier || getFirstMatch(/(?:yabrowser)[\s\/](\d+(\.\d+)?)/i)
+      }
+    }
+    else if (/ucbrowser/i.test(ua)) {
+      result = {
+          name: 'UC Browser'
+        , ucbrowser: t
+        , version: getFirstMatch(/(?:ucbrowser)[\s\/](\d+(?:\.\d+)+)/i)
+      }
+    }
+    else if (/mxios/i.test(ua)) {
+      result = {
+        name: 'Maxthon'
+        , maxthon: t
+        , version: getFirstMatch(/(?:mxios)[\s\/](\d+(?:\.\d+)+)/i)
+      }
+    }
+    else if (/epiphany/i.test(ua)) {
+      result = {
+        name: 'Epiphany'
+        , epiphany: t
+        , version: getFirstMatch(/(?:epiphany)[\s\/](\d+(?:\.\d+)+)/i)
+      }
+    }
+    else if (/puffin/i.test(ua)) {
+      result = {
+        name: 'Puffin'
+        , puffin: t
+        , version: getFirstMatch(/(?:puffin)[\s\/](\d+(?:\.\d+)?)/i)
+      }
+    }
+    else if (/sleipnir/i.test(ua)) {
+      result = {
+        name: 'Sleipnir'
+        , sleipnir: t
+        , version: getFirstMatch(/(?:sleipnir)[\s\/](\d+(?:\.\d+)+)/i)
+      }
+    }
+    else if (/k-meleon/i.test(ua)) {
+      result = {
+        name: 'K-Meleon'
+        , kMeleon: t
+        , version: getFirstMatch(/(?:k-meleon)[\s\/](\d+(?:\.\d+)+)/i)
+      }
+    }
+    else if (windowsphone) {
+      result = {
+        name: 'Windows Phone'
+      , osname: 'Windows Phone'
+      , windowsphone: t
+      }
+      if (edgeVersion) {
+        result.msedge = t
+        result.version = edgeVersion
+      }
+      else {
+        result.msie = t
+        result.version = getFirstMatch(/iemobile\/(\d+(\.\d+)?)/i)
+      }
+    }
+    else if (/msie|trident/i.test(ua)) {
+      result = {
+        name: 'Internet Explorer'
+      , msie: t
+      , version: getFirstMatch(/(?:msie |rv:)(\d+(\.\d+)?)/i)
+      }
+    } else if (chromeos) {
+      result = {
+        name: 'Chrome'
+      , osname: 'Chrome OS'
+      , chromeos: t
+      , chromeBook: t
+      , chrome: t
+      , version: getFirstMatch(/(?:chrome|crios|crmo)\/(\d+(\.\d+)?)/i)
+      }
+    } else if (/edg([ea]|ios)/i.test(ua)) {
+      result = {
+        name: 'Microsoft Edge'
+      , msedge: t
+      , version: edgeVersion
+      }
+    }
+    else if (/vivaldi/i.test(ua)) {
+      result = {
+        name: 'Vivaldi'
+        , vivaldi: t
+        , version: getFirstMatch(/vivaldi\/(\d+(\.\d+)?)/i) || versionIdentifier
+      }
+    }
+    else if (sailfish) {
+      result = {
+        name: 'Sailfish'
+      , osname: 'Sailfish OS'
+      , sailfish: t
+      , version: getFirstMatch(/sailfish\s?browser\/(\d+(\.\d+)?)/i)
+      }
+    }
+    else if (/seamonkey\//i.test(ua)) {
+      result = {
+        name: 'SeaMonkey'
+      , seamonkey: t
+      , version: getFirstMatch(/seamonkey\/(\d+(\.\d+)?)/i)
+      }
+    }
+    else if (/firefox|iceweasel|fxios/i.test(ua)) {
+      result = {
+        name: 'Firefox'
+      , firefox: t
+      , version: getFirstMatch(/(?:firefox|iceweasel|fxios)[ \/](\d+(\.\d+)?)/i)
+      }
+      if (/\((mobile|tablet);[^\)]*rv:[\d\.]+\)/i.test(ua)) {
+        result.firefoxos = t
+        result.osname = 'Firefox OS'
+      }
+    }
+    else if (silk) {
+      result =  {
+        name: 'Amazon Silk'
+      , silk: t
+      , version : getFirstMatch(/silk\/(\d+(\.\d+)?)/i)
+      }
+    }
+    else if (/phantom/i.test(ua)) {
+      result = {
+        name: 'PhantomJS'
+      , phantom: t
+      , version: getFirstMatch(/phantomjs\/(\d+(\.\d+)?)/i)
+      }
+    }
+    else if (/slimerjs/i.test(ua)) {
+      result = {
+        name: 'SlimerJS'
+        , slimer: t
+        , version: getFirstMatch(/slimerjs\/(\d+(\.\d+)?)/i)
+      }
+    }
+    else if (/blackberry|\bbb\d+/i.test(ua) || /rim\stablet/i.test(ua)) {
+      result = {
+        name: 'BlackBerry'
+      , osname: 'BlackBerry OS'
+      , blackberry: t
+      , version: versionIdentifier || getFirstMatch(/blackberry[\d]+\/(\d+(\.\d+)?)/i)
+      }
+    }
+    else if (webos) {
+      result = {
+        name: 'WebOS'
+      , osname: 'WebOS'
+      , webos: t
+      , version: versionIdentifier || getFirstMatch(/w(?:eb)?osbrowser\/(\d+(\.\d+)?)/i)
+      };
+      /touchpad\//i.test(ua) && (result.touchpad = t)
+    }
+    else if (/bada/i.test(ua)) {
+      result = {
+        name: 'Bada'
+      , osname: 'Bada'
+      , bada: t
+      , version: getFirstMatch(/dolfin\/(\d+(\.\d+)?)/i)
+      };
+    }
+    else if (tizen) {
+      result = {
+        name: 'Tizen'
+      , osname: 'Tizen'
+      , tizen: t
+      , version: getFirstMatch(/(?:tizen\s?)?browser\/(\d+(\.\d+)?)/i) || versionIdentifier
+      };
+    }
+    else if (/qupzilla/i.test(ua)) {
+      result = {
+        name: 'QupZilla'
+        , qupzilla: t
+        , version: getFirstMatch(/(?:qupzilla)[\s\/](\d+(?:\.\d+)+)/i) || versionIdentifier
+      }
+    }
+    else if (/chromium/i.test(ua)) {
+      result = {
+        name: 'Chromium'
+        , chromium: t
+        , version: getFirstMatch(/(?:chromium)[\s\/](\d+(?:\.\d+)?)/i) || versionIdentifier
+      }
+    }
+    else if (/chrome|crios|crmo/i.test(ua)) {
+      result = {
+        name: 'Chrome'
+        , chrome: t
+        , version: getFirstMatch(/(?:chrome|crios|crmo)\/(\d+(\.\d+)?)/i)
+      }
+    }
+    else if (android) {
+      result = {
+        name: 'Android'
+        , version: versionIdentifier
+      }
+    }
+    else if (/safari|applewebkit/i.test(ua)) {
+      result = {
+        name: 'Safari'
+      , safari: t
+      }
+      if (versionIdentifier) {
+        result.version = versionIdentifier
+      }
+    }
+    else if (iosdevice) {
+      result = {
+        name : iosdevice == 'iphone' ? 'iPhone' : iosdevice == 'ipad' ? 'iPad' : 'iPod'
+      }
+      // WTF: version is not part of user agent in web apps
+      if (versionIdentifier) {
+        result.version = versionIdentifier
+      }
+    }
+    else if(/googlebot/i.test(ua)) {
+      result = {
+        name: 'Googlebot'
+      , googlebot: t
+      , version: getFirstMatch(/googlebot\/(\d+(\.\d+))/i) || versionIdentifier
+      }
+    }
+    else {
+      result = {
+        name: getFirstMatch(/^(.*)\/(.*) /),
+        version: getSecondMatch(/^(.*)\/(.*) /)
+     };
+   }
+
+    // set webkit or gecko flag for browsers based on these engines
+    if (!result.msedge && /(apple)?webkit/i.test(ua)) {
+      if (/(apple)?webkit\/537\.36/i.test(ua)) {
+        result.name = result.name || "Blink"
+        result.blink = t
+      } else {
+        result.name = result.name || "Webkit"
+        result.webkit = t
+      }
+      if (!result.version && versionIdentifier) {
+        result.version = versionIdentifier
+      }
+    } else if (!result.opera && /gecko\//i.test(ua)) {
+      result.name = result.name || "Gecko"
+      result.gecko = t
+      result.version = result.version || getFirstMatch(/gecko\/(\d+(\.\d+)?)/i)
+    }
+
+    // set OS flags for platforms that have multiple browsers
+    if (!result.windowsphone && (android || result.silk)) {
+      result.android = t
+      result.osname = 'Android'
+    } else if (!result.windowsphone && iosdevice) {
+      result[iosdevice] = t
+      result.ios = t
+      result.osname = 'iOS'
+    } else if (mac) {
+      result.mac = t
+      result.osname = 'macOS'
+    } else if (xbox) {
+      result.xbox = t
+      result.osname = 'Xbox'
+    } else if (windows) {
+      result.windows = t
+      result.osname = 'Windows'
+    } else if (linux) {
+      result.linux = t
+      result.osname = 'Linux'
+    }
+
+    function getWindowsVersion (s) {
+      switch (s) {
+        case 'NT': return 'NT'
+        case 'XP': return 'XP'
+        case 'NT 5.0': return '2000'
+        case 'NT 5.1': return 'XP'
+        case 'NT 5.2': return '2003'
+        case 'NT 6.0': return 'Vista'
+        case 'NT 6.1': return '7'
+        case 'NT 6.2': return '8'
+        case 'NT 6.3': return '8.1'
+        case 'NT 10.0': return '10'
+        default: return undefined
+      }
+    }
+
+    // OS version extraction
+    var osVersion = '';
+    if (result.windows) {
+      osVersion = getWindowsVersion(getFirstMatch(/Windows ((NT|XP)( \d\d?.\d)?)/i))
+    } else if (result.windowsphone) {
+      osVersion = getFirstMatch(/windows phone (?:os)?\s?(\d+(\.\d+)*)/i);
+    } else if (result.mac) {
+      osVersion = getFirstMatch(/Mac OS X (\d+([_\.\s]\d+)*)/i);
+      osVersion = osVersion.replace(/[_\s]/g, '.');
+    } else if (iosdevice) {
+      osVersion = getFirstMatch(/os (\d+([_\s]\d+)*) like mac os x/i);
+      osVersion = osVersion.replace(/[_\s]/g, '.');
+    } else if (android) {
+      osVersion = getFirstMatch(/android[ \/-](\d+(\.\d+)*)/i);
+    } else if (result.webos) {
+      osVersion = getFirstMatch(/(?:web|hpw)os\/(\d+(\.\d+)*)/i);
+    } else if (result.blackberry) {
+      osVersion = getFirstMatch(/rim\stablet\sos\s(\d+(\.\d+)*)/i);
+    } else if (result.bada) {
+      osVersion = getFirstMatch(/bada\/(\d+(\.\d+)*)/i);
+    } else if (result.tizen) {
+      osVersion = getFirstMatch(/tizen[\/\s](\d+(\.\d+)*)/i);
+    }
+    if (osVersion) {
+      result.osversion = osVersion;
+    }
+
+    // device type extraction
+    var osMajorVersion = !result.windows && osVersion.split('.')[0];
+    if (
+         tablet
+      || nexusTablet
+      || iosdevice == 'ipad'
+      || (android && (osMajorVersion == 3 || (osMajorVersion >= 4 && !mobile)))
+      || result.silk
+    ) {
+      result.tablet = t
+    } else if (
+         mobile
+      || iosdevice == 'iphone'
+      || iosdevice == 'ipod'
+      || android
+      || nexusMobile
+      || result.blackberry
+      || result.webos
+      || result.bada
+    ) {
+      result.mobile = t
+    }
+
+    // Graded Browser Support
+    // http://developer.yahoo.com/yui/articles/gbs
+    if (result.msedge ||
+        (result.msie && result.version >= 10) ||
+        (result.yandexbrowser && result.version >= 15) ||
+		    (result.vivaldi && result.version >= 1.0) ||
+        (result.chrome && result.version >= 20) ||
+        (result.samsungBrowser && result.version >= 4) ||
+        (result.whale && compareVersions([result.version, '1.0']) === 1) ||
+        (result.mzbrowser && compareVersions([result.version, '6.0']) === 1) ||
+        (result.focus && compareVersions([result.version, '1.0']) === 1) ||
+        (result.firefox && result.version >= 20.0) ||
+        (result.safari && result.version >= 6) ||
+        (result.opera && result.version >= 10.0) ||
+        (result.ios && result.osversion && result.osversion.split(".")[0] >= 6) ||
+        (result.blackberry && result.version >= 10.1)
+        || (result.chromium && result.version >= 20)
+        ) {
+      result.a = t;
+    }
+    else if ((result.msie && result.version < 10) ||
+        (result.chrome && result.version < 20) ||
+        (result.firefox && result.version < 20.0) ||
+        (result.safari && result.version < 6) ||
+        (result.opera && result.version < 10.0) ||
+        (result.ios && result.osversion && result.osversion.split(".")[0] < 6)
+        || (result.chromium && result.version < 20)
+        ) {
+      result.c = t
+    } else result.x = t
+
+    return result
+  }
+
+  var bowser = detect(typeof navigator !== 'undefined' ? navigator.userAgent || '' : '')
+
+  bowser.test = function (browserList) {
+    for (var i = 0; i < browserList.length; ++i) {
+      var browserItem = browserList[i];
+      if (typeof browserItem=== 'string') {
+        if (browserItem in bowser) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Get version precisions count
+   *
+   * @example
+   *   getVersionPrecision("1.10.3") // 3
+   *
+   * @param  {string} version
+   * @return {number}
+   */
+  function getVersionPrecision(version) {
+    return version.split(".").length;
+  }
+
+  /**
+   * Array::map polyfill
+   *
+   * @param  {Array} arr
+   * @param  {Function} iterator
+   * @return {Array}
+   */
+  function map(arr, iterator) {
+    var result = [], i;
+    if (Array.prototype.map) {
+      return Array.prototype.map.call(arr, iterator);
+    }
+    for (i = 0; i < arr.length; i++) {
+      result.push(iterator(arr[i]));
+    }
+    return result;
+  }
+
+  /**
+   * Calculate browser version weight
+   *
+   * @example
+   *   compareVersions(['1.10.2.1',  '1.8.2.1.90'])    // 1
+   *   compareVersions(['1.010.2.1', '1.09.2.1.90']);  // 1
+   *   compareVersions(['1.10.2.1',  '1.10.2.1']);     // 0
+   *   compareVersions(['1.10.2.1',  '1.0800.2']);     // -1
+   *
+   * @param  {Array<String>} versions versions to compare
+   * @return {Number} comparison result
+   */
+  function compareVersions(versions) {
+    // 1) get common precision for both versions, for example for "10.0" and "9" it should be 2
+    var precision = Math.max(getVersionPrecision(versions[0]), getVersionPrecision(versions[1]));
+    var chunks = map(versions, function (version) {
+      var delta = precision - getVersionPrecision(version);
+
+      // 2) "9" -> "9.0" (for precision = 2)
+      version = version + new Array(delta + 1).join(".0");
+
+      // 3) "9.0" -> ["000000000"", "000000009"]
+      return map(version.split("."), function (chunk) {
+        return new Array(20 - chunk.length).join("0") + chunk;
+      }).reverse();
+    });
+
+    // iterate in reverse order by reversed chunks array
+    while (--precision >= 0) {
+      // 4) compare: "000000009" > "000000010" = false (but "9" > "10" = true)
+      if (chunks[0][precision] > chunks[1][precision]) {
+        return 1;
+      }
+      else if (chunks[0][precision] === chunks[1][precision]) {
+        if (precision === 0) {
+          // all version chunks are same
+          return 0;
+        }
+      }
+      else {
+        return -1;
+      }
+    }
+  }
+
+  /**
+   * Check if browser is unsupported
+   *
+   * @example
+   *   bowser.isUnsupportedBrowser({
+   *     msie: "10",
+   *     firefox: "23",
+   *     chrome: "29",
+   *     safari: "5.1",
+   *     opera: "16",
+   *     phantom: "534"
+   *   });
+   *
+   * @param  {Object}  minVersions map of minimal version to browser
+   * @param  {Boolean} [strictMode = false] flag to return false if browser wasn't found in map
+   * @param  {String}  [ua] user agent string
+   * @return {Boolean}
+   */
+  function isUnsupportedBrowser(minVersions, strictMode, ua) {
+    var _bowser = bowser;
+
+    // make strictMode param optional with ua param usage
+    if (typeof strictMode === 'string') {
+      ua = strictMode;
+      strictMode = void(0);
+    }
+
+    if (strictMode === void(0)) {
+      strictMode = false;
+    }
+    if (ua) {
+      _bowser = detect(ua);
+    }
+
+    var version = "" + _bowser.version;
+    for (var browser in minVersions) {
+      if (minVersions.hasOwnProperty(browser)) {
+        if (_bowser[browser]) {
+          if (typeof minVersions[browser] !== 'string') {
+            throw new Error('Browser version in the minVersion map should be a string: ' + browser + ': ' + String(minVersions));
+          }
+
+          // browser version and min supported version.
+          return compareVersions([version, minVersions[browser]]) < 0;
+        }
+      }
+    }
+
+    return strictMode; // not found
+  }
+
+  /**
+   * Check if browser is supported
+   *
+   * @param  {Object} minVersions map of minimal version to browser
+   * @param  {Boolean} [strictMode = false] flag to return false if browser wasn't found in map
+   * @param  {String}  [ua] user agent string
+   * @return {Boolean}
+   */
+  function check(minVersions, strictMode, ua) {
+    return !isUnsupportedBrowser(minVersions, strictMode, ua);
+  }
+
+  bowser.isUnsupportedBrowser = isUnsupportedBrowser;
+  bowser.compareVersions = compareVersions;
+  bowser.check = check;
+
+  /*
+   * Set our detect method to the main bowser object so we can
+   * reuse it to test other user agents.
+   * This is needed to implement future tests.
+   */
+  bowser._detect = detect;
+
+  /*
+   * Set our detect public method to the main bowser object
+   * This is needed to implement bowser in server side
+   */
+  bowser.detect = detect;
+  return bowser
+});
+
+},{}],2:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.setMatrixArrayType = setMatrixArrayType;
+exports.toRadian = toRadian;
+exports.equals = equals;
+exports.RANDOM = exports.ARRAY_TYPE = exports.EPSILON = void 0;
+
+/**
+ * Common utilities
+ * @module glMatrix
+ */
+// Configuration Constants
+var EPSILON = 0.000001;
+exports.EPSILON = EPSILON;
+var ARRAY_TYPE = typeof Float32Array !== 'undefined' ? Float32Array : Array;
+exports.ARRAY_TYPE = ARRAY_TYPE;
+var RANDOM = Math.random;
+/**
+ * Sets the type of array used when creating new vectors and matrices
+ *
+ * @param {Type} type Array type, such as Float32Array or Array
+ */
+
+exports.RANDOM = RANDOM;
+
+function setMatrixArrayType(type) {
+  exports.ARRAY_TYPE = ARRAY_TYPE = type;
+}
+
+var degree = Math.PI / 180;
+/**
+ * Convert Degree To Radian
+ *
+ * @param {Number} a Angle in Degrees
+ */
+
+function toRadian(a) {
+  return a * degree;
+}
+/**
+ * Tests whether or not the arguments have approximately the same value, within an absolute
+ * or relative tolerance of glMatrix.EPSILON (an absolute tolerance is used for values less
+ * than or equal to 1.0, and a relative tolerance is used for larger values)
+ *
+ * @param {Number} a The first number to test.
+ * @param {Number} b The second number to test.
+ * @returns {Boolean} True if the numbers are approximately equal, false otherwise.
+ */
+
+
+function equals(a, b) {
+  return Math.abs(a - b) <= EPSILON * Math.max(1.0, Math.abs(a), Math.abs(b));
+}
+},{}],3:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.vec4 = exports.vec3 = exports.vec2 = exports.quat2 = exports.quat = exports.mat4 = exports.mat3 = exports.mat2d = exports.mat2 = exports.glMatrix = void 0;
+
+var glMatrix = _interopRequireWildcard(require("./common.js"));
+
+exports.glMatrix = glMatrix;
+
+var mat2 = _interopRequireWildcard(require("./mat2.js"));
+
+exports.mat2 = mat2;
+
+var mat2d = _interopRequireWildcard(require("./mat2d.js"));
+
+exports.mat2d = mat2d;
+
+var mat3 = _interopRequireWildcard(require("./mat3.js"));
+
+exports.mat3 = mat3;
+
+var mat4 = _interopRequireWildcard(require("./mat4.js"));
+
+exports.mat4 = mat4;
+
+var quat = _interopRequireWildcard(require("./quat.js"));
+
+exports.quat = quat;
+
+var quat2 = _interopRequireWildcard(require("./quat2.js"));
+
+exports.quat2 = quat2;
+
+var vec2 = _interopRequireWildcard(require("./vec2.js"));
+
+exports.vec2 = vec2;
+
+var vec3 = _interopRequireWildcard(require("./vec3.js"));
+
+exports.vec3 = vec3;
+
+var vec4 = _interopRequireWildcard(require("./vec4.js"));
+
+exports.vec4 = vec4;
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
+},{"./common.js":2,"./mat2.js":4,"./mat2d.js":5,"./mat3.js":6,"./mat4.js":7,"./quat.js":8,"./quat2.js":9,"./vec2.js":10,"./vec3.js":11,"./vec4.js":12}],4:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.create = create;
+exports.clone = clone;
+exports.copy = copy;
+exports.identity = identity;
+exports.fromValues = fromValues;
+exports.set = set;
+exports.transpose = transpose;
+exports.invert = invert;
+exports.adjoint = adjoint;
+exports.determinant = determinant;
+exports.multiply = multiply;
+exports.rotate = rotate;
+exports.scale = scale;
+exports.fromRotation = fromRotation;
+exports.fromScaling = fromScaling;
+exports.str = str;
+exports.frob = frob;
+exports.LDU = LDU;
+exports.add = add;
+exports.subtract = subtract;
+exports.exactEquals = exactEquals;
+exports.equals = equals;
+exports.multiplyScalar = multiplyScalar;
+exports.multiplyScalarAndAdd = multiplyScalarAndAdd;
+exports.sub = exports.mul = void 0;
+
+var glMatrix = _interopRequireWildcard(require("./common.js"));
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
+
+/**
+ * 2x2 Matrix
+ * @module mat2
+ */
+
+/**
+ * Creates a new identity mat2
+ *
+ * @returns {mat2} a new 2x2 matrix
+ */
+function create() {
+  var out = new glMatrix.ARRAY_TYPE(4);
+
+  if (glMatrix.ARRAY_TYPE != Float32Array) {
+    out[1] = 0;
+    out[2] = 0;
+  }
+
+  out[0] = 1;
+  out[3] = 1;
+  return out;
+}
+/**
+ * Creates a new mat2 initialized with values from an existing matrix
+ *
+ * @param {mat2} a matrix to clone
+ * @returns {mat2} a new 2x2 matrix
+ */
+
+
+function clone(a) {
+  var out = new glMatrix.ARRAY_TYPE(4);
+  out[0] = a[0];
+  out[1] = a[1];
+  out[2] = a[2];
+  out[3] = a[3];
+  return out;
+}
+/**
+ * Copy the values from one mat2 to another
+ *
+ * @param {mat2} out the receiving matrix
+ * @param {mat2} a the source matrix
+ * @returns {mat2} out
+ */
+
+
+function copy(out, a) {
+  out[0] = a[0];
+  out[1] = a[1];
+  out[2] = a[2];
+  out[3] = a[3];
+  return out;
+}
+/**
+ * Set a mat2 to the identity matrix
+ *
+ * @param {mat2} out the receiving matrix
+ * @returns {mat2} out
+ */
+
+
+function identity(out) {
+  out[0] = 1;
+  out[1] = 0;
+  out[2] = 0;
+  out[3] = 1;
+  return out;
+}
+/**
+ * Create a new mat2 with the given values
+ *
+ * @param {Number} m00 Component in column 0, row 0 position (index 0)
+ * @param {Number} m01 Component in column 0, row 1 position (index 1)
+ * @param {Number} m10 Component in column 1, row 0 position (index 2)
+ * @param {Number} m11 Component in column 1, row 1 position (index 3)
+ * @returns {mat2} out A new 2x2 matrix
+ */
+
+
+function fromValues(m00, m01, m10, m11) {
+  var out = new glMatrix.ARRAY_TYPE(4);
+  out[0] = m00;
+  out[1] = m01;
+  out[2] = m10;
+  out[3] = m11;
+  return out;
+}
+/**
+ * Set the components of a mat2 to the given values
+ *
+ * @param {mat2} out the receiving matrix
+ * @param {Number} m00 Component in column 0, row 0 position (index 0)
+ * @param {Number} m01 Component in column 0, row 1 position (index 1)
+ * @param {Number} m10 Component in column 1, row 0 position (index 2)
+ * @param {Number} m11 Component in column 1, row 1 position (index 3)
+ * @returns {mat2} out
+ */
+
+
+function set(out, m00, m01, m10, m11) {
+  out[0] = m00;
+  out[1] = m01;
+  out[2] = m10;
+  out[3] = m11;
+  return out;
+}
+/**
+ * Transpose the values of a mat2
+ *
+ * @param {mat2} out the receiving matrix
+ * @param {mat2} a the source matrix
+ * @returns {mat2} out
+ */
+
+
+function transpose(out, a) {
+  // If we are transposing ourselves we can skip a few steps but have to cache
+  // some values
+  if (out === a) {
+    var a1 = a[1];
+    out[1] = a[2];
+    out[2] = a1;
+  } else {
+    out[0] = a[0];
+    out[1] = a[2];
+    out[2] = a[1];
+    out[3] = a[3];
+  }
+
+  return out;
+}
+/**
+ * Inverts a mat2
+ *
+ * @param {mat2} out the receiving matrix
+ * @param {mat2} a the source matrix
+ * @returns {mat2} out
+ */
+
+
+function invert(out, a) {
+  var a0 = a[0],
+      a1 = a[1],
+      a2 = a[2],
+      a3 = a[3]; // Calculate the determinant
+
+  var det = a0 * a3 - a2 * a1;
+
+  if (!det) {
+    return null;
+  }
+
+  det = 1.0 / det;
+  out[0] = a3 * det;
+  out[1] = -a1 * det;
+  out[2] = -a2 * det;
+  out[3] = a0 * det;
+  return out;
+}
+/**
+ * Calculates the adjugate of a mat2
+ *
+ * @param {mat2} out the receiving matrix
+ * @param {mat2} a the source matrix
+ * @returns {mat2} out
+ */
+
+
+function adjoint(out, a) {
+  // Caching this value is nessecary if out == a
+  var a0 = a[0];
+  out[0] = a[3];
+  out[1] = -a[1];
+  out[2] = -a[2];
+  out[3] = a0;
+  return out;
+}
+/**
+ * Calculates the determinant of a mat2
+ *
+ * @param {mat2} a the source matrix
+ * @returns {Number} determinant of a
+ */
+
+
+function determinant(a) {
+  return a[0] * a[3] - a[2] * a[1];
+}
+/**
+ * Multiplies two mat2's
+ *
+ * @param {mat2} out the receiving matrix
+ * @param {mat2} a the first operand
+ * @param {mat2} b the second operand
+ * @returns {mat2} out
+ */
+
+
+function multiply(out, a, b) {
+  var a0 = a[0],
+      a1 = a[1],
+      a2 = a[2],
+      a3 = a[3];
+  var b0 = b[0],
+      b1 = b[1],
+      b2 = b[2],
+      b3 = b[3];
+  out[0] = a0 * b0 + a2 * b1;
+  out[1] = a1 * b0 + a3 * b1;
+  out[2] = a0 * b2 + a2 * b3;
+  out[3] = a1 * b2 + a3 * b3;
+  return out;
+}
+/**
+ * Rotates a mat2 by the given angle
+ *
+ * @param {mat2} out the receiving matrix
+ * @param {mat2} a the matrix to rotate
+ * @param {Number} rad the angle to rotate the matrix by
+ * @returns {mat2} out
+ */
+
+
+function rotate(out, a, rad) {
+  var a0 = a[0],
+      a1 = a[1],
+      a2 = a[2],
+      a3 = a[3];
+  var s = Math.sin(rad);
+  var c = Math.cos(rad);
+  out[0] = a0 * c + a2 * s;
+  out[1] = a1 * c + a3 * s;
+  out[2] = a0 * -s + a2 * c;
+  out[3] = a1 * -s + a3 * c;
+  return out;
+}
+/**
+ * Scales the mat2 by the dimensions in the given vec2
+ *
+ * @param {mat2} out the receiving matrix
+ * @param {mat2} a the matrix to rotate
+ * @param {vec2} v the vec2 to scale the matrix by
+ * @returns {mat2} out
+ **/
+
+
+function scale(out, a, v) {
+  var a0 = a[0],
+      a1 = a[1],
+      a2 = a[2],
+      a3 = a[3];
+  var v0 = v[0],
+      v1 = v[1];
+  out[0] = a0 * v0;
+  out[1] = a1 * v0;
+  out[2] = a2 * v1;
+  out[3] = a3 * v1;
+  return out;
+}
+/**
+ * Creates a matrix from a given angle
+ * This is equivalent to (but much faster than):
+ *
+ *     mat2.identity(dest);
+ *     mat2.rotate(dest, dest, rad);
+ *
+ * @param {mat2} out mat2 receiving operation result
+ * @param {Number} rad the angle to rotate the matrix by
+ * @returns {mat2} out
+ */
+
+
+function fromRotation(out, rad) {
+  var s = Math.sin(rad);
+  var c = Math.cos(rad);
+  out[0] = c;
+  out[1] = s;
+  out[2] = -s;
+  out[3] = c;
+  return out;
+}
+/**
+ * Creates a matrix from a vector scaling
+ * This is equivalent to (but much faster than):
+ *
+ *     mat2.identity(dest);
+ *     mat2.scale(dest, dest, vec);
+ *
+ * @param {mat2} out mat2 receiving operation result
+ * @param {vec2} v Scaling vector
+ * @returns {mat2} out
+ */
+
+
+function fromScaling(out, v) {
+  out[0] = v[0];
+  out[1] = 0;
+  out[2] = 0;
+  out[3] = v[1];
+  return out;
+}
+/**
+ * Returns a string representation of a mat2
+ *
+ * @param {mat2} a matrix to represent as a string
+ * @returns {String} string representation of the matrix
+ */
+
+
+function str(a) {
+  return 'mat2(' + a[0] + ', ' + a[1] + ', ' + a[2] + ', ' + a[3] + ')';
+}
+/**
+ * Returns Frobenius norm of a mat2
+ *
+ * @param {mat2} a the matrix to calculate Frobenius norm of
+ * @returns {Number} Frobenius norm
+ */
+
+
+function frob(a) {
+  return Math.sqrt(Math.pow(a[0], 2) + Math.pow(a[1], 2) + Math.pow(a[2], 2) + Math.pow(a[3], 2));
+}
+/**
+ * Returns L, D and U matrices (Lower triangular, Diagonal and Upper triangular) by factorizing the input matrix
+ * @param {mat2} L the lower triangular matrix
+ * @param {mat2} D the diagonal matrix
+ * @param {mat2} U the upper triangular matrix
+ * @param {mat2} a the input matrix to factorize
+ */
+
+
+function LDU(L, D, U, a) {
+  L[2] = a[2] / a[0];
+  U[0] = a[0];
+  U[1] = a[1];
+  U[3] = a[3] - L[2] * U[1];
+  return [L, D, U];
+}
+/**
+ * Adds two mat2's
+ *
+ * @param {mat2} out the receiving matrix
+ * @param {mat2} a the first operand
+ * @param {mat2} b the second operand
+ * @returns {mat2} out
+ */
+
+
+function add(out, a, b) {
+  out[0] = a[0] + b[0];
+  out[1] = a[1] + b[1];
+  out[2] = a[2] + b[2];
+  out[3] = a[3] + b[3];
+  return out;
+}
+/**
+ * Subtracts matrix b from matrix a
+ *
+ * @param {mat2} out the receiving matrix
+ * @param {mat2} a the first operand
+ * @param {mat2} b the second operand
+ * @returns {mat2} out
+ */
+
+
+function subtract(out, a, b) {
+  out[0] = a[0] - b[0];
+  out[1] = a[1] - b[1];
+  out[2] = a[2] - b[2];
+  out[3] = a[3] - b[3];
+  return out;
+}
+/**
+ * Returns whether or not the matrices have exactly the same elements in the same position (when compared with ===)
+ *
+ * @param {mat2} a The first matrix.
+ * @param {mat2} b The second matrix.
+ * @returns {Boolean} True if the matrices are equal, false otherwise.
+ */
+
+
+function exactEquals(a, b) {
+  return a[0] === b[0] && a[1] === b[1] && a[2] === b[2] && a[3] === b[3];
+}
+/**
+ * Returns whether or not the matrices have approximately the same elements in the same position.
+ *
+ * @param {mat2} a The first matrix.
+ * @param {mat2} b The second matrix.
+ * @returns {Boolean} True if the matrices are equal, false otherwise.
+ */
+
+
+function equals(a, b) {
+  var a0 = a[0],
+      a1 = a[1],
+      a2 = a[2],
+      a3 = a[3];
+  var b0 = b[0],
+      b1 = b[1],
+      b2 = b[2],
+      b3 = b[3];
+  return Math.abs(a0 - b0) <= glMatrix.EPSILON * Math.max(1.0, Math.abs(a0), Math.abs(b0)) && Math.abs(a1 - b1) <= glMatrix.EPSILON * Math.max(1.0, Math.abs(a1), Math.abs(b1)) && Math.abs(a2 - b2) <= glMatrix.EPSILON * Math.max(1.0, Math.abs(a2), Math.abs(b2)) && Math.abs(a3 - b3) <= glMatrix.EPSILON * Math.max(1.0, Math.abs(a3), Math.abs(b3));
+}
+/**
+ * Multiply each element of the matrix by a scalar.
+ *
+ * @param {mat2} out the receiving matrix
+ * @param {mat2} a the matrix to scale
+ * @param {Number} b amount to scale the matrix's elements by
+ * @returns {mat2} out
+ */
+
+
+function multiplyScalar(out, a, b) {
+  out[0] = a[0] * b;
+  out[1] = a[1] * b;
+  out[2] = a[2] * b;
+  out[3] = a[3] * b;
+  return out;
+}
+/**
+ * Adds two mat2's after multiplying each element of the second operand by a scalar value.
+ *
+ * @param {mat2} out the receiving vector
+ * @param {mat2} a the first operand
+ * @param {mat2} b the second operand
+ * @param {Number} scale the amount to scale b's elements by before adding
+ * @returns {mat2} out
+ */
+
+
+function multiplyScalarAndAdd(out, a, b, scale) {
+  out[0] = a[0] + b[0] * scale;
+  out[1] = a[1] + b[1] * scale;
+  out[2] = a[2] + b[2] * scale;
+  out[3] = a[3] + b[3] * scale;
+  return out;
+}
+/**
+ * Alias for {@link mat2.multiply}
+ * @function
+ */
+
+
+var mul = multiply;
+/**
+ * Alias for {@link mat2.subtract}
+ * @function
+ */
+
+exports.mul = mul;
+var sub = subtract;
+exports.sub = sub;
+},{"./common.js":2}],5:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.create = create;
+exports.clone = clone;
+exports.copy = copy;
+exports.identity = identity;
+exports.fromValues = fromValues;
+exports.set = set;
+exports.invert = invert;
+exports.determinant = determinant;
+exports.multiply = multiply;
+exports.rotate = rotate;
+exports.scale = scale;
+exports.translate = translate;
+exports.fromRotation = fromRotation;
+exports.fromScaling = fromScaling;
+exports.fromTranslation = fromTranslation;
+exports.str = str;
+exports.frob = frob;
+exports.add = add;
+exports.subtract = subtract;
+exports.multiplyScalar = multiplyScalar;
+exports.multiplyScalarAndAdd = multiplyScalarAndAdd;
+exports.exactEquals = exactEquals;
+exports.equals = equals;
+exports.sub = exports.mul = void 0;
+
+var glMatrix = _interopRequireWildcard(require("./common.js"));
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
+
+/**
+ * 2x3 Matrix
+ * @module mat2d
+ *
+ * @description
+ * A mat2d contains six elements defined as:
+ * <pre>
+ * [a, c, tx,
+ *  b, d, ty]
+ * </pre>
+ * This is a short form for the 3x3 matrix:
+ * <pre>
+ * [a, c, tx,
+ *  b, d, ty,
+ *  0, 0, 1]
+ * </pre>
+ * The last row is ignored so the array is shorter and operations are faster.
+ */
+
+/**
+ * Creates a new identity mat2d
+ *
+ * @returns {mat2d} a new 2x3 matrix
+ */
+function create() {
+  var out = new glMatrix.ARRAY_TYPE(6);
+
+  if (glMatrix.ARRAY_TYPE != Float32Array) {
+    out[1] = 0;
+    out[2] = 0;
+    out[4] = 0;
+    out[5] = 0;
+  }
+
+  out[0] = 1;
+  out[3] = 1;
+  return out;
+}
+/**
+ * Creates a new mat2d initialized with values from an existing matrix
+ *
+ * @param {mat2d} a matrix to clone
+ * @returns {mat2d} a new 2x3 matrix
+ */
+
+
+function clone(a) {
+  var out = new glMatrix.ARRAY_TYPE(6);
+  out[0] = a[0];
+  out[1] = a[1];
+  out[2] = a[2];
+  out[3] = a[3];
+  out[4] = a[4];
+  out[5] = a[5];
+  return out;
+}
+/**
+ * Copy the values from one mat2d to another
+ *
+ * @param {mat2d} out the receiving matrix
+ * @param {mat2d} a the source matrix
+ * @returns {mat2d} out
+ */
+
+
+function copy(out, a) {
+  out[0] = a[0];
+  out[1] = a[1];
+  out[2] = a[2];
+  out[3] = a[3];
+  out[4] = a[4];
+  out[5] = a[5];
+  return out;
+}
+/**
+ * Set a mat2d to the identity matrix
+ *
+ * @param {mat2d} out the receiving matrix
+ * @returns {mat2d} out
+ */
+
+
+function identity(out) {
+  out[0] = 1;
+  out[1] = 0;
+  out[2] = 0;
+  out[3] = 1;
+  out[4] = 0;
+  out[5] = 0;
+  return out;
+}
+/**
+ * Create a new mat2d with the given values
+ *
+ * @param {Number} a Component A (index 0)
+ * @param {Number} b Component B (index 1)
+ * @param {Number} c Component C (index 2)
+ * @param {Number} d Component D (index 3)
+ * @param {Number} tx Component TX (index 4)
+ * @param {Number} ty Component TY (index 5)
+ * @returns {mat2d} A new mat2d
+ */
+
+
+function fromValues(a, b, c, d, tx, ty) {
+  var out = new glMatrix.ARRAY_TYPE(6);
+  out[0] = a;
+  out[1] = b;
+  out[2] = c;
+  out[3] = d;
+  out[4] = tx;
+  out[5] = ty;
+  return out;
+}
+/**
+ * Set the components of a mat2d to the given values
+ *
+ * @param {mat2d} out the receiving matrix
+ * @param {Number} a Component A (index 0)
+ * @param {Number} b Component B (index 1)
+ * @param {Number} c Component C (index 2)
+ * @param {Number} d Component D (index 3)
+ * @param {Number} tx Component TX (index 4)
+ * @param {Number} ty Component TY (index 5)
+ * @returns {mat2d} out
+ */
+
+
+function set(out, a, b, c, d, tx, ty) {
+  out[0] = a;
+  out[1] = b;
+  out[2] = c;
+  out[3] = d;
+  out[4] = tx;
+  out[5] = ty;
+  return out;
+}
+/**
+ * Inverts a mat2d
+ *
+ * @param {mat2d} out the receiving matrix
+ * @param {mat2d} a the source matrix
+ * @returns {mat2d} out
+ */
+
+
+function invert(out, a) {
+  var aa = a[0],
+      ab = a[1],
+      ac = a[2],
+      ad = a[3];
+  var atx = a[4],
+      aty = a[5];
+  var det = aa * ad - ab * ac;
+
+  if (!det) {
+    return null;
+  }
+
+  det = 1.0 / det;
+  out[0] = ad * det;
+  out[1] = -ab * det;
+  out[2] = -ac * det;
+  out[3] = aa * det;
+  out[4] = (ac * aty - ad * atx) * det;
+  out[5] = (ab * atx - aa * aty) * det;
+  return out;
+}
+/**
+ * Calculates the determinant of a mat2d
+ *
+ * @param {mat2d} a the source matrix
+ * @returns {Number} determinant of a
+ */
+
+
+function determinant(a) {
+  return a[0] * a[3] - a[1] * a[2];
+}
+/**
+ * Multiplies two mat2d's
+ *
+ * @param {mat2d} out the receiving matrix
+ * @param {mat2d} a the first operand
+ * @param {mat2d} b the second operand
+ * @returns {mat2d} out
+ */
+
+
+function multiply(out, a, b) {
+  var a0 = a[0],
+      a1 = a[1],
+      a2 = a[2],
+      a3 = a[3],
+      a4 = a[4],
+      a5 = a[5];
+  var b0 = b[0],
+      b1 = b[1],
+      b2 = b[2],
+      b3 = b[3],
+      b4 = b[4],
+      b5 = b[5];
+  out[0] = a0 * b0 + a2 * b1;
+  out[1] = a1 * b0 + a3 * b1;
+  out[2] = a0 * b2 + a2 * b3;
+  out[3] = a1 * b2 + a3 * b3;
+  out[4] = a0 * b4 + a2 * b5 + a4;
+  out[5] = a1 * b4 + a3 * b5 + a5;
+  return out;
+}
+/**
+ * Rotates a mat2d by the given angle
+ *
+ * @param {mat2d} out the receiving matrix
+ * @param {mat2d} a the matrix to rotate
+ * @param {Number} rad the angle to rotate the matrix by
+ * @returns {mat2d} out
+ */
+
+
+function rotate(out, a, rad) {
+  var a0 = a[0],
+      a1 = a[1],
+      a2 = a[2],
+      a3 = a[3],
+      a4 = a[4],
+      a5 = a[5];
+  var s = Math.sin(rad);
+  var c = Math.cos(rad);
+  out[0] = a0 * c + a2 * s;
+  out[1] = a1 * c + a3 * s;
+  out[2] = a0 * -s + a2 * c;
+  out[3] = a1 * -s + a3 * c;
+  out[4] = a4;
+  out[5] = a5;
+  return out;
+}
+/**
+ * Scales the mat2d by the dimensions in the given vec2
+ *
+ * @param {mat2d} out the receiving matrix
+ * @param {mat2d} a the matrix to translate
+ * @param {vec2} v the vec2 to scale the matrix by
+ * @returns {mat2d} out
+ **/
+
+
+function scale(out, a, v) {
+  var a0 = a[0],
+      a1 = a[1],
+      a2 = a[2],
+      a3 = a[3],
+      a4 = a[4],
+      a5 = a[5];
+  var v0 = v[0],
+      v1 = v[1];
+  out[0] = a0 * v0;
+  out[1] = a1 * v0;
+  out[2] = a2 * v1;
+  out[3] = a3 * v1;
+  out[4] = a4;
+  out[5] = a5;
+  return out;
+}
+/**
+ * Translates the mat2d by the dimensions in the given vec2
+ *
+ * @param {mat2d} out the receiving matrix
+ * @param {mat2d} a the matrix to translate
+ * @param {vec2} v the vec2 to translate the matrix by
+ * @returns {mat2d} out
+ **/
+
+
+function translate(out, a, v) {
+  var a0 = a[0],
+      a1 = a[1],
+      a2 = a[2],
+      a3 = a[3],
+      a4 = a[4],
+      a5 = a[5];
+  var v0 = v[0],
+      v1 = v[1];
+  out[0] = a0;
+  out[1] = a1;
+  out[2] = a2;
+  out[3] = a3;
+  out[4] = a0 * v0 + a2 * v1 + a4;
+  out[5] = a1 * v0 + a3 * v1 + a5;
+  return out;
+}
+/**
+ * Creates a matrix from a given angle
+ * This is equivalent to (but much faster than):
+ *
+ *     mat2d.identity(dest);
+ *     mat2d.rotate(dest, dest, rad);
+ *
+ * @param {mat2d} out mat2d receiving operation result
+ * @param {Number} rad the angle to rotate the matrix by
+ * @returns {mat2d} out
+ */
+
+
+function fromRotation(out, rad) {
+  var s = Math.sin(rad),
+      c = Math.cos(rad);
+  out[0] = c;
+  out[1] = s;
+  out[2] = -s;
+  out[3] = c;
+  out[4] = 0;
+  out[5] = 0;
+  return out;
+}
+/**
+ * Creates a matrix from a vector scaling
+ * This is equivalent to (but much faster than):
+ *
+ *     mat2d.identity(dest);
+ *     mat2d.scale(dest, dest, vec);
+ *
+ * @param {mat2d} out mat2d receiving operation result
+ * @param {vec2} v Scaling vector
+ * @returns {mat2d} out
+ */
+
+
+function fromScaling(out, v) {
+  out[0] = v[0];
+  out[1] = 0;
+  out[2] = 0;
+  out[3] = v[1];
+  out[4] = 0;
+  out[5] = 0;
+  return out;
+}
+/**
+ * Creates a matrix from a vector translation
+ * This is equivalent to (but much faster than):
+ *
+ *     mat2d.identity(dest);
+ *     mat2d.translate(dest, dest, vec);
+ *
+ * @param {mat2d} out mat2d receiving operation result
+ * @param {vec2} v Translation vector
+ * @returns {mat2d} out
+ */
+
+
+function fromTranslation(out, v) {
+  out[0] = 1;
+  out[1] = 0;
+  out[2] = 0;
+  out[3] = 1;
+  out[4] = v[0];
+  out[5] = v[1];
+  return out;
+}
+/**
+ * Returns a string representation of a mat2d
+ *
+ * @param {mat2d} a matrix to represent as a string
+ * @returns {String} string representation of the matrix
+ */
+
+
+function str(a) {
+  return 'mat2d(' + a[0] + ', ' + a[1] + ', ' + a[2] + ', ' + a[3] + ', ' + a[4] + ', ' + a[5] + ')';
+}
+/**
+ * Returns Frobenius norm of a mat2d
+ *
+ * @param {mat2d} a the matrix to calculate Frobenius norm of
+ * @returns {Number} Frobenius norm
+ */
+
+
+function frob(a) {
+  return Math.sqrt(Math.pow(a[0], 2) + Math.pow(a[1], 2) + Math.pow(a[2], 2) + Math.pow(a[3], 2) + Math.pow(a[4], 2) + Math.pow(a[5], 2) + 1);
+}
+/**
+ * Adds two mat2d's
+ *
+ * @param {mat2d} out the receiving matrix
+ * @param {mat2d} a the first operand
+ * @param {mat2d} b the second operand
+ * @returns {mat2d} out
+ */
+
+
+function add(out, a, b) {
+  out[0] = a[0] + b[0];
+  out[1] = a[1] + b[1];
+  out[2] = a[2] + b[2];
+  out[3] = a[3] + b[3];
+  out[4] = a[4] + b[4];
+  out[5] = a[5] + b[5];
+  return out;
+}
+/**
+ * Subtracts matrix b from matrix a
+ *
+ * @param {mat2d} out the receiving matrix
+ * @param {mat2d} a the first operand
+ * @param {mat2d} b the second operand
+ * @returns {mat2d} out
+ */
+
+
+function subtract(out, a, b) {
+  out[0] = a[0] - b[0];
+  out[1] = a[1] - b[1];
+  out[2] = a[2] - b[2];
+  out[3] = a[3] - b[3];
+  out[4] = a[4] - b[4];
+  out[5] = a[5] - b[5];
+  return out;
+}
+/**
+ * Multiply each element of the matrix by a scalar.
+ *
+ * @param {mat2d} out the receiving matrix
+ * @param {mat2d} a the matrix to scale
+ * @param {Number} b amount to scale the matrix's elements by
+ * @returns {mat2d} out
+ */
+
+
+function multiplyScalar(out, a, b) {
+  out[0] = a[0] * b;
+  out[1] = a[1] * b;
+  out[2] = a[2] * b;
+  out[3] = a[3] * b;
+  out[4] = a[4] * b;
+  out[5] = a[5] * b;
+  return out;
+}
+/**
+ * Adds two mat2d's after multiplying each element of the second operand by a scalar value.
+ *
+ * @param {mat2d} out the receiving vector
+ * @param {mat2d} a the first operand
+ * @param {mat2d} b the second operand
+ * @param {Number} scale the amount to scale b's elements by before adding
+ * @returns {mat2d} out
+ */
+
+
+function multiplyScalarAndAdd(out, a, b, scale) {
+  out[0] = a[0] + b[0] * scale;
+  out[1] = a[1] + b[1] * scale;
+  out[2] = a[2] + b[2] * scale;
+  out[3] = a[3] + b[3] * scale;
+  out[4] = a[4] + b[4] * scale;
+  out[5] = a[5] + b[5] * scale;
+  return out;
+}
+/**
+ * Returns whether or not the matrices have exactly the same elements in the same position (when compared with ===)
+ *
+ * @param {mat2d} a The first matrix.
+ * @param {mat2d} b The second matrix.
+ * @returns {Boolean} True if the matrices are equal, false otherwise.
+ */
+
+
+function exactEquals(a, b) {
+  return a[0] === b[0] && a[1] === b[1] && a[2] === b[2] && a[3] === b[3] && a[4] === b[4] && a[5] === b[5];
+}
+/**
+ * Returns whether or not the matrices have approximately the same elements in the same position.
+ *
+ * @param {mat2d} a The first matrix.
+ * @param {mat2d} b The second matrix.
+ * @returns {Boolean} True if the matrices are equal, false otherwise.
+ */
+
+
+function equals(a, b) {
+  var a0 = a[0],
+      a1 = a[1],
+      a2 = a[2],
+      a3 = a[3],
+      a4 = a[4],
+      a5 = a[5];
+  var b0 = b[0],
+      b1 = b[1],
+      b2 = b[2],
+      b3 = b[3],
+      b4 = b[4],
+      b5 = b[5];
+  return Math.abs(a0 - b0) <= glMatrix.EPSILON * Math.max(1.0, Math.abs(a0), Math.abs(b0)) && Math.abs(a1 - b1) <= glMatrix.EPSILON * Math.max(1.0, Math.abs(a1), Math.abs(b1)) && Math.abs(a2 - b2) <= glMatrix.EPSILON * Math.max(1.0, Math.abs(a2), Math.abs(b2)) && Math.abs(a3 - b3) <= glMatrix.EPSILON * Math.max(1.0, Math.abs(a3), Math.abs(b3)) && Math.abs(a4 - b4) <= glMatrix.EPSILON * Math.max(1.0, Math.abs(a4), Math.abs(b4)) && Math.abs(a5 - b5) <= glMatrix.EPSILON * Math.max(1.0, Math.abs(a5), Math.abs(b5));
+}
+/**
+ * Alias for {@link mat2d.multiply}
+ * @function
+ */
+
+
+var mul = multiply;
+/**
+ * Alias for {@link mat2d.subtract}
+ * @function
+ */
+
+exports.mul = mul;
+var sub = subtract;
+exports.sub = sub;
+},{"./common.js":2}],6:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.create = create;
+exports.fromMat4 = fromMat4;
+exports.clone = clone;
+exports.copy = copy;
+exports.fromValues = fromValues;
+exports.set = set;
+exports.identity = identity;
+exports.transpose = transpose;
+exports.invert = invert;
+exports.adjoint = adjoint;
+exports.determinant = determinant;
+exports.multiply = multiply;
+exports.translate = translate;
+exports.rotate = rotate;
+exports.scale = scale;
+exports.fromTranslation = fromTranslation;
+exports.fromRotation = fromRotation;
+exports.fromScaling = fromScaling;
+exports.fromMat2d = fromMat2d;
+exports.fromQuat = fromQuat;
+exports.normalFromMat4 = normalFromMat4;
+exports.projection = projection;
+exports.str = str;
+exports.frob = frob;
+exports.add = add;
+exports.subtract = subtract;
+exports.multiplyScalar = multiplyScalar;
+exports.multiplyScalarAndAdd = multiplyScalarAndAdd;
+exports.exactEquals = exactEquals;
+exports.equals = equals;
+exports.sub = exports.mul = void 0;
+
+var glMatrix = _interopRequireWildcard(require("./common.js"));
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
+
+/**
+ * 3x3 Matrix
+ * @module mat3
+ */
+
+/**
+ * Creates a new identity mat3
+ *
+ * @returns {mat3} a new 3x3 matrix
+ */
+function create() {
+  var out = new glMatrix.ARRAY_TYPE(9);
+
+  if (glMatrix.ARRAY_TYPE != Float32Array) {
+    out[1] = 0;
+    out[2] = 0;
+    out[3] = 0;
+    out[5] = 0;
+    out[6] = 0;
+    out[7] = 0;
+  }
+
+  out[0] = 1;
+  out[4] = 1;
+  out[8] = 1;
+  return out;
+}
+/**
+ * Copies the upper-left 3x3 values into the given mat3.
+ *
+ * @param {mat3} out the receiving 3x3 matrix
+ * @param {mat4} a   the source 4x4 matrix
+ * @returns {mat3} out
+ */
+
+
+function fromMat4(out, a) {
+  out[0] = a[0];
+  out[1] = a[1];
+  out[2] = a[2];
+  out[3] = a[4];
+  out[4] = a[5];
+  out[5] = a[6];
+  out[6] = a[8];
+  out[7] = a[9];
+  out[8] = a[10];
+  return out;
+}
+/**
+ * Creates a new mat3 initialized with values from an existing matrix
+ *
+ * @param {mat3} a matrix to clone
+ * @returns {mat3} a new 3x3 matrix
+ */
+
+
+function clone(a) {
+  var out = new glMatrix.ARRAY_TYPE(9);
+  out[0] = a[0];
+  out[1] = a[1];
+  out[2] = a[2];
+  out[3] = a[3];
+  out[4] = a[4];
+  out[5] = a[5];
+  out[6] = a[6];
+  out[7] = a[7];
+  out[8] = a[8];
+  return out;
+}
+/**
+ * Copy the values from one mat3 to another
+ *
+ * @param {mat3} out the receiving matrix
+ * @param {mat3} a the source matrix
+ * @returns {mat3} out
+ */
+
+
+function copy(out, a) {
+  out[0] = a[0];
+  out[1] = a[1];
+  out[2] = a[2];
+  out[3] = a[3];
+  out[4] = a[4];
+  out[5] = a[5];
+  out[6] = a[6];
+  out[7] = a[7];
+  out[8] = a[8];
+  return out;
+}
+/**
+ * Create a new mat3 with the given values
+ *
+ * @param {Number} m00 Component in column 0, row 0 position (index 0)
+ * @param {Number} m01 Component in column 0, row 1 position (index 1)
+ * @param {Number} m02 Component in column 0, row 2 position (index 2)
+ * @param {Number} m10 Component in column 1, row 0 position (index 3)
+ * @param {Number} m11 Component in column 1, row 1 position (index 4)
+ * @param {Number} m12 Component in column 1, row 2 position (index 5)
+ * @param {Number} m20 Component in column 2, row 0 position (index 6)
+ * @param {Number} m21 Component in column 2, row 1 position (index 7)
+ * @param {Number} m22 Component in column 2, row 2 position (index 8)
+ * @returns {mat3} A new mat3
+ */
+
+
+function fromValues(m00, m01, m02, m10, m11, m12, m20, m21, m22) {
+  var out = new glMatrix.ARRAY_TYPE(9);
+  out[0] = m00;
+  out[1] = m01;
+  out[2] = m02;
+  out[3] = m10;
+  out[4] = m11;
+  out[5] = m12;
+  out[6] = m20;
+  out[7] = m21;
+  out[8] = m22;
+  return out;
+}
+/**
+ * Set the components of a mat3 to the given values
+ *
+ * @param {mat3} out the receiving matrix
+ * @param {Number} m00 Component in column 0, row 0 position (index 0)
+ * @param {Number} m01 Component in column 0, row 1 position (index 1)
+ * @param {Number} m02 Component in column 0, row 2 position (index 2)
+ * @param {Number} m10 Component in column 1, row 0 position (index 3)
+ * @param {Number} m11 Component in column 1, row 1 position (index 4)
+ * @param {Number} m12 Component in column 1, row 2 position (index 5)
+ * @param {Number} m20 Component in column 2, row 0 position (index 6)
+ * @param {Number} m21 Component in column 2, row 1 position (index 7)
+ * @param {Number} m22 Component in column 2, row 2 position (index 8)
+ * @returns {mat3} out
+ */
+
+
+function set(out, m00, m01, m02, m10, m11, m12, m20, m21, m22) {
+  out[0] = m00;
+  out[1] = m01;
+  out[2] = m02;
+  out[3] = m10;
+  out[4] = m11;
+  out[5] = m12;
+  out[6] = m20;
+  out[7] = m21;
+  out[8] = m22;
+  return out;
+}
+/**
+ * Set a mat3 to the identity matrix
+ *
+ * @param {mat3} out the receiving matrix
+ * @returns {mat3} out
+ */
+
+
+function identity(out) {
+  out[0] = 1;
+  out[1] = 0;
+  out[2] = 0;
+  out[3] = 0;
+  out[4] = 1;
+  out[5] = 0;
+  out[6] = 0;
+  out[7] = 0;
+  out[8] = 1;
+  return out;
+}
+/**
+ * Transpose the values of a mat3
+ *
+ * @param {mat3} out the receiving matrix
+ * @param {mat3} a the source matrix
+ * @returns {mat3} out
+ */
+
+
+function transpose(out, a) {
+  // If we are transposing ourselves we can skip a few steps but have to cache some values
+  if (out === a) {
+    var a01 = a[1],
+        a02 = a[2],
+        a12 = a[5];
+    out[1] = a[3];
+    out[2] = a[6];
+    out[3] = a01;
+    out[5] = a[7];
+    out[6] = a02;
+    out[7] = a12;
+  } else {
+    out[0] = a[0];
+    out[1] = a[3];
+    out[2] = a[6];
+    out[3] = a[1];
+    out[4] = a[4];
+    out[5] = a[7];
+    out[6] = a[2];
+    out[7] = a[5];
+    out[8] = a[8];
+  }
+
+  return out;
+}
+/**
+ * Inverts a mat3
+ *
+ * @param {mat3} out the receiving matrix
+ * @param {mat3} a the source matrix
+ * @returns {mat3} out
+ */
+
+
+function invert(out, a) {
+  var a00 = a[0],
+      a01 = a[1],
+      a02 = a[2];
+  var a10 = a[3],
+      a11 = a[4],
+      a12 = a[5];
+  var a20 = a[6],
+      a21 = a[7],
+      a22 = a[8];
+  var b01 = a22 * a11 - a12 * a21;
+  var b11 = -a22 * a10 + a12 * a20;
+  var b21 = a21 * a10 - a11 * a20; // Calculate the determinant
+
+  var det = a00 * b01 + a01 * b11 + a02 * b21;
+
+  if (!det) {
+    return null;
+  }
+
+  det = 1.0 / det;
+  out[0] = b01 * det;
+  out[1] = (-a22 * a01 + a02 * a21) * det;
+  out[2] = (a12 * a01 - a02 * a11) * det;
+  out[3] = b11 * det;
+  out[4] = (a22 * a00 - a02 * a20) * det;
+  out[5] = (-a12 * a00 + a02 * a10) * det;
+  out[6] = b21 * det;
+  out[7] = (-a21 * a00 + a01 * a20) * det;
+  out[8] = (a11 * a00 - a01 * a10) * det;
+  return out;
+}
+/**
+ * Calculates the adjugate of a mat3
+ *
+ * @param {mat3} out the receiving matrix
+ * @param {mat3} a the source matrix
+ * @returns {mat3} out
+ */
+
+
+function adjoint(out, a) {
+  var a00 = a[0],
+      a01 = a[1],
+      a02 = a[2];
+  var a10 = a[3],
+      a11 = a[4],
+      a12 = a[5];
+  var a20 = a[6],
+      a21 = a[7],
+      a22 = a[8];
+  out[0] = a11 * a22 - a12 * a21;
+  out[1] = a02 * a21 - a01 * a22;
+  out[2] = a01 * a12 - a02 * a11;
+  out[3] = a12 * a20 - a10 * a22;
+  out[4] = a00 * a22 - a02 * a20;
+  out[5] = a02 * a10 - a00 * a12;
+  out[6] = a10 * a21 - a11 * a20;
+  out[7] = a01 * a20 - a00 * a21;
+  out[8] = a00 * a11 - a01 * a10;
+  return out;
+}
+/**
+ * Calculates the determinant of a mat3
+ *
+ * @param {mat3} a the source matrix
+ * @returns {Number} determinant of a
+ */
+
+
+function determinant(a) {
+  var a00 = a[0],
+      a01 = a[1],
+      a02 = a[2];
+  var a10 = a[3],
+      a11 = a[4],
+      a12 = a[5];
+  var a20 = a[6],
+      a21 = a[7],
+      a22 = a[8];
+  return a00 * (a22 * a11 - a12 * a21) + a01 * (-a22 * a10 + a12 * a20) + a02 * (a21 * a10 - a11 * a20);
+}
+/**
+ * Multiplies two mat3's
+ *
+ * @param {mat3} out the receiving matrix
+ * @param {mat3} a the first operand
+ * @param {mat3} b the second operand
+ * @returns {mat3} out
+ */
+
+
+function multiply(out, a, b) {
+  var a00 = a[0],
+      a01 = a[1],
+      a02 = a[2];
+  var a10 = a[3],
+      a11 = a[4],
+      a12 = a[5];
+  var a20 = a[6],
+      a21 = a[7],
+      a22 = a[8];
+  var b00 = b[0],
+      b01 = b[1],
+      b02 = b[2];
+  var b10 = b[3],
+      b11 = b[4],
+      b12 = b[5];
+  var b20 = b[6],
+      b21 = b[7],
+      b22 = b[8];
+  out[0] = b00 * a00 + b01 * a10 + b02 * a20;
+  out[1] = b00 * a01 + b01 * a11 + b02 * a21;
+  out[2] = b00 * a02 + b01 * a12 + b02 * a22;
+  out[3] = b10 * a00 + b11 * a10 + b12 * a20;
+  out[4] = b10 * a01 + b11 * a11 + b12 * a21;
+  out[5] = b10 * a02 + b11 * a12 + b12 * a22;
+  out[6] = b20 * a00 + b21 * a10 + b22 * a20;
+  out[7] = b20 * a01 + b21 * a11 + b22 * a21;
+  out[8] = b20 * a02 + b21 * a12 + b22 * a22;
+  return out;
+}
+/**
+ * Translate a mat3 by the given vector
+ *
+ * @param {mat3} out the receiving matrix
+ * @param {mat3} a the matrix to translate
+ * @param {vec2} v vector to translate by
+ * @returns {mat3} out
+ */
+
+
+function translate(out, a, v) {
+  var a00 = a[0],
+      a01 = a[1],
+      a02 = a[2],
+      a10 = a[3],
+      a11 = a[4],
+      a12 = a[5],
+      a20 = a[6],
+      a21 = a[7],
+      a22 = a[8],
+      x = v[0],
+      y = v[1];
+  out[0] = a00;
+  out[1] = a01;
+  out[2] = a02;
+  out[3] = a10;
+  out[4] = a11;
+  out[5] = a12;
+  out[6] = x * a00 + y * a10 + a20;
+  out[7] = x * a01 + y * a11 + a21;
+  out[8] = x * a02 + y * a12 + a22;
+  return out;
+}
+/**
+ * Rotates a mat3 by the given angle
+ *
+ * @param {mat3} out the receiving matrix
+ * @param {mat3} a the matrix to rotate
+ * @param {Number} rad the angle to rotate the matrix by
+ * @returns {mat3} out
+ */
+
+
+function rotate(out, a, rad) {
+  var a00 = a[0],
+      a01 = a[1],
+      a02 = a[2],
+      a10 = a[3],
+      a11 = a[4],
+      a12 = a[5],
+      a20 = a[6],
+      a21 = a[7],
+      a22 = a[8],
+      s = Math.sin(rad),
+      c = Math.cos(rad);
+  out[0] = c * a00 + s * a10;
+  out[1] = c * a01 + s * a11;
+  out[2] = c * a02 + s * a12;
+  out[3] = c * a10 - s * a00;
+  out[4] = c * a11 - s * a01;
+  out[5] = c * a12 - s * a02;
+  out[6] = a20;
+  out[7] = a21;
+  out[8] = a22;
+  return out;
+}
+
+;
+/**
+ * Scales the mat3 by the dimensions in the given vec2
+ *
+ * @param {mat3} out the receiving matrix
+ * @param {mat3} a the matrix to rotate
+ * @param {vec2} v the vec2 to scale the matrix by
+ * @returns {mat3} out
+ **/
+
+function scale(out, a, v) {
+  var x = v[0],
+      y = v[1];
+  out[0] = x * a[0];
+  out[1] = x * a[1];
+  out[2] = x * a[2];
+  out[3] = y * a[3];
+  out[4] = y * a[4];
+  out[5] = y * a[5];
+  out[6] = a[6];
+  out[7] = a[7];
+  out[8] = a[8];
+  return out;
+}
+/**
+ * Creates a matrix from a vector translation
+ * This is equivalent to (but much faster than):
+ *
+ *     mat3.identity(dest);
+ *     mat3.translate(dest, dest, vec);
+ *
+ * @param {mat3} out mat3 receiving operation result
+ * @param {vec2} v Translation vector
+ * @returns {mat3} out
+ */
+
+
+function fromTranslation(out, v) {
+  out[0] = 1;
+  out[1] = 0;
+  out[2] = 0;
+  out[3] = 0;
+  out[4] = 1;
+  out[5] = 0;
+  out[6] = v[0];
+  out[7] = v[1];
+  out[8] = 1;
+  return out;
+}
+/**
+ * Creates a matrix from a given angle
+ * This is equivalent to (but much faster than):
+ *
+ *     mat3.identity(dest);
+ *     mat3.rotate(dest, dest, rad);
+ *
+ * @param {mat3} out mat3 receiving operation result
+ * @param {Number} rad the angle to rotate the matrix by
+ * @returns {mat3} out
+ */
+
+
+function fromRotation(out, rad) {
+  var s = Math.sin(rad),
+      c = Math.cos(rad);
+  out[0] = c;
+  out[1] = s;
+  out[2] = 0;
+  out[3] = -s;
+  out[4] = c;
+  out[5] = 0;
+  out[6] = 0;
+  out[7] = 0;
+  out[8] = 1;
+  return out;
+}
+/**
+ * Creates a matrix from a vector scaling
+ * This is equivalent to (but much faster than):
+ *
+ *     mat3.identity(dest);
+ *     mat3.scale(dest, dest, vec);
+ *
+ * @param {mat3} out mat3 receiving operation result
+ * @param {vec2} v Scaling vector
+ * @returns {mat3} out
+ */
+
+
+function fromScaling(out, v) {
+  out[0] = v[0];
+  out[1] = 0;
+  out[2] = 0;
+  out[3] = 0;
+  out[4] = v[1];
+  out[5] = 0;
+  out[6] = 0;
+  out[7] = 0;
+  out[8] = 1;
+  return out;
+}
+/**
+ * Copies the values from a mat2d into a mat3
+ *
+ * @param {mat3} out the receiving matrix
+ * @param {mat2d} a the matrix to copy
+ * @returns {mat3} out
+ **/
+
+
+function fromMat2d(out, a) {
+  out[0] = a[0];
+  out[1] = a[1];
+  out[2] = 0;
+  out[3] = a[2];
+  out[4] = a[3];
+  out[5] = 0;
+  out[6] = a[4];
+  out[7] = a[5];
+  out[8] = 1;
+  return out;
+}
+/**
+* Calculates a 3x3 matrix from the given quaternion
+*
+* @param {mat3} out mat3 receiving operation result
+* @param {quat} q Quaternion to create matrix from
+*
+* @returns {mat3} out
+*/
+
+
+function fromQuat(out, q) {
+  var x = q[0],
+      y = q[1],
+      z = q[2],
+      w = q[3];
+  var x2 = x + x;
+  var y2 = y + y;
+  var z2 = z + z;
+  var xx = x * x2;
+  var yx = y * x2;
+  var yy = y * y2;
+  var zx = z * x2;
+  var zy = z * y2;
+  var zz = z * z2;
+  var wx = w * x2;
+  var wy = w * y2;
+  var wz = w * z2;
+  out[0] = 1 - yy - zz;
+  out[3] = yx - wz;
+  out[6] = zx + wy;
+  out[1] = yx + wz;
+  out[4] = 1 - xx - zz;
+  out[7] = zy - wx;
+  out[2] = zx - wy;
+  out[5] = zy + wx;
+  out[8] = 1 - xx - yy;
+  return out;
+}
+/**
+* Calculates a 3x3 normal matrix (transpose inverse) from the 4x4 matrix
+*
+* @param {mat3} out mat3 receiving operation result
+* @param {mat4} a Mat4 to derive the normal matrix from
+*
+* @returns {mat3} out
+*/
+
+
+function normalFromMat4(out, a) {
+  var a00 = a[0],
+      a01 = a[1],
+      a02 = a[2],
+      a03 = a[3];
+  var a10 = a[4],
+      a11 = a[5],
+      a12 = a[6],
+      a13 = a[7];
+  var a20 = a[8],
+      a21 = a[9],
+      a22 = a[10],
+      a23 = a[11];
+  var a30 = a[12],
+      a31 = a[13],
+      a32 = a[14],
+      a33 = a[15];
+  var b00 = a00 * a11 - a01 * a10;
+  var b01 = a00 * a12 - a02 * a10;
+  var b02 = a00 * a13 - a03 * a10;
+  var b03 = a01 * a12 - a02 * a11;
+  var b04 = a01 * a13 - a03 * a11;
+  var b05 = a02 * a13 - a03 * a12;
+  var b06 = a20 * a31 - a21 * a30;
+  var b07 = a20 * a32 - a22 * a30;
+  var b08 = a20 * a33 - a23 * a30;
+  var b09 = a21 * a32 - a22 * a31;
+  var b10 = a21 * a33 - a23 * a31;
+  var b11 = a22 * a33 - a23 * a32; // Calculate the determinant
+
+  var det = b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
+
+  if (!det) {
+    return null;
+  }
+
+  det = 1.0 / det;
+  out[0] = (a11 * b11 - a12 * b10 + a13 * b09) * det;
+  out[1] = (a12 * b08 - a10 * b11 - a13 * b07) * det;
+  out[2] = (a10 * b10 - a11 * b08 + a13 * b06) * det;
+  out[3] = (a02 * b10 - a01 * b11 - a03 * b09) * det;
+  out[4] = (a00 * b11 - a02 * b08 + a03 * b07) * det;
+  out[5] = (a01 * b08 - a00 * b10 - a03 * b06) * det;
+  out[6] = (a31 * b05 - a32 * b04 + a33 * b03) * det;
+  out[7] = (a32 * b02 - a30 * b05 - a33 * b01) * det;
+  out[8] = (a30 * b04 - a31 * b02 + a33 * b00) * det;
+  return out;
+}
+/**
+ * Generates a 2D projection matrix with the given bounds
+ *
+ * @param {mat3} out mat3 frustum matrix will be written into
+ * @param {number} width Width of your gl context
+ * @param {number} height Height of gl context
+ * @returns {mat3} out
+ */
+
+
+function projection(out, width, height) {
+  out[0] = 2 / width;
+  out[1] = 0;
+  out[2] = 0;
+  out[3] = 0;
+  out[4] = -2 / height;
+  out[5] = 0;
+  out[6] = -1;
+  out[7] = 1;
+  out[8] = 1;
+  return out;
+}
+/**
+ * Returns a string representation of a mat3
+ *
+ * @param {mat3} a matrix to represent as a string
+ * @returns {String} string representation of the matrix
+ */
+
+
+function str(a) {
+  return 'mat3(' + a[0] + ', ' + a[1] + ', ' + a[2] + ', ' + a[3] + ', ' + a[4] + ', ' + a[5] + ', ' + a[6] + ', ' + a[7] + ', ' + a[8] + ')';
+}
+/**
+ * Returns Frobenius norm of a mat3
+ *
+ * @param {mat3} a the matrix to calculate Frobenius norm of
+ * @returns {Number} Frobenius norm
+ */
+
+
+function frob(a) {
+  return Math.sqrt(Math.pow(a[0], 2) + Math.pow(a[1], 2) + Math.pow(a[2], 2) + Math.pow(a[3], 2) + Math.pow(a[4], 2) + Math.pow(a[5], 2) + Math.pow(a[6], 2) + Math.pow(a[7], 2) + Math.pow(a[8], 2));
+}
+/**
+ * Adds two mat3's
+ *
+ * @param {mat3} out the receiving matrix
+ * @param {mat3} a the first operand
+ * @param {mat3} b the second operand
+ * @returns {mat3} out
+ */
+
+
+function add(out, a, b) {
+  out[0] = a[0] + b[0];
+  out[1] = a[1] + b[1];
+  out[2] = a[2] + b[2];
+  out[3] = a[3] + b[3];
+  out[4] = a[4] + b[4];
+  out[5] = a[5] + b[5];
+  out[6] = a[6] + b[6];
+  out[7] = a[7] + b[7];
+  out[8] = a[8] + b[8];
+  return out;
+}
+/**
+ * Subtracts matrix b from matrix a
+ *
+ * @param {mat3} out the receiving matrix
+ * @param {mat3} a the first operand
+ * @param {mat3} b the second operand
+ * @returns {mat3} out
+ */
+
+
+function subtract(out, a, b) {
+  out[0] = a[0] - b[0];
+  out[1] = a[1] - b[1];
+  out[2] = a[2] - b[2];
+  out[3] = a[3] - b[3];
+  out[4] = a[4] - b[4];
+  out[5] = a[5] - b[5];
+  out[6] = a[6] - b[6];
+  out[7] = a[7] - b[7];
+  out[8] = a[8] - b[8];
+  return out;
+}
+/**
+ * Multiply each element of the matrix by a scalar.
+ *
+ * @param {mat3} out the receiving matrix
+ * @param {mat3} a the matrix to scale
+ * @param {Number} b amount to scale the matrix's elements by
+ * @returns {mat3} out
+ */
+
+
+function multiplyScalar(out, a, b) {
+  out[0] = a[0] * b;
+  out[1] = a[1] * b;
+  out[2] = a[2] * b;
+  out[3] = a[3] * b;
+  out[4] = a[4] * b;
+  out[5] = a[5] * b;
+  out[6] = a[6] * b;
+  out[7] = a[7] * b;
+  out[8] = a[8] * b;
+  return out;
+}
+/**
+ * Adds two mat3's after multiplying each element of the second operand by a scalar value.
+ *
+ * @param {mat3} out the receiving vector
+ * @param {mat3} a the first operand
+ * @param {mat3} b the second operand
+ * @param {Number} scale the amount to scale b's elements by before adding
+ * @returns {mat3} out
+ */
+
+
+function multiplyScalarAndAdd(out, a, b, scale) {
+  out[0] = a[0] + b[0] * scale;
+  out[1] = a[1] + b[1] * scale;
+  out[2] = a[2] + b[2] * scale;
+  out[3] = a[3] + b[3] * scale;
+  out[4] = a[4] + b[4] * scale;
+  out[5] = a[5] + b[5] * scale;
+  out[6] = a[6] + b[6] * scale;
+  out[7] = a[7] + b[7] * scale;
+  out[8] = a[8] + b[8] * scale;
+  return out;
+}
+/**
+ * Returns whether or not the matrices have exactly the same elements in the same position (when compared with ===)
+ *
+ * @param {mat3} a The first matrix.
+ * @param {mat3} b The second matrix.
+ * @returns {Boolean} True if the matrices are equal, false otherwise.
+ */
+
+
+function exactEquals(a, b) {
+  return a[0] === b[0] && a[1] === b[1] && a[2] === b[2] && a[3] === b[3] && a[4] === b[4] && a[5] === b[5] && a[6] === b[6] && a[7] === b[7] && a[8] === b[8];
+}
+/**
+ * Returns whether or not the matrices have approximately the same elements in the same position.
+ *
+ * @param {mat3} a The first matrix.
+ * @param {mat3} b The second matrix.
+ * @returns {Boolean} True if the matrices are equal, false otherwise.
+ */
+
+
+function equals(a, b) {
+  var a0 = a[0],
+      a1 = a[1],
+      a2 = a[2],
+      a3 = a[3],
+      a4 = a[4],
+      a5 = a[5],
+      a6 = a[6],
+      a7 = a[7],
+      a8 = a[8];
+  var b0 = b[0],
+      b1 = b[1],
+      b2 = b[2],
+      b3 = b[3],
+      b4 = b[4],
+      b5 = b[5],
+      b6 = b[6],
+      b7 = b[7],
+      b8 = b[8];
+  return Math.abs(a0 - b0) <= glMatrix.EPSILON * Math.max(1.0, Math.abs(a0), Math.abs(b0)) && Math.abs(a1 - b1) <= glMatrix.EPSILON * Math.max(1.0, Math.abs(a1), Math.abs(b1)) && Math.abs(a2 - b2) <= glMatrix.EPSILON * Math.max(1.0, Math.abs(a2), Math.abs(b2)) && Math.abs(a3 - b3) <= glMatrix.EPSILON * Math.max(1.0, Math.abs(a3), Math.abs(b3)) && Math.abs(a4 - b4) <= glMatrix.EPSILON * Math.max(1.0, Math.abs(a4), Math.abs(b4)) && Math.abs(a5 - b5) <= glMatrix.EPSILON * Math.max(1.0, Math.abs(a5), Math.abs(b5)) && Math.abs(a6 - b6) <= glMatrix.EPSILON * Math.max(1.0, Math.abs(a6), Math.abs(b6)) && Math.abs(a7 - b7) <= glMatrix.EPSILON * Math.max(1.0, Math.abs(a7), Math.abs(b7)) && Math.abs(a8 - b8) <= glMatrix.EPSILON * Math.max(1.0, Math.abs(a8), Math.abs(b8));
+}
+/**
+ * Alias for {@link mat3.multiply}
+ * @function
+ */
+
+
+var mul = multiply;
+/**
+ * Alias for {@link mat3.subtract}
+ * @function
+ */
+
+exports.mul = mul;
+var sub = subtract;
+exports.sub = sub;
+},{"./common.js":2}],7:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.create = create;
+exports.clone = clone;
+exports.copy = copy;
+exports.fromValues = fromValues;
+exports.set = set;
+exports.identity = identity;
+exports.transpose = transpose;
+exports.invert = invert;
+exports.adjoint = adjoint;
+exports.determinant = determinant;
+exports.multiply = multiply;
+exports.translate = translate;
+exports.scale = scale;
+exports.rotate = rotate;
+exports.rotateX = rotateX;
+exports.rotateY = rotateY;
+exports.rotateZ = rotateZ;
+exports.fromTranslation = fromTranslation;
+exports.fromScaling = fromScaling;
+exports.fromRotation = fromRotation;
+exports.fromXRotation = fromXRotation;
+exports.fromYRotation = fromYRotation;
+exports.fromZRotation = fromZRotation;
+exports.fromRotationTranslation = fromRotationTranslation;
+exports.fromQuat2 = fromQuat2;
+exports.getTranslation = getTranslation;
+exports.getScaling = getScaling;
+exports.getRotation = getRotation;
+exports.fromRotationTranslationScale = fromRotationTranslationScale;
+exports.fromRotationTranslationScaleOrigin = fromRotationTranslationScaleOrigin;
+exports.fromQuat = fromQuat;
+exports.frustum = frustum;
+exports.perspective = perspective;
+exports.perspectiveFromFieldOfView = perspectiveFromFieldOfView;
+exports.ortho = ortho;
+exports.lookAt = lookAt;
+exports.targetTo = targetTo;
+exports.str = str;
+exports.frob = frob;
+exports.add = add;
+exports.subtract = subtract;
+exports.multiplyScalar = multiplyScalar;
+exports.multiplyScalarAndAdd = multiplyScalarAndAdd;
+exports.exactEquals = exactEquals;
+exports.equals = equals;
+exports.sub = exports.mul = void 0;
+
+var glMatrix = _interopRequireWildcard(require("./common.js"));
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
+
+/**
+ * 4x4 Matrix<br>Format: column-major, when typed out it looks like row-major<br>The matrices are being post multiplied.
+ * @module mat4
+ */
+
+/**
+ * Creates a new identity mat4
+ *
+ * @returns {mat4} a new 4x4 matrix
+ */
+function create() {
+  var out = new glMatrix.ARRAY_TYPE(16);
+
+  if (glMatrix.ARRAY_TYPE != Float32Array) {
+    out[1] = 0;
+    out[2] = 0;
+    out[3] = 0;
+    out[4] = 0;
+    out[6] = 0;
+    out[7] = 0;
+    out[8] = 0;
+    out[9] = 0;
+    out[11] = 0;
+    out[12] = 0;
+    out[13] = 0;
+    out[14] = 0;
+  }
+
+  out[0] = 1;
+  out[5] = 1;
+  out[10] = 1;
+  out[15] = 1;
+  return out;
+}
+/**
+ * Creates a new mat4 initialized with values from an existing matrix
+ *
+ * @param {mat4} a matrix to clone
+ * @returns {mat4} a new 4x4 matrix
+ */
+
+
+function clone(a) {
+  var out = new glMatrix.ARRAY_TYPE(16);
+  out[0] = a[0];
+  out[1] = a[1];
+  out[2] = a[2];
+  out[3] = a[3];
+  out[4] = a[4];
+  out[5] = a[5];
+  out[6] = a[6];
+  out[7] = a[7];
+  out[8] = a[8];
+  out[9] = a[9];
+  out[10] = a[10];
+  out[11] = a[11];
+  out[12] = a[12];
+  out[13] = a[13];
+  out[14] = a[14];
+  out[15] = a[15];
+  return out;
+}
+/**
+ * Copy the values from one mat4 to another
+ *
+ * @param {mat4} out the receiving matrix
+ * @param {mat4} a the source matrix
+ * @returns {mat4} out
+ */
+
+
+function copy(out, a) {
+  out[0] = a[0];
+  out[1] = a[1];
+  out[2] = a[2];
+  out[3] = a[3];
+  out[4] = a[4];
+  out[5] = a[5];
+  out[6] = a[6];
+  out[7] = a[7];
+  out[8] = a[8];
+  out[9] = a[9];
+  out[10] = a[10];
+  out[11] = a[11];
+  out[12] = a[12];
+  out[13] = a[13];
+  out[14] = a[14];
+  out[15] = a[15];
+  return out;
+}
+/**
+ * Create a new mat4 with the given values
+ *
+ * @param {Number} m00 Component in column 0, row 0 position (index 0)
+ * @param {Number} m01 Component in column 0, row 1 position (index 1)
+ * @param {Number} m02 Component in column 0, row 2 position (index 2)
+ * @param {Number} m03 Component in column 0, row 3 position (index 3)
+ * @param {Number} m10 Component in column 1, row 0 position (index 4)
+ * @param {Number} m11 Component in column 1, row 1 position (index 5)
+ * @param {Number} m12 Component in column 1, row 2 position (index 6)
+ * @param {Number} m13 Component in column 1, row 3 position (index 7)
+ * @param {Number} m20 Component in column 2, row 0 position (index 8)
+ * @param {Number} m21 Component in column 2, row 1 position (index 9)
+ * @param {Number} m22 Component in column 2, row 2 position (index 10)
+ * @param {Number} m23 Component in column 2, row 3 position (index 11)
+ * @param {Number} m30 Component in column 3, row 0 position (index 12)
+ * @param {Number} m31 Component in column 3, row 1 position (index 13)
+ * @param {Number} m32 Component in column 3, row 2 position (index 14)
+ * @param {Number} m33 Component in column 3, row 3 position (index 15)
+ * @returns {mat4} A new mat4
+ */
+
+
+function fromValues(m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33) {
+  var out = new glMatrix.ARRAY_TYPE(16);
+  out[0] = m00;
+  out[1] = m01;
+  out[2] = m02;
+  out[3] = m03;
+  out[4] = m10;
+  out[5] = m11;
+  out[6] = m12;
+  out[7] = m13;
+  out[8] = m20;
+  out[9] = m21;
+  out[10] = m22;
+  out[11] = m23;
+  out[12] = m30;
+  out[13] = m31;
+  out[14] = m32;
+  out[15] = m33;
+  return out;
+}
+/**
+ * Set the components of a mat4 to the given values
+ *
+ * @param {mat4} out the receiving matrix
+ * @param {Number} m00 Component in column 0, row 0 position (index 0)
+ * @param {Number} m01 Component in column 0, row 1 position (index 1)
+ * @param {Number} m02 Component in column 0, row 2 position (index 2)
+ * @param {Number} m03 Component in column 0, row 3 position (index 3)
+ * @param {Number} m10 Component in column 1, row 0 position (index 4)
+ * @param {Number} m11 Component in column 1, row 1 position (index 5)
+ * @param {Number} m12 Component in column 1, row 2 position (index 6)
+ * @param {Number} m13 Component in column 1, row 3 position (index 7)
+ * @param {Number} m20 Component in column 2, row 0 position (index 8)
+ * @param {Number} m21 Component in column 2, row 1 position (index 9)
+ * @param {Number} m22 Component in column 2, row 2 position (index 10)
+ * @param {Number} m23 Component in column 2, row 3 position (index 11)
+ * @param {Number} m30 Component in column 3, row 0 position (index 12)
+ * @param {Number} m31 Component in column 3, row 1 position (index 13)
+ * @param {Number} m32 Component in column 3, row 2 position (index 14)
+ * @param {Number} m33 Component in column 3, row 3 position (index 15)
+ * @returns {mat4} out
+ */
+
+
+function set(out, m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33) {
+  out[0] = m00;
+  out[1] = m01;
+  out[2] = m02;
+  out[3] = m03;
+  out[4] = m10;
+  out[5] = m11;
+  out[6] = m12;
+  out[7] = m13;
+  out[8] = m20;
+  out[9] = m21;
+  out[10] = m22;
+  out[11] = m23;
+  out[12] = m30;
+  out[13] = m31;
+  out[14] = m32;
+  out[15] = m33;
+  return out;
+}
+/**
+ * Set a mat4 to the identity matrix
+ *
+ * @param {mat4} out the receiving matrix
+ * @returns {mat4} out
+ */
+
+
+function identity(out) {
+  out[0] = 1;
+  out[1] = 0;
+  out[2] = 0;
+  out[3] = 0;
+  out[4] = 0;
+  out[5] = 1;
+  out[6] = 0;
+  out[7] = 0;
+  out[8] = 0;
+  out[9] = 0;
+  out[10] = 1;
+  out[11] = 0;
+  out[12] = 0;
+  out[13] = 0;
+  out[14] = 0;
+  out[15] = 1;
+  return out;
+}
+/**
+ * Transpose the values of a mat4
+ *
+ * @param {mat4} out the receiving matrix
+ * @param {mat4} a the source matrix
+ * @returns {mat4} out
+ */
+
+
+function transpose(out, a) {
+  // If we are transposing ourselves we can skip a few steps but have to cache some values
+  if (out === a) {
+    var a01 = a[1],
+        a02 = a[2],
+        a03 = a[3];
+    var a12 = a[6],
+        a13 = a[7];
+    var a23 = a[11];
+    out[1] = a[4];
+    out[2] = a[8];
+    out[3] = a[12];
+    out[4] = a01;
+    out[6] = a[9];
+    out[7] = a[13];
+    out[8] = a02;
+    out[9] = a12;
+    out[11] = a[14];
+    out[12] = a03;
+    out[13] = a13;
+    out[14] = a23;
+  } else {
+    out[0] = a[0];
+    out[1] = a[4];
+    out[2] = a[8];
+    out[3] = a[12];
+    out[4] = a[1];
+    out[5] = a[5];
+    out[6] = a[9];
+    out[7] = a[13];
+    out[8] = a[2];
+    out[9] = a[6];
+    out[10] = a[10];
+    out[11] = a[14];
+    out[12] = a[3];
+    out[13] = a[7];
+    out[14] = a[11];
+    out[15] = a[15];
+  }
+
+  return out;
+}
+/**
+ * Inverts a mat4
+ *
+ * @param {mat4} out the receiving matrix
+ * @param {mat4} a the source matrix
+ * @returns {mat4} out
+ */
+
+
+function invert(out, a) {
+  var a00 = a[0],
+      a01 = a[1],
+      a02 = a[2],
+      a03 = a[3];
+  var a10 = a[4],
+      a11 = a[5],
+      a12 = a[6],
+      a13 = a[7];
+  var a20 = a[8],
+      a21 = a[9],
+      a22 = a[10],
+      a23 = a[11];
+  var a30 = a[12],
+      a31 = a[13],
+      a32 = a[14],
+      a33 = a[15];
+  var b00 = a00 * a11 - a01 * a10;
+  var b01 = a00 * a12 - a02 * a10;
+  var b02 = a00 * a13 - a03 * a10;
+  var b03 = a01 * a12 - a02 * a11;
+  var b04 = a01 * a13 - a03 * a11;
+  var b05 = a02 * a13 - a03 * a12;
+  var b06 = a20 * a31 - a21 * a30;
+  var b07 = a20 * a32 - a22 * a30;
+  var b08 = a20 * a33 - a23 * a30;
+  var b09 = a21 * a32 - a22 * a31;
+  var b10 = a21 * a33 - a23 * a31;
+  var b11 = a22 * a33 - a23 * a32; // Calculate the determinant
+
+  var det = b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
+
+  if (!det) {
+    return null;
+  }
+
+  det = 1.0 / det;
+  out[0] = (a11 * b11 - a12 * b10 + a13 * b09) * det;
+  out[1] = (a02 * b10 - a01 * b11 - a03 * b09) * det;
+  out[2] = (a31 * b05 - a32 * b04 + a33 * b03) * det;
+  out[3] = (a22 * b04 - a21 * b05 - a23 * b03) * det;
+  out[4] = (a12 * b08 - a10 * b11 - a13 * b07) * det;
+  out[5] = (a00 * b11 - a02 * b08 + a03 * b07) * det;
+  out[6] = (a32 * b02 - a30 * b05 - a33 * b01) * det;
+  out[7] = (a20 * b05 - a22 * b02 + a23 * b01) * det;
+  out[8] = (a10 * b10 - a11 * b08 + a13 * b06) * det;
+  out[9] = (a01 * b08 - a00 * b10 - a03 * b06) * det;
+  out[10] = (a30 * b04 - a31 * b02 + a33 * b00) * det;
+  out[11] = (a21 * b02 - a20 * b04 - a23 * b00) * det;
+  out[12] = (a11 * b07 - a10 * b09 - a12 * b06) * det;
+  out[13] = (a00 * b09 - a01 * b07 + a02 * b06) * det;
+  out[14] = (a31 * b01 - a30 * b03 - a32 * b00) * det;
+  out[15] = (a20 * b03 - a21 * b01 + a22 * b00) * det;
+  return out;
+}
+/**
+ * Calculates the adjugate of a mat4
+ *
+ * @param {mat4} out the receiving matrix
+ * @param {mat4} a the source matrix
+ * @returns {mat4} out
+ */
+
+
+function adjoint(out, a) {
+  var a00 = a[0],
+      a01 = a[1],
+      a02 = a[2],
+      a03 = a[3];
+  var a10 = a[4],
+      a11 = a[5],
+      a12 = a[6],
+      a13 = a[7];
+  var a20 = a[8],
+      a21 = a[9],
+      a22 = a[10],
+      a23 = a[11];
+  var a30 = a[12],
+      a31 = a[13],
+      a32 = a[14],
+      a33 = a[15];
+  out[0] = a11 * (a22 * a33 - a23 * a32) - a21 * (a12 * a33 - a13 * a32) + a31 * (a12 * a23 - a13 * a22);
+  out[1] = -(a01 * (a22 * a33 - a23 * a32) - a21 * (a02 * a33 - a03 * a32) + a31 * (a02 * a23 - a03 * a22));
+  out[2] = a01 * (a12 * a33 - a13 * a32) - a11 * (a02 * a33 - a03 * a32) + a31 * (a02 * a13 - a03 * a12);
+  out[3] = -(a01 * (a12 * a23 - a13 * a22) - a11 * (a02 * a23 - a03 * a22) + a21 * (a02 * a13 - a03 * a12));
+  out[4] = -(a10 * (a22 * a33 - a23 * a32) - a20 * (a12 * a33 - a13 * a32) + a30 * (a12 * a23 - a13 * a22));
+  out[5] = a00 * (a22 * a33 - a23 * a32) - a20 * (a02 * a33 - a03 * a32) + a30 * (a02 * a23 - a03 * a22);
+  out[6] = -(a00 * (a12 * a33 - a13 * a32) - a10 * (a02 * a33 - a03 * a32) + a30 * (a02 * a13 - a03 * a12));
+  out[7] = a00 * (a12 * a23 - a13 * a22) - a10 * (a02 * a23 - a03 * a22) + a20 * (a02 * a13 - a03 * a12);
+  out[8] = a10 * (a21 * a33 - a23 * a31) - a20 * (a11 * a33 - a13 * a31) + a30 * (a11 * a23 - a13 * a21);
+  out[9] = -(a00 * (a21 * a33 - a23 * a31) - a20 * (a01 * a33 - a03 * a31) + a30 * (a01 * a23 - a03 * a21));
+  out[10] = a00 * (a11 * a33 - a13 * a31) - a10 * (a01 * a33 - a03 * a31) + a30 * (a01 * a13 - a03 * a11);
+  out[11] = -(a00 * (a11 * a23 - a13 * a21) - a10 * (a01 * a23 - a03 * a21) + a20 * (a01 * a13 - a03 * a11));
+  out[12] = -(a10 * (a21 * a32 - a22 * a31) - a20 * (a11 * a32 - a12 * a31) + a30 * (a11 * a22 - a12 * a21));
+  out[13] = a00 * (a21 * a32 - a22 * a31) - a20 * (a01 * a32 - a02 * a31) + a30 * (a01 * a22 - a02 * a21);
+  out[14] = -(a00 * (a11 * a32 - a12 * a31) - a10 * (a01 * a32 - a02 * a31) + a30 * (a01 * a12 - a02 * a11));
+  out[15] = a00 * (a11 * a22 - a12 * a21) - a10 * (a01 * a22 - a02 * a21) + a20 * (a01 * a12 - a02 * a11);
+  return out;
+}
+/**
+ * Calculates the determinant of a mat4
+ *
+ * @param {mat4} a the source matrix
+ * @returns {Number} determinant of a
+ */
+
+
+function determinant(a) {
+  var a00 = a[0],
+      a01 = a[1],
+      a02 = a[2],
+      a03 = a[3];
+  var a10 = a[4],
+      a11 = a[5],
+      a12 = a[6],
+      a13 = a[7];
+  var a20 = a[8],
+      a21 = a[9],
+      a22 = a[10],
+      a23 = a[11];
+  var a30 = a[12],
+      a31 = a[13],
+      a32 = a[14],
+      a33 = a[15];
+  var b00 = a00 * a11 - a01 * a10;
+  var b01 = a00 * a12 - a02 * a10;
+  var b02 = a00 * a13 - a03 * a10;
+  var b03 = a01 * a12 - a02 * a11;
+  var b04 = a01 * a13 - a03 * a11;
+  var b05 = a02 * a13 - a03 * a12;
+  var b06 = a20 * a31 - a21 * a30;
+  var b07 = a20 * a32 - a22 * a30;
+  var b08 = a20 * a33 - a23 * a30;
+  var b09 = a21 * a32 - a22 * a31;
+  var b10 = a21 * a33 - a23 * a31;
+  var b11 = a22 * a33 - a23 * a32; // Calculate the determinant
+
+  return b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
+}
+/**
+ * Multiplies two mat4s
+ *
+ * @param {mat4} out the receiving matrix
+ * @param {mat4} a the first operand
+ * @param {mat4} b the second operand
+ * @returns {mat4} out
+ */
+
+
+function multiply(out, a, b) {
+  var a00 = a[0],
+      a01 = a[1],
+      a02 = a[2],
+      a03 = a[3];
+  var a10 = a[4],
+      a11 = a[5],
+      a12 = a[6],
+      a13 = a[7];
+  var a20 = a[8],
+      a21 = a[9],
+      a22 = a[10],
+      a23 = a[11];
+  var a30 = a[12],
+      a31 = a[13],
+      a32 = a[14],
+      a33 = a[15]; // Cache only the current line of the second matrix
+
+  var b0 = b[0],
+      b1 = b[1],
+      b2 = b[2],
+      b3 = b[3];
+  out[0] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30;
+  out[1] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31;
+  out[2] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32;
+  out[3] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33;
+  b0 = b[4];
+  b1 = b[5];
+  b2 = b[6];
+  b3 = b[7];
+  out[4] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30;
+  out[5] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31;
+  out[6] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32;
+  out[7] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33;
+  b0 = b[8];
+  b1 = b[9];
+  b2 = b[10];
+  b3 = b[11];
+  out[8] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30;
+  out[9] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31;
+  out[10] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32;
+  out[11] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33;
+  b0 = b[12];
+  b1 = b[13];
+  b2 = b[14];
+  b3 = b[15];
+  out[12] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30;
+  out[13] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31;
+  out[14] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32;
+  out[15] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33;
+  return out;
+}
+/**
+ * Translate a mat4 by the given vector
+ *
+ * @param {mat4} out the receiving matrix
+ * @param {mat4} a the matrix to translate
+ * @param {vec3} v vector to translate by
+ * @returns {mat4} out
+ */
+
+
+function translate(out, a, v) {
+  var x = v[0],
+      y = v[1],
+      z = v[2];
+  var a00, a01, a02, a03;
+  var a10, a11, a12, a13;
+  var a20, a21, a22, a23;
+
+  if (a === out) {
+    out[12] = a[0] * x + a[4] * y + a[8] * z + a[12];
+    out[13] = a[1] * x + a[5] * y + a[9] * z + a[13];
+    out[14] = a[2] * x + a[6] * y + a[10] * z + a[14];
+    out[15] = a[3] * x + a[7] * y + a[11] * z + a[15];
+  } else {
+    a00 = a[0];
+    a01 = a[1];
+    a02 = a[2];
+    a03 = a[3];
+    a10 = a[4];
+    a11 = a[5];
+    a12 = a[6];
+    a13 = a[7];
+    a20 = a[8];
+    a21 = a[9];
+    a22 = a[10];
+    a23 = a[11];
+    out[0] = a00;
+    out[1] = a01;
+    out[2] = a02;
+    out[3] = a03;
+    out[4] = a10;
+    out[5] = a11;
+    out[6] = a12;
+    out[7] = a13;
+    out[8] = a20;
+    out[9] = a21;
+    out[10] = a22;
+    out[11] = a23;
+    out[12] = a00 * x + a10 * y + a20 * z + a[12];
+    out[13] = a01 * x + a11 * y + a21 * z + a[13];
+    out[14] = a02 * x + a12 * y + a22 * z + a[14];
+    out[15] = a03 * x + a13 * y + a23 * z + a[15];
+  }
+
+  return out;
+}
+/**
+ * Scales the mat4 by the dimensions in the given vec3 not using vectorization
+ *
+ * @param {mat4} out the receiving matrix
+ * @param {mat4} a the matrix to scale
+ * @param {vec3} v the vec3 to scale the matrix by
+ * @returns {mat4} out
+ **/
+
+
+function scale(out, a, v) {
+  var x = v[0],
+      y = v[1],
+      z = v[2];
+  out[0] = a[0] * x;
+  out[1] = a[1] * x;
+  out[2] = a[2] * x;
+  out[3] = a[3] * x;
+  out[4] = a[4] * y;
+  out[5] = a[5] * y;
+  out[6] = a[6] * y;
+  out[7] = a[7] * y;
+  out[8] = a[8] * z;
+  out[9] = a[9] * z;
+  out[10] = a[10] * z;
+  out[11] = a[11] * z;
+  out[12] = a[12];
+  out[13] = a[13];
+  out[14] = a[14];
+  out[15] = a[15];
+  return out;
+}
+/**
+ * Rotates a mat4 by the given angle around the given axis
+ *
+ * @param {mat4} out the receiving matrix
+ * @param {mat4} a the matrix to rotate
+ * @param {Number} rad the angle to rotate the matrix by
+ * @param {vec3} axis the axis to rotate around
+ * @returns {mat4} out
+ */
+
+
+function rotate(out, a, rad, axis) {
+  var x = axis[0],
+      y = axis[1],
+      z = axis[2];
+  var len = Math.sqrt(x * x + y * y + z * z);
+  var s, c, t;
+  var a00, a01, a02, a03;
+  var a10, a11, a12, a13;
+  var a20, a21, a22, a23;
+  var b00, b01, b02;
+  var b10, b11, b12;
+  var b20, b21, b22;
+
+  if (len < glMatrix.EPSILON) {
+    return null;
+  }
+
+  len = 1 / len;
+  x *= len;
+  y *= len;
+  z *= len;
+  s = Math.sin(rad);
+  c = Math.cos(rad);
+  t = 1 - c;
+  a00 = a[0];
+  a01 = a[1];
+  a02 = a[2];
+  a03 = a[3];
+  a10 = a[4];
+  a11 = a[5];
+  a12 = a[6];
+  a13 = a[7];
+  a20 = a[8];
+  a21 = a[9];
+  a22 = a[10];
+  a23 = a[11]; // Construct the elements of the rotation matrix
+
+  b00 = x * x * t + c;
+  b01 = y * x * t + z * s;
+  b02 = z * x * t - y * s;
+  b10 = x * y * t - z * s;
+  b11 = y * y * t + c;
+  b12 = z * y * t + x * s;
+  b20 = x * z * t + y * s;
+  b21 = y * z * t - x * s;
+  b22 = z * z * t + c; // Perform rotation-specific matrix multiplication
+
+  out[0] = a00 * b00 + a10 * b01 + a20 * b02;
+  out[1] = a01 * b00 + a11 * b01 + a21 * b02;
+  out[2] = a02 * b00 + a12 * b01 + a22 * b02;
+  out[3] = a03 * b00 + a13 * b01 + a23 * b02;
+  out[4] = a00 * b10 + a10 * b11 + a20 * b12;
+  out[5] = a01 * b10 + a11 * b11 + a21 * b12;
+  out[6] = a02 * b10 + a12 * b11 + a22 * b12;
+  out[7] = a03 * b10 + a13 * b11 + a23 * b12;
+  out[8] = a00 * b20 + a10 * b21 + a20 * b22;
+  out[9] = a01 * b20 + a11 * b21 + a21 * b22;
+  out[10] = a02 * b20 + a12 * b21 + a22 * b22;
+  out[11] = a03 * b20 + a13 * b21 + a23 * b22;
+
+  if (a !== out) {
+    // If the source and destination differ, copy the unchanged last row
+    out[12] = a[12];
+    out[13] = a[13];
+    out[14] = a[14];
+    out[15] = a[15];
+  }
+
+  return out;
+}
+/**
+ * Rotates a matrix by the given angle around the X axis
+ *
+ * @param {mat4} out the receiving matrix
+ * @param {mat4} a the matrix to rotate
+ * @param {Number} rad the angle to rotate the matrix by
+ * @returns {mat4} out
+ */
+
+
+function rotateX(out, a, rad) {
+  var s = Math.sin(rad);
+  var c = Math.cos(rad);
+  var a10 = a[4];
+  var a11 = a[5];
+  var a12 = a[6];
+  var a13 = a[7];
+  var a20 = a[8];
+  var a21 = a[9];
+  var a22 = a[10];
+  var a23 = a[11];
+
+  if (a !== out) {
+    // If the source and destination differ, copy the unchanged rows
+    out[0] = a[0];
+    out[1] = a[1];
+    out[2] = a[2];
+    out[3] = a[3];
+    out[12] = a[12];
+    out[13] = a[13];
+    out[14] = a[14];
+    out[15] = a[15];
+  } // Perform axis-specific matrix multiplication
+
+
+  out[4] = a10 * c + a20 * s;
+  out[5] = a11 * c + a21 * s;
+  out[6] = a12 * c + a22 * s;
+  out[7] = a13 * c + a23 * s;
+  out[8] = a20 * c - a10 * s;
+  out[9] = a21 * c - a11 * s;
+  out[10] = a22 * c - a12 * s;
+  out[11] = a23 * c - a13 * s;
+  return out;
+}
+/**
+ * Rotates a matrix by the given angle around the Y axis
+ *
+ * @param {mat4} out the receiving matrix
+ * @param {mat4} a the matrix to rotate
+ * @param {Number} rad the angle to rotate the matrix by
+ * @returns {mat4} out
+ */
+
+
+function rotateY(out, a, rad) {
+  var s = Math.sin(rad);
+  var c = Math.cos(rad);
+  var a00 = a[0];
+  var a01 = a[1];
+  var a02 = a[2];
+  var a03 = a[3];
+  var a20 = a[8];
+  var a21 = a[9];
+  var a22 = a[10];
+  var a23 = a[11];
+
+  if (a !== out) {
+    // If the source and destination differ, copy the unchanged rows
+    out[4] = a[4];
+    out[5] = a[5];
+    out[6] = a[6];
+    out[7] = a[7];
+    out[12] = a[12];
+    out[13] = a[13];
+    out[14] = a[14];
+    out[15] = a[15];
+  } // Perform axis-specific matrix multiplication
+
+
+  out[0] = a00 * c - a20 * s;
+  out[1] = a01 * c - a21 * s;
+  out[2] = a02 * c - a22 * s;
+  out[3] = a03 * c - a23 * s;
+  out[8] = a00 * s + a20 * c;
+  out[9] = a01 * s + a21 * c;
+  out[10] = a02 * s + a22 * c;
+  out[11] = a03 * s + a23 * c;
+  return out;
+}
+/**
+ * Rotates a matrix by the given angle around the Z axis
+ *
+ * @param {mat4} out the receiving matrix
+ * @param {mat4} a the matrix to rotate
+ * @param {Number} rad the angle to rotate the matrix by
+ * @returns {mat4} out
+ */
+
+
+function rotateZ(out, a, rad) {
+  var s = Math.sin(rad);
+  var c = Math.cos(rad);
+  var a00 = a[0];
+  var a01 = a[1];
+  var a02 = a[2];
+  var a03 = a[3];
+  var a10 = a[4];
+  var a11 = a[5];
+  var a12 = a[6];
+  var a13 = a[7];
+
+  if (a !== out) {
+    // If the source and destination differ, copy the unchanged last row
+    out[8] = a[8];
+    out[9] = a[9];
+    out[10] = a[10];
+    out[11] = a[11];
+    out[12] = a[12];
+    out[13] = a[13];
+    out[14] = a[14];
+    out[15] = a[15];
+  } // Perform axis-specific matrix multiplication
+
+
+  out[0] = a00 * c + a10 * s;
+  out[1] = a01 * c + a11 * s;
+  out[2] = a02 * c + a12 * s;
+  out[3] = a03 * c + a13 * s;
+  out[4] = a10 * c - a00 * s;
+  out[5] = a11 * c - a01 * s;
+  out[6] = a12 * c - a02 * s;
+  out[7] = a13 * c - a03 * s;
+  return out;
+}
+/**
+ * Creates a matrix from a vector translation
+ * This is equivalent to (but much faster than):
+ *
+ *     mat4.identity(dest);
+ *     mat4.translate(dest, dest, vec);
+ *
+ * @param {mat4} out mat4 receiving operation result
+ * @param {vec3} v Translation vector
+ * @returns {mat4} out
+ */
+
+
+function fromTranslation(out, v) {
+  out[0] = 1;
+  out[1] = 0;
+  out[2] = 0;
+  out[3] = 0;
+  out[4] = 0;
+  out[5] = 1;
+  out[6] = 0;
+  out[7] = 0;
+  out[8] = 0;
+  out[9] = 0;
+  out[10] = 1;
+  out[11] = 0;
+  out[12] = v[0];
+  out[13] = v[1];
+  out[14] = v[2];
+  out[15] = 1;
+  return out;
+}
+/**
+ * Creates a matrix from a vector scaling
+ * This is equivalent to (but much faster than):
+ *
+ *     mat4.identity(dest);
+ *     mat4.scale(dest, dest, vec);
+ *
+ * @param {mat4} out mat4 receiving operation result
+ * @param {vec3} v Scaling vector
+ * @returns {mat4} out
+ */
+
+
+function fromScaling(out, v) {
+  out[0] = v[0];
+  out[1] = 0;
+  out[2] = 0;
+  out[3] = 0;
+  out[4] = 0;
+  out[5] = v[1];
+  out[6] = 0;
+  out[7] = 0;
+  out[8] = 0;
+  out[9] = 0;
+  out[10] = v[2];
+  out[11] = 0;
+  out[12] = 0;
+  out[13] = 0;
+  out[14] = 0;
+  out[15] = 1;
+  return out;
+}
+/**
+ * Creates a matrix from a given angle around a given axis
+ * This is equivalent to (but much faster than):
+ *
+ *     mat4.identity(dest);
+ *     mat4.rotate(dest, dest, rad, axis);
+ *
+ * @param {mat4} out mat4 receiving operation result
+ * @param {Number} rad the angle to rotate the matrix by
+ * @param {vec3} axis the axis to rotate around
+ * @returns {mat4} out
+ */
+
+
+function fromRotation(out, rad, axis) {
+  var x = axis[0],
+      y = axis[1],
+      z = axis[2];
+  var len = Math.sqrt(x * x + y * y + z * z);
+  var s, c, t;
+
+  if (len < glMatrix.EPSILON) {
+    return null;
+  }
+
+  len = 1 / len;
+  x *= len;
+  y *= len;
+  z *= len;
+  s = Math.sin(rad);
+  c = Math.cos(rad);
+  t = 1 - c; // Perform rotation-specific matrix multiplication
+
+  out[0] = x * x * t + c;
+  out[1] = y * x * t + z * s;
+  out[2] = z * x * t - y * s;
+  out[3] = 0;
+  out[4] = x * y * t - z * s;
+  out[5] = y * y * t + c;
+  out[6] = z * y * t + x * s;
+  out[7] = 0;
+  out[8] = x * z * t + y * s;
+  out[9] = y * z * t - x * s;
+  out[10] = z * z * t + c;
+  out[11] = 0;
+  out[12] = 0;
+  out[13] = 0;
+  out[14] = 0;
+  out[15] = 1;
+  return out;
+}
+/**
+ * Creates a matrix from the given angle around the X axis
+ * This is equivalent to (but much faster than):
+ *
+ *     mat4.identity(dest);
+ *     mat4.rotateX(dest, dest, rad);
+ *
+ * @param {mat4} out mat4 receiving operation result
+ * @param {Number} rad the angle to rotate the matrix by
+ * @returns {mat4} out
+ */
+
+
+function fromXRotation(out, rad) {
+  var s = Math.sin(rad);
+  var c = Math.cos(rad); // Perform axis-specific matrix multiplication
+
+  out[0] = 1;
+  out[1] = 0;
+  out[2] = 0;
+  out[3] = 0;
+  out[4] = 0;
+  out[5] = c;
+  out[6] = s;
+  out[7] = 0;
+  out[8] = 0;
+  out[9] = -s;
+  out[10] = c;
+  out[11] = 0;
+  out[12] = 0;
+  out[13] = 0;
+  out[14] = 0;
+  out[15] = 1;
+  return out;
+}
+/**
+ * Creates a matrix from the given angle around the Y axis
+ * This is equivalent to (but much faster than):
+ *
+ *     mat4.identity(dest);
+ *     mat4.rotateY(dest, dest, rad);
+ *
+ * @param {mat4} out mat4 receiving operation result
+ * @param {Number} rad the angle to rotate the matrix by
+ * @returns {mat4} out
+ */
+
+
+function fromYRotation(out, rad) {
+  var s = Math.sin(rad);
+  var c = Math.cos(rad); // Perform axis-specific matrix multiplication
+
+  out[0] = c;
+  out[1] = 0;
+  out[2] = -s;
+  out[3] = 0;
+  out[4] = 0;
+  out[5] = 1;
+  out[6] = 0;
+  out[7] = 0;
+  out[8] = s;
+  out[9] = 0;
+  out[10] = c;
+  out[11] = 0;
+  out[12] = 0;
+  out[13] = 0;
+  out[14] = 0;
+  out[15] = 1;
+  return out;
+}
+/**
+ * Creates a matrix from the given angle around the Z axis
+ * This is equivalent to (but much faster than):
+ *
+ *     mat4.identity(dest);
+ *     mat4.rotateZ(dest, dest, rad);
+ *
+ * @param {mat4} out mat4 receiving operation result
+ * @param {Number} rad the angle to rotate the matrix by
+ * @returns {mat4} out
+ */
+
+
+function fromZRotation(out, rad) {
+  var s = Math.sin(rad);
+  var c = Math.cos(rad); // Perform axis-specific matrix multiplication
+
+  out[0] = c;
+  out[1] = s;
+  out[2] = 0;
+  out[3] = 0;
+  out[4] = -s;
+  out[5] = c;
+  out[6] = 0;
+  out[7] = 0;
+  out[8] = 0;
+  out[9] = 0;
+  out[10] = 1;
+  out[11] = 0;
+  out[12] = 0;
+  out[13] = 0;
+  out[14] = 0;
+  out[15] = 1;
+  return out;
+}
+/**
+ * Creates a matrix from a quaternion rotation and vector translation
+ * This is equivalent to (but much faster than):
+ *
+ *     mat4.identity(dest);
+ *     mat4.translate(dest, vec);
+ *     let quatMat = mat4.create();
+ *     quat4.toMat4(quat, quatMat);
+ *     mat4.multiply(dest, quatMat);
+ *
+ * @param {mat4} out mat4 receiving operation result
+ * @param {quat4} q Rotation quaternion
+ * @param {vec3} v Translation vector
+ * @returns {mat4} out
+ */
+
+
+function fromRotationTranslation(out, q, v) {
+  // Quaternion math
+  var x = q[0],
+      y = q[1],
+      z = q[2],
+      w = q[3];
+  var x2 = x + x;
+  var y2 = y + y;
+  var z2 = z + z;
+  var xx = x * x2;
+  var xy = x * y2;
+  var xz = x * z2;
+  var yy = y * y2;
+  var yz = y * z2;
+  var zz = z * z2;
+  var wx = w * x2;
+  var wy = w * y2;
+  var wz = w * z2;
+  out[0] = 1 - (yy + zz);
+  out[1] = xy + wz;
+  out[2] = xz - wy;
+  out[3] = 0;
+  out[4] = xy - wz;
+  out[5] = 1 - (xx + zz);
+  out[6] = yz + wx;
+  out[7] = 0;
+  out[8] = xz + wy;
+  out[9] = yz - wx;
+  out[10] = 1 - (xx + yy);
+  out[11] = 0;
+  out[12] = v[0];
+  out[13] = v[1];
+  out[14] = v[2];
+  out[15] = 1;
+  return out;
+}
+/**
+ * Creates a new mat4 from a dual quat.
+ *
+ * @param {mat4} out Matrix
+ * @param {quat2} a Dual Quaternion
+ * @returns {mat4} mat4 receiving operation result
+ */
+
+
+function fromQuat2(out, a) {
+  var translation = new glMatrix.ARRAY_TYPE(3);
+  var bx = -a[0],
+      by = -a[1],
+      bz = -a[2],
+      bw = a[3],
+      ax = a[4],
+      ay = a[5],
+      az = a[6],
+      aw = a[7];
+  var magnitude = bx * bx + by * by + bz * bz + bw * bw; //Only scale if it makes sense
+
+  if (magnitude > 0) {
+    translation[0] = (ax * bw + aw * bx + ay * bz - az * by) * 2 / magnitude;
+    translation[1] = (ay * bw + aw * by + az * bx - ax * bz) * 2 / magnitude;
+    translation[2] = (az * bw + aw * bz + ax * by - ay * bx) * 2 / magnitude;
+  } else {
+    translation[0] = (ax * bw + aw * bx + ay * bz - az * by) * 2;
+    translation[1] = (ay * bw + aw * by + az * bx - ax * bz) * 2;
+    translation[2] = (az * bw + aw * bz + ax * by - ay * bx) * 2;
+  }
+
+  fromRotationTranslation(out, a, translation);
+  return out;
+}
+/**
+ * Returns the translation vector component of a transformation
+ *  matrix. If a matrix is built with fromRotationTranslation,
+ *  the returned vector will be the same as the translation vector
+ *  originally supplied.
+ * @param  {vec3} out Vector to receive translation component
+ * @param  {mat4} mat Matrix to be decomposed (input)
+ * @return {vec3} out
+ */
+
+
+function getTranslation(out, mat) {
+  out[0] = mat[12];
+  out[1] = mat[13];
+  out[2] = mat[14];
+  return out;
+}
+/**
+ * Returns the scaling factor component of a transformation
+ *  matrix. If a matrix is built with fromRotationTranslationScale
+ *  with a normalized Quaternion paramter, the returned vector will be
+ *  the same as the scaling vector
+ *  originally supplied.
+ * @param  {vec3} out Vector to receive scaling factor component
+ * @param  {mat4} mat Matrix to be decomposed (input)
+ * @return {vec3} out
+ */
+
+
+function getScaling(out, mat) {
+  var m11 = mat[0];
+  var m12 = mat[1];
+  var m13 = mat[2];
+  var m21 = mat[4];
+  var m22 = mat[5];
+  var m23 = mat[6];
+  var m31 = mat[8];
+  var m32 = mat[9];
+  var m33 = mat[10];
+  out[0] = Math.sqrt(m11 * m11 + m12 * m12 + m13 * m13);
+  out[1] = Math.sqrt(m21 * m21 + m22 * m22 + m23 * m23);
+  out[2] = Math.sqrt(m31 * m31 + m32 * m32 + m33 * m33);
+  return out;
+}
+/**
+ * Returns a quaternion representing the rotational component
+ *  of a transformation matrix. If a matrix is built with
+ *  fromRotationTranslation, the returned quaternion will be the
+ *  same as the quaternion originally supplied.
+ * @param {quat} out Quaternion to receive the rotation component
+ * @param {mat4} mat Matrix to be decomposed (input)
+ * @return {quat} out
+ */
+
+
+function getRotation(out, mat) {
+  // Algorithm taken from http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/index.htm
+  var trace = mat[0] + mat[5] + mat[10];
+  var S = 0;
+
+  if (trace > 0) {
+    S = Math.sqrt(trace + 1.0) * 2;
+    out[3] = 0.25 * S;
+    out[0] = (mat[6] - mat[9]) / S;
+    out[1] = (mat[8] - mat[2]) / S;
+    out[2] = (mat[1] - mat[4]) / S;
+  } else if (mat[0] > mat[5] && mat[0] > mat[10]) {
+    S = Math.sqrt(1.0 + mat[0] - mat[5] - mat[10]) * 2;
+    out[3] = (mat[6] - mat[9]) / S;
+    out[0] = 0.25 * S;
+    out[1] = (mat[1] + mat[4]) / S;
+    out[2] = (mat[8] + mat[2]) / S;
+  } else if (mat[5] > mat[10]) {
+    S = Math.sqrt(1.0 + mat[5] - mat[0] - mat[10]) * 2;
+    out[3] = (mat[8] - mat[2]) / S;
+    out[0] = (mat[1] + mat[4]) / S;
+    out[1] = 0.25 * S;
+    out[2] = (mat[6] + mat[9]) / S;
+  } else {
+    S = Math.sqrt(1.0 + mat[10] - mat[0] - mat[5]) * 2;
+    out[3] = (mat[1] - mat[4]) / S;
+    out[0] = (mat[8] + mat[2]) / S;
+    out[1] = (mat[6] + mat[9]) / S;
+    out[2] = 0.25 * S;
+  }
+
+  return out;
+}
+/**
+ * Creates a matrix from a quaternion rotation, vector translation and vector scale
+ * This is equivalent to (but much faster than):
+ *
+ *     mat4.identity(dest);
+ *     mat4.translate(dest, vec);
+ *     let quatMat = mat4.create();
+ *     quat4.toMat4(quat, quatMat);
+ *     mat4.multiply(dest, quatMat);
+ *     mat4.scale(dest, scale)
+ *
+ * @param {mat4} out mat4 receiving operation result
+ * @param {quat4} q Rotation quaternion
+ * @param {vec3} v Translation vector
+ * @param {vec3} s Scaling vector
+ * @returns {mat4} out
+ */
+
+
+function fromRotationTranslationScale(out, q, v, s) {
+  // Quaternion math
+  var x = q[0],
+      y = q[1],
+      z = q[2],
+      w = q[3];
+  var x2 = x + x;
+  var y2 = y + y;
+  var z2 = z + z;
+  var xx = x * x2;
+  var xy = x * y2;
+  var xz = x * z2;
+  var yy = y * y2;
+  var yz = y * z2;
+  var zz = z * z2;
+  var wx = w * x2;
+  var wy = w * y2;
+  var wz = w * z2;
+  var sx = s[0];
+  var sy = s[1];
+  var sz = s[2];
+  out[0] = (1 - (yy + zz)) * sx;
+  out[1] = (xy + wz) * sx;
+  out[2] = (xz - wy) * sx;
+  out[3] = 0;
+  out[4] = (xy - wz) * sy;
+  out[5] = (1 - (xx + zz)) * sy;
+  out[6] = (yz + wx) * sy;
+  out[7] = 0;
+  out[8] = (xz + wy) * sz;
+  out[9] = (yz - wx) * sz;
+  out[10] = (1 - (xx + yy)) * sz;
+  out[11] = 0;
+  out[12] = v[0];
+  out[13] = v[1];
+  out[14] = v[2];
+  out[15] = 1;
+  return out;
+}
+/**
+ * Creates a matrix from a quaternion rotation, vector translation and vector scale, rotating and scaling around the given origin
+ * This is equivalent to (but much faster than):
+ *
+ *     mat4.identity(dest);
+ *     mat4.translate(dest, vec);
+ *     mat4.translate(dest, origin);
+ *     let quatMat = mat4.create();
+ *     quat4.toMat4(quat, quatMat);
+ *     mat4.multiply(dest, quatMat);
+ *     mat4.scale(dest, scale)
+ *     mat4.translate(dest, negativeOrigin);
+ *
+ * @param {mat4} out mat4 receiving operation result
+ * @param {quat4} q Rotation quaternion
+ * @param {vec3} v Translation vector
+ * @param {vec3} s Scaling vector
+ * @param {vec3} o The origin vector around which to scale and rotate
+ * @returns {mat4} out
+ */
+
+
+function fromRotationTranslationScaleOrigin(out, q, v, s, o) {
+  // Quaternion math
+  var x = q[0],
+      y = q[1],
+      z = q[2],
+      w = q[3];
+  var x2 = x + x;
+  var y2 = y + y;
+  var z2 = z + z;
+  var xx = x * x2;
+  var xy = x * y2;
+  var xz = x * z2;
+  var yy = y * y2;
+  var yz = y * z2;
+  var zz = z * z2;
+  var wx = w * x2;
+  var wy = w * y2;
+  var wz = w * z2;
+  var sx = s[0];
+  var sy = s[1];
+  var sz = s[2];
+  var ox = o[0];
+  var oy = o[1];
+  var oz = o[2];
+  var out0 = (1 - (yy + zz)) * sx;
+  var out1 = (xy + wz) * sx;
+  var out2 = (xz - wy) * sx;
+  var out4 = (xy - wz) * sy;
+  var out5 = (1 - (xx + zz)) * sy;
+  var out6 = (yz + wx) * sy;
+  var out8 = (xz + wy) * sz;
+  var out9 = (yz - wx) * sz;
+  var out10 = (1 - (xx + yy)) * sz;
+  out[0] = out0;
+  out[1] = out1;
+  out[2] = out2;
+  out[3] = 0;
+  out[4] = out4;
+  out[5] = out5;
+  out[6] = out6;
+  out[7] = 0;
+  out[8] = out8;
+  out[9] = out9;
+  out[10] = out10;
+  out[11] = 0;
+  out[12] = v[0] + ox - (out0 * ox + out4 * oy + out8 * oz);
+  out[13] = v[1] + oy - (out1 * ox + out5 * oy + out9 * oz);
+  out[14] = v[2] + oz - (out2 * ox + out6 * oy + out10 * oz);
+  out[15] = 1;
+  return out;
+}
+/**
+ * Calculates a 4x4 matrix from the given quaternion
+ *
+ * @param {mat4} out mat4 receiving operation result
+ * @param {quat} q Quaternion to create matrix from
+ *
+ * @returns {mat4} out
+ */
+
+
+function fromQuat(out, q) {
+  var x = q[0],
+      y = q[1],
+      z = q[2],
+      w = q[3];
+  var x2 = x + x;
+  var y2 = y + y;
+  var z2 = z + z;
+  var xx = x * x2;
+  var yx = y * x2;
+  var yy = y * y2;
+  var zx = z * x2;
+  var zy = z * y2;
+  var zz = z * z2;
+  var wx = w * x2;
+  var wy = w * y2;
+  var wz = w * z2;
+  out[0] = 1 - yy - zz;
+  out[1] = yx + wz;
+  out[2] = zx - wy;
+  out[3] = 0;
+  out[4] = yx - wz;
+  out[5] = 1 - xx - zz;
+  out[6] = zy + wx;
+  out[7] = 0;
+  out[8] = zx + wy;
+  out[9] = zy - wx;
+  out[10] = 1 - xx - yy;
+  out[11] = 0;
+  out[12] = 0;
+  out[13] = 0;
+  out[14] = 0;
+  out[15] = 1;
+  return out;
+}
+/**
+ * Generates a frustum matrix with the given bounds
+ *
+ * @param {mat4} out mat4 frustum matrix will be written into
+ * @param {Number} left Left bound of the frustum
+ * @param {Number} right Right bound of the frustum
+ * @param {Number} bottom Bottom bound of the frustum
+ * @param {Number} top Top bound of the frustum
+ * @param {Number} near Near bound of the frustum
+ * @param {Number} far Far bound of the frustum
+ * @returns {mat4} out
+ */
+
+
+function frustum(out, left, right, bottom, top, near, far) {
+  var rl = 1 / (right - left);
+  var tb = 1 / (top - bottom);
+  var nf = 1 / (near - far);
+  out[0] = near * 2 * rl;
+  out[1] = 0;
+  out[2] = 0;
+  out[3] = 0;
+  out[4] = 0;
+  out[5] = near * 2 * tb;
+  out[6] = 0;
+  out[7] = 0;
+  out[8] = (right + left) * rl;
+  out[9] = (top + bottom) * tb;
+  out[10] = (far + near) * nf;
+  out[11] = -1;
+  out[12] = 0;
+  out[13] = 0;
+  out[14] = far * near * 2 * nf;
+  out[15] = 0;
+  return out;
+}
+/**
+ * Generates a perspective projection matrix with the given bounds.
+ * Passing null/undefined/no value for far will generate infinite projection matrix.
+ *
+ * @param {mat4} out mat4 frustum matrix will be written into
+ * @param {number} fovy Vertical field of view in radians
+ * @param {number} aspect Aspect ratio. typically viewport width/height
+ * @param {number} near Near bound of the frustum
+ * @param {number} far Far bound of the frustum, can be null or Infinity
+ * @returns {mat4} out
+ */
+
+
+function perspective(out, fovy, aspect, near, far) {
+  var f = 1.0 / Math.tan(fovy / 2),
+      nf;
+  out[0] = f / aspect;
+  out[1] = 0;
+  out[2] = 0;
+  out[3] = 0;
+  out[4] = 0;
+  out[5] = f;
+  out[6] = 0;
+  out[7] = 0;
+  out[8] = 0;
+  out[9] = 0;
+  out[11] = -1;
+  out[12] = 0;
+  out[13] = 0;
+  out[15] = 0;
+
+  if (far != null && far !== Infinity) {
+    nf = 1 / (near - far);
+    out[10] = (far + near) * nf;
+    out[14] = 2 * far * near * nf;
+  } else {
+    out[10] = -1;
+    out[14] = -2 * near;
+  }
+
+  return out;
+}
+/**
+ * Generates a perspective projection matrix with the given field of view.
+ * This is primarily useful for generating projection matrices to be used
+ * with the still experiemental WebVR API.
+ *
+ * @param {mat4} out mat4 frustum matrix will be written into
+ * @param {Object} fov Object containing the following values: upDegrees, downDegrees, leftDegrees, rightDegrees
+ * @param {number} near Near bound of the frustum
+ * @param {number} far Far bound of the frustum
+ * @returns {mat4} out
+ */
+
+
+function perspectiveFromFieldOfView(out, fov, near, far) {
+  var upTan = Math.tan(fov.upDegrees * Math.PI / 180.0);
+  var downTan = Math.tan(fov.downDegrees * Math.PI / 180.0);
+  var leftTan = Math.tan(fov.leftDegrees * Math.PI / 180.0);
+  var rightTan = Math.tan(fov.rightDegrees * Math.PI / 180.0);
+  var xScale = 2.0 / (leftTan + rightTan);
+  var yScale = 2.0 / (upTan + downTan);
+  out[0] = xScale;
+  out[1] = 0.0;
+  out[2] = 0.0;
+  out[3] = 0.0;
+  out[4] = 0.0;
+  out[5] = yScale;
+  out[6] = 0.0;
+  out[7] = 0.0;
+  out[8] = -((leftTan - rightTan) * xScale * 0.5);
+  out[9] = (upTan - downTan) * yScale * 0.5;
+  out[10] = far / (near - far);
+  out[11] = -1.0;
+  out[12] = 0.0;
+  out[13] = 0.0;
+  out[14] = far * near / (near - far);
+  out[15] = 0.0;
+  return out;
+}
+/**
+ * Generates a orthogonal projection matrix with the given bounds
+ *
+ * @param {mat4} out mat4 frustum matrix will be written into
+ * @param {number} left Left bound of the frustum
+ * @param {number} right Right bound of the frustum
+ * @param {number} bottom Bottom bound of the frustum
+ * @param {number} top Top bound of the frustum
+ * @param {number} near Near bound of the frustum
+ * @param {number} far Far bound of the frustum
+ * @returns {mat4} out
+ */
+
+
+function ortho(out, left, right, bottom, top, near, far) {
+  var lr = 1 / (left - right);
+  var bt = 1 / (bottom - top);
+  var nf = 1 / (near - far);
+  out[0] = -2 * lr;
+  out[1] = 0;
+  out[2] = 0;
+  out[3] = 0;
+  out[4] = 0;
+  out[5] = -2 * bt;
+  out[6] = 0;
+  out[7] = 0;
+  out[8] = 0;
+  out[9] = 0;
+  out[10] = 2 * nf;
+  out[11] = 0;
+  out[12] = (left + right) * lr;
+  out[13] = (top + bottom) * bt;
+  out[14] = (far + near) * nf;
+  out[15] = 1;
+  return out;
+}
+/**
+ * Generates a look-at matrix with the given eye position, focal point, and up axis.
+ * If you want a matrix that actually makes an object look at another object, you should use targetTo instead.
+ *
+ * @param {mat4} out mat4 frustum matrix will be written into
+ * @param {vec3} eye Position of the viewer
+ * @param {vec3} center Point the viewer is looking at
+ * @param {vec3} up vec3 pointing up
+ * @returns {mat4} out
+ */
+
+
+function lookAt(out, eye, center, up) {
+  var x0, x1, x2, y0, y1, y2, z0, z1, z2, len;
+  var eyex = eye[0];
+  var eyey = eye[1];
+  var eyez = eye[2];
+  var upx = up[0];
+  var upy = up[1];
+  var upz = up[2];
+  var centerx = center[0];
+  var centery = center[1];
+  var centerz = center[2];
+
+  if (Math.abs(eyex - centerx) < glMatrix.EPSILON && Math.abs(eyey - centery) < glMatrix.EPSILON && Math.abs(eyez - centerz) < glMatrix.EPSILON) {
+    return identity(out);
+  }
+
+  z0 = eyex - centerx;
+  z1 = eyey - centery;
+  z2 = eyez - centerz;
+  len = 1 / Math.sqrt(z0 * z0 + z1 * z1 + z2 * z2);
+  z0 *= len;
+  z1 *= len;
+  z2 *= len;
+  x0 = upy * z2 - upz * z1;
+  x1 = upz * z0 - upx * z2;
+  x2 = upx * z1 - upy * z0;
+  len = Math.sqrt(x0 * x0 + x1 * x1 + x2 * x2);
+
+  if (!len) {
+    x0 = 0;
+    x1 = 0;
+    x2 = 0;
+  } else {
+    len = 1 / len;
+    x0 *= len;
+    x1 *= len;
+    x2 *= len;
+  }
+
+  y0 = z1 * x2 - z2 * x1;
+  y1 = z2 * x0 - z0 * x2;
+  y2 = z0 * x1 - z1 * x0;
+  len = Math.sqrt(y0 * y0 + y1 * y1 + y2 * y2);
+
+  if (!len) {
+    y0 = 0;
+    y1 = 0;
+    y2 = 0;
+  } else {
+    len = 1 / len;
+    y0 *= len;
+    y1 *= len;
+    y2 *= len;
+  }
+
+  out[0] = x0;
+  out[1] = y0;
+  out[2] = z0;
+  out[3] = 0;
+  out[4] = x1;
+  out[5] = y1;
+  out[6] = z1;
+  out[7] = 0;
+  out[8] = x2;
+  out[9] = y2;
+  out[10] = z2;
+  out[11] = 0;
+  out[12] = -(x0 * eyex + x1 * eyey + x2 * eyez);
+  out[13] = -(y0 * eyex + y1 * eyey + y2 * eyez);
+  out[14] = -(z0 * eyex + z1 * eyey + z2 * eyez);
+  out[15] = 1;
+  return out;
+}
+/**
+ * Generates a matrix that makes something look at something else.
+ *
+ * @param {mat4} out mat4 frustum matrix will be written into
+ * @param {vec3} eye Position of the viewer
+ * @param {vec3} center Point the viewer is looking at
+ * @param {vec3} up vec3 pointing up
+ * @returns {mat4} out
+ */
+
+
+function targetTo(out, eye, target, up) {
+  var eyex = eye[0],
+      eyey = eye[1],
+      eyez = eye[2],
+      upx = up[0],
+      upy = up[1],
+      upz = up[2];
+  var z0 = eyex - target[0],
+      z1 = eyey - target[1],
+      z2 = eyez - target[2];
+  var len = z0 * z0 + z1 * z1 + z2 * z2;
+
+  if (len > 0) {
+    len = 1 / Math.sqrt(len);
+    z0 *= len;
+    z1 *= len;
+    z2 *= len;
+  }
+
+  var x0 = upy * z2 - upz * z1,
+      x1 = upz * z0 - upx * z2,
+      x2 = upx * z1 - upy * z0;
+  len = x0 * x0 + x1 * x1 + x2 * x2;
+
+  if (len > 0) {
+    len = 1 / Math.sqrt(len);
+    x0 *= len;
+    x1 *= len;
+    x2 *= len;
+  }
+
+  out[0] = x0;
+  out[1] = x1;
+  out[2] = x2;
+  out[3] = 0;
+  out[4] = z1 * x2 - z2 * x1;
+  out[5] = z2 * x0 - z0 * x2;
+  out[6] = z0 * x1 - z1 * x0;
+  out[7] = 0;
+  out[8] = z0;
+  out[9] = z1;
+  out[10] = z2;
+  out[11] = 0;
+  out[12] = eyex;
+  out[13] = eyey;
+  out[14] = eyez;
+  out[15] = 1;
+  return out;
+}
+
+;
+/**
+ * Returns a string representation of a mat4
+ *
+ * @param {mat4} a matrix to represent as a string
+ * @returns {String} string representation of the matrix
+ */
+
+function str(a) {
+  return 'mat4(' + a[0] + ', ' + a[1] + ', ' + a[2] + ', ' + a[3] + ', ' + a[4] + ', ' + a[5] + ', ' + a[6] + ', ' + a[7] + ', ' + a[8] + ', ' + a[9] + ', ' + a[10] + ', ' + a[11] + ', ' + a[12] + ', ' + a[13] + ', ' + a[14] + ', ' + a[15] + ')';
+}
+/**
+ * Returns Frobenius norm of a mat4
+ *
+ * @param {mat4} a the matrix to calculate Frobenius norm of
+ * @returns {Number} Frobenius norm
+ */
+
+
+function frob(a) {
+  return Math.sqrt(Math.pow(a[0], 2) + Math.pow(a[1], 2) + Math.pow(a[2], 2) + Math.pow(a[3], 2) + Math.pow(a[4], 2) + Math.pow(a[5], 2) + Math.pow(a[6], 2) + Math.pow(a[7], 2) + Math.pow(a[8], 2) + Math.pow(a[9], 2) + Math.pow(a[10], 2) + Math.pow(a[11], 2) + Math.pow(a[12], 2) + Math.pow(a[13], 2) + Math.pow(a[14], 2) + Math.pow(a[15], 2));
+}
+/**
+ * Adds two mat4's
+ *
+ * @param {mat4} out the receiving matrix
+ * @param {mat4} a the first operand
+ * @param {mat4} b the second operand
+ * @returns {mat4} out
+ */
+
+
+function add(out, a, b) {
+  out[0] = a[0] + b[0];
+  out[1] = a[1] + b[1];
+  out[2] = a[2] + b[2];
+  out[3] = a[3] + b[3];
+  out[4] = a[4] + b[4];
+  out[5] = a[5] + b[5];
+  out[6] = a[6] + b[6];
+  out[7] = a[7] + b[7];
+  out[8] = a[8] + b[8];
+  out[9] = a[9] + b[9];
+  out[10] = a[10] + b[10];
+  out[11] = a[11] + b[11];
+  out[12] = a[12] + b[12];
+  out[13] = a[13] + b[13];
+  out[14] = a[14] + b[14];
+  out[15] = a[15] + b[15];
+  return out;
+}
+/**
+ * Subtracts matrix b from matrix a
+ *
+ * @param {mat4} out the receiving matrix
+ * @param {mat4} a the first operand
+ * @param {mat4} b the second operand
+ * @returns {mat4} out
+ */
+
+
+function subtract(out, a, b) {
+  out[0] = a[0] - b[0];
+  out[1] = a[1] - b[1];
+  out[2] = a[2] - b[2];
+  out[3] = a[3] - b[3];
+  out[4] = a[4] - b[4];
+  out[5] = a[5] - b[5];
+  out[6] = a[6] - b[6];
+  out[7] = a[7] - b[7];
+  out[8] = a[8] - b[8];
+  out[9] = a[9] - b[9];
+  out[10] = a[10] - b[10];
+  out[11] = a[11] - b[11];
+  out[12] = a[12] - b[12];
+  out[13] = a[13] - b[13];
+  out[14] = a[14] - b[14];
+  out[15] = a[15] - b[15];
+  return out;
+}
+/**
+ * Multiply each element of the matrix by a scalar.
+ *
+ * @param {mat4} out the receiving matrix
+ * @param {mat4} a the matrix to scale
+ * @param {Number} b amount to scale the matrix's elements by
+ * @returns {mat4} out
+ */
+
+
+function multiplyScalar(out, a, b) {
+  out[0] = a[0] * b;
+  out[1] = a[1] * b;
+  out[2] = a[2] * b;
+  out[3] = a[3] * b;
+  out[4] = a[4] * b;
+  out[5] = a[5] * b;
+  out[6] = a[6] * b;
+  out[7] = a[7] * b;
+  out[8] = a[8] * b;
+  out[9] = a[9] * b;
+  out[10] = a[10] * b;
+  out[11] = a[11] * b;
+  out[12] = a[12] * b;
+  out[13] = a[13] * b;
+  out[14] = a[14] * b;
+  out[15] = a[15] * b;
+  return out;
+}
+/**
+ * Adds two mat4's after multiplying each element of the second operand by a scalar value.
+ *
+ * @param {mat4} out the receiving vector
+ * @param {mat4} a the first operand
+ * @param {mat4} b the second operand
+ * @param {Number} scale the amount to scale b's elements by before adding
+ * @returns {mat4} out
+ */
+
+
+function multiplyScalarAndAdd(out, a, b, scale) {
+  out[0] = a[0] + b[0] * scale;
+  out[1] = a[1] + b[1] * scale;
+  out[2] = a[2] + b[2] * scale;
+  out[3] = a[3] + b[3] * scale;
+  out[4] = a[4] + b[4] * scale;
+  out[5] = a[5] + b[5] * scale;
+  out[6] = a[6] + b[6] * scale;
+  out[7] = a[7] + b[7] * scale;
+  out[8] = a[8] + b[8] * scale;
+  out[9] = a[9] + b[9] * scale;
+  out[10] = a[10] + b[10] * scale;
+  out[11] = a[11] + b[11] * scale;
+  out[12] = a[12] + b[12] * scale;
+  out[13] = a[13] + b[13] * scale;
+  out[14] = a[14] + b[14] * scale;
+  out[15] = a[15] + b[15] * scale;
+  return out;
+}
+/**
+ * Returns whether or not the matrices have exactly the same elements in the same position (when compared with ===)
+ *
+ * @param {mat4} a The first matrix.
+ * @param {mat4} b The second matrix.
+ * @returns {Boolean} True if the matrices are equal, false otherwise.
+ */
+
+
+function exactEquals(a, b) {
+  return a[0] === b[0] && a[1] === b[1] && a[2] === b[2] && a[3] === b[3] && a[4] === b[4] && a[5] === b[5] && a[6] === b[6] && a[7] === b[7] && a[8] === b[8] && a[9] === b[9] && a[10] === b[10] && a[11] === b[11] && a[12] === b[12] && a[13] === b[13] && a[14] === b[14] && a[15] === b[15];
+}
+/**
+ * Returns whether or not the matrices have approximately the same elements in the same position.
+ *
+ * @param {mat4} a The first matrix.
+ * @param {mat4} b The second matrix.
+ * @returns {Boolean} True if the matrices are equal, false otherwise.
+ */
+
+
+function equals(a, b) {
+  var a0 = a[0],
+      a1 = a[1],
+      a2 = a[2],
+      a3 = a[3];
+  var a4 = a[4],
+      a5 = a[5],
+      a6 = a[6],
+      a7 = a[7];
+  var a8 = a[8],
+      a9 = a[9],
+      a10 = a[10],
+      a11 = a[11];
+  var a12 = a[12],
+      a13 = a[13],
+      a14 = a[14],
+      a15 = a[15];
+  var b0 = b[0],
+      b1 = b[1],
+      b2 = b[2],
+      b3 = b[3];
+  var b4 = b[4],
+      b5 = b[5],
+      b6 = b[6],
+      b7 = b[7];
+  var b8 = b[8],
+      b9 = b[9],
+      b10 = b[10],
+      b11 = b[11];
+  var b12 = b[12],
+      b13 = b[13],
+      b14 = b[14],
+      b15 = b[15];
+  return Math.abs(a0 - b0) <= glMatrix.EPSILON * Math.max(1.0, Math.abs(a0), Math.abs(b0)) && Math.abs(a1 - b1) <= glMatrix.EPSILON * Math.max(1.0, Math.abs(a1), Math.abs(b1)) && Math.abs(a2 - b2) <= glMatrix.EPSILON * Math.max(1.0, Math.abs(a2), Math.abs(b2)) && Math.abs(a3 - b3) <= glMatrix.EPSILON * Math.max(1.0, Math.abs(a3), Math.abs(b3)) && Math.abs(a4 - b4) <= glMatrix.EPSILON * Math.max(1.0, Math.abs(a4), Math.abs(b4)) && Math.abs(a5 - b5) <= glMatrix.EPSILON * Math.max(1.0, Math.abs(a5), Math.abs(b5)) && Math.abs(a6 - b6) <= glMatrix.EPSILON * Math.max(1.0, Math.abs(a6), Math.abs(b6)) && Math.abs(a7 - b7) <= glMatrix.EPSILON * Math.max(1.0, Math.abs(a7), Math.abs(b7)) && Math.abs(a8 - b8) <= glMatrix.EPSILON * Math.max(1.0, Math.abs(a8), Math.abs(b8)) && Math.abs(a9 - b9) <= glMatrix.EPSILON * Math.max(1.0, Math.abs(a9), Math.abs(b9)) && Math.abs(a10 - b10) <= glMatrix.EPSILON * Math.max(1.0, Math.abs(a10), Math.abs(b10)) && Math.abs(a11 - b11) <= glMatrix.EPSILON * Math.max(1.0, Math.abs(a11), Math.abs(b11)) && Math.abs(a12 - b12) <= glMatrix.EPSILON * Math.max(1.0, Math.abs(a12), Math.abs(b12)) && Math.abs(a13 - b13) <= glMatrix.EPSILON * Math.max(1.0, Math.abs(a13), Math.abs(b13)) && Math.abs(a14 - b14) <= glMatrix.EPSILON * Math.max(1.0, Math.abs(a14), Math.abs(b14)) && Math.abs(a15 - b15) <= glMatrix.EPSILON * Math.max(1.0, Math.abs(a15), Math.abs(b15));
+}
+/**
+ * Alias for {@link mat4.multiply}
+ * @function
+ */
+
+
+var mul = multiply;
+/**
+ * Alias for {@link mat4.subtract}
+ * @function
+ */
+
+exports.mul = mul;
+var sub = subtract;
+exports.sub = sub;
+},{"./common.js":2}],8:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.create = create;
+exports.identity = identity;
+exports.setAxisAngle = setAxisAngle;
+exports.getAxisAngle = getAxisAngle;
+exports.multiply = multiply;
+exports.rotateX = rotateX;
+exports.rotateY = rotateY;
+exports.rotateZ = rotateZ;
+exports.calculateW = calculateW;
+exports.slerp = slerp;
+exports.random = random;
+exports.invert = invert;
+exports.conjugate = conjugate;
+exports.fromMat3 = fromMat3;
+exports.fromEuler = fromEuler;
+exports.str = str;
+exports.setAxes = exports.sqlerp = exports.rotationTo = exports.equals = exports.exactEquals = exports.normalize = exports.sqrLen = exports.squaredLength = exports.len = exports.length = exports.lerp = exports.dot = exports.scale = exports.mul = exports.add = exports.set = exports.copy = exports.fromValues = exports.clone = void 0;
+
+var glMatrix = _interopRequireWildcard(require("./common.js"));
+
+var mat3 = _interopRequireWildcard(require("./mat3.js"));
+
+var vec3 = _interopRequireWildcard(require("./vec3.js"));
+
+var vec4 = _interopRequireWildcard(require("./vec4.js"));
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
+
+/**
+ * Quaternion
+ * @module quat
+ */
+
+/**
+ * Creates a new identity quat
+ *
+ * @returns {quat} a new quaternion
+ */
+function create() {
+  var out = new glMatrix.ARRAY_TYPE(4);
+
+  if (glMatrix.ARRAY_TYPE != Float32Array) {
+    out[0] = 0;
+    out[1] = 0;
+    out[2] = 0;
+  }
+
+  out[3] = 1;
+  return out;
+}
+/**
+ * Set a quat to the identity quaternion
+ *
+ * @param {quat} out the receiving quaternion
+ * @returns {quat} out
+ */
+
+
+function identity(out) {
+  out[0] = 0;
+  out[1] = 0;
+  out[2] = 0;
+  out[3] = 1;
+  return out;
+}
+/**
+ * Sets a quat from the given angle and rotation axis,
+ * then returns it.
+ *
+ * @param {quat} out the receiving quaternion
+ * @param {vec3} axis the axis around which to rotate
+ * @param {Number} rad the angle in radians
+ * @returns {quat} out
+ **/
+
+
+function setAxisAngle(out, axis, rad) {
+  rad = rad * 0.5;
+  var s = Math.sin(rad);
+  out[0] = s * axis[0];
+  out[1] = s * axis[1];
+  out[2] = s * axis[2];
+  out[3] = Math.cos(rad);
+  return out;
+}
+/**
+ * Gets the rotation axis and angle for a given
+ *  quaternion. If a quaternion is created with
+ *  setAxisAngle, this method will return the same
+ *  values as providied in the original parameter list
+ *  OR functionally equivalent values.
+ * Example: The quaternion formed by axis [0, 0, 1] and
+ *  angle -90 is the same as the quaternion formed by
+ *  [0, 0, 1] and 270. This method favors the latter.
+ * @param  {vec3} out_axis  Vector receiving the axis of rotation
+ * @param  {quat} q     Quaternion to be decomposed
+ * @return {Number}     Angle, in radians, of the rotation
+ */
+
+
+function getAxisAngle(out_axis, q) {
+  var rad = Math.acos(q[3]) * 2.0;
+  var s = Math.sin(rad / 2.0);
+
+  if (s > glMatrix.EPSILON) {
+    out_axis[0] = q[0] / s;
+    out_axis[1] = q[1] / s;
+    out_axis[2] = q[2] / s;
+  } else {
+    // If s is zero, return any axis (no rotation - axis does not matter)
+    out_axis[0] = 1;
+    out_axis[1] = 0;
+    out_axis[2] = 0;
+  }
+
+  return rad;
+}
+/**
+ * Multiplies two quat's
+ *
+ * @param {quat} out the receiving quaternion
+ * @param {quat} a the first operand
+ * @param {quat} b the second operand
+ * @returns {quat} out
+ */
+
+
+function multiply(out, a, b) {
+  var ax = a[0],
+      ay = a[1],
+      az = a[2],
+      aw = a[3];
+  var bx = b[0],
+      by = b[1],
+      bz = b[2],
+      bw = b[3];
+  out[0] = ax * bw + aw * bx + ay * bz - az * by;
+  out[1] = ay * bw + aw * by + az * bx - ax * bz;
+  out[2] = az * bw + aw * bz + ax * by - ay * bx;
+  out[3] = aw * bw - ax * bx - ay * by - az * bz;
+  return out;
+}
+/**
+ * Rotates a quaternion by the given angle about the X axis
+ *
+ * @param {quat} out quat receiving operation result
+ * @param {quat} a quat to rotate
+ * @param {number} rad angle (in radians) to rotate
+ * @returns {quat} out
+ */
+
+
+function rotateX(out, a, rad) {
+  rad *= 0.5;
+  var ax = a[0],
+      ay = a[1],
+      az = a[2],
+      aw = a[3];
+  var bx = Math.sin(rad),
+      bw = Math.cos(rad);
+  out[0] = ax * bw + aw * bx;
+  out[1] = ay * bw + az * bx;
+  out[2] = az * bw - ay * bx;
+  out[3] = aw * bw - ax * bx;
+  return out;
+}
+/**
+ * Rotates a quaternion by the given angle about the Y axis
+ *
+ * @param {quat} out quat receiving operation result
+ * @param {quat} a quat to rotate
+ * @param {number} rad angle (in radians) to rotate
+ * @returns {quat} out
+ */
+
+
+function rotateY(out, a, rad) {
+  rad *= 0.5;
+  var ax = a[0],
+      ay = a[1],
+      az = a[2],
+      aw = a[3];
+  var by = Math.sin(rad),
+      bw = Math.cos(rad);
+  out[0] = ax * bw - az * by;
+  out[1] = ay * bw + aw * by;
+  out[2] = az * bw + ax * by;
+  out[3] = aw * bw - ay * by;
+  return out;
+}
+/**
+ * Rotates a quaternion by the given angle about the Z axis
+ *
+ * @param {quat} out quat receiving operation result
+ * @param {quat} a quat to rotate
+ * @param {number} rad angle (in radians) to rotate
+ * @returns {quat} out
+ */
+
+
+function rotateZ(out, a, rad) {
+  rad *= 0.5;
+  var ax = a[0],
+      ay = a[1],
+      az = a[2],
+      aw = a[3];
+  var bz = Math.sin(rad),
+      bw = Math.cos(rad);
+  out[0] = ax * bw + ay * bz;
+  out[1] = ay * bw - ax * bz;
+  out[2] = az * bw + aw * bz;
+  out[3] = aw * bw - az * bz;
+  return out;
+}
+/**
+ * Calculates the W component of a quat from the X, Y, and Z components.
+ * Assumes that quaternion is 1 unit in length.
+ * Any existing W component will be ignored.
+ *
+ * @param {quat} out the receiving quaternion
+ * @param {quat} a quat to calculate W component of
+ * @returns {quat} out
+ */
+
+
+function calculateW(out, a) {
+  var x = a[0],
+      y = a[1],
+      z = a[2];
+  out[0] = x;
+  out[1] = y;
+  out[2] = z;
+  out[3] = Math.sqrt(Math.abs(1.0 - x * x - y * y - z * z));
+  return out;
+}
+/**
+ * Performs a spherical linear interpolation between two quat
+ *
+ * @param {quat} out the receiving quaternion
+ * @param {quat} a the first operand
+ * @param {quat} b the second operand
+ * @param {Number} t interpolation amount, in the range [0-1], between the two inputs
+ * @returns {quat} out
+ */
+
+
+function slerp(out, a, b, t) {
+  // benchmarks:
+  //    http://jsperf.com/quaternion-slerp-implementations
+  var ax = a[0],
+      ay = a[1],
+      az = a[2],
+      aw = a[3];
+  var bx = b[0],
+      by = b[1],
+      bz = b[2],
+      bw = b[3];
+  var omega, cosom, sinom, scale0, scale1; // calc cosine
+
+  cosom = ax * bx + ay * by + az * bz + aw * bw; // adjust signs (if necessary)
+
+  if (cosom < 0.0) {
+    cosom = -cosom;
+    bx = -bx;
+    by = -by;
+    bz = -bz;
+    bw = -bw;
+  } // calculate coefficients
+
+
+  if (1.0 - cosom > glMatrix.EPSILON) {
+    // standard case (slerp)
+    omega = Math.acos(cosom);
+    sinom = Math.sin(omega);
+    scale0 = Math.sin((1.0 - t) * omega) / sinom;
+    scale1 = Math.sin(t * omega) / sinom;
+  } else {
+    // "from" and "to" quaternions are very close
+    //  ... so we can do a linear interpolation
+    scale0 = 1.0 - t;
+    scale1 = t;
+  } // calculate final values
+
+
+  out[0] = scale0 * ax + scale1 * bx;
+  out[1] = scale0 * ay + scale1 * by;
+  out[2] = scale0 * az + scale1 * bz;
+  out[3] = scale0 * aw + scale1 * bw;
+  return out;
+}
+/**
+ * Generates a random quaternion
+ *
+ * @param {quat} out the receiving quaternion
+ * @returns {quat} out
+ */
+
+
+function random(out) {
+  // Implementation of http://planning.cs.uiuc.edu/node198.html
+  // TODO: Calling random 3 times is probably not the fastest solution
+  var u1 = glMatrix.RANDOM();
+  var u2 = glMatrix.RANDOM();
+  var u3 = glMatrix.RANDOM();
+  var sqrt1MinusU1 = Math.sqrt(1 - u1);
+  var sqrtU1 = Math.sqrt(u1);
+  out[0] = sqrt1MinusU1 * Math.sin(2.0 * Math.PI * u2);
+  out[1] = sqrt1MinusU1 * Math.cos(2.0 * Math.PI * u2);
+  out[2] = sqrtU1 * Math.sin(2.0 * Math.PI * u3);
+  out[3] = sqrtU1 * Math.cos(2.0 * Math.PI * u3);
+  return out;
+}
+/**
+ * Calculates the inverse of a quat
+ *
+ * @param {quat} out the receiving quaternion
+ * @param {quat} a quat to calculate inverse of
+ * @returns {quat} out
+ */
+
+
+function invert(out, a) {
+  var a0 = a[0],
+      a1 = a[1],
+      a2 = a[2],
+      a3 = a[3];
+  var dot = a0 * a0 + a1 * a1 + a2 * a2 + a3 * a3;
+  var invDot = dot ? 1.0 / dot : 0; // TODO: Would be faster to return [0,0,0,0] immediately if dot == 0
+
+  out[0] = -a0 * invDot;
+  out[1] = -a1 * invDot;
+  out[2] = -a2 * invDot;
+  out[3] = a3 * invDot;
+  return out;
+}
+/**
+ * Calculates the conjugate of a quat
+ * If the quaternion is normalized, this function is faster than quat.inverse and produces the same result.
+ *
+ * @param {quat} out the receiving quaternion
+ * @param {quat} a quat to calculate conjugate of
+ * @returns {quat} out
+ */
+
+
+function conjugate(out, a) {
+  out[0] = -a[0];
+  out[1] = -a[1];
+  out[2] = -a[2];
+  out[3] = a[3];
+  return out;
+}
+/**
+ * Creates a quaternion from the given 3x3 rotation matrix.
+ *
+ * NOTE: The resultant quaternion is not normalized, so you should be sure
+ * to renormalize the quaternion yourself where necessary.
+ *
+ * @param {quat} out the receiving quaternion
+ * @param {mat3} m rotation matrix
+ * @returns {quat} out
+ * @function
+ */
+
+
+function fromMat3(out, m) {
+  // Algorithm in Ken Shoemake's article in 1987 SIGGRAPH course notes
+  // article "Quaternion Calculus and Fast Animation".
+  var fTrace = m[0] + m[4] + m[8];
+  var fRoot;
+
+  if (fTrace > 0.0) {
+    // |w| > 1/2, may as well choose w > 1/2
+    fRoot = Math.sqrt(fTrace + 1.0); // 2w
+
+    out[3] = 0.5 * fRoot;
+    fRoot = 0.5 / fRoot; // 1/(4w)
+
+    out[0] = (m[5] - m[7]) * fRoot;
+    out[1] = (m[6] - m[2]) * fRoot;
+    out[2] = (m[1] - m[3]) * fRoot;
+  } else {
+    // |w| <= 1/2
+    var i = 0;
+    if (m[4] > m[0]) i = 1;
+    if (m[8] > m[i * 3 + i]) i = 2;
+    var j = (i + 1) % 3;
+    var k = (i + 2) % 3;
+    fRoot = Math.sqrt(m[i * 3 + i] - m[j * 3 + j] - m[k * 3 + k] + 1.0);
+    out[i] = 0.5 * fRoot;
+    fRoot = 0.5 / fRoot;
+    out[3] = (m[j * 3 + k] - m[k * 3 + j]) * fRoot;
+    out[j] = (m[j * 3 + i] + m[i * 3 + j]) * fRoot;
+    out[k] = (m[k * 3 + i] + m[i * 3 + k]) * fRoot;
+  }
+
+  return out;
+}
+/**
+ * Creates a quaternion from the given euler angle x, y, z.
+ *
+ * @param {quat} out the receiving quaternion
+ * @param {x} Angle to rotate around X axis in degrees.
+ * @param {y} Angle to rotate around Y axis in degrees.
+ * @param {z} Angle to rotate around Z axis in degrees.
+ * @returns {quat} out
+ * @function
+ */
+
+
+function fromEuler(out, x, y, z) {
+  var halfToRad = 0.5 * Math.PI / 180.0;
+  x *= halfToRad;
+  y *= halfToRad;
+  z *= halfToRad;
+  var sx = Math.sin(x);
+  var cx = Math.cos(x);
+  var sy = Math.sin(y);
+  var cy = Math.cos(y);
+  var sz = Math.sin(z);
+  var cz = Math.cos(z);
+  out[0] = sx * cy * cz - cx * sy * sz;
+  out[1] = cx * sy * cz + sx * cy * sz;
+  out[2] = cx * cy * sz - sx * sy * cz;
+  out[3] = cx * cy * cz + sx * sy * sz;
+  return out;
+}
+/**
+ * Returns a string representation of a quatenion
+ *
+ * @param {quat} a vector to represent as a string
+ * @returns {String} string representation of the vector
+ */
+
+
+function str(a) {
+  return 'quat(' + a[0] + ', ' + a[1] + ', ' + a[2] + ', ' + a[3] + ')';
+}
+/**
+ * Creates a new quat initialized with values from an existing quaternion
+ *
+ * @param {quat} a quaternion to clone
+ * @returns {quat} a new quaternion
+ * @function
+ */
+
+
+var clone = vec4.clone;
+/**
+ * Creates a new quat initialized with the given values
+ *
+ * @param {Number} x X component
+ * @param {Number} y Y component
+ * @param {Number} z Z component
+ * @param {Number} w W component
+ * @returns {quat} a new quaternion
+ * @function
+ */
+
+exports.clone = clone;
+var fromValues = vec4.fromValues;
+/**
+ * Copy the values from one quat to another
+ *
+ * @param {quat} out the receiving quaternion
+ * @param {quat} a the source quaternion
+ * @returns {quat} out
+ * @function
+ */
+
+exports.fromValues = fromValues;
+var copy = vec4.copy;
+/**
+ * Set the components of a quat to the given values
+ *
+ * @param {quat} out the receiving quaternion
+ * @param {Number} x X component
+ * @param {Number} y Y component
+ * @param {Number} z Z component
+ * @param {Number} w W component
+ * @returns {quat} out
+ * @function
+ */
+
+exports.copy = copy;
+var set = vec4.set;
+/**
+ * Adds two quat's
+ *
+ * @param {quat} out the receiving quaternion
+ * @param {quat} a the first operand
+ * @param {quat} b the second operand
+ * @returns {quat} out
+ * @function
+ */
+
+exports.set = set;
+var add = vec4.add;
+/**
+ * Alias for {@link quat.multiply}
+ * @function
+ */
+
+exports.add = add;
+var mul = multiply;
+/**
+ * Scales a quat by a scalar number
+ *
+ * @param {quat} out the receiving vector
+ * @param {quat} a the vector to scale
+ * @param {Number} b amount to scale the vector by
+ * @returns {quat} out
+ * @function
+ */
+
+exports.mul = mul;
+var scale = vec4.scale;
+/**
+ * Calculates the dot product of two quat's
+ *
+ * @param {quat} a the first operand
+ * @param {quat} b the second operand
+ * @returns {Number} dot product of a and b
+ * @function
+ */
+
+exports.scale = scale;
+var dot = vec4.dot;
+/**
+ * Performs a linear interpolation between two quat's
+ *
+ * @param {quat} out the receiving quaternion
+ * @param {quat} a the first operand
+ * @param {quat} b the second operand
+ * @param {Number} t interpolation amount, in the range [0-1], between the two inputs
+ * @returns {quat} out
+ * @function
+ */
+
+exports.dot = dot;
+var lerp = vec4.lerp;
+/**
+ * Calculates the length of a quat
+ *
+ * @param {quat} a vector to calculate length of
+ * @returns {Number} length of a
+ */
+
+exports.lerp = lerp;
+var length = vec4.length;
+/**
+ * Alias for {@link quat.length}
+ * @function
+ */
+
+exports.length = length;
+var len = length;
+/**
+ * Calculates the squared length of a quat
+ *
+ * @param {quat} a vector to calculate squared length of
+ * @returns {Number} squared length of a
+ * @function
+ */
+
+exports.len = len;
+var squaredLength = vec4.squaredLength;
+/**
+ * Alias for {@link quat.squaredLength}
+ * @function
+ */
+
+exports.squaredLength = squaredLength;
+var sqrLen = squaredLength;
+/**
+ * Normalize a quat
+ *
+ * @param {quat} out the receiving quaternion
+ * @param {quat} a quaternion to normalize
+ * @returns {quat} out
+ * @function
+ */
+
+exports.sqrLen = sqrLen;
+var normalize = vec4.normalize;
+/**
+ * Returns whether or not the quaternions have exactly the same elements in the same position (when compared with ===)
+ *
+ * @param {quat} a The first quaternion.
+ * @param {quat} b The second quaternion.
+ * @returns {Boolean} True if the vectors are equal, false otherwise.
+ */
+
+exports.normalize = normalize;
+var exactEquals = vec4.exactEquals;
+/**
+ * Returns whether or not the quaternions have approximately the same elements in the same position.
+ *
+ * @param {quat} a The first vector.
+ * @param {quat} b The second vector.
+ * @returns {Boolean} True if the vectors are equal, false otherwise.
+ */
+
+exports.exactEquals = exactEquals;
+var equals = vec4.equals;
+/**
+ * Sets a quaternion to represent the shortest rotation from one
+ * vector to another.
+ *
+ * Both vectors are assumed to be unit length.
+ *
+ * @param {quat} out the receiving quaternion.
+ * @param {vec3} a the initial vector
+ * @param {vec3} b the destination vector
+ * @returns {quat} out
+ */
+
+exports.equals = equals;
+
+var rotationTo = function () {
+  var tmpvec3 = vec3.create();
+  var xUnitVec3 = vec3.fromValues(1, 0, 0);
+  var yUnitVec3 = vec3.fromValues(0, 1, 0);
+  return function (out, a, b) {
+    var dot = vec3.dot(a, b);
+
+    if (dot < -0.999999) {
+      vec3.cross(tmpvec3, xUnitVec3, a);
+      if (vec3.len(tmpvec3) < 0.000001) vec3.cross(tmpvec3, yUnitVec3, a);
+      vec3.normalize(tmpvec3, tmpvec3);
+      setAxisAngle(out, tmpvec3, Math.PI);
+      return out;
+    } else if (dot > 0.999999) {
+      out[0] = 0;
+      out[1] = 0;
+      out[2] = 0;
+      out[3] = 1;
+      return out;
+    } else {
+      vec3.cross(tmpvec3, a, b);
+      out[0] = tmpvec3[0];
+      out[1] = tmpvec3[1];
+      out[2] = tmpvec3[2];
+      out[3] = 1 + dot;
+      return normalize(out, out);
+    }
+  };
+}();
+/**
+ * Performs a spherical linear interpolation with two control points
+ *
+ * @param {quat} out the receiving quaternion
+ * @param {quat} a the first operand
+ * @param {quat} b the second operand
+ * @param {quat} c the third operand
+ * @param {quat} d the fourth operand
+ * @param {Number} t interpolation amount, in the range [0-1], between the two inputs
+ * @returns {quat} out
+ */
+
+
+exports.rotationTo = rotationTo;
+
+var sqlerp = function () {
+  var temp1 = create();
+  var temp2 = create();
+  return function (out, a, b, c, d, t) {
+    slerp(temp1, a, d, t);
+    slerp(temp2, b, c, t);
+    slerp(out, temp1, temp2, 2 * t * (1 - t));
+    return out;
+  };
+}();
+/**
+ * Sets the specified quaternion with values corresponding to the given
+ * axes. Each axis is a vec3 and is expected to be unit length and
+ * perpendicular to all other specified axes.
+ *
+ * @param {vec3} view  the vector representing the viewing direction
+ * @param {vec3} right the vector representing the local "right" direction
+ * @param {vec3} up    the vector representing the local "up" direction
+ * @returns {quat} out
+ */
+
+
+exports.sqlerp = sqlerp;
+
+var setAxes = function () {
+  var matr = mat3.create();
+  return function (out, view, right, up) {
+    matr[0] = right[0];
+    matr[3] = right[1];
+    matr[6] = right[2];
+    matr[1] = up[0];
+    matr[4] = up[1];
+    matr[7] = up[2];
+    matr[2] = -view[0];
+    matr[5] = -view[1];
+    matr[8] = -view[2];
+    return normalize(out, fromMat3(out, matr));
+  };
+}();
+
+exports.setAxes = setAxes;
+},{"./common.js":2,"./mat3.js":6,"./vec3.js":11,"./vec4.js":12}],9:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.create = create;
+exports.clone = clone;
+exports.fromValues = fromValues;
+exports.fromRotationTranslationValues = fromRotationTranslationValues;
+exports.fromRotationTranslation = fromRotationTranslation;
+exports.fromTranslation = fromTranslation;
+exports.fromRotation = fromRotation;
+exports.fromMat4 = fromMat4;
+exports.copy = copy;
+exports.identity = identity;
+exports.set = set;
+exports.getDual = getDual;
+exports.setDual = setDual;
+exports.getTranslation = getTranslation;
+exports.translate = translate;
+exports.rotateX = rotateX;
+exports.rotateY = rotateY;
+exports.rotateZ = rotateZ;
+exports.rotateByQuatAppend = rotateByQuatAppend;
+exports.rotateByQuatPrepend = rotateByQuatPrepend;
+exports.rotateAroundAxis = rotateAroundAxis;
+exports.add = add;
+exports.multiply = multiply;
+exports.scale = scale;
+exports.lerp = lerp;
+exports.invert = invert;
+exports.conjugate = conjugate;
+exports.normalize = normalize;
+exports.str = str;
+exports.exactEquals = exactEquals;
+exports.equals = equals;
+exports.sqrLen = exports.squaredLength = exports.len = exports.length = exports.dot = exports.mul = exports.setReal = exports.getReal = void 0;
+
+var glMatrix = _interopRequireWildcard(require("./common.js"));
+
+var quat = _interopRequireWildcard(require("./quat.js"));
+
+var mat4 = _interopRequireWildcard(require("./mat4.js"));
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
+
+/**
+ * Dual Quaternion<br>
+ * Format: [real, dual]<br>
+ * Quaternion format: XYZW<br>
+ * Make sure to have normalized dual quaternions, otherwise the functions may not work as intended.<br>
+ * @module quat2
+ */
+
+/**
+ * Creates a new identity dual quat
+ *
+ * @returns {quat2} a new dual quaternion [real -> rotation, dual -> translation]
+ */
+function create() {
+  var dq = new glMatrix.ARRAY_TYPE(8);
+
+  if (glMatrix.ARRAY_TYPE != Float32Array) {
+    dq[0] = 0;
+    dq[1] = 0;
+    dq[2] = 0;
+    dq[4] = 0;
+    dq[5] = 0;
+    dq[6] = 0;
+    dq[7] = 0;
+  }
+
+  dq[3] = 1;
+  return dq;
+}
+/**
+ * Creates a new quat initialized with values from an existing quaternion
+ *
+ * @param {quat2} a dual quaternion to clone
+ * @returns {quat2} new dual quaternion
+ * @function
+ */
+
+
+function clone(a) {
+  var dq = new glMatrix.ARRAY_TYPE(8);
+  dq[0] = a[0];
+  dq[1] = a[1];
+  dq[2] = a[2];
+  dq[3] = a[3];
+  dq[4] = a[4];
+  dq[5] = a[5];
+  dq[6] = a[6];
+  dq[7] = a[7];
+  return dq;
+}
+/**
+ * Creates a new dual quat initialized with the given values
+ *
+ * @param {Number} x1 X component
+ * @param {Number} y1 Y component
+ * @param {Number} z1 Z component
+ * @param {Number} w1 W component
+ * @param {Number} x2 X component
+ * @param {Number} y2 Y component
+ * @param {Number} z2 Z component
+ * @param {Number} w2 W component
+ * @returns {quat2} new dual quaternion
+ * @function
+ */
+
+
+function fromValues(x1, y1, z1, w1, x2, y2, z2, w2) {
+  var dq = new glMatrix.ARRAY_TYPE(8);
+  dq[0] = x1;
+  dq[1] = y1;
+  dq[2] = z1;
+  dq[3] = w1;
+  dq[4] = x2;
+  dq[5] = y2;
+  dq[6] = z2;
+  dq[7] = w2;
+  return dq;
+}
+/**
+ * Creates a new dual quat from the given values (quat and translation)
+ *
+ * @param {Number} x1 X component
+ * @param {Number} y1 Y component
+ * @param {Number} z1 Z component
+ * @param {Number} w1 W component
+ * @param {Number} x2 X component (translation)
+ * @param {Number} y2 Y component (translation)
+ * @param {Number} z2 Z component (translation)
+ * @returns {quat2} new dual quaternion
+ * @function
+ */
+
+
+function fromRotationTranslationValues(x1, y1, z1, w1, x2, y2, z2) {
+  var dq = new glMatrix.ARRAY_TYPE(8);
+  dq[0] = x1;
+  dq[1] = y1;
+  dq[2] = z1;
+  dq[3] = w1;
+  var ax = x2 * 0.5,
+      ay = y2 * 0.5,
+      az = z2 * 0.5;
+  dq[4] = ax * w1 + ay * z1 - az * y1;
+  dq[5] = ay * w1 + az * x1 - ax * z1;
+  dq[6] = az * w1 + ax * y1 - ay * x1;
+  dq[7] = -ax * x1 - ay * y1 - az * z1;
+  return dq;
+}
+/**
+ * Creates a dual quat from a quaternion and a translation
+ *
+ * @param {quat2} dual quaternion receiving operation result
+ * @param {quat} q quaternion
+ * @param {vec3} t tranlation vector
+ * @returns {quat2} dual quaternion receiving operation result
+ * @function
+ */
+
+
+function fromRotationTranslation(out, q, t) {
+  var ax = t[0] * 0.5,
+      ay = t[1] * 0.5,
+      az = t[2] * 0.5,
+      bx = q[0],
+      by = q[1],
+      bz = q[2],
+      bw = q[3];
+  out[0] = bx;
+  out[1] = by;
+  out[2] = bz;
+  out[3] = bw;
+  out[4] = ax * bw + ay * bz - az * by;
+  out[5] = ay * bw + az * bx - ax * bz;
+  out[6] = az * bw + ax * by - ay * bx;
+  out[7] = -ax * bx - ay * by - az * bz;
+  return out;
+}
+/**
+ * Creates a dual quat from a translation
+ *
+ * @param {quat2} dual quaternion receiving operation result
+ * @param {vec3} t translation vector
+ * @returns {quat2} dual quaternion receiving operation result
+ * @function
+ */
+
+
+function fromTranslation(out, t) {
+  out[0] = 0;
+  out[1] = 0;
+  out[2] = 0;
+  out[3] = 1;
+  out[4] = t[0] * 0.5;
+  out[5] = t[1] * 0.5;
+  out[6] = t[2] * 0.5;
+  out[7] = 0;
+  return out;
+}
+/**
+ * Creates a dual quat from a quaternion
+ *
+ * @param {quat2} dual quaternion receiving operation result
+ * @param {quat} q the quaternion
+ * @returns {quat2} dual quaternion receiving operation result
+ * @function
+ */
+
+
+function fromRotation(out, q) {
+  out[0] = q[0];
+  out[1] = q[1];
+  out[2] = q[2];
+  out[3] = q[3];
+  out[4] = 0;
+  out[5] = 0;
+  out[6] = 0;
+  out[7] = 0;
+  return out;
+}
+/**
+ * Creates a new dual quat from a matrix (4x4)
+ *
+ * @param {quat2} out the dual quaternion
+ * @param {mat4} a the matrix
+ * @returns {quat2} dual quat receiving operation result
+ * @function
+ */
+
+
+function fromMat4(out, a) {
+  //TODO Optimize this
+  var outer = quat.create();
+  mat4.getRotation(outer, a);
+  var t = new glMatrix.ARRAY_TYPE(3);
+  mat4.getTranslation(t, a);
+  fromRotationTranslation(out, outer, t);
+  return out;
+}
+/**
+ * Copy the values from one dual quat to another
+ *
+ * @param {quat2} out the receiving dual quaternion
+ * @param {quat2} a the source dual quaternion
+ * @returns {quat2} out
+ * @function
+ */
+
+
+function copy(out, a) {
+  out[0] = a[0];
+  out[1] = a[1];
+  out[2] = a[2];
+  out[3] = a[3];
+  out[4] = a[4];
+  out[5] = a[5];
+  out[6] = a[6];
+  out[7] = a[7];
+  return out;
+}
+/**
+ * Set a dual quat to the identity dual quaternion
+ *
+ * @param {quat2} out the receiving quaternion
+ * @returns {quat2} out
+ */
+
+
+function identity(out) {
+  out[0] = 0;
+  out[1] = 0;
+  out[2] = 0;
+  out[3] = 1;
+  out[4] = 0;
+  out[5] = 0;
+  out[6] = 0;
+  out[7] = 0;
+  return out;
+}
+/**
+ * Set the components of a dual quat to the given values
+ *
+ * @param {quat2} out the receiving quaternion
+ * @param {Number} x1 X component
+ * @param {Number} y1 Y component
+ * @param {Number} z1 Z component
+ * @param {Number} w1 W component
+ * @param {Number} x2 X component
+ * @param {Number} y2 Y component
+ * @param {Number} z2 Z component
+ * @param {Number} w2 W component
+ * @returns {quat2} out
+ * @function
+ */
+
+
+function set(out, x1, y1, z1, w1, x2, y2, z2, w2) {
+  out[0] = x1;
+  out[1] = y1;
+  out[2] = z1;
+  out[3] = w1;
+  out[4] = x2;
+  out[5] = y2;
+  out[6] = z2;
+  out[7] = w2;
+  return out;
+}
+/**
+ * Gets the real part of a dual quat
+ * @param  {quat} out real part
+ * @param  {quat2} a Dual Quaternion
+ * @return {quat} real part
+ */
+
+
+var getReal = quat.copy;
+/**
+ * Gets the dual part of a dual quat
+ * @param  {quat} out dual part
+ * @param  {quat2} a Dual Quaternion
+ * @return {quat} dual part
+ */
+
+exports.getReal = getReal;
+
+function getDual(out, a) {
+  out[0] = a[4];
+  out[1] = a[5];
+  out[2] = a[6];
+  out[3] = a[7];
+  return out;
+}
+/**
+ * Set the real component of a dual quat to the given quaternion
+ *
+ * @param {quat2} out the receiving quaternion
+ * @param {quat} q a quaternion representing the real part
+ * @returns {quat2} out
+ * @function
+ */
+
+
+var setReal = quat.copy;
+/**
+ * Set the dual component of a dual quat to the given quaternion
+ *
+ * @param {quat2} out the receiving quaternion
+ * @param {quat} q a quaternion representing the dual part
+ * @returns {quat2} out
+ * @function
+ */
+
+exports.setReal = setReal;
+
+function setDual(out, q) {
+  out[4] = q[0];
+  out[5] = q[1];
+  out[6] = q[2];
+  out[7] = q[3];
+  return out;
+}
+/**
+ * Gets the translation of a normalized dual quat
+ * @param  {vec3} out translation
+ * @param  {quat2} a Dual Quaternion to be decomposed
+ * @return {vec3} translation
+ */
+
+
+function getTranslation(out, a) {
+  var ax = a[4],
+      ay = a[5],
+      az = a[6],
+      aw = a[7],
+      bx = -a[0],
+      by = -a[1],
+      bz = -a[2],
+      bw = a[3];
+  out[0] = (ax * bw + aw * bx + ay * bz - az * by) * 2;
+  out[1] = (ay * bw + aw * by + az * bx - ax * bz) * 2;
+  out[2] = (az * bw + aw * bz + ax * by - ay * bx) * 2;
+  return out;
+}
+/**
+ * Translates a dual quat by the given vector
+ *
+ * @param {quat2} out the receiving dual quaternion
+ * @param {quat2} a the dual quaternion to translate
+ * @param {vec3} v vector to translate by
+ * @returns {quat2} out
+ */
+
+
+function translate(out, a, v) {
+  var ax1 = a[0],
+      ay1 = a[1],
+      az1 = a[2],
+      aw1 = a[3],
+      bx1 = v[0] * 0.5,
+      by1 = v[1] * 0.5,
+      bz1 = v[2] * 0.5,
+      ax2 = a[4],
+      ay2 = a[5],
+      az2 = a[6],
+      aw2 = a[7];
+  out[0] = ax1;
+  out[1] = ay1;
+  out[2] = az1;
+  out[3] = aw1;
+  out[4] = aw1 * bx1 + ay1 * bz1 - az1 * by1 + ax2;
+  out[5] = aw1 * by1 + az1 * bx1 - ax1 * bz1 + ay2;
+  out[6] = aw1 * bz1 + ax1 * by1 - ay1 * bx1 + az2;
+  out[7] = -ax1 * bx1 - ay1 * by1 - az1 * bz1 + aw2;
+  return out;
+}
+/**
+ * Rotates a dual quat around the X axis
+ *
+ * @param {quat2} out the receiving dual quaternion
+ * @param {quat2} a the dual quaternion to rotate
+ * @param {number} rad how far should the rotation be
+ * @returns {quat2} out
+ */
+
+
+function rotateX(out, a, rad) {
+  var bx = -a[0],
+      by = -a[1],
+      bz = -a[2],
+      bw = a[3],
+      ax = a[4],
+      ay = a[5],
+      az = a[6],
+      aw = a[7],
+      ax1 = ax * bw + aw * bx + ay * bz - az * by,
+      ay1 = ay * bw + aw * by + az * bx - ax * bz,
+      az1 = az * bw + aw * bz + ax * by - ay * bx,
+      aw1 = aw * bw - ax * bx - ay * by - az * bz;
+  quat.rotateX(out, a, rad);
+  bx = out[0];
+  by = out[1];
+  bz = out[2];
+  bw = out[3];
+  out[4] = ax1 * bw + aw1 * bx + ay1 * bz - az1 * by;
+  out[5] = ay1 * bw + aw1 * by + az1 * bx - ax1 * bz;
+  out[6] = az1 * bw + aw1 * bz + ax1 * by - ay1 * bx;
+  out[7] = aw1 * bw - ax1 * bx - ay1 * by - az1 * bz;
+  return out;
+}
+/**
+ * Rotates a dual quat around the Y axis
+ *
+ * @param {quat2} out the receiving dual quaternion
+ * @param {quat2} a the dual quaternion to rotate
+ * @param {number} rad how far should the rotation be
+ * @returns {quat2} out
+ */
+
+
+function rotateY(out, a, rad) {
+  var bx = -a[0],
+      by = -a[1],
+      bz = -a[2],
+      bw = a[3],
+      ax = a[4],
+      ay = a[5],
+      az = a[6],
+      aw = a[7],
+      ax1 = ax * bw + aw * bx + ay * bz - az * by,
+      ay1 = ay * bw + aw * by + az * bx - ax * bz,
+      az1 = az * bw + aw * bz + ax * by - ay * bx,
+      aw1 = aw * bw - ax * bx - ay * by - az * bz;
+  quat.rotateY(out, a, rad);
+  bx = out[0];
+  by = out[1];
+  bz = out[2];
+  bw = out[3];
+  out[4] = ax1 * bw + aw1 * bx + ay1 * bz - az1 * by;
+  out[5] = ay1 * bw + aw1 * by + az1 * bx - ax1 * bz;
+  out[6] = az1 * bw + aw1 * bz + ax1 * by - ay1 * bx;
+  out[7] = aw1 * bw - ax1 * bx - ay1 * by - az1 * bz;
+  return out;
+}
+/**
+ * Rotates a dual quat around the Z axis
+ *
+ * @param {quat2} out the receiving dual quaternion
+ * @param {quat2} a the dual quaternion to rotate
+ * @param {number} rad how far should the rotation be
+ * @returns {quat2} out
+ */
+
+
+function rotateZ(out, a, rad) {
+  var bx = -a[0],
+      by = -a[1],
+      bz = -a[2],
+      bw = a[3],
+      ax = a[4],
+      ay = a[5],
+      az = a[6],
+      aw = a[7],
+      ax1 = ax * bw + aw * bx + ay * bz - az * by,
+      ay1 = ay * bw + aw * by + az * bx - ax * bz,
+      az1 = az * bw + aw * bz + ax * by - ay * bx,
+      aw1 = aw * bw - ax * bx - ay * by - az * bz;
+  quat.rotateZ(out, a, rad);
+  bx = out[0];
+  by = out[1];
+  bz = out[2];
+  bw = out[3];
+  out[4] = ax1 * bw + aw1 * bx + ay1 * bz - az1 * by;
+  out[5] = ay1 * bw + aw1 * by + az1 * bx - ax1 * bz;
+  out[6] = az1 * bw + aw1 * bz + ax1 * by - ay1 * bx;
+  out[7] = aw1 * bw - ax1 * bx - ay1 * by - az1 * bz;
+  return out;
+}
+/**
+ * Rotates a dual quat by a given quaternion (a * q)
+ *
+ * @param {quat2} out the receiving dual quaternion
+ * @param {quat2} a the dual quaternion to rotate
+ * @param {quat} q quaternion to rotate by
+ * @returns {quat2} out
+ */
+
+
+function rotateByQuatAppend(out, a, q) {
+  var qx = q[0],
+      qy = q[1],
+      qz = q[2],
+      qw = q[3],
+      ax = a[0],
+      ay = a[1],
+      az = a[2],
+      aw = a[3];
+  out[0] = ax * qw + aw * qx + ay * qz - az * qy;
+  out[1] = ay * qw + aw * qy + az * qx - ax * qz;
+  out[2] = az * qw + aw * qz + ax * qy - ay * qx;
+  out[3] = aw * qw - ax * qx - ay * qy - az * qz;
+  ax = a[4];
+  ay = a[5];
+  az = a[6];
+  aw = a[7];
+  out[4] = ax * qw + aw * qx + ay * qz - az * qy;
+  out[5] = ay * qw + aw * qy + az * qx - ax * qz;
+  out[6] = az * qw + aw * qz + ax * qy - ay * qx;
+  out[7] = aw * qw - ax * qx - ay * qy - az * qz;
+  return out;
+}
+/**
+ * Rotates a dual quat by a given quaternion (q * a)
+ *
+ * @param {quat2} out the receiving dual quaternion
+ * @param {quat} q quaternion to rotate by
+ * @param {quat2} a the dual quaternion to rotate
+ * @returns {quat2} out
+ */
+
+
+function rotateByQuatPrepend(out, q, a) {
+  var qx = q[0],
+      qy = q[1],
+      qz = q[2],
+      qw = q[3],
+      bx = a[0],
+      by = a[1],
+      bz = a[2],
+      bw = a[3];
+  out[0] = qx * bw + qw * bx + qy * bz - qz * by;
+  out[1] = qy * bw + qw * by + qz * bx - qx * bz;
+  out[2] = qz * bw + qw * bz + qx * by - qy * bx;
+  out[3] = qw * bw - qx * bx - qy * by - qz * bz;
+  bx = a[4];
+  by = a[5];
+  bz = a[6];
+  bw = a[7];
+  out[4] = qx * bw + qw * bx + qy * bz - qz * by;
+  out[5] = qy * bw + qw * by + qz * bx - qx * bz;
+  out[6] = qz * bw + qw * bz + qx * by - qy * bx;
+  out[7] = qw * bw - qx * bx - qy * by - qz * bz;
+  return out;
+}
+/**
+ * Rotates a dual quat around a given axis. Does the normalisation automatically
+ *
+ * @param {quat2} out the receiving dual quaternion
+ * @param {quat2} a the dual quaternion to rotate
+ * @param {vec3} axis the axis to rotate around
+ * @param {Number} rad how far the rotation should be
+ * @returns {quat2} out
+ */
+
+
+function rotateAroundAxis(out, a, axis, rad) {
+  //Special case for rad = 0
+  if (Math.abs(rad) < glMatrix.EPSILON) {
+    return copy(out, a);
+  }
+
+  var axisLength = Math.sqrt(axis[0] * axis[0] + axis[1] * axis[1] + axis[2] * axis[2]);
+  rad = rad * 0.5;
+  var s = Math.sin(rad);
+  var bx = s * axis[0] / axisLength;
+  var by = s * axis[1] / axisLength;
+  var bz = s * axis[2] / axisLength;
+  var bw = Math.cos(rad);
+  var ax1 = a[0],
+      ay1 = a[1],
+      az1 = a[2],
+      aw1 = a[3];
+  out[0] = ax1 * bw + aw1 * bx + ay1 * bz - az1 * by;
+  out[1] = ay1 * bw + aw1 * by + az1 * bx - ax1 * bz;
+  out[2] = az1 * bw + aw1 * bz + ax1 * by - ay1 * bx;
+  out[3] = aw1 * bw - ax1 * bx - ay1 * by - az1 * bz;
+  var ax = a[4],
+      ay = a[5],
+      az = a[6],
+      aw = a[7];
+  out[4] = ax * bw + aw * bx + ay * bz - az * by;
+  out[5] = ay * bw + aw * by + az * bx - ax * bz;
+  out[6] = az * bw + aw * bz + ax * by - ay * bx;
+  out[7] = aw * bw - ax * bx - ay * by - az * bz;
+  return out;
+}
+/**
+ * Adds two dual quat's
+ *
+ * @param {quat2} out the receiving dual quaternion
+ * @param {quat2} a the first operand
+ * @param {quat2} b the second operand
+ * @returns {quat2} out
+ * @function
+ */
+
+
+function add(out, a, b) {
+  out[0] = a[0] + b[0];
+  out[1] = a[1] + b[1];
+  out[2] = a[2] + b[2];
+  out[3] = a[3] + b[3];
+  out[4] = a[4] + b[4];
+  out[5] = a[5] + b[5];
+  out[6] = a[6] + b[6];
+  out[7] = a[7] + b[7];
+  return out;
+}
+/**
+ * Multiplies two dual quat's
+ *
+ * @param {quat2} out the receiving dual quaternion
+ * @param {quat2} a the first operand
+ * @param {quat2} b the second operand
+ * @returns {quat2} out
+ */
+
+
+function multiply(out, a, b) {
+  var ax0 = a[0],
+      ay0 = a[1],
+      az0 = a[2],
+      aw0 = a[3],
+      bx1 = b[4],
+      by1 = b[5],
+      bz1 = b[6],
+      bw1 = b[7],
+      ax1 = a[4],
+      ay1 = a[5],
+      az1 = a[6],
+      aw1 = a[7],
+      bx0 = b[0],
+      by0 = b[1],
+      bz0 = b[2],
+      bw0 = b[3];
+  out[0] = ax0 * bw0 + aw0 * bx0 + ay0 * bz0 - az0 * by0;
+  out[1] = ay0 * bw0 + aw0 * by0 + az0 * bx0 - ax0 * bz0;
+  out[2] = az0 * bw0 + aw0 * bz0 + ax0 * by0 - ay0 * bx0;
+  out[3] = aw0 * bw0 - ax0 * bx0 - ay0 * by0 - az0 * bz0;
+  out[4] = ax0 * bw1 + aw0 * bx1 + ay0 * bz1 - az0 * by1 + ax1 * bw0 + aw1 * bx0 + ay1 * bz0 - az1 * by0;
+  out[5] = ay0 * bw1 + aw0 * by1 + az0 * bx1 - ax0 * bz1 + ay1 * bw0 + aw1 * by0 + az1 * bx0 - ax1 * bz0;
+  out[6] = az0 * bw1 + aw0 * bz1 + ax0 * by1 - ay0 * bx1 + az1 * bw0 + aw1 * bz0 + ax1 * by0 - ay1 * bx0;
+  out[7] = aw0 * bw1 - ax0 * bx1 - ay0 * by1 - az0 * bz1 + aw1 * bw0 - ax1 * bx0 - ay1 * by0 - az1 * bz0;
+  return out;
+}
+/**
+ * Alias for {@link quat2.multiply}
+ * @function
+ */
+
+
+var mul = multiply;
+/**
+ * Scales a dual quat by a scalar number
+ *
+ * @param {quat2} out the receiving dual quat
+ * @param {quat2} a the dual quat to scale
+ * @param {Number} b amount to scale the dual quat by
+ * @returns {quat2} out
+ * @function
+ */
+
+exports.mul = mul;
+
+function scale(out, a, b) {
+  out[0] = a[0] * b;
+  out[1] = a[1] * b;
+  out[2] = a[2] * b;
+  out[3] = a[3] * b;
+  out[4] = a[4] * b;
+  out[5] = a[5] * b;
+  out[6] = a[6] * b;
+  out[7] = a[7] * b;
+  return out;
+}
+/**
+ * Calculates the dot product of two dual quat's (The dot product of the real parts)
+ *
+ * @param {quat2} a the first operand
+ * @param {quat2} b the second operand
+ * @returns {Number} dot product of a and b
+ * @function
+ */
+
+
+var dot = quat.dot;
+/**
+ * Performs a linear interpolation between two dual quats's
+ * NOTE: The resulting dual quaternions won't always be normalized (The error is most noticeable when t = 0.5)
+ *
+ * @param {quat2} out the receiving dual quat
+ * @param {quat2} a the first operand
+ * @param {quat2} b the second operand
+ * @param {Number} t interpolation amount, in the range [0-1], between the two inputs
+ * @returns {quat2} out
+ */
+
+exports.dot = dot;
+
+function lerp(out, a, b, t) {
+  var mt = 1 - t;
+  if (dot(a, b) < 0) t = -t;
+  out[0] = a[0] * mt + b[0] * t;
+  out[1] = a[1] * mt + b[1] * t;
+  out[2] = a[2] * mt + b[2] * t;
+  out[3] = a[3] * mt + b[3] * t;
+  out[4] = a[4] * mt + b[4] * t;
+  out[5] = a[5] * mt + b[5] * t;
+  out[6] = a[6] * mt + b[6] * t;
+  out[7] = a[7] * mt + b[7] * t;
+  return out;
+}
+/**
+ * Calculates the inverse of a dual quat. If they are normalized, conjugate is cheaper
+ *
+ * @param {quat2} out the receiving dual quaternion
+ * @param {quat2} a dual quat to calculate inverse of
+ * @returns {quat2} out
+ */
+
+
+function invert(out, a) {
+  var sqlen = squaredLength(a);
+  out[0] = -a[0] / sqlen;
+  out[1] = -a[1] / sqlen;
+  out[2] = -a[2] / sqlen;
+  out[3] = a[3] / sqlen;
+  out[4] = -a[4] / sqlen;
+  out[5] = -a[5] / sqlen;
+  out[6] = -a[6] / sqlen;
+  out[7] = a[7] / sqlen;
+  return out;
+}
+/**
+ * Calculates the conjugate of a dual quat
+ * If the dual quaternion is normalized, this function is faster than quat2.inverse and produces the same result.
+ *
+ * @param {quat2} out the receiving quaternion
+ * @param {quat2} a quat to calculate conjugate of
+ * @returns {quat2} out
+ */
+
+
+function conjugate(out, a) {
+  out[0] = -a[0];
+  out[1] = -a[1];
+  out[2] = -a[2];
+  out[3] = a[3];
+  out[4] = -a[4];
+  out[5] = -a[5];
+  out[6] = -a[6];
+  out[7] = a[7];
+  return out;
+}
+/**
+ * Calculates the length of a dual quat
+ *
+ * @param {quat2} a dual quat to calculate length of
+ * @returns {Number} length of a
+ * @function
+ */
+
+
+var length = quat.length;
+/**
+ * Alias for {@link quat2.length}
+ * @function
+ */
+
+exports.length = length;
+var len = length;
+/**
+ * Calculates the squared length of a dual quat
+ *
+ * @param {quat2} a dual quat to calculate squared length of
+ * @returns {Number} squared length of a
+ * @function
+ */
+
+exports.len = len;
+var squaredLength = quat.squaredLength;
+/**
+ * Alias for {@link quat2.squaredLength}
+ * @function
+ */
+
+exports.squaredLength = squaredLength;
+var sqrLen = squaredLength;
+/**
+ * Normalize a dual quat
+ *
+ * @param {quat2} out the receiving dual quaternion
+ * @param {quat2} a dual quaternion to normalize
+ * @returns {quat2} out
+ * @function
+ */
+
+exports.sqrLen = sqrLen;
+
+function normalize(out, a) {
+  var magnitude = squaredLength(a);
+
+  if (magnitude > 0) {
+    magnitude = Math.sqrt(magnitude);
+    var a0 = a[0] / magnitude;
+    var a1 = a[1] / magnitude;
+    var a2 = a[2] / magnitude;
+    var a3 = a[3] / magnitude;
+    var b0 = a[4];
+    var b1 = a[5];
+    var b2 = a[6];
+    var b3 = a[7];
+    var a_dot_b = a0 * b0 + a1 * b1 + a2 * b2 + a3 * b3;
+    out[0] = a0;
+    out[1] = a1;
+    out[2] = a2;
+    out[3] = a3;
+    out[4] = (b0 - a0 * a_dot_b) / magnitude;
+    out[5] = (b1 - a1 * a_dot_b) / magnitude;
+    out[6] = (b2 - a2 * a_dot_b) / magnitude;
+    out[7] = (b3 - a3 * a_dot_b) / magnitude;
+  }
+
+  return out;
+}
+/**
+ * Returns a string representation of a dual quatenion
+ *
+ * @param {quat2} a dual quaternion to represent as a string
+ * @returns {String} string representation of the dual quat
+ */
+
+
+function str(a) {
+  return 'quat2(' + a[0] + ', ' + a[1] + ', ' + a[2] + ', ' + a[3] + ', ' + a[4] + ', ' + a[5] + ', ' + a[6] + ', ' + a[7] + ')';
+}
+/**
+ * Returns whether or not the dual quaternions have exactly the same elements in the same position (when compared with ===)
+ *
+ * @param {quat2} a the first dual quaternion.
+ * @param {quat2} b the second dual quaternion.
+ * @returns {Boolean} true if the dual quaternions are equal, false otherwise.
+ */
+
+
+function exactEquals(a, b) {
+  return a[0] === b[0] && a[1] === b[1] && a[2] === b[2] && a[3] === b[3] && a[4] === b[4] && a[5] === b[5] && a[6] === b[6] && a[7] === b[7];
+}
+/**
+ * Returns whether or not the dual quaternions have approximately the same elements in the same position.
+ *
+ * @param {quat2} a the first dual quat.
+ * @param {quat2} b the second dual quat.
+ * @returns {Boolean} true if the dual quats are equal, false otherwise.
+ */
+
+
+function equals(a, b) {
+  var a0 = a[0],
+      a1 = a[1],
+      a2 = a[2],
+      a3 = a[3],
+      a4 = a[4],
+      a5 = a[5],
+      a6 = a[6],
+      a7 = a[7];
+  var b0 = b[0],
+      b1 = b[1],
+      b2 = b[2],
+      b3 = b[3],
+      b4 = b[4],
+      b5 = b[5],
+      b6 = b[6],
+      b7 = b[7];
+  return Math.abs(a0 - b0) <= glMatrix.EPSILON * Math.max(1.0, Math.abs(a0), Math.abs(b0)) && Math.abs(a1 - b1) <= glMatrix.EPSILON * Math.max(1.0, Math.abs(a1), Math.abs(b1)) && Math.abs(a2 - b2) <= glMatrix.EPSILON * Math.max(1.0, Math.abs(a2), Math.abs(b2)) && Math.abs(a3 - b3) <= glMatrix.EPSILON * Math.max(1.0, Math.abs(a3), Math.abs(b3)) && Math.abs(a4 - b4) <= glMatrix.EPSILON * Math.max(1.0, Math.abs(a4), Math.abs(b4)) && Math.abs(a5 - b5) <= glMatrix.EPSILON * Math.max(1.0, Math.abs(a5), Math.abs(b5)) && Math.abs(a6 - b6) <= glMatrix.EPSILON * Math.max(1.0, Math.abs(a6), Math.abs(b6)) && Math.abs(a7 - b7) <= glMatrix.EPSILON * Math.max(1.0, Math.abs(a7), Math.abs(b7));
+}
+},{"./common.js":2,"./mat4.js":7,"./quat.js":8}],10:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.create = create;
+exports.clone = clone;
+exports.fromValues = fromValues;
+exports.copy = copy;
+exports.set = set;
+exports.add = add;
+exports.subtract = subtract;
+exports.multiply = multiply;
+exports.divide = divide;
+exports.ceil = ceil;
+exports.floor = floor;
+exports.min = min;
+exports.max = max;
+exports.round = round;
+exports.scale = scale;
+exports.scaleAndAdd = scaleAndAdd;
+exports.distance = distance;
+exports.squaredDistance = squaredDistance;
+exports.length = length;
+exports.squaredLength = squaredLength;
+exports.negate = negate;
+exports.inverse = inverse;
+exports.normalize = normalize;
+exports.dot = dot;
+exports.cross = cross;
+exports.lerp = lerp;
+exports.random = random;
+exports.transformMat2 = transformMat2;
+exports.transformMat2d = transformMat2d;
+exports.transformMat3 = transformMat3;
+exports.transformMat4 = transformMat4;
+exports.rotate = rotate;
+exports.angle = angle;
+exports.zero = zero;
+exports.str = str;
+exports.exactEquals = exactEquals;
+exports.equals = equals;
+exports.forEach = exports.sqrLen = exports.sqrDist = exports.dist = exports.div = exports.mul = exports.sub = exports.len = void 0;
+
+var glMatrix = _interopRequireWildcard(require("./common.js"));
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
+
+/**
+ * 2 Dimensional Vector
+ * @module vec2
+ */
+
+/**
+ * Creates a new, empty vec2
+ *
+ * @returns {vec2} a new 2D vector
+ */
+function create() {
+  var out = new glMatrix.ARRAY_TYPE(2);
+
+  if (glMatrix.ARRAY_TYPE != Float32Array) {
+    out[0] = 0;
+    out[1] = 0;
+  }
+
+  return out;
+}
+/**
+ * Creates a new vec2 initialized with values from an existing vector
+ *
+ * @param {vec2} a vector to clone
+ * @returns {vec2} a new 2D vector
+ */
+
+
+function clone(a) {
+  var out = new glMatrix.ARRAY_TYPE(2);
+  out[0] = a[0];
+  out[1] = a[1];
+  return out;
+}
+/**
+ * Creates a new vec2 initialized with the given values
+ *
+ * @param {Number} x X component
+ * @param {Number} y Y component
+ * @returns {vec2} a new 2D vector
+ */
+
+
+function fromValues(x, y) {
+  var out = new glMatrix.ARRAY_TYPE(2);
+  out[0] = x;
+  out[1] = y;
+  return out;
+}
+/**
+ * Copy the values from one vec2 to another
+ *
+ * @param {vec2} out the receiving vector
+ * @param {vec2} a the source vector
+ * @returns {vec2} out
+ */
+
+
+function copy(out, a) {
+  out[0] = a[0];
+  out[1] = a[1];
+  return out;
+}
+/**
+ * Set the components of a vec2 to the given values
+ *
+ * @param {vec2} out the receiving vector
+ * @param {Number} x X component
+ * @param {Number} y Y component
+ * @returns {vec2} out
+ */
+
+
+function set(out, x, y) {
+  out[0] = x;
+  out[1] = y;
+  return out;
+}
+/**
+ * Adds two vec2's
+ *
+ * @param {vec2} out the receiving vector
+ * @param {vec2} a the first operand
+ * @param {vec2} b the second operand
+ * @returns {vec2} out
+ */
+
+
+function add(out, a, b) {
+  out[0] = a[0] + b[0];
+  out[1] = a[1] + b[1];
+  return out;
+}
+/**
+ * Subtracts vector b from vector a
+ *
+ * @param {vec2} out the receiving vector
+ * @param {vec2} a the first operand
+ * @param {vec2} b the second operand
+ * @returns {vec2} out
+ */
+
+
+function subtract(out, a, b) {
+  out[0] = a[0] - b[0];
+  out[1] = a[1] - b[1];
+  return out;
+}
+/**
+ * Multiplies two vec2's
+ *
+ * @param {vec2} out the receiving vector
+ * @param {vec2} a the first operand
+ * @param {vec2} b the second operand
+ * @returns {vec2} out
+ */
+
+
+function multiply(out, a, b) {
+  out[0] = a[0] * b[0];
+  out[1] = a[1] * b[1];
+  return out;
+}
+/**
+ * Divides two vec2's
+ *
+ * @param {vec2} out the receiving vector
+ * @param {vec2} a the first operand
+ * @param {vec2} b the second operand
+ * @returns {vec2} out
+ */
+
+
+function divide(out, a, b) {
+  out[0] = a[0] / b[0];
+  out[1] = a[1] / b[1];
+  return out;
+}
+/**
+ * Math.ceil the components of a vec2
+ *
+ * @param {vec2} out the receiving vector
+ * @param {vec2} a vector to ceil
+ * @returns {vec2} out
+ */
+
+
+function ceil(out, a) {
+  out[0] = Math.ceil(a[0]);
+  out[1] = Math.ceil(a[1]);
+  return out;
+}
+/**
+ * Math.floor the components of a vec2
+ *
+ * @param {vec2} out the receiving vector
+ * @param {vec2} a vector to floor
+ * @returns {vec2} out
+ */
+
+
+function floor(out, a) {
+  out[0] = Math.floor(a[0]);
+  out[1] = Math.floor(a[1]);
+  return out;
+}
+/**
+ * Returns the minimum of two vec2's
+ *
+ * @param {vec2} out the receiving vector
+ * @param {vec2} a the first operand
+ * @param {vec2} b the second operand
+ * @returns {vec2} out
+ */
+
+
+function min(out, a, b) {
+  out[0] = Math.min(a[0], b[0]);
+  out[1] = Math.min(a[1], b[1]);
+  return out;
+}
+/**
+ * Returns the maximum of two vec2's
+ *
+ * @param {vec2} out the receiving vector
+ * @param {vec2} a the first operand
+ * @param {vec2} b the second operand
+ * @returns {vec2} out
+ */
+
+
+function max(out, a, b) {
+  out[0] = Math.max(a[0], b[0]);
+  out[1] = Math.max(a[1], b[1]);
+  return out;
+}
+/**
+ * Math.round the components of a vec2
+ *
+ * @param {vec2} out the receiving vector
+ * @param {vec2} a vector to round
+ * @returns {vec2} out
+ */
+
+
+function round(out, a) {
+  out[0] = Math.round(a[0]);
+  out[1] = Math.round(a[1]);
+  return out;
+}
+/**
+ * Scales a vec2 by a scalar number
+ *
+ * @param {vec2} out the receiving vector
+ * @param {vec2} a the vector to scale
+ * @param {Number} b amount to scale the vector by
+ * @returns {vec2} out
+ */
+
+
+function scale(out, a, b) {
+  out[0] = a[0] * b;
+  out[1] = a[1] * b;
+  return out;
+}
+/**
+ * Adds two vec2's after scaling the second operand by a scalar value
+ *
+ * @param {vec2} out the receiving vector
+ * @param {vec2} a the first operand
+ * @param {vec2} b the second operand
+ * @param {Number} scale the amount to scale b by before adding
+ * @returns {vec2} out
+ */
+
+
+function scaleAndAdd(out, a, b, scale) {
+  out[0] = a[0] + b[0] * scale;
+  out[1] = a[1] + b[1] * scale;
+  return out;
+}
+/**
+ * Calculates the euclidian distance between two vec2's
+ *
+ * @param {vec2} a the first operand
+ * @param {vec2} b the second operand
+ * @returns {Number} distance between a and b
+ */
+
+
+function distance(a, b) {
+  var x = b[0] - a[0],
+      y = b[1] - a[1];
+  return Math.sqrt(x * x + y * y);
+}
+/**
+ * Calculates the squared euclidian distance between two vec2's
+ *
+ * @param {vec2} a the first operand
+ * @param {vec2} b the second operand
+ * @returns {Number} squared distance between a and b
+ */
+
+
+function squaredDistance(a, b) {
+  var x = b[0] - a[0],
+      y = b[1] - a[1];
+  return x * x + y * y;
+}
+/**
+ * Calculates the length of a vec2
+ *
+ * @param {vec2} a vector to calculate length of
+ * @returns {Number} length of a
+ */
+
+
+function length(a) {
+  var x = a[0],
+      y = a[1];
+  return Math.sqrt(x * x + y * y);
+}
+/**
+ * Calculates the squared length of a vec2
+ *
+ * @param {vec2} a vector to calculate squared length of
+ * @returns {Number} squared length of a
+ */
+
+
+function squaredLength(a) {
+  var x = a[0],
+      y = a[1];
+  return x * x + y * y;
+}
+/**
+ * Negates the components of a vec2
+ *
+ * @param {vec2} out the receiving vector
+ * @param {vec2} a vector to negate
+ * @returns {vec2} out
+ */
+
+
+function negate(out, a) {
+  out[0] = -a[0];
+  out[1] = -a[1];
+  return out;
+}
+/**
+ * Returns the inverse of the components of a vec2
+ *
+ * @param {vec2} out the receiving vector
+ * @param {vec2} a vector to invert
+ * @returns {vec2} out
+ */
+
+
+function inverse(out, a) {
+  out[0] = 1.0 / a[0];
+  out[1] = 1.0 / a[1];
+  return out;
+}
+/**
+ * Normalize a vec2
+ *
+ * @param {vec2} out the receiving vector
+ * @param {vec2} a vector to normalize
+ * @returns {vec2} out
+ */
+
+
+function normalize(out, a) {
+  var x = a[0],
+      y = a[1];
+  var len = x * x + y * y;
+
+  if (len > 0) {
+    //TODO: evaluate use of glm_invsqrt here?
+    len = 1 / Math.sqrt(len);
+  }
+
+  out[0] = a[0] * len;
+  out[1] = a[1] * len;
+  return out;
+}
+/**
+ * Calculates the dot product of two vec2's
+ *
+ * @param {vec2} a the first operand
+ * @param {vec2} b the second operand
+ * @returns {Number} dot product of a and b
+ */
+
+
+function dot(a, b) {
+  return a[0] * b[0] + a[1] * b[1];
+}
+/**
+ * Computes the cross product of two vec2's
+ * Note that the cross product must by definition produce a 3D vector
+ *
+ * @param {vec3} out the receiving vector
+ * @param {vec2} a the first operand
+ * @param {vec2} b the second operand
+ * @returns {vec3} out
+ */
+
+
+function cross(out, a, b) {
+  var z = a[0] * b[1] - a[1] * b[0];
+  out[0] = out[1] = 0;
+  out[2] = z;
+  return out;
+}
+/**
+ * Performs a linear interpolation between two vec2's
+ *
+ * @param {vec2} out the receiving vector
+ * @param {vec2} a the first operand
+ * @param {vec2} b the second operand
+ * @param {Number} t interpolation amount, in the range [0-1], between the two inputs
+ * @returns {vec2} out
+ */
+
+
+function lerp(out, a, b, t) {
+  var ax = a[0],
+      ay = a[1];
+  out[0] = ax + t * (b[0] - ax);
+  out[1] = ay + t * (b[1] - ay);
+  return out;
+}
+/**
+ * Generates a random vector with the given scale
+ *
+ * @param {vec2} out the receiving vector
+ * @param {Number} [scale] Length of the resulting vector. If ommitted, a unit vector will be returned
+ * @returns {vec2} out
+ */
+
+
+function random(out, scale) {
+  scale = scale || 1.0;
+  var r = glMatrix.RANDOM() * 2.0 * Math.PI;
+  out[0] = Math.cos(r) * scale;
+  out[1] = Math.sin(r) * scale;
+  return out;
+}
+/**
+ * Transforms the vec2 with a mat2
+ *
+ * @param {vec2} out the receiving vector
+ * @param {vec2} a the vector to transform
+ * @param {mat2} m matrix to transform with
+ * @returns {vec2} out
+ */
+
+
+function transformMat2(out, a, m) {
+  var x = a[0],
+      y = a[1];
+  out[0] = m[0] * x + m[2] * y;
+  out[1] = m[1] * x + m[3] * y;
+  return out;
+}
+/**
+ * Transforms the vec2 with a mat2d
+ *
+ * @param {vec2} out the receiving vector
+ * @param {vec2} a the vector to transform
+ * @param {mat2d} m matrix to transform with
+ * @returns {vec2} out
+ */
+
+
+function transformMat2d(out, a, m) {
+  var x = a[0],
+      y = a[1];
+  out[0] = m[0] * x + m[2] * y + m[4];
+  out[1] = m[1] * x + m[3] * y + m[5];
+  return out;
+}
+/**
+ * Transforms the vec2 with a mat3
+ * 3rd vector component is implicitly '1'
+ *
+ * @param {vec2} out the receiving vector
+ * @param {vec2} a the vector to transform
+ * @param {mat3} m matrix to transform with
+ * @returns {vec2} out
+ */
+
+
+function transformMat3(out, a, m) {
+  var x = a[0],
+      y = a[1];
+  out[0] = m[0] * x + m[3] * y + m[6];
+  out[1] = m[1] * x + m[4] * y + m[7];
+  return out;
+}
+/**
+ * Transforms the vec2 with a mat4
+ * 3rd vector component is implicitly '0'
+ * 4th vector component is implicitly '1'
+ *
+ * @param {vec2} out the receiving vector
+ * @param {vec2} a the vector to transform
+ * @param {mat4} m matrix to transform with
+ * @returns {vec2} out
+ */
+
+
+function transformMat4(out, a, m) {
+  var x = a[0];
+  var y = a[1];
+  out[0] = m[0] * x + m[4] * y + m[12];
+  out[1] = m[1] * x + m[5] * y + m[13];
+  return out;
+}
+/**
+ * Rotate a 2D vector
+ * @param {vec2} out The receiving vec2
+ * @param {vec2} a The vec2 point to rotate
+ * @param {vec2} b The origin of the rotation
+ * @param {Number} c The angle of rotation
+ * @returns {vec2} out
+ */
+
+
+function rotate(out, a, b, c) {
+  //Translate point to the origin
+  var p0 = a[0] - b[0],
+      p1 = a[1] - b[1],
+      sinC = Math.sin(c),
+      cosC = Math.cos(c); //perform rotation and translate to correct position
+
+  out[0] = p0 * cosC - p1 * sinC + b[0];
+  out[1] = p0 * sinC + p1 * cosC + b[1];
+  return out;
+}
+/**
+ * Get the angle between two 2D vectors
+ * @param {vec2} a The first operand
+ * @param {vec2} b The second operand
+ * @returns {Number} The angle in radians
+ */
+
+
+function angle(a, b) {
+  var x1 = a[0],
+      y1 = a[1],
+      x2 = b[0],
+      y2 = b[1];
+  var len1 = x1 * x1 + y1 * y1;
+
+  if (len1 > 0) {
+    //TODO: evaluate use of glm_invsqrt here?
+    len1 = 1 / Math.sqrt(len1);
+  }
+
+  var len2 = x2 * x2 + y2 * y2;
+
+  if (len2 > 0) {
+    //TODO: evaluate use of glm_invsqrt here?
+    len2 = 1 / Math.sqrt(len2);
+  }
+
+  var cosine = (x1 * x2 + y1 * y2) * len1 * len2;
+
+  if (cosine > 1.0) {
+    return 0;
+  } else if (cosine < -1.0) {
+    return Math.PI;
+  } else {
+    return Math.acos(cosine);
+  }
+}
+/**
+ * Set the components of a vec2 to zero
+ *
+ * @param {vec2} out the receiving vector
+ * @returns {vec2} out
+ */
+
+
+function zero(out) {
+  out[0] = 0.0;
+  out[1] = 0.0;
+  return out;
+}
+/**
+ * Returns a string representation of a vector
+ *
+ * @param {vec2} a vector to represent as a string
+ * @returns {String} string representation of the vector
+ */
+
+
+function str(a) {
+  return 'vec2(' + a[0] + ', ' + a[1] + ')';
+}
+/**
+ * Returns whether or not the vectors exactly have the same elements in the same position (when compared with ===)
+ *
+ * @param {vec2} a The first vector.
+ * @param {vec2} b The second vector.
+ * @returns {Boolean} True if the vectors are equal, false otherwise.
+ */
+
+
+function exactEquals(a, b) {
+  return a[0] === b[0] && a[1] === b[1];
+}
+/**
+ * Returns whether or not the vectors have approximately the same elements in the same position.
+ *
+ * @param {vec2} a The first vector.
+ * @param {vec2} b The second vector.
+ * @returns {Boolean} True if the vectors are equal, false otherwise.
+ */
+
+
+function equals(a, b) {
+  var a0 = a[0],
+      a1 = a[1];
+  var b0 = b[0],
+      b1 = b[1];
+  return Math.abs(a0 - b0) <= glMatrix.EPSILON * Math.max(1.0, Math.abs(a0), Math.abs(b0)) && Math.abs(a1 - b1) <= glMatrix.EPSILON * Math.max(1.0, Math.abs(a1), Math.abs(b1));
+}
+/**
+ * Alias for {@link vec2.length}
+ * @function
+ */
+
+
+var len = length;
+/**
+ * Alias for {@link vec2.subtract}
+ * @function
+ */
+
+exports.len = len;
+var sub = subtract;
+/**
+ * Alias for {@link vec2.multiply}
+ * @function
+ */
+
+exports.sub = sub;
+var mul = multiply;
+/**
+ * Alias for {@link vec2.divide}
+ * @function
+ */
+
+exports.mul = mul;
+var div = divide;
+/**
+ * Alias for {@link vec2.distance}
+ * @function
+ */
+
+exports.div = div;
+var dist = distance;
+/**
+ * Alias for {@link vec2.squaredDistance}
+ * @function
+ */
+
+exports.dist = dist;
+var sqrDist = squaredDistance;
+/**
+ * Alias for {@link vec2.squaredLength}
+ * @function
+ */
+
+exports.sqrDist = sqrDist;
+var sqrLen = squaredLength;
+/**
+ * Perform some operation over an array of vec2s.
+ *
+ * @param {Array} a the array of vectors to iterate over
+ * @param {Number} stride Number of elements between the start of each vec2. If 0 assumes tightly packed
+ * @param {Number} offset Number of elements to skip at the beginning of the array
+ * @param {Number} count Number of vec2s to iterate over. If 0 iterates over entire array
+ * @param {Function} fn Function to call for each vector in the array
+ * @param {Object} [arg] additional argument to pass to fn
+ * @returns {Array} a
+ * @function
+ */
+
+exports.sqrLen = sqrLen;
+
+var forEach = function () {
+  var vec = create();
+  return function (a, stride, offset, count, fn, arg) {
+    var i, l;
+
+    if (!stride) {
+      stride = 2;
+    }
+
+    if (!offset) {
+      offset = 0;
+    }
+
+    if (count) {
+      l = Math.min(count * stride + offset, a.length);
+    } else {
+      l = a.length;
+    }
+
+    for (i = offset; i < l; i += stride) {
+      vec[0] = a[i];
+      vec[1] = a[i + 1];
+      fn(vec, vec, arg);
+      a[i] = vec[0];
+      a[i + 1] = vec[1];
+    }
+
+    return a;
+  };
+}();
+
+exports.forEach = forEach;
+},{"./common.js":2}],11:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.create = create;
+exports.clone = clone;
+exports.length = length;
+exports.fromValues = fromValues;
+exports.copy = copy;
+exports.set = set;
+exports.add = add;
+exports.subtract = subtract;
+exports.multiply = multiply;
+exports.divide = divide;
+exports.ceil = ceil;
+exports.floor = floor;
+exports.min = min;
+exports.max = max;
+exports.round = round;
+exports.scale = scale;
+exports.scaleAndAdd = scaleAndAdd;
+exports.distance = distance;
+exports.squaredDistance = squaredDistance;
+exports.squaredLength = squaredLength;
+exports.negate = negate;
+exports.inverse = inverse;
+exports.normalize = normalize;
+exports.dot = dot;
+exports.cross = cross;
+exports.lerp = lerp;
+exports.hermite = hermite;
+exports.bezier = bezier;
+exports.random = random;
+exports.transformMat4 = transformMat4;
+exports.transformMat3 = transformMat3;
+exports.transformQuat = transformQuat;
+exports.rotateX = rotateX;
+exports.rotateY = rotateY;
+exports.rotateZ = rotateZ;
+exports.angle = angle;
+exports.zero = zero;
+exports.str = str;
+exports.exactEquals = exactEquals;
+exports.equals = equals;
+exports.forEach = exports.sqrLen = exports.len = exports.sqrDist = exports.dist = exports.div = exports.mul = exports.sub = void 0;
+
+var glMatrix = _interopRequireWildcard(require("./common.js"));
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
+
+/**
+ * 3 Dimensional Vector
+ * @module vec3
+ */
+
+/**
+ * Creates a new, empty vec3
+ *
+ * @returns {vec3} a new 3D vector
+ */
+function create() {
+  var out = new glMatrix.ARRAY_TYPE(3);
+
+  if (glMatrix.ARRAY_TYPE != Float32Array) {
+    out[0] = 0;
+    out[1] = 0;
+    out[2] = 0;
+  }
+
+  return out;
+}
+/**
+ * Creates a new vec3 initialized with values from an existing vector
+ *
+ * @param {vec3} a vector to clone
+ * @returns {vec3} a new 3D vector
+ */
+
+
+function clone(a) {
+  var out = new glMatrix.ARRAY_TYPE(3);
+  out[0] = a[0];
+  out[1] = a[1];
+  out[2] = a[2];
+  return out;
+}
+/**
+ * Calculates the length of a vec3
+ *
+ * @param {vec3} a vector to calculate length of
+ * @returns {Number} length of a
+ */
+
+
+function length(a) {
+  var x = a[0];
+  var y = a[1];
+  var z = a[2];
+  return Math.sqrt(x * x + y * y + z * z);
+}
+/**
+ * Creates a new vec3 initialized with the given values
+ *
+ * @param {Number} x X component
+ * @param {Number} y Y component
+ * @param {Number} z Z component
+ * @returns {vec3} a new 3D vector
+ */
+
+
+function fromValues(x, y, z) {
+  var out = new glMatrix.ARRAY_TYPE(3);
+  out[0] = x;
+  out[1] = y;
+  out[2] = z;
+  return out;
+}
+/**
+ * Copy the values from one vec3 to another
+ *
+ * @param {vec3} out the receiving vector
+ * @param {vec3} a the source vector
+ * @returns {vec3} out
+ */
+
+
+function copy(out, a) {
+  out[0] = a[0];
+  out[1] = a[1];
+  out[2] = a[2];
+  return out;
+}
+/**
+ * Set the components of a vec3 to the given values
+ *
+ * @param {vec3} out the receiving vector
+ * @param {Number} x X component
+ * @param {Number} y Y component
+ * @param {Number} z Z component
+ * @returns {vec3} out
+ */
+
+
+function set(out, x, y, z) {
+  out[0] = x;
+  out[1] = y;
+  out[2] = z;
+  return out;
+}
+/**
+ * Adds two vec3's
+ *
+ * @param {vec3} out the receiving vector
+ * @param {vec3} a the first operand
+ * @param {vec3} b the second operand
+ * @returns {vec3} out
+ */
+
+
+function add(out, a, b) {
+  out[0] = a[0] + b[0];
+  out[1] = a[1] + b[1];
+  out[2] = a[2] + b[2];
+  return out;
+}
+/**
+ * Subtracts vector b from vector a
+ *
+ * @param {vec3} out the receiving vector
+ * @param {vec3} a the first operand
+ * @param {vec3} b the second operand
+ * @returns {vec3} out
+ */
+
+
+function subtract(out, a, b) {
+  out[0] = a[0] - b[0];
+  out[1] = a[1] - b[1];
+  out[2] = a[2] - b[2];
+  return out;
+}
+/**
+ * Multiplies two vec3's
+ *
+ * @param {vec3} out the receiving vector
+ * @param {vec3} a the first operand
+ * @param {vec3} b the second operand
+ * @returns {vec3} out
+ */
+
+
+function multiply(out, a, b) {
+  out[0] = a[0] * b[0];
+  out[1] = a[1] * b[1];
+  out[2] = a[2] * b[2];
+  return out;
+}
+/**
+ * Divides two vec3's
+ *
+ * @param {vec3} out the receiving vector
+ * @param {vec3} a the first operand
+ * @param {vec3} b the second operand
+ * @returns {vec3} out
+ */
+
+
+function divide(out, a, b) {
+  out[0] = a[0] / b[0];
+  out[1] = a[1] / b[1];
+  out[2] = a[2] / b[2];
+  return out;
+}
+/**
+ * Math.ceil the components of a vec3
+ *
+ * @param {vec3} out the receiving vector
+ * @param {vec3} a vector to ceil
+ * @returns {vec3} out
+ */
+
+
+function ceil(out, a) {
+  out[0] = Math.ceil(a[0]);
+  out[1] = Math.ceil(a[1]);
+  out[2] = Math.ceil(a[2]);
+  return out;
+}
+/**
+ * Math.floor the components of a vec3
+ *
+ * @param {vec3} out the receiving vector
+ * @param {vec3} a vector to floor
+ * @returns {vec3} out
+ */
+
+
+function floor(out, a) {
+  out[0] = Math.floor(a[0]);
+  out[1] = Math.floor(a[1]);
+  out[2] = Math.floor(a[2]);
+  return out;
+}
+/**
+ * Returns the minimum of two vec3's
+ *
+ * @param {vec3} out the receiving vector
+ * @param {vec3} a the first operand
+ * @param {vec3} b the second operand
+ * @returns {vec3} out
+ */
+
+
+function min(out, a, b) {
+  out[0] = Math.min(a[0], b[0]);
+  out[1] = Math.min(a[1], b[1]);
+  out[2] = Math.min(a[2], b[2]);
+  return out;
+}
+/**
+ * Returns the maximum of two vec3's
+ *
+ * @param {vec3} out the receiving vector
+ * @param {vec3} a the first operand
+ * @param {vec3} b the second operand
+ * @returns {vec3} out
+ */
+
+
+function max(out, a, b) {
+  out[0] = Math.max(a[0], b[0]);
+  out[1] = Math.max(a[1], b[1]);
+  out[2] = Math.max(a[2], b[2]);
+  return out;
+}
+/**
+ * Math.round the components of a vec3
+ *
+ * @param {vec3} out the receiving vector
+ * @param {vec3} a vector to round
+ * @returns {vec3} out
+ */
+
+
+function round(out, a) {
+  out[0] = Math.round(a[0]);
+  out[1] = Math.round(a[1]);
+  out[2] = Math.round(a[2]);
+  return out;
+}
+/**
+ * Scales a vec3 by a scalar number
+ *
+ * @param {vec3} out the receiving vector
+ * @param {vec3} a the vector to scale
+ * @param {Number} b amount to scale the vector by
+ * @returns {vec3} out
+ */
+
+
+function scale(out, a, b) {
+  out[0] = a[0] * b;
+  out[1] = a[1] * b;
+  out[2] = a[2] * b;
+  return out;
+}
+/**
+ * Adds two vec3's after scaling the second operand by a scalar value
+ *
+ * @param {vec3} out the receiving vector
+ * @param {vec3} a the first operand
+ * @param {vec3} b the second operand
+ * @param {Number} scale the amount to scale b by before adding
+ * @returns {vec3} out
+ */
+
+
+function scaleAndAdd(out, a, b, scale) {
+  out[0] = a[0] + b[0] * scale;
+  out[1] = a[1] + b[1] * scale;
+  out[2] = a[2] + b[2] * scale;
+  return out;
+}
+/**
+ * Calculates the euclidian distance between two vec3's
+ *
+ * @param {vec3} a the first operand
+ * @param {vec3} b the second operand
+ * @returns {Number} distance between a and b
+ */
+
+
+function distance(a, b) {
+  var x = b[0] - a[0];
+  var y = b[1] - a[1];
+  var z = b[2] - a[2];
+  return Math.sqrt(x * x + y * y + z * z);
+}
+/**
+ * Calculates the squared euclidian distance between two vec3's
+ *
+ * @param {vec3} a the first operand
+ * @param {vec3} b the second operand
+ * @returns {Number} squared distance between a and b
+ */
+
+
+function squaredDistance(a, b) {
+  var x = b[0] - a[0];
+  var y = b[1] - a[1];
+  var z = b[2] - a[2];
+  return x * x + y * y + z * z;
+}
+/**
+ * Calculates the squared length of a vec3
+ *
+ * @param {vec3} a vector to calculate squared length of
+ * @returns {Number} squared length of a
+ */
+
+
+function squaredLength(a) {
+  var x = a[0];
+  var y = a[1];
+  var z = a[2];
+  return x * x + y * y + z * z;
+}
+/**
+ * Negates the components of a vec3
+ *
+ * @param {vec3} out the receiving vector
+ * @param {vec3} a vector to negate
+ * @returns {vec3} out
+ */
+
+
+function negate(out, a) {
+  out[0] = -a[0];
+  out[1] = -a[1];
+  out[2] = -a[2];
+  return out;
+}
+/**
+ * Returns the inverse of the components of a vec3
+ *
+ * @param {vec3} out the receiving vector
+ * @param {vec3} a vector to invert
+ * @returns {vec3} out
+ */
+
+
+function inverse(out, a) {
+  out[0] = 1.0 / a[0];
+  out[1] = 1.0 / a[1];
+  out[2] = 1.0 / a[2];
+  return out;
+}
+/**
+ * Normalize a vec3
+ *
+ * @param {vec3} out the receiving vector
+ * @param {vec3} a vector to normalize
+ * @returns {vec3} out
+ */
+
+
+function normalize(out, a) {
+  var x = a[0];
+  var y = a[1];
+  var z = a[2];
+  var len = x * x + y * y + z * z;
+
+  if (len > 0) {
+    //TODO: evaluate use of glm_invsqrt here?
+    len = 1 / Math.sqrt(len);
+  }
+
+  out[0] = a[0] * len;
+  out[1] = a[1] * len;
+  out[2] = a[2] * len;
+  return out;
+}
+/**
+ * Calculates the dot product of two vec3's
+ *
+ * @param {vec3} a the first operand
+ * @param {vec3} b the second operand
+ * @returns {Number} dot product of a and b
+ */
+
+
+function dot(a, b) {
+  return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+}
+/**
+ * Computes the cross product of two vec3's
+ *
+ * @param {vec3} out the receiving vector
+ * @param {vec3} a the first operand
+ * @param {vec3} b the second operand
+ * @returns {vec3} out
+ */
+
+
+function cross(out, a, b) {
+  var ax = a[0],
+      ay = a[1],
+      az = a[2];
+  var bx = b[0],
+      by = b[1],
+      bz = b[2];
+  out[0] = ay * bz - az * by;
+  out[1] = az * bx - ax * bz;
+  out[2] = ax * by - ay * bx;
+  return out;
+}
+/**
+ * Performs a linear interpolation between two vec3's
+ *
+ * @param {vec3} out the receiving vector
+ * @param {vec3} a the first operand
+ * @param {vec3} b the second operand
+ * @param {Number} t interpolation amount, in the range [0-1], between the two inputs
+ * @returns {vec3} out
+ */
+
+
+function lerp(out, a, b, t) {
+  var ax = a[0];
+  var ay = a[1];
+  var az = a[2];
+  out[0] = ax + t * (b[0] - ax);
+  out[1] = ay + t * (b[1] - ay);
+  out[2] = az + t * (b[2] - az);
+  return out;
+}
+/**
+ * Performs a hermite interpolation with two control points
+ *
+ * @param {vec3} out the receiving vector
+ * @param {vec3} a the first operand
+ * @param {vec3} b the second operand
+ * @param {vec3} c the third operand
+ * @param {vec3} d the fourth operand
+ * @param {Number} t interpolation amount, in the range [0-1], between the two inputs
+ * @returns {vec3} out
+ */
+
+
+function hermite(out, a, b, c, d, t) {
+  var factorTimes2 = t * t;
+  var factor1 = factorTimes2 * (2 * t - 3) + 1;
+  var factor2 = factorTimes2 * (t - 2) + t;
+  var factor3 = factorTimes2 * (t - 1);
+  var factor4 = factorTimes2 * (3 - 2 * t);
+  out[0] = a[0] * factor1 + b[0] * factor2 + c[0] * factor3 + d[0] * factor4;
+  out[1] = a[1] * factor1 + b[1] * factor2 + c[1] * factor3 + d[1] * factor4;
+  out[2] = a[2] * factor1 + b[2] * factor2 + c[2] * factor3 + d[2] * factor4;
+  return out;
+}
+/**
+ * Performs a bezier interpolation with two control points
+ *
+ * @param {vec3} out the receiving vector
+ * @param {vec3} a the first operand
+ * @param {vec3} b the second operand
+ * @param {vec3} c the third operand
+ * @param {vec3} d the fourth operand
+ * @param {Number} t interpolation amount, in the range [0-1], between the two inputs
+ * @returns {vec3} out
+ */
+
+
+function bezier(out, a, b, c, d, t) {
+  var inverseFactor = 1 - t;
+  var inverseFactorTimesTwo = inverseFactor * inverseFactor;
+  var factorTimes2 = t * t;
+  var factor1 = inverseFactorTimesTwo * inverseFactor;
+  var factor2 = 3 * t * inverseFactorTimesTwo;
+  var factor3 = 3 * factorTimes2 * inverseFactor;
+  var factor4 = factorTimes2 * t;
+  out[0] = a[0] * factor1 + b[0] * factor2 + c[0] * factor3 + d[0] * factor4;
+  out[1] = a[1] * factor1 + b[1] * factor2 + c[1] * factor3 + d[1] * factor4;
+  out[2] = a[2] * factor1 + b[2] * factor2 + c[2] * factor3 + d[2] * factor4;
+  return out;
+}
+/**
+ * Generates a random vector with the given scale
+ *
+ * @param {vec3} out the receiving vector
+ * @param {Number} [scale] Length of the resulting vector. If ommitted, a unit vector will be returned
+ * @returns {vec3} out
+ */
+
+
+function random(out, scale) {
+  scale = scale || 1.0;
+  var r = glMatrix.RANDOM() * 2.0 * Math.PI;
+  var z = glMatrix.RANDOM() * 2.0 - 1.0;
+  var zScale = Math.sqrt(1.0 - z * z) * scale;
+  out[0] = Math.cos(r) * zScale;
+  out[1] = Math.sin(r) * zScale;
+  out[2] = z * scale;
+  return out;
+}
+/**
+ * Transforms the vec3 with a mat4.
+ * 4th vector component is implicitly '1'
+ *
+ * @param {vec3} out the receiving vector
+ * @param {vec3} a the vector to transform
+ * @param {mat4} m matrix to transform with
+ * @returns {vec3} out
+ */
+
+
+function transformMat4(out, a, m) {
+  var x = a[0],
+      y = a[1],
+      z = a[2];
+  var w = m[3] * x + m[7] * y + m[11] * z + m[15];
+  w = w || 1.0;
+  out[0] = (m[0] * x + m[4] * y + m[8] * z + m[12]) / w;
+  out[1] = (m[1] * x + m[5] * y + m[9] * z + m[13]) / w;
+  out[2] = (m[2] * x + m[6] * y + m[10] * z + m[14]) / w;
+  return out;
+}
+/**
+ * Transforms the vec3 with a mat3.
+ *
+ * @param {vec3} out the receiving vector
+ * @param {vec3} a the vector to transform
+ * @param {mat3} m the 3x3 matrix to transform with
+ * @returns {vec3} out
+ */
+
+
+function transformMat3(out, a, m) {
+  var x = a[0],
+      y = a[1],
+      z = a[2];
+  out[0] = x * m[0] + y * m[3] + z * m[6];
+  out[1] = x * m[1] + y * m[4] + z * m[7];
+  out[2] = x * m[2] + y * m[5] + z * m[8];
+  return out;
+}
+/**
+ * Transforms the vec3 with a quat
+ * Can also be used for dual quaternions. (Multiply it with the real part)
+ *
+ * @param {vec3} out the receiving vector
+ * @param {vec3} a the vector to transform
+ * @param {quat} q quaternion to transform with
+ * @returns {vec3} out
+ */
+
+
+function transformQuat(out, a, q) {
+  // benchmarks: https://jsperf.com/quaternion-transform-vec3-implementations-fixed
+  var qx = q[0],
+      qy = q[1],
+      qz = q[2],
+      qw = q[3];
+  var x = a[0],
+      y = a[1],
+      z = a[2]; // var qvec = [qx, qy, qz];
+  // var uv = vec3.cross([], qvec, a);
+
+  var uvx = qy * z - qz * y,
+      uvy = qz * x - qx * z,
+      uvz = qx * y - qy * x; // var uuv = vec3.cross([], qvec, uv);
+
+  var uuvx = qy * uvz - qz * uvy,
+      uuvy = qz * uvx - qx * uvz,
+      uuvz = qx * uvy - qy * uvx; // vec3.scale(uv, uv, 2 * w);
+
+  var w2 = qw * 2;
+  uvx *= w2;
+  uvy *= w2;
+  uvz *= w2; // vec3.scale(uuv, uuv, 2);
+
+  uuvx *= 2;
+  uuvy *= 2;
+  uuvz *= 2; // return vec3.add(out, a, vec3.add(out, uv, uuv));
+
+  out[0] = x + uvx + uuvx;
+  out[1] = y + uvy + uuvy;
+  out[2] = z + uvz + uuvz;
+  return out;
+}
+/**
+ * Rotate a 3D vector around the x-axis
+ * @param {vec3} out The receiving vec3
+ * @param {vec3} a The vec3 point to rotate
+ * @param {vec3} b The origin of the rotation
+ * @param {Number} c The angle of rotation
+ * @returns {vec3} out
+ */
+
+
+function rotateX(out, a, b, c) {
+  var p = [],
+      r = []; //Translate point to the origin
+
+  p[0] = a[0] - b[0];
+  p[1] = a[1] - b[1];
+  p[2] = a[2] - b[2]; //perform rotation
+
+  r[0] = p[0];
+  r[1] = p[1] * Math.cos(c) - p[2] * Math.sin(c);
+  r[2] = p[1] * Math.sin(c) + p[2] * Math.cos(c); //translate to correct position
+
+  out[0] = r[0] + b[0];
+  out[1] = r[1] + b[1];
+  out[2] = r[2] + b[2];
+  return out;
+}
+/**
+ * Rotate a 3D vector around the y-axis
+ * @param {vec3} out The receiving vec3
+ * @param {vec3} a The vec3 point to rotate
+ * @param {vec3} b The origin of the rotation
+ * @param {Number} c The angle of rotation
+ * @returns {vec3} out
+ */
+
+
+function rotateY(out, a, b, c) {
+  var p = [],
+      r = []; //Translate point to the origin
+
+  p[0] = a[0] - b[0];
+  p[1] = a[1] - b[1];
+  p[2] = a[2] - b[2]; //perform rotation
+
+  r[0] = p[2] * Math.sin(c) + p[0] * Math.cos(c);
+  r[1] = p[1];
+  r[2] = p[2] * Math.cos(c) - p[0] * Math.sin(c); //translate to correct position
+
+  out[0] = r[0] + b[0];
+  out[1] = r[1] + b[1];
+  out[2] = r[2] + b[2];
+  return out;
+}
+/**
+ * Rotate a 3D vector around the z-axis
+ * @param {vec3} out The receiving vec3
+ * @param {vec3} a The vec3 point to rotate
+ * @param {vec3} b The origin of the rotation
+ * @param {Number} c The angle of rotation
+ * @returns {vec3} out
+ */
+
+
+function rotateZ(out, a, b, c) {
+  var p = [],
+      r = []; //Translate point to the origin
+
+  p[0] = a[0] - b[0];
+  p[1] = a[1] - b[1];
+  p[2] = a[2] - b[2]; //perform rotation
+
+  r[0] = p[0] * Math.cos(c) - p[1] * Math.sin(c);
+  r[1] = p[0] * Math.sin(c) + p[1] * Math.cos(c);
+  r[2] = p[2]; //translate to correct position
+
+  out[0] = r[0] + b[0];
+  out[1] = r[1] + b[1];
+  out[2] = r[2] + b[2];
+  return out;
+}
+/**
+ * Get the angle between two 3D vectors
+ * @param {vec3} a The first operand
+ * @param {vec3} b The second operand
+ * @returns {Number} The angle in radians
+ */
+
+
+function angle(a, b) {
+  var tempA = fromValues(a[0], a[1], a[2]);
+  var tempB = fromValues(b[0], b[1], b[2]);
+  normalize(tempA, tempA);
+  normalize(tempB, tempB);
+  var cosine = dot(tempA, tempB);
+
+  if (cosine > 1.0) {
+    return 0;
+  } else if (cosine < -1.0) {
+    return Math.PI;
+  } else {
+    return Math.acos(cosine);
+  }
+}
+/**
+ * Set the components of a vec3 to zero
+ *
+ * @param {vec3} out the receiving vector
+ * @returns {vec3} out
+ */
+
+
+function zero(out) {
+  out[0] = 0.0;
+  out[1] = 0.0;
+  out[2] = 0.0;
+  return out;
+}
+/**
+ * Returns a string representation of a vector
+ *
+ * @param {vec3} a vector to represent as a string
+ * @returns {String} string representation of the vector
+ */
+
+
+function str(a) {
+  return 'vec3(' + a[0] + ', ' + a[1] + ', ' + a[2] + ')';
+}
+/**
+ * Returns whether or not the vectors have exactly the same elements in the same position (when compared with ===)
+ *
+ * @param {vec3} a The first vector.
+ * @param {vec3} b The second vector.
+ * @returns {Boolean} True if the vectors are equal, false otherwise.
+ */
+
+
+function exactEquals(a, b) {
+  return a[0] === b[0] && a[1] === b[1] && a[2] === b[2];
+}
+/**
+ * Returns whether or not the vectors have approximately the same elements in the same position.
+ *
+ * @param {vec3} a The first vector.
+ * @param {vec3} b The second vector.
+ * @returns {Boolean} True if the vectors are equal, false otherwise.
+ */
+
+
+function equals(a, b) {
+  var a0 = a[0],
+      a1 = a[1],
+      a2 = a[2];
+  var b0 = b[0],
+      b1 = b[1],
+      b2 = b[2];
+  return Math.abs(a0 - b0) <= glMatrix.EPSILON * Math.max(1.0, Math.abs(a0), Math.abs(b0)) && Math.abs(a1 - b1) <= glMatrix.EPSILON * Math.max(1.0, Math.abs(a1), Math.abs(b1)) && Math.abs(a2 - b2) <= glMatrix.EPSILON * Math.max(1.0, Math.abs(a2), Math.abs(b2));
+}
+/**
+ * Alias for {@link vec3.subtract}
+ * @function
+ */
+
+
+var sub = subtract;
+/**
+ * Alias for {@link vec3.multiply}
+ * @function
+ */
+
+exports.sub = sub;
+var mul = multiply;
+/**
+ * Alias for {@link vec3.divide}
+ * @function
+ */
+
+exports.mul = mul;
+var div = divide;
+/**
+ * Alias for {@link vec3.distance}
+ * @function
+ */
+
+exports.div = div;
+var dist = distance;
+/**
+ * Alias for {@link vec3.squaredDistance}
+ * @function
+ */
+
+exports.dist = dist;
+var sqrDist = squaredDistance;
+/**
+ * Alias for {@link vec3.length}
+ * @function
+ */
+
+exports.sqrDist = sqrDist;
+var len = length;
+/**
+ * Alias for {@link vec3.squaredLength}
+ * @function
+ */
+
+exports.len = len;
+var sqrLen = squaredLength;
+/**
+ * Perform some operation over an array of vec3s.
+ *
+ * @param {Array} a the array of vectors to iterate over
+ * @param {Number} stride Number of elements between the start of each vec3. If 0 assumes tightly packed
+ * @param {Number} offset Number of elements to skip at the beginning of the array
+ * @param {Number} count Number of vec3s to iterate over. If 0 iterates over entire array
+ * @param {Function} fn Function to call for each vector in the array
+ * @param {Object} [arg] additional argument to pass to fn
+ * @returns {Array} a
+ * @function
+ */
+
+exports.sqrLen = sqrLen;
+
+var forEach = function () {
+  var vec = create();
+  return function (a, stride, offset, count, fn, arg) {
+    var i, l;
+
+    if (!stride) {
+      stride = 3;
+    }
+
+    if (!offset) {
+      offset = 0;
+    }
+
+    if (count) {
+      l = Math.min(count * stride + offset, a.length);
+    } else {
+      l = a.length;
+    }
+
+    for (i = offset; i < l; i += stride) {
+      vec[0] = a[i];
+      vec[1] = a[i + 1];
+      vec[2] = a[i + 2];
+      fn(vec, vec, arg);
+      a[i] = vec[0];
+      a[i + 1] = vec[1];
+      a[i + 2] = vec[2];
+    }
+
+    return a;
+  };
+}();
+
+exports.forEach = forEach;
+},{"./common.js":2}],12:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.create = create;
+exports.clone = clone;
+exports.fromValues = fromValues;
+exports.copy = copy;
+exports.set = set;
+exports.add = add;
+exports.subtract = subtract;
+exports.multiply = multiply;
+exports.divide = divide;
+exports.ceil = ceil;
+exports.floor = floor;
+exports.min = min;
+exports.max = max;
+exports.round = round;
+exports.scale = scale;
+exports.scaleAndAdd = scaleAndAdd;
+exports.distance = distance;
+exports.squaredDistance = squaredDistance;
+exports.length = length;
+exports.squaredLength = squaredLength;
+exports.negate = negate;
+exports.inverse = inverse;
+exports.normalize = normalize;
+exports.dot = dot;
+exports.cross = cross;
+exports.lerp = lerp;
+exports.random = random;
+exports.transformMat4 = transformMat4;
+exports.transformQuat = transformQuat;
+exports.zero = zero;
+exports.str = str;
+exports.exactEquals = exactEquals;
+exports.equals = equals;
+exports.forEach = exports.sqrLen = exports.len = exports.sqrDist = exports.dist = exports.div = exports.mul = exports.sub = void 0;
+
+var glMatrix = _interopRequireWildcard(require("./common.js"));
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
+
+/**
+ * 4 Dimensional Vector
+ * @module vec4
+ */
+
+/**
+ * Creates a new, empty vec4
+ *
+ * @returns {vec4} a new 4D vector
+ */
+function create() {
+  var out = new glMatrix.ARRAY_TYPE(4);
+
+  if (glMatrix.ARRAY_TYPE != Float32Array) {
+    out[0] = 0;
+    out[1] = 0;
+    out[2] = 0;
+    out[3] = 0;
+  }
+
+  return out;
+}
+/**
+ * Creates a new vec4 initialized with values from an existing vector
+ *
+ * @param {vec4} a vector to clone
+ * @returns {vec4} a new 4D vector
+ */
+
+
+function clone(a) {
+  var out = new glMatrix.ARRAY_TYPE(4);
+  out[0] = a[0];
+  out[1] = a[1];
+  out[2] = a[2];
+  out[3] = a[3];
+  return out;
+}
+/**
+ * Creates a new vec4 initialized with the given values
+ *
+ * @param {Number} x X component
+ * @param {Number} y Y component
+ * @param {Number} z Z component
+ * @param {Number} w W component
+ * @returns {vec4} a new 4D vector
+ */
+
+
+function fromValues(x, y, z, w) {
+  var out = new glMatrix.ARRAY_TYPE(4);
+  out[0] = x;
+  out[1] = y;
+  out[2] = z;
+  out[3] = w;
+  return out;
+}
+/**
+ * Copy the values from one vec4 to another
+ *
+ * @param {vec4} out the receiving vector
+ * @param {vec4} a the source vector
+ * @returns {vec4} out
+ */
+
+
+function copy(out, a) {
+  out[0] = a[0];
+  out[1] = a[1];
+  out[2] = a[2];
+  out[3] = a[3];
+  return out;
+}
+/**
+ * Set the components of a vec4 to the given values
+ *
+ * @param {vec4} out the receiving vector
+ * @param {Number} x X component
+ * @param {Number} y Y component
+ * @param {Number} z Z component
+ * @param {Number} w W component
+ * @returns {vec4} out
+ */
+
+
+function set(out, x, y, z, w) {
+  out[0] = x;
+  out[1] = y;
+  out[2] = z;
+  out[3] = w;
+  return out;
+}
+/**
+ * Adds two vec4's
+ *
+ * @param {vec4} out the receiving vector
+ * @param {vec4} a the first operand
+ * @param {vec4} b the second operand
+ * @returns {vec4} out
+ */
+
+
+function add(out, a, b) {
+  out[0] = a[0] + b[0];
+  out[1] = a[1] + b[1];
+  out[2] = a[2] + b[2];
+  out[3] = a[3] + b[3];
+  return out;
+}
+/**
+ * Subtracts vector b from vector a
+ *
+ * @param {vec4} out the receiving vector
+ * @param {vec4} a the first operand
+ * @param {vec4} b the second operand
+ * @returns {vec4} out
+ */
+
+
+function subtract(out, a, b) {
+  out[0] = a[0] - b[0];
+  out[1] = a[1] - b[1];
+  out[2] = a[2] - b[2];
+  out[3] = a[3] - b[3];
+  return out;
+}
+/**
+ * Multiplies two vec4's
+ *
+ * @param {vec4} out the receiving vector
+ * @param {vec4} a the first operand
+ * @param {vec4} b the second operand
+ * @returns {vec4} out
+ */
+
+
+function multiply(out, a, b) {
+  out[0] = a[0] * b[0];
+  out[1] = a[1] * b[1];
+  out[2] = a[2] * b[2];
+  out[3] = a[3] * b[3];
+  return out;
+}
+/**
+ * Divides two vec4's
+ *
+ * @param {vec4} out the receiving vector
+ * @param {vec4} a the first operand
+ * @param {vec4} b the second operand
+ * @returns {vec4} out
+ */
+
+
+function divide(out, a, b) {
+  out[0] = a[0] / b[0];
+  out[1] = a[1] / b[1];
+  out[2] = a[2] / b[2];
+  out[3] = a[3] / b[3];
+  return out;
+}
+/**
+ * Math.ceil the components of a vec4
+ *
+ * @param {vec4} out the receiving vector
+ * @param {vec4} a vector to ceil
+ * @returns {vec4} out
+ */
+
+
+function ceil(out, a) {
+  out[0] = Math.ceil(a[0]);
+  out[1] = Math.ceil(a[1]);
+  out[2] = Math.ceil(a[2]);
+  out[3] = Math.ceil(a[3]);
+  return out;
+}
+/**
+ * Math.floor the components of a vec4
+ *
+ * @param {vec4} out the receiving vector
+ * @param {vec4} a vector to floor
+ * @returns {vec4} out
+ */
+
+
+function floor(out, a) {
+  out[0] = Math.floor(a[0]);
+  out[1] = Math.floor(a[1]);
+  out[2] = Math.floor(a[2]);
+  out[3] = Math.floor(a[3]);
+  return out;
+}
+/**
+ * Returns the minimum of two vec4's
+ *
+ * @param {vec4} out the receiving vector
+ * @param {vec4} a the first operand
+ * @param {vec4} b the second operand
+ * @returns {vec4} out
+ */
+
+
+function min(out, a, b) {
+  out[0] = Math.min(a[0], b[0]);
+  out[1] = Math.min(a[1], b[1]);
+  out[2] = Math.min(a[2], b[2]);
+  out[3] = Math.min(a[3], b[3]);
+  return out;
+}
+/**
+ * Returns the maximum of two vec4's
+ *
+ * @param {vec4} out the receiving vector
+ * @param {vec4} a the first operand
+ * @param {vec4} b the second operand
+ * @returns {vec4} out
+ */
+
+
+function max(out, a, b) {
+  out[0] = Math.max(a[0], b[0]);
+  out[1] = Math.max(a[1], b[1]);
+  out[2] = Math.max(a[2], b[2]);
+  out[3] = Math.max(a[3], b[3]);
+  return out;
+}
+/**
+ * Math.round the components of a vec4
+ *
+ * @param {vec4} out the receiving vector
+ * @param {vec4} a vector to round
+ * @returns {vec4} out
+ */
+
+
+function round(out, a) {
+  out[0] = Math.round(a[0]);
+  out[1] = Math.round(a[1]);
+  out[2] = Math.round(a[2]);
+  out[3] = Math.round(a[3]);
+  return out;
+}
+/**
+ * Scales a vec4 by a scalar number
+ *
+ * @param {vec4} out the receiving vector
+ * @param {vec4} a the vector to scale
+ * @param {Number} b amount to scale the vector by
+ * @returns {vec4} out
+ */
+
+
+function scale(out, a, b) {
+  out[0] = a[0] * b;
+  out[1] = a[1] * b;
+  out[2] = a[2] * b;
+  out[3] = a[3] * b;
+  return out;
+}
+/**
+ * Adds two vec4's after scaling the second operand by a scalar value
+ *
+ * @param {vec4} out the receiving vector
+ * @param {vec4} a the first operand
+ * @param {vec4} b the second operand
+ * @param {Number} scale the amount to scale b by before adding
+ * @returns {vec4} out
+ */
+
+
+function scaleAndAdd(out, a, b, scale) {
+  out[0] = a[0] + b[0] * scale;
+  out[1] = a[1] + b[1] * scale;
+  out[2] = a[2] + b[2] * scale;
+  out[3] = a[3] + b[3] * scale;
+  return out;
+}
+/**
+ * Calculates the euclidian distance between two vec4's
+ *
+ * @param {vec4} a the first operand
+ * @param {vec4} b the second operand
+ * @returns {Number} distance between a and b
+ */
+
+
+function distance(a, b) {
+  var x = b[0] - a[0];
+  var y = b[1] - a[1];
+  var z = b[2] - a[2];
+  var w = b[3] - a[3];
+  return Math.sqrt(x * x + y * y + z * z + w * w);
+}
+/**
+ * Calculates the squared euclidian distance between two vec4's
+ *
+ * @param {vec4} a the first operand
+ * @param {vec4} b the second operand
+ * @returns {Number} squared distance between a and b
+ */
+
+
+function squaredDistance(a, b) {
+  var x = b[0] - a[0];
+  var y = b[1] - a[1];
+  var z = b[2] - a[2];
+  var w = b[3] - a[3];
+  return x * x + y * y + z * z + w * w;
+}
+/**
+ * Calculates the length of a vec4
+ *
+ * @param {vec4} a vector to calculate length of
+ * @returns {Number} length of a
+ */
+
+
+function length(a) {
+  var x = a[0];
+  var y = a[1];
+  var z = a[2];
+  var w = a[3];
+  return Math.sqrt(x * x + y * y + z * z + w * w);
+}
+/**
+ * Calculates the squared length of a vec4
+ *
+ * @param {vec4} a vector to calculate squared length of
+ * @returns {Number} squared length of a
+ */
+
+
+function squaredLength(a) {
+  var x = a[0];
+  var y = a[1];
+  var z = a[2];
+  var w = a[3];
+  return x * x + y * y + z * z + w * w;
+}
+/**
+ * Negates the components of a vec4
+ *
+ * @param {vec4} out the receiving vector
+ * @param {vec4} a vector to negate
+ * @returns {vec4} out
+ */
+
+
+function negate(out, a) {
+  out[0] = -a[0];
+  out[1] = -a[1];
+  out[2] = -a[2];
+  out[3] = -a[3];
+  return out;
+}
+/**
+ * Returns the inverse of the components of a vec4
+ *
+ * @param {vec4} out the receiving vector
+ * @param {vec4} a vector to invert
+ * @returns {vec4} out
+ */
+
+
+function inverse(out, a) {
+  out[0] = 1.0 / a[0];
+  out[1] = 1.0 / a[1];
+  out[2] = 1.0 / a[2];
+  out[3] = 1.0 / a[3];
+  return out;
+}
+/**
+ * Normalize a vec4
+ *
+ * @param {vec4} out the receiving vector
+ * @param {vec4} a vector to normalize
+ * @returns {vec4} out
+ */
+
+
+function normalize(out, a) {
+  var x = a[0];
+  var y = a[1];
+  var z = a[2];
+  var w = a[3];
+  var len = x * x + y * y + z * z + w * w;
+
+  if (len > 0) {
+    len = 1 / Math.sqrt(len);
+  }
+
+  out[0] = x * len;
+  out[1] = y * len;
+  out[2] = z * len;
+  out[3] = w * len;
+  return out;
+}
+/**
+ * Calculates the dot product of two vec4's
+ *
+ * @param {vec4} a the first operand
+ * @param {vec4} b the second operand
+ * @returns {Number} dot product of a and b
+ */
+
+
+function dot(a, b) {
+  return a[0] * b[0] + a[1] * b[1] + a[2] * b[2] + a[3] * b[3];
+}
+/**
+ * Returns the cross-product of three vectors in a 4-dimensional space
+ *
+ * @param {vec4} result the receiving vector
+ * @param {vec4} U the first vector
+ * @param {vec4} V the second vector
+ * @param {vec4} W the third vector
+ * @returns {vec4} result
+ */
+
+
+function cross(out, u, v, w) {
+  var A = v[0] * w[1] - v[1] * w[0],
+      B = v[0] * w[2] - v[2] * w[0],
+      C = v[0] * w[3] - v[3] * w[0],
+      D = v[1] * w[2] - v[2] * w[1],
+      E = v[1] * w[3] - v[3] * w[1],
+      F = v[2] * w[3] - v[3] * w[2];
+  var G = u[0];
+  var H = u[1];
+  var I = u[2];
+  var J = u[3];
+  out[0] = H * F - I * E + J * D;
+  out[1] = -(G * F) + I * C - J * B;
+  out[2] = G * E - H * C + J * A;
+  out[3] = -(G * D) + H * B - I * A;
+  return out;
+}
+
+;
+/**
+ * Performs a linear interpolation between two vec4's
+ *
+ * @param {vec4} out the receiving vector
+ * @param {vec4} a the first operand
+ * @param {vec4} b the second operand
+ * @param {Number} t interpolation amount, in the range [0-1], between the two inputs
+ * @returns {vec4} out
+ */
+
+function lerp(out, a, b, t) {
+  var ax = a[0];
+  var ay = a[1];
+  var az = a[2];
+  var aw = a[3];
+  out[0] = ax + t * (b[0] - ax);
+  out[1] = ay + t * (b[1] - ay);
+  out[2] = az + t * (b[2] - az);
+  out[3] = aw + t * (b[3] - aw);
+  return out;
+}
+/**
+ * Generates a random vector with the given scale
+ *
+ * @param {vec4} out the receiving vector
+ * @param {Number} [scale] Length of the resulting vector. If ommitted, a unit vector will be returned
+ * @returns {vec4} out
+ */
+
+
+function random(out, scale) {
+  scale = scale || 1.0; // Marsaglia, George. Choosing a Point from the Surface of a
+  // Sphere. Ann. Math. Statist. 43 (1972), no. 2, 645--646.
+  // http://projecteuclid.org/euclid.aoms/1177692644;
+
+  var v1, v2, v3, v4;
+  var s1, s2;
+
+  do {
+    v1 = glMatrix.RANDOM() * 2 - 1;
+    v2 = glMatrix.RANDOM() * 2 - 1;
+    s1 = v1 * v1 + v2 * v2;
+  } while (s1 >= 1);
+
+  do {
+    v3 = glMatrix.RANDOM() * 2 - 1;
+    v4 = glMatrix.RANDOM() * 2 - 1;
+    s2 = v3 * v3 + v4 * v4;
+  } while (s2 >= 1);
+
+  var d = Math.sqrt((1 - s1) / s2);
+  out[0] = scale * v1;
+  out[1] = scale * v2;
+  out[2] = scale * v3 * d;
+  out[3] = scale * v4 * d;
+  return out;
+}
+/**
+ * Transforms the vec4 with a mat4.
+ *
+ * @param {vec4} out the receiving vector
+ * @param {vec4} a the vector to transform
+ * @param {mat4} m matrix to transform with
+ * @returns {vec4} out
+ */
+
+
+function transformMat4(out, a, m) {
+  var x = a[0],
+      y = a[1],
+      z = a[2],
+      w = a[3];
+  out[0] = m[0] * x + m[4] * y + m[8] * z + m[12] * w;
+  out[1] = m[1] * x + m[5] * y + m[9] * z + m[13] * w;
+  out[2] = m[2] * x + m[6] * y + m[10] * z + m[14] * w;
+  out[3] = m[3] * x + m[7] * y + m[11] * z + m[15] * w;
+  return out;
+}
+/**
+ * Transforms the vec4 with a quat
+ *
+ * @param {vec4} out the receiving vector
+ * @param {vec4} a the vector to transform
+ * @param {quat} q quaternion to transform with
+ * @returns {vec4} out
+ */
+
+
+function transformQuat(out, a, q) {
+  var x = a[0],
+      y = a[1],
+      z = a[2];
+  var qx = q[0],
+      qy = q[1],
+      qz = q[2],
+      qw = q[3]; // calculate quat * vec
+
+  var ix = qw * x + qy * z - qz * y;
+  var iy = qw * y + qz * x - qx * z;
+  var iz = qw * z + qx * y - qy * x;
+  var iw = -qx * x - qy * y - qz * z; // calculate result * inverse quat
+
+  out[0] = ix * qw + iw * -qx + iy * -qz - iz * -qy;
+  out[1] = iy * qw + iw * -qy + iz * -qx - ix * -qz;
+  out[2] = iz * qw + iw * -qz + ix * -qy - iy * -qx;
+  out[3] = a[3];
+  return out;
+}
+/**
+ * Set the components of a vec4 to zero
+ *
+ * @param {vec4} out the receiving vector
+ * @returns {vec4} out
+ */
+
+
+function zero(out) {
+  out[0] = 0.0;
+  out[1] = 0.0;
+  out[2] = 0.0;
+  out[3] = 0.0;
+  return out;
+}
+/**
+ * Returns a string representation of a vector
+ *
+ * @param {vec4} a vector to represent as a string
+ * @returns {String} string representation of the vector
+ */
+
+
+function str(a) {
+  return 'vec4(' + a[0] + ', ' + a[1] + ', ' + a[2] + ', ' + a[3] + ')';
+}
+/**
+ * Returns whether or not the vectors have exactly the same elements in the same position (when compared with ===)
+ *
+ * @param {vec4} a The first vector.
+ * @param {vec4} b The second vector.
+ * @returns {Boolean} True if the vectors are equal, false otherwise.
+ */
+
+
+function exactEquals(a, b) {
+  return a[0] === b[0] && a[1] === b[1] && a[2] === b[2] && a[3] === b[3];
+}
+/**
+ * Returns whether or not the vectors have approximately the same elements in the same position.
+ *
+ * @param {vec4} a The first vector.
+ * @param {vec4} b The second vector.
+ * @returns {Boolean} True if the vectors are equal, false otherwise.
+ */
+
+
+function equals(a, b) {
+  var a0 = a[0],
+      a1 = a[1],
+      a2 = a[2],
+      a3 = a[3];
+  var b0 = b[0],
+      b1 = b[1],
+      b2 = b[2],
+      b3 = b[3];
+  return Math.abs(a0 - b0) <= glMatrix.EPSILON * Math.max(1.0, Math.abs(a0), Math.abs(b0)) && Math.abs(a1 - b1) <= glMatrix.EPSILON * Math.max(1.0, Math.abs(a1), Math.abs(b1)) && Math.abs(a2 - b2) <= glMatrix.EPSILON * Math.max(1.0, Math.abs(a2), Math.abs(b2)) && Math.abs(a3 - b3) <= glMatrix.EPSILON * Math.max(1.0, Math.abs(a3), Math.abs(b3));
+}
+/**
+ * Alias for {@link vec4.subtract}
+ * @function
+ */
+
+
+var sub = subtract;
+/**
+ * Alias for {@link vec4.multiply}
+ * @function
+ */
+
+exports.sub = sub;
+var mul = multiply;
+/**
+ * Alias for {@link vec4.divide}
+ * @function
+ */
+
+exports.mul = mul;
+var div = divide;
+/**
+ * Alias for {@link vec4.distance}
+ * @function
+ */
+
+exports.div = div;
+var dist = distance;
+/**
+ * Alias for {@link vec4.squaredDistance}
+ * @function
+ */
+
+exports.dist = dist;
+var sqrDist = squaredDistance;
+/**
+ * Alias for {@link vec4.length}
+ * @function
+ */
+
+exports.sqrDist = sqrDist;
+var len = length;
+/**
+ * Alias for {@link vec4.squaredLength}
+ * @function
+ */
+
+exports.len = len;
+var sqrLen = squaredLength;
+/**
+ * Perform some operation over an array of vec4s.
+ *
+ * @param {Array} a the array of vectors to iterate over
+ * @param {Number} stride Number of elements between the start of each vec4. If 0 assumes tightly packed
+ * @param {Number} offset Number of elements to skip at the beginning of the array
+ * @param {Number} count Number of vec4s to iterate over. If 0 iterates over entire array
+ * @param {Function} fn Function to call for each vector in the array
+ * @param {Object} [arg] additional argument to pass to fn
+ * @returns {Array} a
+ * @function
+ */
+
+exports.sqrLen = sqrLen;
+
+var forEach = function () {
+  var vec = create();
+  return function (a, stride, offset, count, fn, arg) {
+    var i, l;
+
+    if (!stride) {
+      stride = 4;
+    }
+
+    if (!offset) {
+      offset = 0;
+    }
+
+    if (count) {
+      l = Math.min(count * stride + offset, a.length);
+    } else {
+      l = a.length;
+    }
+
+    for (i = offset; i < l; i += stride) {
+      vec[0] = a[i];
+      vec[1] = a[i + 1];
+      vec[2] = a[i + 2];
+      vec[3] = a[i + 3];
+      fn(vec, vec, arg);
+      a[i] = vec[0];
+      a[i + 1] = vec[1];
+      a[i + 2] = vec[2];
+      a[i + 3] = vec[3];
+    }
+
+    return a;
+  };
+}();
+
+exports.forEach = forEach;
+},{"./common.js":2}],13:[function(require,module,exports){
+/*! Hammer.JS - v2.0.4 - 2015-01-30
+ * http://hammerjs.github.io/
+ *
+ * Copyright (c) 2015 Jorik Tangelder;
+ * Licensed under the MIT license */
+(function(window, document, exportName, undefined) {
+  'use strict';
+
+var VENDOR_PREFIXES = ['', 'webkit', 'moz', 'MS', 'ms', 'o'];
+var TEST_ELEMENT = document.createElement('div');
+
+var TYPE_FUNCTION = 'function';
+
+var round = Math.round;
+var abs = Math.abs;
+var now = Date.now;
+
+/**
+ * set a timeout with a given scope
+ * @param {Function} fn
+ * @param {Number} timeout
+ * @param {Object} context
+ * @returns {number}
+ */
+function setTimeoutContext(fn, timeout, context) {
+    return setTimeout(bindFn(fn, context), timeout);
+}
+
+/**
+ * if the argument is an array, we want to execute the fn on each entry
+ * if it aint an array we don't want to do a thing.
+ * this is used by all the methods that accept a single and array argument.
+ * @param {*|Array} arg
+ * @param {String} fn
+ * @param {Object} [context]
+ * @returns {Boolean}
+ */
+function invokeArrayArg(arg, fn, context) {
+    if (Array.isArray(arg)) {
+        each(arg, context[fn], context);
+        return true;
+    }
+    return false;
+}
+
+/**
+ * walk objects and arrays
+ * @param {Object} obj
+ * @param {Function} iterator
+ * @param {Object} context
+ */
+function each(obj, iterator, context) {
+    var i;
+
+    if (!obj) {
+        return;
+    }
+
+    if (obj.forEach) {
+        obj.forEach(iterator, context);
+    } else if (obj.length !== undefined) {
+        i = 0;
+        while (i < obj.length) {
+            iterator.call(context, obj[i], i, obj);
+            i++;
+        }
+    } else {
+        for (i in obj) {
+            obj.hasOwnProperty(i) && iterator.call(context, obj[i], i, obj);
+        }
+    }
+}
+
+/**
+ * extend object.
+ * means that properties in dest will be overwritten by the ones in src.
+ * @param {Object} dest
+ * @param {Object} src
+ * @param {Boolean} [merge]
+ * @returns {Object} dest
+ */
+function extend(dest, src, merge) {
+    var keys = Object.keys(src);
+    var i = 0;
+    while (i < keys.length) {
+        if (!merge || (merge && dest[keys[i]] === undefined)) {
+            dest[keys[i]] = src[keys[i]];
+        }
+        i++;
+    }
+    return dest;
+}
+
+/**
+ * merge the values from src in the dest.
+ * means that properties that exist in dest will not be overwritten by src
+ * @param {Object} dest
+ * @param {Object} src
+ * @returns {Object} dest
+ */
+function merge(dest, src) {
+    return extend(dest, src, true);
+}
+
+/**
+ * Basic Object.create polyfill (for IE8 support)
+ *
+ * This does not support the second argument to Object.create (property descriptor).
+ *
+ * Uses native Object.create if available, otherwise provides a basic polyfill.
+ *
+ * @param {Object} proto - the prototype to use for the new Object
+ * @return {Object} - the new object
+ */
+function objectCreate(proto) {
+    if (Object.create) {
+        return Object.create(proto);
+    }
+    var Obj = function() {};
+    Obj.prototype = proto;
+    var result = new Obj();
+    Obj.prototype = null;
+    return result;
+}
+
+/**
+ * simple class inheritance
+ * @param {Function} child
+ * @param {Function} base
+ * @param {Object} [properties]
+ */
+function inherit(child, base, properties) {
+    var baseP = base.prototype,
+        childP;
+
+    childP = child.prototype = objectCreate(baseP);
+    childP.constructor = child;
+    childP._super = baseP;
+
+    if (properties) {
+        extend(childP, properties);
+    }
+}
+
+/**
+ * simple function bind
+ * @param {Function} fn
+ * @param {Object} context
+ * @returns {Function}
+ */
+function bindFn(fn, context) {
+    return function boundFn() {
+        return fn.apply(context, arguments);
+    };
+}
+
+/**
+ * let a boolean value also be a function that must return a boolean
+ * this first item in args will be used as the context
+ * @param {Boolean|Function} val
+ * @param {Array} [args]
+ * @returns {Boolean}
+ */
+function boolOrFn(val, args) {
+    if (typeof val == TYPE_FUNCTION) {
+        return val.apply(args ? args[0] || undefined : undefined, args);
+    }
+    return val;
+}
+
+/**
+ * use the val2 when val1 is undefined
+ * @param {*} val1
+ * @param {*} val2
+ * @returns {*}
+ */
+function ifUndefined(val1, val2) {
+    return (val1 === undefined) ? val2 : val1;
+}
+
+/**
+ * addEventListener with multiple events at once
+ * @param {EventTarget} target
+ * @param {String} types
+ * @param {Function} handler
+ */
+function addEventListeners(target, types, handler) {
+    each(splitStr(types), function(type) {
+        target.addEventListener(type, handler, false);
+    });
+}
+
+/**
+ * removeEventListener with multiple events at once
+ * @param {EventTarget} target
+ * @param {String} types
+ * @param {Function} handler
+ */
+function removeEventListeners(target, types, handler) {
+    each(splitStr(types), function(type) {
+        target.removeEventListener(type, handler, false);
+    });
+}
+
+/**
+ * find if a node is in the given parent
+ * @method hasParent
+ * @param {HTMLElement} node
+ * @param {HTMLElement} parent
+ * @return {Boolean} found
+ */
+function hasParent(node, parent) {
+    while (node) {
+        if (node == parent) {
+            return true;
+        }
+        node = node.parentNode;
+    }
+    return false;
+}
+
+/**
+ * small indexOf wrapper
+ * @param {String} str
+ * @param {String} find
+ * @returns {Boolean} found
+ */
+function inStr(str, find) {
+    return str.indexOf(find) > -1;
+}
+
+/**
+ * split string on whitespace
+ * @param {String} str
+ * @returns {Array} words
+ */
+function splitStr(str) {
+    return str.trim().split(/\s+/g);
+}
+
+/**
+ * find if a array contains the object using indexOf or a simple polyFill
+ * @param {Array} src
+ * @param {String} find
+ * @param {String} [findByKey]
+ * @return {Boolean|Number} false when not found, or the index
+ */
+function inArray(src, find, findByKey) {
+    if (src.indexOf && !findByKey) {
+        return src.indexOf(find);
+    } else {
+        var i = 0;
+        while (i < src.length) {
+            if ((findByKey && src[i][findByKey] == find) || (!findByKey && src[i] === find)) {
+                return i;
+            }
+            i++;
+        }
+        return -1;
+    }
+}
+
+/**
+ * convert array-like objects to real arrays
+ * @param {Object} obj
+ * @returns {Array}
+ */
+function toArray(obj) {
+    return Array.prototype.slice.call(obj, 0);
+}
+
+/**
+ * unique array with objects based on a key (like 'id') or just by the array's value
+ * @param {Array} src [{id:1},{id:2},{id:1}]
+ * @param {String} [key]
+ * @param {Boolean} [sort=False]
+ * @returns {Array} [{id:1},{id:2}]
+ */
+function uniqueArray(src, key, sort) {
+    var results = [];
+    var values = [];
+    var i = 0;
+
+    while (i < src.length) {
+        var val = key ? src[i][key] : src[i];
+        if (inArray(values, val) < 0) {
+            results.push(src[i]);
+        }
+        values[i] = val;
+        i++;
+    }
+
+    if (sort) {
+        if (!key) {
+            results = results.sort();
+        } else {
+            results = results.sort(function sortUniqueArray(a, b) {
+                return a[key] > b[key];
+            });
+        }
+    }
+
+    return results;
+}
+
+/**
+ * get the prefixed property
+ * @param {Object} obj
+ * @param {String} property
+ * @returns {String|Undefined} prefixed
+ */
+function prefixed(obj, property) {
+    var prefix, prop;
+    var camelProp = property[0].toUpperCase() + property.slice(1);
+
+    var i = 0;
+    while (i < VENDOR_PREFIXES.length) {
+        prefix = VENDOR_PREFIXES[i];
+        prop = (prefix) ? prefix + camelProp : property;
+
+        if (prop in obj) {
+            return prop;
+        }
+        i++;
+    }
+    return undefined;
+}
+
+/**
+ * get a unique id
+ * @returns {number} uniqueId
+ */
+var _uniqueId = 1;
+function uniqueId() {
+    return _uniqueId++;
+}
+
+/**
+ * get the window object of an element
+ * @param {HTMLElement} element
+ * @returns {DocumentView|Window}
+ */
+function getWindowForElement(element) {
+    var doc = element.ownerDocument || element;
+    return (doc.defaultView || doc.parentWindow || window);
+}
+
+var MOBILE_REGEX = /mobile|tablet|ip(ad|hone|od)|android/i;
+
+var SUPPORT_TOUCH = ('ontouchstart' in window);
+var SUPPORT_POINTER_EVENTS = prefixed(window, 'PointerEvent') !== undefined;
+var SUPPORT_ONLY_TOUCH = SUPPORT_TOUCH && MOBILE_REGEX.test(navigator.userAgent);
+
+var INPUT_TYPE_TOUCH = 'touch';
+var INPUT_TYPE_PEN = 'pen';
+var INPUT_TYPE_MOUSE = 'mouse';
+var INPUT_TYPE_KINECT = 'kinect';
+
+var COMPUTE_INTERVAL = 25;
+
+var INPUT_START = 1;
+var INPUT_MOVE = 2;
+var INPUT_END = 4;
+var INPUT_CANCEL = 8;
+
+var DIRECTION_NONE = 1;
+var DIRECTION_LEFT = 2;
+var DIRECTION_RIGHT = 4;
+var DIRECTION_UP = 8;
+var DIRECTION_DOWN = 16;
+
+var DIRECTION_HORIZONTAL = DIRECTION_LEFT | DIRECTION_RIGHT;
+var DIRECTION_VERTICAL = DIRECTION_UP | DIRECTION_DOWN;
+var DIRECTION_ALL = DIRECTION_HORIZONTAL | DIRECTION_VERTICAL;
+
+var PROPS_XY = ['x', 'y'];
+var PROPS_CLIENT_XY = ['clientX', 'clientY'];
+
+/**
+ * create new input type manager
+ * @param {Manager} manager
+ * @param {Function} callback
+ * @returns {Input}
+ * @constructor
+ */
+function Input(manager, callback) {
+    var self = this;
+    this.manager = manager;
+    this.callback = callback;
+    this.element = manager.element;
+    this.target = manager.options.inputTarget;
+
+    // smaller wrapper around the handler, for the scope and the enabled state of the manager,
+    // so when disabled the input events are completely bypassed.
+    this.domHandler = function(ev) {
+        if (boolOrFn(manager.options.enable, [manager])) {
+            self.handler(ev);
+        }
+    };
+
+    this.init();
+
+}
+
+Input.prototype = {
+    /**
+     * should handle the inputEvent data and trigger the callback
+     * @virtual
+     */
+    handler: function() { },
+
+    /**
+     * bind the events
+     */
+    init: function() {
+        this.evEl && addEventListeners(this.element, this.evEl, this.domHandler);
+        this.evTarget && addEventListeners(this.target, this.evTarget, this.domHandler);
+        this.evWin && addEventListeners(getWindowForElement(this.element), this.evWin, this.domHandler);
+        this.evDoc && addEventListeners(document, this.evDoc, this.domHandler);
+        this.evBody && addEventListeners(document.body, this.evBody, this.domHandler);
+    },
+
+    /**
+     * unbind the events
+     */
+    destroy: function() {
+        this.evEl && removeEventListeners(this.element, this.evEl, this.domHandler);
+        this.evTarget && removeEventListeners(this.target, this.evTarget, this.domHandler);
+        this.evWin && removeEventListeners(getWindowForElement(this.element), this.evWin, this.domHandler);
+        this.evDoc && removeEventListeners(document, this.evDoc, this.domHandler);
+        this.evBody && removeEventListeners(document.body, this.evBody, this.domHandler);
+    }
+};
+
+/**
+ * create new input type manager
+ * called by the Manager constructor
+ * @param {Hammer} manager
+ * @returns {Input}
+ */
+function createInputInstance(manager) {
+    var Type;
+    var inputClass = manager.options.inputClass;
+
+    if (inputClass) {
+        Type = inputClass;
+    } else if (SUPPORT_POINTER_EVENTS) {
+        Type = PointerEventInput;
+    } else if (SUPPORT_ONLY_TOUCH) {
+        Type = TouchInput;
+    } else if (!SUPPORT_TOUCH) {
+        Type = MouseInput;
+    } else {
+        Type = TouchMouseInput;
+    }
+    return new (Type)(manager, inputHandler);
+}
+
+/**
+ * handle input events
+ * @param {Manager} manager
+ * @param {String} eventType
+ * @param {Object} input
+ */
+function inputHandler(manager, eventType, input) {
+    var pointersLen = input.pointers.length;
+    var changedPointersLen = input.changedPointers.length;
+    var isFirst = (eventType & INPUT_START && (pointersLen - changedPointersLen === 0));
+    var isFinal = (eventType & (INPUT_END | INPUT_CANCEL) && (pointersLen - changedPointersLen === 0));
+
+    input.isFirst = !!isFirst;
+    input.isFinal = !!isFinal;
+
+    if (isFirst) {
+        manager.session = {};
+    }
+
+    // source event is the normalized value of the domEvents
+    // like 'touchstart, mouseup, pointerdown'
+    input.eventType = eventType;
+
+    // compute scale, rotation etc
+    computeInputData(manager, input);
+
+    // emit secret event
+    manager.emit('hammer.input', input);
+
+    manager.recognize(input);
+    manager.session.prevInput = input;
+}
+
+/**
+ * extend the data with some usable properties like scale, rotate, velocity etc
+ * @param {Object} manager
+ * @param {Object} input
+ */
+function computeInputData(manager, input) {
+    var session = manager.session;
+    var pointers = input.pointers;
+    var pointersLength = pointers.length;
+
+    // store the first input to calculate the distance and direction
+    if (!session.firstInput) {
+        session.firstInput = simpleCloneInputData(input);
+    }
+
+    // to compute scale and rotation we need to store the multiple touches
+    if (pointersLength > 1 && !session.firstMultiple) {
+        session.firstMultiple = simpleCloneInputData(input);
+    } else if (pointersLength === 1) {
+        session.firstMultiple = false;
+    }
+
+    var firstInput = session.firstInput;
+    var firstMultiple = session.firstMultiple;
+    var offsetCenter = firstMultiple ? firstMultiple.center : firstInput.center;
+
+    var center = input.center = getCenter(pointers);
+    input.timeStamp = now();
+    input.deltaTime = input.timeStamp - firstInput.timeStamp;
+
+    input.angle = getAngle(offsetCenter, center);
+    input.distance = getDistance(offsetCenter, center);
+
+    computeDeltaXY(session, input);
+    input.offsetDirection = getDirection(input.deltaX, input.deltaY);
+
+    input.scale = firstMultiple ? getScale(firstMultiple.pointers, pointers) : 1;
+    input.rotation = firstMultiple ? getRotation(firstMultiple.pointers, pointers) : 0;
+
+    computeIntervalInputData(session, input);
+
+    // find the correct target
+    var target = manager.element;
+    if (hasParent(input.srcEvent.target, target)) {
+        target = input.srcEvent.target;
+    }
+    input.target = target;
+}
+
+function computeDeltaXY(session, input) {
+    var center = input.center;
+    var offset = session.offsetDelta || {};
+    var prevDelta = session.prevDelta || {};
+    var prevInput = session.prevInput || {};
+
+    if (input.eventType === INPUT_START || prevInput.eventType === INPUT_END) {
+        prevDelta = session.prevDelta = {
+            x: prevInput.deltaX || 0,
+            y: prevInput.deltaY || 0
+        };
+
+        offset = session.offsetDelta = {
+            x: center.x,
+            y: center.y
+        };
+    }
+
+    input.deltaX = prevDelta.x + (center.x - offset.x);
+    input.deltaY = prevDelta.y + (center.y - offset.y);
+}
+
+/**
+ * velocity is calculated every x ms
+ * @param {Object} session
+ * @param {Object} input
+ */
+function computeIntervalInputData(session, input) {
+    var last = session.lastInterval || input,
+        deltaTime = input.timeStamp - last.timeStamp,
+        velocity, velocityX, velocityY, direction;
+
+    if (input.eventType != INPUT_CANCEL && (deltaTime > COMPUTE_INTERVAL || last.velocity === undefined)) {
+        var deltaX = last.deltaX - input.deltaX;
+        var deltaY = last.deltaY - input.deltaY;
+
+        var v = getVelocity(deltaTime, deltaX, deltaY);
+        velocityX = v.x;
+        velocityY = v.y;
+        velocity = (abs(v.x) > abs(v.y)) ? v.x : v.y;
+        direction = getDirection(deltaX, deltaY);
+
+        session.lastInterval = input;
+    } else {
+        // use latest velocity info if it doesn't overtake a minimum period
+        velocity = last.velocity;
+        velocityX = last.velocityX;
+        velocityY = last.velocityY;
+        direction = last.direction;
+    }
+
+    input.velocity = velocity;
+    input.velocityX = velocityX;
+    input.velocityY = velocityY;
+    input.direction = direction;
+}
+
+/**
+ * create a simple clone from the input used for storage of firstInput and firstMultiple
+ * @param {Object} input
+ * @returns {Object} clonedInputData
+ */
+function simpleCloneInputData(input) {
+    // make a simple copy of the pointers because we will get a reference if we don't
+    // we only need clientXY for the calculations
+    var pointers = [];
+    var i = 0;
+    while (i < input.pointers.length) {
+        pointers[i] = {
+            clientX: round(input.pointers[i].clientX),
+            clientY: round(input.pointers[i].clientY)
+        };
+        i++;
+    }
+
+    return {
+        timeStamp: now(),
+        pointers: pointers,
+        center: getCenter(pointers),
+        deltaX: input.deltaX,
+        deltaY: input.deltaY
+    };
+}
+
+/**
+ * get the center of all the pointers
+ * @param {Array} pointers
+ * @return {Object} center contains `x` and `y` properties
+ */
+function getCenter(pointers) {
+    var pointersLength = pointers.length;
+
+    // no need to loop when only one touch
+    if (pointersLength === 1) {
+        return {
+            x: round(pointers[0].clientX),
+            y: round(pointers[0].clientY)
+        };
+    }
+
+    var x = 0, y = 0, i = 0;
+    while (i < pointersLength) {
+        x += pointers[i].clientX;
+        y += pointers[i].clientY;
+        i++;
+    }
+
+    return {
+        x: round(x / pointersLength),
+        y: round(y / pointersLength)
+    };
+}
+
+/**
+ * calculate the velocity between two points. unit is in px per ms.
+ * @param {Number} deltaTime
+ * @param {Number} x
+ * @param {Number} y
+ * @return {Object} velocity `x` and `y`
+ */
+function getVelocity(deltaTime, x, y) {
+    return {
+        x: x / deltaTime || 0,
+        y: y / deltaTime || 0
+    };
+}
+
+/**
+ * get the direction between two points
+ * @param {Number} x
+ * @param {Number} y
+ * @return {Number} direction
+ */
+function getDirection(x, y) {
+    if (x === y) {
+        return DIRECTION_NONE;
+    }
+
+    if (abs(x) >= abs(y)) {
+        return x > 0 ? DIRECTION_LEFT : DIRECTION_RIGHT;
+    }
+    return y > 0 ? DIRECTION_UP : DIRECTION_DOWN;
+}
+
+/**
+ * calculate the absolute distance between two points
+ * @param {Object} p1 {x, y}
+ * @param {Object} p2 {x, y}
+ * @param {Array} [props] containing x and y keys
+ * @return {Number} distance
+ */
+function getDistance(p1, p2, props) {
+    if (!props) {
+        props = PROPS_XY;
+    }
+    var x = p2[props[0]] - p1[props[0]],
+        y = p2[props[1]] - p1[props[1]];
+
+    return Math.sqrt((x * x) + (y * y));
+}
+
+/**
+ * calculate the angle between two coordinates
+ * @param {Object} p1
+ * @param {Object} p2
+ * @param {Array} [props] containing x and y keys
+ * @return {Number} angle
+ */
+function getAngle(p1, p2, props) {
+    if (!props) {
+        props = PROPS_XY;
+    }
+    var x = p2[props[0]] - p1[props[0]],
+        y = p2[props[1]] - p1[props[1]];
+    return Math.atan2(y, x) * 180 / Math.PI;
+}
+
+/**
+ * calculate the rotation degrees between two pointersets
+ * @param {Array} start array of pointers
+ * @param {Array} end array of pointers
+ * @return {Number} rotation
+ */
+function getRotation(start, end) {
+    return getAngle(end[1], end[0], PROPS_CLIENT_XY) - getAngle(start[1], start[0], PROPS_CLIENT_XY);
+}
+
+/**
+ * calculate the scale factor between two pointersets
+ * no scale is 1, and goes down to 0 when pinched together, and bigger when pinched out
+ * @param {Array} start array of pointers
+ * @param {Array} end array of pointers
+ * @return {Number} scale
+ */
+function getScale(start, end) {
+    return getDistance(end[0], end[1], PROPS_CLIENT_XY) / getDistance(start[0], start[1], PROPS_CLIENT_XY);
+}
+
+var MOUSE_INPUT_MAP = {
+    mousedown: INPUT_START,
+    mousemove: INPUT_MOVE,
+    mouseup: INPUT_END
+};
+
+var MOUSE_ELEMENT_EVENTS = 'mousedown';
+var MOUSE_WINDOW_EVENTS = 'mousemove mouseup';
+
+var isIE8 = window.navigator.userAgent.indexOf('MSIE 8') > 0;
+
+/**
+ * Mouse events input
+ * @constructor
+ * @extends Input
+ */
+function MouseInput() {
+    this.evEl = MOUSE_ELEMENT_EVENTS;
+
+    if (isIE8) {
+        // mousemove and moveup don't bubble to the window in IE8 - attach events to the document.body instead
+        this.evDoc = MOUSE_WINDOW_EVENTS;
+    } else {
+        this.evWin = MOUSE_WINDOW_EVENTS;
+    }
+
+    this.allow = true; // used by Input.TouchMouse to disable mouse events
+    this.pressed = false; // mousedown state
+
+    Input.apply(this, arguments);
+}
+
+inherit(MouseInput, Input, {
+    /**
+     * handle mouse events
+     * @param {Object} ev
+     */
+    handler: function MEhandler(ev) {
+        var eventType = MOUSE_INPUT_MAP[ev.type];
+
+        // IE8 uses non-standard button indices:
+        // http://msdn.microsoft.com/en-us/library/ie/ms533544(v=vs.85).aspx
+        // left button is 1
+        //
+        // Standard is here:
+        // http://msdn.microsoft.com/en-us/library/ie/ff974877(v=vs.85).aspx
+        // left button is 0
+        var leftMouseButton = 0;
+        if (isIE8) {
+            leftMouseButton = 1;
+        }
+
+        // on start we want to have the left mouse button down
+        if (eventType & INPUT_START && ev.button === leftMouseButton) {
+            this.pressed = true;
+        }
+
+        if (eventType & INPUT_MOVE && ev.button !== leftMouseButton) {
+            eventType = INPUT_END;
+        }
+
+        // mouse must be down, and mouse events are allowed (see the TouchMouse input)
+        if (!this.pressed || !this.allow) {
+            return;
+        }
+
+        if (eventType & INPUT_END) {
+            this.pressed = false;
+        }
+
+        this.callback(this.manager, eventType, {
+            pointers: [ev],
+            changedPointers: [ev],
+            pointerType: INPUT_TYPE_MOUSE,
+            srcEvent: ev
+        });
+    }
+});
+
+var POINTER_INPUT_MAP = {
+    pointerdown: INPUT_START,
+    pointermove: INPUT_MOVE,
+    pointerup: INPUT_END,
+    pointercancel: INPUT_CANCEL,
+    pointerout: INPUT_CANCEL
+};
+
+// in IE10 the pointer types is defined as an enum
+var IE10_POINTER_TYPE_ENUM = {
+    2: INPUT_TYPE_TOUCH,
+    3: INPUT_TYPE_PEN,
+    4: INPUT_TYPE_MOUSE,
+    5: INPUT_TYPE_KINECT // see https://twitter.com/jacobrossi/status/480596438489890816
+};
+
+var POINTER_ELEMENT_EVENTS = 'pointerdown';
+var POINTER_WINDOW_EVENTS = 'pointermove pointerup pointercancel';
+
+// IE10 has prefixed support, and case-sensitive
+if (window.MSPointerEvent) {
+    POINTER_ELEMENT_EVENTS = 'MSPointerDown';
+    POINTER_WINDOW_EVENTS = 'MSPointerMove MSPointerUp MSPointerCancel';
+}
+
+/**
+ * Pointer events input
+ * @constructor
+ * @extends Input
+ */
+function PointerEventInput() {
+    this.evEl = POINTER_ELEMENT_EVENTS;
+    this.evWin = POINTER_WINDOW_EVENTS;
+
+    Input.apply(this, arguments);
+
+    this.store = (this.manager.session.pointerEvents = []);
+}
+
+inherit(PointerEventInput, Input, {
+    /**
+     * handle mouse events
+     * @param {Object} ev
+     */
+    handler: function PEhandler(ev) {
+        var store = this.store;
+        var removePointer = false;
+
+        var eventTypeNormalized = ev.type.toLowerCase().replace('ms', '');
+        var eventType = POINTER_INPUT_MAP[eventTypeNormalized];
+        var pointerType = IE10_POINTER_TYPE_ENUM[ev.pointerType] || ev.pointerType;
+
+        var isTouch = (pointerType == INPUT_TYPE_TOUCH);
+
+        // get index of the event in the store
+        var storeIndex = inArray(store, ev.pointerId, 'pointerId');
+
+        // start and mouse must be down
+        if (eventType & INPUT_START && (ev.button === 0 || isTouch)) {
+            if (storeIndex < 0) {
+                store.push(ev);
+                storeIndex = store.length - 1;
+            }
+        } else if (eventType & (INPUT_END | INPUT_CANCEL)) {
+            removePointer = true;
+        }
+
+        // it not found, so the pointer hasn't been down (so it's probably a hover)
+        if (storeIndex < 0) {
+            return;
+        }
+
+        // update the event in the store
+        store[storeIndex] = ev;
+
+        this.callback(this.manager, eventType, {
+            pointers: store,
+            changedPointers: [ev],
+            pointerType: pointerType,
+            srcEvent: ev
+        });
+
+        if (removePointer) {
+            // remove from the store
+            store.splice(storeIndex, 1);
+        }
+    }
+});
+
+var SINGLE_TOUCH_INPUT_MAP = {
+    touchstart: INPUT_START,
+    touchmove: INPUT_MOVE,
+    touchend: INPUT_END,
+    touchcancel: INPUT_CANCEL
+};
+
+var SINGLE_TOUCH_TARGET_EVENTS = 'touchstart';
+var SINGLE_TOUCH_WINDOW_EVENTS = 'touchstart touchmove touchend touchcancel';
+
+/**
+ * Touch events input
+ * @constructor
+ * @extends Input
+ */
+function SingleTouchInput() {
+    this.evTarget = SINGLE_TOUCH_TARGET_EVENTS;
+    this.evWin = SINGLE_TOUCH_WINDOW_EVENTS;
+    this.started = false;
+
+    Input.apply(this, arguments);
+}
+
+inherit(SingleTouchInput, Input, {
+    handler: function TEhandler(ev) {
+        var type = SINGLE_TOUCH_INPUT_MAP[ev.type];
+
+        // should we handle the touch events?
+        if (type === INPUT_START) {
+            this.started = true;
+        }
+
+        if (!this.started) {
+            return;
+        }
+
+        var touches = normalizeSingleTouches.call(this, ev, type);
+
+        // when done, reset the started state
+        if (type & (INPUT_END | INPUT_CANCEL) && touches[0].length - touches[1].length === 0) {
+            this.started = false;
+        }
+
+        this.callback(this.manager, type, {
+            pointers: touches[0],
+            changedPointers: touches[1],
+            pointerType: INPUT_TYPE_TOUCH,
+            srcEvent: ev
+        });
+    }
+});
+
+/**
+ * @this {TouchInput}
+ * @param {Object} ev
+ * @param {Number} type flag
+ * @returns {undefined|Array} [all, changed]
+ */
+function normalizeSingleTouches(ev, type) {
+    var all = toArray(ev.touches);
+    var changed = toArray(ev.changedTouches);
+
+    if (type & (INPUT_END | INPUT_CANCEL)) {
+        all = uniqueArray(all.concat(changed), 'identifier', true);
+    }
+
+    return [all, changed];
+}
+
+var TOUCH_INPUT_MAP = {
+    touchstart: INPUT_START,
+    touchmove: INPUT_MOVE,
+    touchend: INPUT_END,
+    touchcancel: INPUT_CANCEL
+};
+
+var TOUCH_TARGET_EVENTS = 'touchstart touchmove touchend touchcancel';
+
+/**
+ * Multi-user touch events input
+ * @constructor
+ * @extends Input
+ */
+function TouchInput() {
+    this.evTarget = TOUCH_TARGET_EVENTS;
+    this.targetIds = {};
+
+    Input.apply(this, arguments);
+}
+
+inherit(TouchInput, Input, {
+    handler: function MTEhandler(ev) {
+        var type = TOUCH_INPUT_MAP[ev.type];
+        var touches = getTouches.call(this, ev, type);
+        if (!touches) {
+            return;
+        }
+
+        this.callback(this.manager, type, {
+            pointers: touches[0],
+            changedPointers: touches[1],
+            pointerType: INPUT_TYPE_TOUCH,
+            srcEvent: ev
+        });
+    }
+});
+
+/**
+ * @this {TouchInput}
+ * @param {Object} ev
+ * @param {Number} type flag
+ * @returns {undefined|Array} [all, changed]
+ */
+function getTouches(ev, type) {
+    var allTouches = toArray(ev.touches);
+    var targetIds = this.targetIds;
+
+    // when there is only one touch, the process can be simplified
+    if (type & (INPUT_START | INPUT_MOVE) && allTouches.length === 1) {
+        targetIds[allTouches[0].identifier] = true;
+        return [allTouches, allTouches];
+    }
+
+    var i,
+        targetTouches,
+        changedTouches = toArray(ev.changedTouches),
+        changedTargetTouches = [],
+        target = this.target;
+
+    // get target touches from touches
+    targetTouches = allTouches.filter(function(touch) {
+        return hasParent(touch.target, target);
+    });
+
+    // collect touches
+    if (type === INPUT_START) {
+        i = 0;
+        while (i < targetTouches.length) {
+            targetIds[targetTouches[i].identifier] = true;
+            i++;
+        }
+    }
+
+    // filter changed touches to only contain touches that exist in the collected target ids
+    i = 0;
+    while (i < changedTouches.length) {
+        if (targetIds[changedTouches[i].identifier]) {
+            changedTargetTouches.push(changedTouches[i]);
+        }
+
+        // cleanup removed touches
+        if (type & (INPUT_END | INPUT_CANCEL)) {
+            delete targetIds[changedTouches[i].identifier];
+        }
+        i++;
+    }
+
+    if (!changedTargetTouches.length) {
+        return;
+    }
+
+    return [
+        // merge targetTouches with changedTargetTouches so it contains ALL touches, including 'end' and 'cancel'
+        uniqueArray(targetTouches.concat(changedTargetTouches), 'identifier', true),
+        changedTargetTouches
+    ];
+}
+
+/**
+ * Combined touch and mouse input
+ *
+ * Touch has a higher priority then mouse, and while touching no mouse events are allowed.
+ * This because touch devices also emit mouse events while doing a touch.
+ *
+ * @constructor
+ * @extends Input
+ */
+function TouchMouseInput() {
+    Input.apply(this, arguments);
+
+    var handler = bindFn(this.handler, this);
+    this.touch = new TouchInput(this.manager, handler);
+    this.mouse = new MouseInput(this.manager, handler);
+}
+
+inherit(TouchMouseInput, Input, {
+    /**
+     * handle mouse and touch events
+     * @param {Hammer} manager
+     * @param {String} inputEvent
+     * @param {Object} inputData
+     */
+    handler: function TMEhandler(manager, inputEvent, inputData) {
+        var isTouch = (inputData.pointerType == INPUT_TYPE_TOUCH),
+            isMouse = (inputData.pointerType == INPUT_TYPE_MOUSE);
+
+        // when we're in a touch event, so  block all upcoming mouse events
+        // most mobile browser also emit mouseevents, right after touchstart
+        if (isTouch) {
+            this.mouse.allow = false;
+        } else if (isMouse && !this.mouse.allow) {
+            return;
+        }
+
+        // reset the allowMouse when we're done
+        if (inputEvent & (INPUT_END | INPUT_CANCEL)) {
+            this.mouse.allow = true;
+        }
+
+        this.callback(manager, inputEvent, inputData);
+    },
+
+    /**
+     * remove the event listeners
+     */
+    destroy: function destroy() {
+        this.touch.destroy();
+        this.mouse.destroy();
+    }
+});
+
+var PREFIXED_TOUCH_ACTION = prefixed(TEST_ELEMENT.style, 'touchAction');
+var NATIVE_TOUCH_ACTION = PREFIXED_TOUCH_ACTION !== undefined;
+
+// magical touchAction value
+var TOUCH_ACTION_COMPUTE = 'compute';
+var TOUCH_ACTION_AUTO = 'auto';
+var TOUCH_ACTION_MANIPULATION = 'manipulation'; // not implemented
+var TOUCH_ACTION_NONE = 'none';
+var TOUCH_ACTION_PAN_X = 'pan-x';
+var TOUCH_ACTION_PAN_Y = 'pan-y';
+
+/**
+ * Touch Action
+ * sets the touchAction property or uses the js alternative
+ * @param {Manager} manager
+ * @param {String} value
+ * @constructor
+ */
+function TouchAction(manager, value) {
+    this.manager = manager;
+    this.set(value);
+}
+
+TouchAction.prototype = {
+    /**
+     * set the touchAction value on the element or enable the polyfill
+     * @param {String} value
+     */
+    set: function(value) {
+        // find out the touch-action by the event handlers
+        if (value == TOUCH_ACTION_COMPUTE) {
+            value = this.compute();
+        }
+
+        if (NATIVE_TOUCH_ACTION && this.manager.element.style) {
+            this.manager.element.style[PREFIXED_TOUCH_ACTION] = value;
+        }
+        this.actions = value.toLowerCase().trim();
+    },
+
+    /**
+     * just re-set the touchAction value
+     */
+    update: function() {
+        this.set(this.manager.options.touchAction);
+    },
+
+    /**
+     * compute the value for the touchAction property based on the recognizer's settings
+     * @returns {String} value
+     */
+    compute: function() {
+        var actions = [];
+        each(this.manager.recognizers, function(recognizer) {
+            if (boolOrFn(recognizer.options.enable, [recognizer])) {
+                actions = actions.concat(recognizer.getTouchAction());
+            }
+        });
+        return cleanTouchActions(actions.join(' '));
+    },
+
+    /**
+     * this method is called on each input cycle and provides the preventing of the browser behavior
+     * @param {Object} input
+     */
+    preventDefaults: function(input) {
+        // not needed with native support for the touchAction property
+        if (NATIVE_TOUCH_ACTION) {
+            return;
+        }
+
+        var srcEvent = input.srcEvent;
+        var direction = input.offsetDirection;
+
+        // if the touch action did prevented once this session
+        if (this.manager.session.prevented) {
+            srcEvent.preventDefault();
+            return;
+        }
+
+        var actions = this.actions;
+        var hasNone = inStr(actions, TOUCH_ACTION_NONE);
+        var hasPanY = inStr(actions, TOUCH_ACTION_PAN_Y);
+        var hasPanX = inStr(actions, TOUCH_ACTION_PAN_X);
+
+        if (hasNone ||
+            (hasPanY && direction & DIRECTION_HORIZONTAL) ||
+            (hasPanX && direction & DIRECTION_VERTICAL)) {
+            return this.preventSrc(srcEvent);
+        }
+    },
+
+    /**
+     * call preventDefault to prevent the browser's default behavior (scrolling in most cases)
+     * @param {Object} srcEvent
+     */
+    preventSrc: function(srcEvent) {
+        this.manager.session.prevented = true;
+        srcEvent.preventDefault();
+    }
+};
+
+/**
+ * when the touchActions are collected they are not a valid value, so we need to clean things up. *
+ * @param {String} actions
+ * @returns {*}
+ */
+function cleanTouchActions(actions) {
+    // none
+    if (inStr(actions, TOUCH_ACTION_NONE)) {
+        return TOUCH_ACTION_NONE;
+    }
+
+    var hasPanX = inStr(actions, TOUCH_ACTION_PAN_X);
+    var hasPanY = inStr(actions, TOUCH_ACTION_PAN_Y);
+
+    // pan-x and pan-y can be combined
+    if (hasPanX && hasPanY) {
+        return TOUCH_ACTION_PAN_X + ' ' + TOUCH_ACTION_PAN_Y;
+    }
+
+    // pan-x OR pan-y
+    if (hasPanX || hasPanY) {
+        return hasPanX ? TOUCH_ACTION_PAN_X : TOUCH_ACTION_PAN_Y;
+    }
+
+    // manipulation
+    if (inStr(actions, TOUCH_ACTION_MANIPULATION)) {
+        return TOUCH_ACTION_MANIPULATION;
+    }
+
+    return TOUCH_ACTION_AUTO;
+}
+
+/**
+ * Recognizer flow explained; *
+ * All recognizers have the initial state of POSSIBLE when a input session starts.
+ * The definition of a input session is from the first input until the last input, with all it's movement in it. *
+ * Example session for mouse-input: mousedown -> mousemove -> mouseup
+ *
+ * On each recognizing cycle (see Manager.recognize) the .recognize() method is executed
+ * which determines with state it should be.
+ *
+ * If the recognizer has the state FAILED, CANCELLED or RECOGNIZED (equals ENDED), it is reset to
+ * POSSIBLE to give it another change on the next cycle.
+ *
+ *               Possible
+ *                  |
+ *            +-----+---------------+
+ *            |                     |
+ *      +-----+-----+               |
+ *      |           |               |
+ *   Failed      Cancelled          |
+ *                          +-------+------+
+ *                          |              |
+ *                      Recognized       Began
+ *                                         |
+ *                                      Changed
+ *                                         |
+ *                                  Ended/Recognized
+ */
+var STATE_POSSIBLE = 1;
+var STATE_BEGAN = 2;
+var STATE_CHANGED = 4;
+var STATE_ENDED = 8;
+var STATE_RECOGNIZED = STATE_ENDED;
+var STATE_CANCELLED = 16;
+var STATE_FAILED = 32;
+
+/**
+ * Recognizer
+ * Every recognizer needs to extend from this class.
+ * @constructor
+ * @param {Object} options
+ */
+function Recognizer(options) {
+    this.id = uniqueId();
+
+    this.manager = null;
+    this.options = merge(options || {}, this.defaults);
+
+    // default is enable true
+    this.options.enable = ifUndefined(this.options.enable, true);
+
+    this.state = STATE_POSSIBLE;
+
+    this.simultaneous = {};
+    this.requireFail = [];
+}
+
+Recognizer.prototype = {
+    /**
+     * @virtual
+     * @type {Object}
+     */
+    defaults: {},
+
+    /**
+     * set options
+     * @param {Object} options
+     * @return {Recognizer}
+     */
+    set: function(options) {
+        extend(this.options, options);
+
+        // also update the touchAction, in case something changed about the directions/enabled state
+        this.manager && this.manager.touchAction.update();
+        return this;
+    },
+
+    /**
+     * recognize simultaneous with an other recognizer.
+     * @param {Recognizer} otherRecognizer
+     * @returns {Recognizer} this
+     */
+    recognizeWith: function(otherRecognizer) {
+        if (invokeArrayArg(otherRecognizer, 'recognizeWith', this)) {
+            return this;
+        }
+
+        var simultaneous = this.simultaneous;
+        otherRecognizer = getRecognizerByNameIfManager(otherRecognizer, this);
+        if (!simultaneous[otherRecognizer.id]) {
+            simultaneous[otherRecognizer.id] = otherRecognizer;
+            otherRecognizer.recognizeWith(this);
+        }
+        return this;
+    },
+
+    /**
+     * drop the simultaneous link. it doesnt remove the link on the other recognizer.
+     * @param {Recognizer} otherRecognizer
+     * @returns {Recognizer} this
+     */
+    dropRecognizeWith: function(otherRecognizer) {
+        if (invokeArrayArg(otherRecognizer, 'dropRecognizeWith', this)) {
+            return this;
+        }
+
+        otherRecognizer = getRecognizerByNameIfManager(otherRecognizer, this);
+        delete this.simultaneous[otherRecognizer.id];
+        return this;
+    },
+
+    /**
+     * recognizer can only run when an other is failing
+     * @param {Recognizer} otherRecognizer
+     * @returns {Recognizer} this
+     */
+    requireFailure: function(otherRecognizer) {
+        if (invokeArrayArg(otherRecognizer, 'requireFailure', this)) {
+            return this;
+        }
+
+        var requireFail = this.requireFail;
+        otherRecognizer = getRecognizerByNameIfManager(otherRecognizer, this);
+        if (inArray(requireFail, otherRecognizer) === -1) {
+            requireFail.push(otherRecognizer);
+            otherRecognizer.requireFailure(this);
+        }
+        return this;
+    },
+
+    /**
+     * drop the requireFailure link. it does not remove the link on the other recognizer.
+     * @param {Recognizer} otherRecognizer
+     * @returns {Recognizer} this
+     */
+    dropRequireFailure: function(otherRecognizer) {
+        if (invokeArrayArg(otherRecognizer, 'dropRequireFailure', this)) {
+            return this;
+        }
+
+        otherRecognizer = getRecognizerByNameIfManager(otherRecognizer, this);
+        var index = inArray(this.requireFail, otherRecognizer);
+        if (index > -1) {
+            this.requireFail.splice(index, 1);
+        }
+        return this;
+    },
+
+    /**
+     * has require failures boolean
+     * @returns {boolean}
+     */
+    hasRequireFailures: function() {
+        return this.requireFail.length > 0;
+    },
+
+    /**
+     * if the recognizer can recognize simultaneous with an other recognizer
+     * @param {Recognizer} otherRecognizer
+     * @returns {Boolean}
+     */
+    canRecognizeWith: function(otherRecognizer) {
+        return !!this.simultaneous[otherRecognizer.id];
+    },
+
+    /**
+     * You should use `tryEmit` instead of `emit` directly to check
+     * that all the needed recognizers has failed before emitting.
+     * @param {Object} input
+     */
+    emit: function(input) {
+        var self = this;
+        var state = this.state;
+
+        function emit(withState) {
+            self.manager.emit(self.options.event + (withState ? stateStr(state) : ''), input);
+        }
+
+        // 'panstart' and 'panmove'
+        if (state < STATE_ENDED) {
+            emit(true);
+        }
+
+        emit(); // simple 'eventName' events
+
+        // panend and pancancel
+        if (state >= STATE_ENDED) {
+            emit(true);
+        }
+    },
+
+    /**
+     * Check that all the require failure recognizers has failed,
+     * if true, it emits a gesture event,
+     * otherwise, setup the state to FAILED.
+     * @param {Object} input
+     */
+    tryEmit: function(input) {
+        if (this.canEmit()) {
+            return this.emit(input);
+        }
+        // it's failing anyway
+        this.state = STATE_FAILED;
+    },
+
+    /**
+     * can we emit?
+     * @returns {boolean}
+     */
+    canEmit: function() {
+        var i = 0;
+        while (i < this.requireFail.length) {
+            if (!(this.requireFail[i].state & (STATE_FAILED | STATE_POSSIBLE))) {
+                return false;
+            }
+            i++;
+        }
+        return true;
+    },
+
+    /**
+     * update the recognizer
+     * @param {Object} inputData
+     */
+    recognize: function(inputData) {
+        // make a new copy of the inputData
+        // so we can change the inputData without messing up the other recognizers
+        var inputDataClone = extend({}, inputData);
+
+        // is is enabled and allow recognizing?
+        if (!boolOrFn(this.options.enable, [this, inputDataClone])) {
+            this.reset();
+            this.state = STATE_FAILED;
+            return;
+        }
+
+        // reset when we've reached the end
+        if (this.state & (STATE_RECOGNIZED | STATE_CANCELLED | STATE_FAILED)) {
+            this.state = STATE_POSSIBLE;
+        }
+
+        this.state = this.process(inputDataClone);
+
+        // the recognizer has recognized a gesture
+        // so trigger an event
+        if (this.state & (STATE_BEGAN | STATE_CHANGED | STATE_ENDED | STATE_CANCELLED)) {
+            this.tryEmit(inputDataClone);
+        }
+    },
+
+    /**
+     * return the state of the recognizer
+     * the actual recognizing happens in this method
+     * @virtual
+     * @param {Object} inputData
+     * @returns {Const} STATE
+     */
+    process: function(inputData) { }, // jshint ignore:line
+
+    /**
+     * return the preferred touch-action
+     * @virtual
+     * @returns {Array}
+     */
+    getTouchAction: function() { },
+
+    /**
+     * called when the gesture isn't allowed to recognize
+     * like when another is being recognized or it is disabled
+     * @virtual
+     */
+    reset: function() { }
+};
+
+/**
+ * get a usable string, used as event postfix
+ * @param {Const} state
+ * @returns {String} state
+ */
+function stateStr(state) {
+    if (state & STATE_CANCELLED) {
+        return 'cancel';
+    } else if (state & STATE_ENDED) {
+        return 'end';
+    } else if (state & STATE_CHANGED) {
+        return 'move';
+    } else if (state & STATE_BEGAN) {
+        return 'start';
+    }
+    return '';
+}
+
+/**
+ * direction cons to string
+ * @param {Const} direction
+ * @returns {String}
+ */
+function directionStr(direction) {
+    if (direction == DIRECTION_DOWN) {
+        return 'down';
+    } else if (direction == DIRECTION_UP) {
+        return 'up';
+    } else if (direction == DIRECTION_LEFT) {
+        return 'left';
+    } else if (direction == DIRECTION_RIGHT) {
+        return 'right';
+    }
+    return '';
+}
+
+/**
+ * get a recognizer by name if it is bound to a manager
+ * @param {Recognizer|String} otherRecognizer
+ * @param {Recognizer} recognizer
+ * @returns {Recognizer}
+ */
+function getRecognizerByNameIfManager(otherRecognizer, recognizer) {
+    var manager = recognizer.manager;
+    if (manager) {
+        return manager.get(otherRecognizer);
+    }
+    return otherRecognizer;
+}
+
+/**
+ * This recognizer is just used as a base for the simple attribute recognizers.
+ * @constructor
+ * @extends Recognizer
+ */
+function AttrRecognizer() {
+    Recognizer.apply(this, arguments);
+}
+
+inherit(AttrRecognizer, Recognizer, {
+    /**
+     * @namespace
+     * @memberof AttrRecognizer
+     */
+    defaults: {
+        /**
+         * @type {Number}
+         * @default 1
+         */
+        pointers: 1
+    },
+
+    /**
+     * Used to check if it the recognizer receives valid input, like input.distance > 10.
+     * @memberof AttrRecognizer
+     * @param {Object} input
+     * @returns {Boolean} recognized
+     */
+    attrTest: function(input) {
+        var optionPointers = this.options.pointers;
+        return optionPointers === 0 || input.pointers.length === optionPointers;
+    },
+
+    /**
+     * Process the input and return the state for the recognizer
+     * @memberof AttrRecognizer
+     * @param {Object} input
+     * @returns {*} State
+     */
+    process: function(input) {
+        var state = this.state;
+        var eventType = input.eventType;
+
+        var isRecognized = state & (STATE_BEGAN | STATE_CHANGED);
+        var isValid = this.attrTest(input);
+
+        // on cancel input and we've recognized before, return STATE_CANCELLED
+        if (isRecognized && (eventType & INPUT_CANCEL || !isValid)) {
+            return state | STATE_CANCELLED;
+        } else if (isRecognized || isValid) {
+            if (eventType & INPUT_END) {
+                return state | STATE_ENDED;
+            } else if (!(state & STATE_BEGAN)) {
+                return STATE_BEGAN;
+            }
+            return state | STATE_CHANGED;
+        }
+        return STATE_FAILED;
+    }
+});
+
+/**
+ * Pan
+ * Recognized when the pointer is down and moved in the allowed direction.
+ * @constructor
+ * @extends AttrRecognizer
+ */
+function PanRecognizer() {
+    AttrRecognizer.apply(this, arguments);
+
+    this.pX = null;
+    this.pY = null;
+}
+
+inherit(PanRecognizer, AttrRecognizer, {
+    /**
+     * @namespace
+     * @memberof PanRecognizer
+     */
+    defaults: {
+        event: 'pan',
+        threshold: 10,
+        pointers: 1,
+        direction: DIRECTION_ALL
+    },
+
+    getTouchAction: function() {
+        var direction = this.options.direction;
+        var actions = [];
+        if (direction & DIRECTION_HORIZONTAL) {
+            actions.push(TOUCH_ACTION_PAN_Y);
+        }
+        if (direction & DIRECTION_VERTICAL) {
+            actions.push(TOUCH_ACTION_PAN_X);
+        }
+        return actions;
+    },
+
+    directionTest: function(input) {
+        var options = this.options;
+        var hasMoved = true;
+        var distance = input.distance;
+        var direction = input.direction;
+        var x = input.deltaX;
+        var y = input.deltaY;
+
+        // lock to axis?
+        if (!(direction & options.direction)) {
+            if (options.direction & DIRECTION_HORIZONTAL) {
+                direction = (x === 0) ? DIRECTION_NONE : (x < 0) ? DIRECTION_LEFT : DIRECTION_RIGHT;
+                hasMoved = x != this.pX;
+                distance = Math.abs(input.deltaX);
+            } else {
+                direction = (y === 0) ? DIRECTION_NONE : (y < 0) ? DIRECTION_UP : DIRECTION_DOWN;
+                hasMoved = y != this.pY;
+                distance = Math.abs(input.deltaY);
+            }
+        }
+        input.direction = direction;
+        return hasMoved && distance > options.threshold && direction & options.direction;
+    },
+
+    attrTest: function(input) {
+        return AttrRecognizer.prototype.attrTest.call(this, input) &&
+            (this.state & STATE_BEGAN || (!(this.state & STATE_BEGAN) && this.directionTest(input)));
+    },
+
+    emit: function(input) {
+        this.pX = input.deltaX;
+        this.pY = input.deltaY;
+
+        var direction = directionStr(input.direction);
+        if (direction) {
+            this.manager.emit(this.options.event + direction, input);
+        }
+
+        this._super.emit.call(this, input);
+    }
+});
+
+/**
+ * Pinch
+ * Recognized when two or more pointers are moving toward (zoom-in) or away from each other (zoom-out).
+ * @constructor
+ * @extends AttrRecognizer
+ */
+function PinchRecognizer() {
+    AttrRecognizer.apply(this, arguments);
+}
+
+inherit(PinchRecognizer, AttrRecognizer, {
+    /**
+     * @namespace
+     * @memberof PinchRecognizer
+     */
+    defaults: {
+        event: 'pinch',
+        threshold: 0,
+        pointers: 2
+    },
+
+    getTouchAction: function() {
+        return [TOUCH_ACTION_NONE];
+    },
+
+    attrTest: function(input) {
+        return this._super.attrTest.call(this, input) &&
+            (Math.abs(input.scale - 1) > this.options.threshold || this.state & STATE_BEGAN);
+    },
+
+    emit: function(input) {
+        this._super.emit.call(this, input);
+        if (input.scale !== 1) {
+            var inOut = input.scale < 1 ? 'in' : 'out';
+            this.manager.emit(this.options.event + inOut, input);
+        }
+    }
+});
+
+/**
+ * Press
+ * Recognized when the pointer is down for x ms without any movement.
+ * @constructor
+ * @extends Recognizer
+ */
+function PressRecognizer() {
+    Recognizer.apply(this, arguments);
+
+    this._timer = null;
+    this._input = null;
+}
+
+inherit(PressRecognizer, Recognizer, {
+    /**
+     * @namespace
+     * @memberof PressRecognizer
+     */
+    defaults: {
+        event: 'press',
+        pointers: 1,
+        time: 500, // minimal time of the pointer to be pressed
+        threshold: 5 // a minimal movement is ok, but keep it low
+    },
+
+    getTouchAction: function() {
+        return [TOUCH_ACTION_AUTO];
+    },
+
+    process: function(input) {
+        var options = this.options;
+        var validPointers = input.pointers.length === options.pointers;
+        var validMovement = input.distance < options.threshold;
+        var validTime = input.deltaTime > options.time;
+
+        this._input = input;
+
+        // we only allow little movement
+        // and we've reached an end event, so a tap is possible
+        if (!validMovement || !validPointers || (input.eventType & (INPUT_END | INPUT_CANCEL) && !validTime)) {
+            this.reset();
+        } else if (input.eventType & INPUT_START) {
+            this.reset();
+            this._timer = setTimeoutContext(function() {
+                this.state = STATE_RECOGNIZED;
+                this.tryEmit();
+            }, options.time, this);
+        } else if (input.eventType & INPUT_END) {
+            return STATE_RECOGNIZED;
+        }
+        return STATE_FAILED;
+    },
+
+    reset: function() {
+        clearTimeout(this._timer);
+    },
+
+    emit: function(input) {
+        if (this.state !== STATE_RECOGNIZED) {
+            return;
+        }
+
+        if (input && (input.eventType & INPUT_END)) {
+            this.manager.emit(this.options.event + 'up', input);
+        } else {
+            this._input.timeStamp = now();
+            this.manager.emit(this.options.event, this._input);
+        }
+    }
+});
+
+/**
+ * Rotate
+ * Recognized when two or more pointer are moving in a circular motion.
+ * @constructor
+ * @extends AttrRecognizer
+ */
+function RotateRecognizer() {
+    AttrRecognizer.apply(this, arguments);
+}
+
+inherit(RotateRecognizer, AttrRecognizer, {
+    /**
+     * @namespace
+     * @memberof RotateRecognizer
+     */
+    defaults: {
+        event: 'rotate',
+        threshold: 0,
+        pointers: 2
+    },
+
+    getTouchAction: function() {
+        return [TOUCH_ACTION_NONE];
+    },
+
+    attrTest: function(input) {
+        return this._super.attrTest.call(this, input) &&
+            (Math.abs(input.rotation) > this.options.threshold || this.state & STATE_BEGAN);
+    }
+});
+
+/**
+ * Swipe
+ * Recognized when the pointer is moving fast (velocity), with enough distance in the allowed direction.
+ * @constructor
+ * @extends AttrRecognizer
+ */
+function SwipeRecognizer() {
+    AttrRecognizer.apply(this, arguments);
+}
+
+inherit(SwipeRecognizer, AttrRecognizer, {
+    /**
+     * @namespace
+     * @memberof SwipeRecognizer
+     */
+    defaults: {
+        event: 'swipe',
+        threshold: 10,
+        velocity: 0.65,
+        direction: DIRECTION_HORIZONTAL | DIRECTION_VERTICAL,
+        pointers: 1
+    },
+
+    getTouchAction: function() {
+        return PanRecognizer.prototype.getTouchAction.call(this);
+    },
+
+    attrTest: function(input) {
+        var direction = this.options.direction;
+        var velocity;
+
+        if (direction & (DIRECTION_HORIZONTAL | DIRECTION_VERTICAL)) {
+            velocity = input.velocity;
+        } else if (direction & DIRECTION_HORIZONTAL) {
+            velocity = input.velocityX;
+        } else if (direction & DIRECTION_VERTICAL) {
+            velocity = input.velocityY;
+        }
+
+        return this._super.attrTest.call(this, input) &&
+            direction & input.direction &&
+            input.distance > this.options.threshold &&
+            abs(velocity) > this.options.velocity && input.eventType & INPUT_END;
+    },
+
+    emit: function(input) {
+        var direction = directionStr(input.direction);
+        if (direction) {
+            this.manager.emit(this.options.event + direction, input);
+        }
+
+        this.manager.emit(this.options.event, input);
+    }
+});
+
+/**
+ * A tap is ecognized when the pointer is doing a small tap/click. Multiple taps are recognized if they occur
+ * between the given interval and position. The delay option can be used to recognize multi-taps without firing
+ * a single tap.
+ *
+ * The eventData from the emitted event contains the property `tapCount`, which contains the amount of
+ * multi-taps being recognized.
+ * @constructor
+ * @extends Recognizer
+ */
+function TapRecognizer() {
+    Recognizer.apply(this, arguments);
+
+    // previous time and center,
+    // used for tap counting
+    this.pTime = false;
+    this.pCenter = false;
+
+    this._timer = null;
+    this._input = null;
+    this.count = 0;
+}
+
+inherit(TapRecognizer, Recognizer, {
+    /**
+     * @namespace
+     * @memberof PinchRecognizer
+     */
+    defaults: {
+        event: 'tap',
+        pointers: 1,
+        taps: 1,
+        interval: 300, // max time between the multi-tap taps
+        time: 250, // max time of the pointer to be down (like finger on the screen)
+        threshold: 2, // a minimal movement is ok, but keep it low
+        posThreshold: 10 // a multi-tap can be a bit off the initial position
+    },
+
+    getTouchAction: function() {
+        return [TOUCH_ACTION_MANIPULATION];
+    },
+
+    process: function(input) {
+        var options = this.options;
+
+        var validPointers = input.pointers.length === options.pointers;
+        var validMovement = input.distance < options.threshold;
+        var validTouchTime = input.deltaTime < options.time;
+
+        this.reset();
+
+        if ((input.eventType & INPUT_START) && (this.count === 0)) {
+            return this.failTimeout();
+        }
+
+        // we only allow little movement
+        // and we've reached an end event, so a tap is possible
+        if (validMovement && validTouchTime && validPointers) {
+            if (input.eventType != INPUT_END) {
+                return this.failTimeout();
+            }
+
+            var validInterval = this.pTime ? (input.timeStamp - this.pTime < options.interval) : true;
+            var validMultiTap = !this.pCenter || getDistance(this.pCenter, input.center) < options.posThreshold;
+
+            this.pTime = input.timeStamp;
+            this.pCenter = input.center;
+
+            if (!validMultiTap || !validInterval) {
+                this.count = 1;
+            } else {
+                this.count += 1;
+            }
+
+            this._input = input;
+
+            // if tap count matches we have recognized it,
+            // else it has began recognizing...
+            var tapCount = this.count % options.taps;
+            if (tapCount === 0) {
+                // no failing requirements, immediately trigger the tap event
+                // or wait as long as the multitap interval to trigger
+                if (!this.hasRequireFailures()) {
+                    return STATE_RECOGNIZED;
+                } else {
+                    this._timer = setTimeoutContext(function() {
+                        this.state = STATE_RECOGNIZED;
+                        this.tryEmit();
+                    }, options.interval, this);
+                    return STATE_BEGAN;
+                }
+            }
+        }
+        return STATE_FAILED;
+    },
+
+    failTimeout: function() {
+        this._timer = setTimeoutContext(function() {
+            this.state = STATE_FAILED;
+        }, this.options.interval, this);
+        return STATE_FAILED;
+    },
+
+    reset: function() {
+        clearTimeout(this._timer);
+    },
+
+    emit: function() {
+        if (this.state == STATE_RECOGNIZED) {
+            this._input.tapCount = this.count;
+            this.manager.emit(this.options.event, this._input);
+        }
+    }
+});
+
+/**
+ * Simple way to create an manager with a default set of recognizers.
+ * @param {HTMLElement} element
+ * @param {Object} [options]
+ * @constructor
+ */
+function Hammer(element, options) {
+    options = options || {};
+    options.recognizers = ifUndefined(options.recognizers, Hammer.defaults.preset);
+    return new Manager(element, options);
+}
+
+/**
+ * @const {string}
+ */
+Hammer.VERSION = '2.0.4';
+
+/**
+ * default settings
+ * @namespace
+ */
+Hammer.defaults = {
+    /**
+     * set if DOM events are being triggered.
+     * But this is slower and unused by simple implementations, so disabled by default.
+     * @type {Boolean}
+     * @default false
+     */
+    domEvents: false,
+
+    /**
+     * The value for the touchAction property/fallback.
+     * When set to `compute` it will magically set the correct value based on the added recognizers.
+     * @type {String}
+     * @default compute
+     */
+    touchAction: TOUCH_ACTION_COMPUTE,
+
+    /**
+     * @type {Boolean}
+     * @default true
+     */
+    enable: true,
+
+    /**
+     * EXPERIMENTAL FEATURE -- can be removed/changed
+     * Change the parent input target element.
+     * If Null, then it is being set the to main element.
+     * @type {Null|EventTarget}
+     * @default null
+     */
+    inputTarget: null,
+
+    /**
+     * force an input class
+     * @type {Null|Function}
+     * @default null
+     */
+    inputClass: null,
+
+    /**
+     * Default recognizer setup when calling `Hammer()`
+     * When creating a new Manager these will be skipped.
+     * @type {Array}
+     */
+    preset: [
+        // RecognizerClass, options, [recognizeWith, ...], [requireFailure, ...]
+        [RotateRecognizer, {enable: false}],
+        [PinchRecognizer, {enable: false}, ['rotate']],
+        [SwipeRecognizer, {direction: DIRECTION_HORIZONTAL}],
+        [PanRecognizer, {direction: DIRECTION_HORIZONTAL}, ['swipe']],
+        [TapRecognizer],
+        [TapRecognizer, {event: 'doubletap', taps: 2}, ['tap']],
+        [PressRecognizer]
+    ],
+
+    /**
+     * Some CSS properties can be used to improve the working of Hammer.
+     * Add them to this method and they will be set when creating a new Manager.
+     * @namespace
+     */
+    cssProps: {
+        /**
+         * Disables text selection to improve the dragging gesture. Mainly for desktop browsers.
+         * @type {String}
+         * @default 'none'
+         */
+        userSelect: 'none',
+
+        /**
+         * Disable the Windows Phone grippers when pressing an element.
+         * @type {String}
+         * @default 'none'
+         */
+        touchSelect: 'none',
+
+        /**
+         * Disables the default callout shown when you touch and hold a touch target.
+         * On iOS, when you touch and hold a touch target such as a link, Safari displays
+         * a callout containing information about the link. This property allows you to disable that callout.
+         * @type {String}
+         * @default 'none'
+         */
+        touchCallout: 'none',
+
+        /**
+         * Specifies whether zooming is enabled. Used by IE10>
+         * @type {String}
+         * @default 'none'
+         */
+        contentZooming: 'none',
+
+        /**
+         * Specifies that an entire element should be draggable instead of its contents. Mainly for desktop browsers.
+         * @type {String}
+         * @default 'none'
+         */
+        userDrag: 'none',
+
+        /**
+         * Overrides the highlight color shown when the user taps a link or a JavaScript
+         * clickable element in iOS. This property obeys the alpha value, if specified.
+         * @type {String}
+         * @default 'rgba(0,0,0,0)'
+         */
+        tapHighlightColor: 'rgba(0,0,0,0)'
+    }
+};
+
+var STOP = 1;
+var FORCED_STOP = 2;
+
+/**
+ * Manager
+ * @param {HTMLElement} element
+ * @param {Object} [options]
+ * @constructor
+ */
+function Manager(element, options) {
+    options = options || {};
+
+    this.options = merge(options, Hammer.defaults);
+    this.options.inputTarget = this.options.inputTarget || element;
+
+    this.handlers = {};
+    this.session = {};
+    this.recognizers = [];
+
+    this.element = element;
+    this.input = createInputInstance(this);
+    this.touchAction = new TouchAction(this, this.options.touchAction);
+
+    toggleCssProps(this, true);
+
+    each(options.recognizers, function(item) {
+        var recognizer = this.add(new (item[0])(item[1]));
+        item[2] && recognizer.recognizeWith(item[2]);
+        item[3] && recognizer.requireFailure(item[3]);
+    }, this);
+}
+
+Manager.prototype = {
+    /**
+     * set options
+     * @param {Object} options
+     * @returns {Manager}
+     */
+    set: function(options) {
+        extend(this.options, options);
+
+        // Options that need a little more setup
+        if (options.touchAction) {
+            this.touchAction.update();
+        }
+        if (options.inputTarget) {
+            // Clean up existing event listeners and reinitialize
+            this.input.destroy();
+            this.input.target = options.inputTarget;
+            this.input.init();
+        }
+        return this;
+    },
+
+    /**
+     * stop recognizing for this session.
+     * This session will be discarded, when a new [input]start event is fired.
+     * When forced, the recognizer cycle is stopped immediately.
+     * @param {Boolean} [force]
+     */
+    stop: function(force) {
+        this.session.stopped = force ? FORCED_STOP : STOP;
+    },
+
+    /**
+     * run the recognizers!
+     * called by the inputHandler function on every movement of the pointers (touches)
+     * it walks through all the recognizers and tries to detect the gesture that is being made
+     * @param {Object} inputData
+     */
+    recognize: function(inputData) {
+        var session = this.session;
+        if (session.stopped) {
+            return;
+        }
+
+        // run the touch-action polyfill
+        this.touchAction.preventDefaults(inputData);
+
+        var recognizer;
+        var recognizers = this.recognizers;
+
+        // this holds the recognizer that is being recognized.
+        // so the recognizer's state needs to be BEGAN, CHANGED, ENDED or RECOGNIZED
+        // if no recognizer is detecting a thing, it is set to `null`
+        var curRecognizer = session.curRecognizer;
+
+        // reset when the last recognizer is recognized
+        // or when we're in a new session
+        if (!curRecognizer || (curRecognizer && curRecognizer.state & STATE_RECOGNIZED)) {
+            curRecognizer = session.curRecognizer = null;
+        }
+
+        var i = 0;
+        while (i < recognizers.length) {
+            recognizer = recognizers[i];
+
+            // find out if we are allowed try to recognize the input for this one.
+            // 1.   allow if the session is NOT forced stopped (see the .stop() method)
+            // 2.   allow if we still haven't recognized a gesture in this session, or the this recognizer is the one
+            //      that is being recognized.
+            // 3.   allow if the recognizer is allowed to run simultaneous with the current recognized recognizer.
+            //      this can be setup with the `recognizeWith()` method on the recognizer.
+            if (session.stopped !== FORCED_STOP && ( // 1
+                    !curRecognizer || recognizer == curRecognizer || // 2
+                    recognizer.canRecognizeWith(curRecognizer))) { // 3
+                recognizer.recognize(inputData);
+            } else {
+                recognizer.reset();
+            }
+
+            // if the recognizer has been recognizing the input as a valid gesture, we want to store this one as the
+            // current active recognizer. but only if we don't already have an active recognizer
+            if (!curRecognizer && recognizer.state & (STATE_BEGAN | STATE_CHANGED | STATE_ENDED)) {
+                curRecognizer = session.curRecognizer = recognizer;
+            }
+            i++;
+        }
+    },
+
+    /**
+     * get a recognizer by its event name.
+     * @param {Recognizer|String} recognizer
+     * @returns {Recognizer|Null}
+     */
+    get: function(recognizer) {
+        if (recognizer instanceof Recognizer) {
+            return recognizer;
+        }
+
+        var recognizers = this.recognizers;
+        for (var i = 0; i < recognizers.length; i++) {
+            if (recognizers[i].options.event == recognizer) {
+                return recognizers[i];
+            }
+        }
+        return null;
+    },
+
+    /**
+     * add a recognizer to the manager
+     * existing recognizers with the same event name will be removed
+     * @param {Recognizer} recognizer
+     * @returns {Recognizer|Manager}
+     */
+    add: function(recognizer) {
+        if (invokeArrayArg(recognizer, 'add', this)) {
+            return this;
+        }
+
+        // remove existing
+        var existing = this.get(recognizer.options.event);
+        if (existing) {
+            this.remove(existing);
+        }
+
+        this.recognizers.push(recognizer);
+        recognizer.manager = this;
+
+        this.touchAction.update();
+        return recognizer;
+    },
+
+    /**
+     * remove a recognizer by name or instance
+     * @param {Recognizer|String} recognizer
+     * @returns {Manager}
+     */
+    remove: function(recognizer) {
+        if (invokeArrayArg(recognizer, 'remove', this)) {
+            return this;
+        }
+
+        var recognizers = this.recognizers;
+        recognizer = this.get(recognizer);
+        recognizers.splice(inArray(recognizers, recognizer), 1);
+
+        this.touchAction.update();
+        return this;
+    },
+
+    /**
+     * bind event
+     * @param {String} events
+     * @param {Function} handler
+     * @returns {EventEmitter} this
+     */
+    on: function(events, handler) {
+        var handlers = this.handlers;
+        each(splitStr(events), function(event) {
+            handlers[event] = handlers[event] || [];
+            handlers[event].push(handler);
+        });
+        return this;
+    },
+
+    /**
+     * unbind event, leave emit blank to remove all handlers
+     * @param {String} events
+     * @param {Function} [handler]
+     * @returns {EventEmitter} this
+     */
+    off: function(events, handler) {
+        var handlers = this.handlers;
+        each(splitStr(events), function(event) {
+            if (!handler) {
+                delete handlers[event];
+            } else {
+                handlers[event].splice(inArray(handlers[event], handler), 1);
+            }
+        });
+        return this;
+    },
+
+    /**
+     * emit event to the listeners
+     * @param {String} event
+     * @param {Object} data
+     */
+    emit: function(event, data) {
+        // we also want to trigger dom events
+        if (this.options.domEvents) {
+            triggerDomEvent(event, data);
+        }
+
+        // no handlers, so skip it all
+        var handlers = this.handlers[event] && this.handlers[event].slice();
+        if (!handlers || !handlers.length) {
+            return;
+        }
+
+        data.type = event;
+        data.preventDefault = function() {
+            data.srcEvent.preventDefault();
+        };
+
+        var i = 0;
+        while (i < handlers.length) {
+            handlers[i](data);
+            i++;
+        }
+    },
+
+    /**
+     * destroy the manager and unbinds all events
+     * it doesn't unbind dom events, that is the user own responsibility
+     */
+    destroy: function() {
+        this.element && toggleCssProps(this, false);
+
+        this.handlers = {};
+        this.session = {};
+        this.input.destroy();
+        this.element = null;
+    }
+};
+
+/**
+ * add/remove the css properties as defined in manager.options.cssProps
+ * @param {Manager} manager
+ * @param {Boolean} add
+ */
+function toggleCssProps(manager, add) {
+    var element = manager.element;
+    if (!element.style) {
+        return;
+    }
+    each(manager.options.cssProps, function(value, name) {
+        element.style[prefixed(element.style, name)] = add ? value : '';
+    });
+}
+
+/**
+ * trigger dom event
+ * @param {String} event
+ * @param {Object} data
+ */
+function triggerDomEvent(event, data) {
+    var gestureEvent = document.createEvent('Event');
+    gestureEvent.initEvent(event, true, true);
+    gestureEvent.gesture = data;
+    data.target.dispatchEvent(gestureEvent);
+}
+
+extend(Hammer, {
+    INPUT_START: INPUT_START,
+    INPUT_MOVE: INPUT_MOVE,
+    INPUT_END: INPUT_END,
+    INPUT_CANCEL: INPUT_CANCEL,
+
+    STATE_POSSIBLE: STATE_POSSIBLE,
+    STATE_BEGAN: STATE_BEGAN,
+    STATE_CHANGED: STATE_CHANGED,
+    STATE_ENDED: STATE_ENDED,
+    STATE_RECOGNIZED: STATE_RECOGNIZED,
+    STATE_CANCELLED: STATE_CANCELLED,
+    STATE_FAILED: STATE_FAILED,
+
+    DIRECTION_NONE: DIRECTION_NONE,
+    DIRECTION_LEFT: DIRECTION_LEFT,
+    DIRECTION_RIGHT: DIRECTION_RIGHT,
+    DIRECTION_UP: DIRECTION_UP,
+    DIRECTION_DOWN: DIRECTION_DOWN,
+    DIRECTION_HORIZONTAL: DIRECTION_HORIZONTAL,
+    DIRECTION_VERTICAL: DIRECTION_VERTICAL,
+    DIRECTION_ALL: DIRECTION_ALL,
+
+    Manager: Manager,
+    Input: Input,
+    TouchAction: TouchAction,
+
+    TouchInput: TouchInput,
+    MouseInput: MouseInput,
+    PointerEventInput: PointerEventInput,
+    TouchMouseInput: TouchMouseInput,
+    SingleTouchInput: SingleTouchInput,
+
+    Recognizer: Recognizer,
+    AttrRecognizer: AttrRecognizer,
+    Tap: TapRecognizer,
+    Pan: PanRecognizer,
+    Swipe: SwipeRecognizer,
+    Pinch: PinchRecognizer,
+    Rotate: RotateRecognizer,
+    Press: PressRecognizer,
+
+    on: addEventListeners,
+    off: removeEventListeners,
+    each: each,
+    merge: merge,
+    extend: extend,
+    inherit: inherit,
+    bindFn: bindFn,
+    prefixed: prefixed
+});
+
+if (typeof define == TYPE_FUNCTION && define.amd) {
+    define(function() {
+        return Hammer;
+    });
+} else if (typeof module != 'undefined' && module.exports) {
+    module.exports = Hammer;
+} else {
+    window[exportName] = Hammer;
+}
+
+})(window, document, 'Hammer');
+
+},{}],14:[function(require,module,exports){
+'use strict';
+
+/**
+ * @class
+ * @classdesc Minimalistic event emitter mixin.
+ */
+function EventEmitter() {}
+
+/**
+ * Registers an event listener for the specified event. If the listener has
+ * already been registered for the event, this is a no-op.
+ *
+ * @param {string} name The event name.
+ * @param {function} fn The listener function.
+ */
+EventEmitter.prototype.addEventListener = function(name, fn) {
+  var eventMap = this.__events = this.__events || {};
+  var handlerList = eventMap[name] = eventMap[name] || [];
+  if (handlerList.indexOf(fn) < 0) {
+    handlerList.push(fn);
+  }
+};
+
+/**
+ * Unregisters an event listener from the specified event. If the listener
+ * hasn't been registered for the event, this is a no-op.
+ *
+ * @param {string} name The event name.
+ * @param {function} fn The listener function.
+ */
+EventEmitter.prototype.removeEventListener = function(name, fn) {
+  var eventMap = this.__events = this.__events || {};
+  var handlerList = eventMap[name];
+  if (handlerList) {
+    var index = handlerList.indexOf(fn);
+    if (index >= 0) {
+      handlerList.splice(index, 1);
+    }
+  }
+};
+
+/**
+ * Emits an event, causing all registered event listeners for that event to be
+ * called in registration order.
+ *
+ * @param {string} name The event name.
+ * @param {...*} var_args Arguments to call listeners with.
+ */
+EventEmitter.prototype.emit = function(name, var_args) {
+  var eventMap = this.__events = this.__events || {};
+  var handlerList = eventMap[name];
+  var args = Array.prototype.slice.call(arguments, 1);
+  if (handlerList) {
+    for (var i = 0; i < handlerList.length; i++) {
+      var fn = handlerList[i];
+      fn.apply(this, args);
+    }
+  }
+};
+
+/**
+ * Mixes in {@link EventEmitter} into a constructor function.
+ *
+ * @param {function} ctor The constructor function.
+ */
+function eventEmitter(ctor) {
+  for (var prop in EventEmitter.prototype) {
+    if (EventEmitter.prototype.hasOwnProperty(prop)) {
+      ctor.prototype[prop] = EventEmitter.prototype[prop];
+    }
+  }
+}
+
+module.exports = eventEmitter;
+
+},{}],15:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var eventEmitter = require('minimal-event-emitter');
+var cssSupported = require('./support/Css');
+var positionAbsolutely = require('./util/positionAbsolutely');
+var setTransform = require('./util/dom').setTransform;
+var clearOwnProperties = require('./util/clearOwnProperties');
+
+/**
+ * @class Hotspot
+ * @classdesc
+ *
+ * A Hotspot allows a DOM element to be placed at a fixed position in the
+ * image. The position is updated automatically when the {@link View view}
+ * changes.
+ *
+ * Positioning is performed with the `transform` CSS property when available,
+ * falling back to the `position`, `left` and `top` properties when not.
+ * In both cases, the top left corner of the element is placed in the requested
+ * position; clients are expected to use additional children elements or other
+ * CSS properties to achieve more sophisticated layouts.
+ *
+ * There are two kinds of hotspots: regular and embedded. A regular hotspot
+ * does not change size depending on the zoom level. An embedded hotspot is
+ * displayed at a fixed size relative to the panorama, always covering the
+ * same portion of the image. Embedded hotspots require CSS 3D transform
+ * support.
+ *
+ * Clients should call {@link HotspotContainer#createHotspot} instead of
+ * invoking the constructor directly.
+ *
+ * @param {Element} domElement The DOM element.
+ * @param {View} view The view.
+ * @param {Object} coords The hotspot coordinates.
+ *     Use {@link RectilinearViewCoords} for a {@link RectilinearView} or
+ *     {@link FlatViewCoords} for a {@link FlatView}.
+ * @param {Object} opts Additional options.
+ * @param {Object} opts.perspective Perspective options for embedded hotspots.
+ * @param {number} [opts.perspective.radius=null] If set, embed the hotspot
+ *     into the image by transforming it into the surface of a sphere with this
+ *     radius.
+ * @param {string} [opts.perspective.extraTransforms=null] If set, append this
+ *     value to the CSS `transform` property used to position the hotspot. This
+ *     may be used to rotate an embedded hotspot.
+ */
+function Hotspot(domElement, parentDomElement, view, coords, opts) {
+
+  opts = opts || {};
+  opts.perspective = opts.perspective || {};
+  opts.perspective.extraTransforms =
+      opts.perspective.extraTransforms != null ? opts.perspective.extraTransforms : "";
+
+  if ((opts.perspective.radius || opts.perspective.extraTransforms) && !cssSupported()) {
+    throw new Error('CSS transforms on hotspots are not supported on this browser');
+  }
+
+  this._domElement = domElement;
+  this._parentDomElement = parentDomElement;
+  this._view = view;
+  this._coords = {};
+  this._perspective = {};
+
+  this.setPosition(coords);
+
+  // Add hotspot into the DOM.
+  this._parentDomElement.appendChild(this._domElement);
+
+  this.setPerspective(opts.perspective);
+
+  // Whether the hotspot is visible.
+  // The hotspot may still be hidden if it's inside a hidden HotspotContainer.
+  this._visible = true;
+
+  // The current calculated screen position.
+  this._position = { x: 0, y: 0 };
+}
+
+eventEmitter(Hotspot);
+
+
+/**
+ * Destructor.
+ * Clients should call {@link HotspotContainer#destroyHotspot} instead.
+ */
+Hotspot.prototype.destroy = function() {
+  this._parentDomElement.removeChild(this._domElement);
+  clearOwnProperties(this);
+};
+
+
+/**
+ * @return {Element}
+ */
+Hotspot.prototype.domElement = function() {
+  return this._domElement;
+};
+
+
+/**
+ * @return {Object}
+ */
+Hotspot.prototype.position = function() {
+  return this._coords;
+};
+
+
+/**
+ * @param {Object} coords
+ */
+Hotspot.prototype.setPosition = function(coords) {
+  for (var key in coords) {
+    this._coords[key] = coords[key];
+  }
+  this._update();
+  // TODO: We should probably emit a hotspotsChange event on the parent
+  // HotspotContainer. What's the best way to do so?
+};
+
+
+/**
+ * @return {Object}
+ */
+Hotspot.prototype.perspective = function() {
+  return this._perspective;
+};
+
+
+/**
+ * @param {Object}
+ */
+Hotspot.prototype.setPerspective = function(perspective) {
+  for (var key in perspective) {
+    this._perspective[key] = perspective[key];
+  }
+  this._update();
+};
+
+
+/**
+ * Show the hotspot
+ */
+Hotspot.prototype.show = function() {
+  if (!this._visible) {
+    this._visible = true;
+    this._update();
+  }
+};
+
+
+/**
+ * Hide the hotspot
+ */
+Hotspot.prototype.hide = function() {
+  if (this._visible) {
+    this._visible = false;
+    this._update();
+  }
+};
+
+
+Hotspot.prototype._update = function() {
+  var element = this._domElement;
+
+  var params = this._coords;
+  var position = this._position;
+  var x, y;
+
+  var isVisible = false;
+
+  if (this._visible) {
+    var view = this._view;
+
+    if (this._perspective.radius) {
+      // Hotspots that are embedded in the panorama may be visible even when
+      // positioned behind the camera.
+      isVisible = true;
+      this._setEmbeddedPosition(view, params);
+    } else {
+      // Regular hotspots are only visible when positioned in front of the
+      // camera. Note that they may be partially visible when positioned outside
+      // the viewport.
+      view.coordinatesToScreen(params, position);
+      x = position.x;
+      y = position.y;
+
+      if (x != null && y != null) {
+        isVisible = true;
+        this._setPosition(x, y);
+      }
+    }
+  }
+
+  // Show if visible, hide if not.
+  if (isVisible) {
+    element.style.display = 'block';
+    element.style.position = 'absolute';
+  }
+  else {
+    element.style.display = 'none';
+    element.style.position = '';
+  }
+
+};
+
+
+Hotspot.prototype._setEmbeddedPosition = function(view, params) {
+  var transform = view.coordinatesToPerspectiveTransform(
+      params, this._perspective.radius, this._perspective.extraTransforms);
+  setTransform(this._domElement, transform);
+};
+
+
+Hotspot.prototype._setPosition = function(x, y) {
+  positionAbsolutely(this._domElement, x, y, this._perspective.extraTransforms);
+};
+
+
+module.exports = Hotspot;
+
+},{"./support/Css":83,"./util/clearOwnProperties":92,"./util/dom":102,"./util/positionAbsolutely":111,"minimal-event-emitter":14}],16:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var eventEmitter = require('minimal-event-emitter');
+var Hotspot = require('./Hotspot');
+var calcRect = require('./util/calcRect');
+var cssPointerEventsSupported = require('./support/cssPointerEvents');
+var positionAbsolutely = require('./util/positionAbsolutely');
+var setAbsolute = require('./util/dom').setAbsolute;
+var setOverflowHidden = require('./util/dom').setOverflowHidden;
+var setOverflowVisible = require('./util/dom').setOverflowVisible;
+var setNullSize = require('./util/dom').setNullSize;
+var setPixelSize = require('./util/dom').setPixelSize;
+var setPointerEvents = require('./util/dom').setWithVendorPrefix('pointer-events');
+var clearOwnProperties = require('./util/clearOwnProperties');
+
+/**
+ * Signals that a hotspot has been created or destroyed on the container.
+ * @event HotspotContainer#hotspotsChange
+ */
+
+/**
+ * @class HotspotContainer
+ * @classdesc
+ *
+ * Creates a DOM element to hold {@link Hotspot hotspots} and updates their
+ * position when necessary.
+ *
+ * @param {Element} parentDomElement The DOM element inside which the container
+ *     should be created.
+ * @param {Stage} stage The underlying stage.
+ * @param {View} view The view according to which the hotspots are positioned.
+ * @param {RenderLoop} renderLoop The render loop indicating when the hotspots
+ *     must be rendered.
+ * @param {Object} opts
+ * @param {RectSpec} opts.rect Rectangular region covered by the container. See
+ *    {@link Effects#rect}.
+ */
+function HotspotContainer(parentDomElement, stage, view, renderLoop, opts) {
+  opts = opts || {};
+
+  this._parentDomElement = parentDomElement;
+  this._stage = stage;
+  this._view = view;
+  this._renderLoop = renderLoop;
+
+  // Hotspot list.
+  this._hotspots = [];
+
+  // Whether the hotspot container should be visible.
+  // It may still be hidden if a rect effect is set on a browser without
+  // pointer-events support.
+  this._visible = true;
+
+  // The current rect.
+  this._rect = opts.rect;
+
+  // Whether the visibility or the rect have changed since the last DOM update.
+  this._visibilityOrRectChanged = true;
+
+  // The last seen stage dimensions.
+  this._stageWidth = null;
+  this._stageHeight = null;
+
+  // Temporary variable to hold the calculated position and size.
+  this._tmpRect = {};
+
+  // Wrapper element. When the rect effect is set, the wrapper will have nonzero
+  // dimensions and `pointer-events: none` so that hotspots outside the rect are
+  // hidden, but no mouse events are hijacked. The exception is browsers without
+  // pointer-events support, where we refuse to show the hotspots when a rect is
+  // set as it would prevent the controls from receiving mouse events.
+  this._hotspotContainerWrapper = document.createElement('div');
+  setAbsolute(this._hotspotContainerWrapper);
+  setPointerEvents(this._hotspotContainerWrapper, 'none');
+  this._parentDomElement.appendChild(this._hotspotContainerWrapper);
+
+  // Hotspot container element. It has zero dimensions and `pointer-events: all`
+  // to override the `pointer-events: none` on the wrapper and allow hotspots to
+  // be interacted with.
+  this._hotspotContainer = document.createElement('div');
+  setAbsolute(this._hotspotContainer);
+  setPointerEvents(this._hotspotContainer, 'all');
+  this._hotspotContainerWrapper.appendChild(this._hotspotContainer);
+
+  // Update when the hotspots change or scene is re-rendered.
+  this._updateHandler = this._update.bind(this);
+  this._renderLoop.addEventListener('afterRender', this._updateHandler);
+}
+
+eventEmitter(HotspotContainer);
+
+
+/**
+ * Destructor.
+ */
+HotspotContainer.prototype.destroy = function() {
+  while (this._hotspots.length) {
+    this.destroyHotspot(this._hotspots[0]);
+  }
+
+  this._parentDomElement.removeChild(this._hotspotContainerWrapper);
+
+  this._renderLoop.removeEventListener('afterRender', this._updateHandler);
+
+  clearOwnProperties(this);
+};
+
+
+/**
+ * @return {Element}
+ */
+HotspotContainer.prototype.domElement = function() {
+  return this._hotspotContainer;
+};
+
+
+/**
+ * @param {Rect} rect
+ */
+HotspotContainer.prototype.setRect = function(rect) {
+  if (rect && !cssPointerEventsSupported() && typeof console !== 'undefined') {
+    console.warn(
+        "Using a rect effect is not fully supported on this browser. " +
+        "Hotspots may not be shown.")
+  }
+  this._rect = rect;
+  this._visibilityOrRectChanged = true;
+};
+
+
+/**
+ * @return {Rect}
+ */
+HotspotContainer.prototype.rect = function() {
+  return this._rect;
+};
+
+
+/**
+ * Creates a new hotspot in this container.
+ *
+ * @param {Element} domElement DOM element to use for the hotspot
+ * @param {Object} coords The hotspot coordinates.
+ *     Use {@link RectilinearViewCoords}` for a {@link RectilinearView} or
+ *     {@link FlatViewCoords} for a {@link FlatView}.
+ * @param {Object} opts Options in the same format as the `opts` argument to
+ *     the {@link Hotspot} constructor.
+ * @return {Hotspot}
+ */
+HotspotContainer.prototype.createHotspot = function(domElement, coords, opts) {
+  coords = coords || {};
+
+  var hotspot = new Hotspot(
+      domElement, this._hotspotContainer, this._view, coords, opts);
+  this._hotspots.push(hotspot);
+  hotspot._update();
+
+  this.emit('hotspotsChange');
+
+  return hotspot;
+};
+
+
+/**
+ * @param {Hotspot} hotspot
+ * @return {boolean}
+ */
+HotspotContainer.prototype.hasHotspot = function(hotspot) {
+  return this._hotspots.indexOf(hotspot) >= 0;
+};
+
+
+/**
+ * @return {Hotspot[]}
+ */
+HotspotContainer.prototype.listHotspots = function() {
+  return [].concat(this._hotspots);
+};
+
+
+/**
+ * Removes a hotspot from the container.
+ *
+ * @param {Hotspot} hotspot
+ */
+HotspotContainer.prototype.destroyHotspot = function(hotspot) {
+  var i = this._hotspots.indexOf(hotspot);
+  if (i < 0) {
+    throw new Error('No such hotspot');
+  }
+  this._hotspots.splice(i, 1);
+
+  hotspot.destroy();
+  this.emit('hotspotsChange');
+};
+
+
+/**
+ * Hide the container's DOM element, causing every contained {@link Hotspot} to
+ * be hidden.
+ */
+HotspotContainer.prototype.hide = function() {
+  if (this._visible) {
+    this._visible = false;
+    this._visibilityOrRectChanged = true;
+    this._update();
+  }
+};
+
+
+/**
+ * Show the container's DOM element, causing every contained {@link Hotspot} to
+ * be shown.
+ */
+HotspotContainer.prototype.show = function() {
+  if (!this._visible) {
+    this._visible = true;
+    this._visibilityOrRectChanged = true;
+    this._update();
+  }
+};
+
+
+HotspotContainer.prototype._update = function() {
+  var wrapper = this._hotspotContainerWrapper;
+  var width = this._stage.width();
+  var height = this._stage.height();
+  var tmpRect = this._tmpRect;
+
+  // Avoid updating the wrapper DOM unless necessary.
+  if (this._visibilityOrRectChanged ||
+      (this._rect && (width !== this._stageWidth || height !== this._stageHeight))) {
+    var visible = this._visible && !(this._rect && !cssPointerEventsSupported());
+    wrapper.style.display = visible ? 'block' : 'none';
+
+    if (visible) {
+      if (this._rect) {
+        calcRect(width, height, this._rect, tmpRect);
+        positionAbsolutely(wrapper, width * tmpRect.x, height * tmpRect.y);
+        setPixelSize(wrapper, width * tmpRect.width, height * tmpRect.height);
+        setOverflowHidden(wrapper);
+      } else {
+        positionAbsolutely(wrapper, 0, 0);
+        setNullSize(wrapper);
+        setOverflowVisible(wrapper);
+      }
+    }
+
+    this._stageWidth = width;
+    this._stageHeight = height;
+    this._visibilityOrRectChanged = false;
+  }
+
+  // Update hotspots unconditionally, as the view parameters may have changed.
+  for (var i = 0; i < this._hotspots.length; i++) {
+    this._hotspots[i]._update();
+  }
+};
+
+
+module.exports = HotspotContainer;
+
+},{"./Hotspot":15,"./support/cssPointerEvents":86,"./util/calcRect":88,"./util/clearOwnProperties":92,"./util/dom":102,"./util/positionAbsolutely":111,"minimal-event-emitter":14}],17:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+
+var eventEmitter = require('minimal-event-emitter');
+var extend = require('./util/extend');
+var clearOwnProperties = require('./util/clearOwnProperties');
+
+/**
+ * Signals that the layer has been rendered.
+ *
+ * @param {boolean} stable Whether all tiles were successfully rendered without
+ *     missing textures or resorting to fallbacks.
+ * @event Layer#renderComplete
+ */
+
+/**
+ * @class Layer
+ * @classdesc
+ *
+ * A Layer is a combination of {@link Source}, {@link Geometry}, {@link View}
+ * and {@link TextureStore} that may be added into a {@link Stage} and rendered
+ * with {@link Effects}.
+ *
+ * @param {Source} source
+ * @param {Geometry} geometry
+ * @param {View} view
+ * @param {TextureStore} textureStore
+ * @param {Object} opts
+ * @param {Effects} opts.effects
+*/
+function Layer(source, geometry, view, textureStore, opts) {
+  opts = opts || {};
+
+  var self = this;
+
+  this._source = source;
+  this._geometry = geometry;
+  this._view = view;
+  this._textureStore = textureStore;
+
+  this._effects = opts.effects || {};
+
+  this._fixedLevelIndex = null;
+
+  this._viewChangeHandler = function() {
+    self.emit('viewChange', self.view());
+  };
+
+  this._view.addEventListener('change', this._viewChangeHandler);
+
+  this._textureStoreChangeHandler = function() {
+    self.emit('textureStoreChange', self.textureStore());
+  };
+
+  this._textureStore.addEventListener('textureLoad',
+    this._textureStoreChangeHandler);
+  this._textureStore.addEventListener('textureError',
+    this._textureStoreChangeHandler);
+  this._textureStore.addEventListener('textureInvalid',
+    this._textureStoreChangeHandler);
+}
+
+eventEmitter(Layer);
+
+
+/**
+ * Destructor.
+ */
+Layer.prototype.destroy = function() {
+  this._view.removeEventListener('change', this._viewChangeHandler);
+  this._textureStore.removeEventListener('textureLoad',
+    this._textureStoreChangeHandler);
+  this._textureStore.removeEventListener('textureError',
+    this._textureStoreChangeHandler);
+  this._textureStore.removeEventListener('textureInvalid',
+    this._textureStoreChangeHandler);
+  clearOwnProperties(this);
+};
+
+
+/**
+ * Returns the underlying {@link Source source}.
+ * @return {Source}
+ */
+Layer.prototype.source = function() {
+  return this._source;
+};
+
+
+/**
+ * Returns the underlying {@link Geometry geometry}.
+ * @return {Geometry}
+ */
+Layer.prototype.geometry = function() {
+  return this._geometry;
+};
+
+
+/**
+ * Returns the underlying {@link View view}.
+ * @return {View}
+ */
+Layer.prototype.view = function() {
+  return this._view;
+};
+
+
+/**
+ * Returns the underlying {@link TextureStore texture store}.
+ * @return {TextureStore}
+ */
+Layer.prototype.textureStore = function() {
+  return this._textureStore;
+};
+
+
+/**
+ * Returns the currently set {@link Effects effects}.
+ * @return {Effects}
+ */
+Layer.prototype.effects = function() {
+  return this._effects;
+};
+
+
+/**
+ * Sets the {@link Effects effects}.
+ * @param {Effects} effects
+ */
+Layer.prototype.setEffects = function(effects) {
+  this._effects = effects;
+  this.emit('effectsChange', this._effects);
+};
+
+
+/**
+ * Merges effects into the currently set ones. The merge is non-recursive; for
+ * instance, if current effects are `{ rect: { relativeWidth: 0.5 } }`,
+ * calling this method with `{ rect: { relativeX: 0.5 }}` will reset
+ * `rect.relativeWidth`.
+ *
+ * @param {Effects} effects
+ */
+Layer.prototype.mergeEffects = function(effects) {
+  extend(this._effects, effects);
+  this.emit('effectsChange', this._effects);
+};
+
+
+/**
+ * Returns the fixed level index.
+ * @return {(number|null)}
+ */
+Layer.prototype.fixedLevel = function() {
+  return this._fixedLevelIndex;
+};
+
+
+/**
+ * Sets the fixed level index. When set, the corresponding level will be
+ * used regardless of the view parameters. Unset with a null argument.
+ *
+ * @param {(number|null)} levelIndex
+ * @throws An error if the level index is out of range.
+ */
+Layer.prototype.setFixedLevel = function(levelIndex) {
+  if (levelIndex !== this._fixedLevelIndex) {
+    if (levelIndex != null && (levelIndex >= this._geometry.levelList.length ||
+        levelIndex < 0)) {
+      throw new Error("Level index out of range: " + levelIndex);
+    }
+    this._fixedLevelIndex = levelIndex;
+    this.emit('fixedLevelChange', this._fixedLevelIndex);
+  }
+};
+
+
+Layer.prototype._selectLevel = function() {
+  var level;
+  if (this._fixedLevelIndex != null) {
+    level = this._geometry.levelList[this._fixedLevelIndex];
+  } else {
+    level = this._view.selectLevel(this._geometry.selectableLevelList);
+  }
+  return level;
+};
+
+
+Layer.prototype.visibleTiles = function(result) {
+  var level = this._selectLevel();
+  return this._geometry.visibleTiles(this._view, level, result);
+};
+
+
+/**
+ * Pin a whole level into the texture store.
+ * @param {Number} levelIndex
+ */
+Layer.prototype.pinLevel = function(levelIndex) {
+  var level = this._geometry.levelList[levelIndex];
+  var tiles = this._geometry.levelTiles(level);
+  for (var i = 0; i < tiles.length; i++) {
+    this._textureStore.pin(tiles[i]);
+  }
+};
+
+
+/**
+ * Unpin a whole level from the texture store.
+ * @param {Number} levelIndex
+ */
+Layer.prototype.unpinLevel = function(levelIndex) {
+  var level = this._geometry.levelList[levelIndex];
+  var tiles = this._geometry.levelTiles(level);
+  for (var i = 0; i < tiles.length; i++) {
+    this._textureStore.unpin(tiles[i]);
+  }
+};
+
+
+/**
+ * Pin the first level. Equivalent to `pinLevel(0)`.
+ */
+Layer.prototype.pinFirstLevel = function() {
+  return this.pinLevel(0);
+};
+
+
+/**
+ * Unpin the first level. Equivalent to `unpinLevel(0)`.
+ */
+Layer.prototype.unpinFirstLevel = function() {
+  return this.unpinLevel(0);
+};
+
+
+module.exports = Layer;
+
+},{"./util/clearOwnProperties":92,"./util/extend":103,"minimal-event-emitter":14}],18:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var inherits = require('./util/inherits');
+
+/**
+ * @class NetworkError
+ * @extends {Error}
+ * @classdesc
+ *
+ * Signals an error that occurred while fetching a URL. This is used by
+ * {@link Loader loaders} to distinguish network failures from other errors.
+ */
+function NetworkError(message) {
+  // See: https://stackoverflow.com/questions/1382107/whats-a-good-way-to-extend-error-in-javascript
+  this.constructor.super_.apply(this, arguments);
+  this.message = message;
+}
+
+inherits(NetworkError, Error);
+
+module.exports = NetworkError;
+
+},{"./util/inherits":105}],19:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var eventEmitter = require('minimal-event-emitter');
+var clearOwnProperties = require('./util/clearOwnProperties');
+
+/**
+ * Signals that {@link Stage#render} is about to be called.
+ * @event RenderLoop#beforeRender
+ */
+
+/**
+ * Signals that {@link Stage#render} has just been called.
+ * @event RenderLoop#afterRender
+ */
+
+/**
+ * @class RenderLoop
+ * @classdesc
+ *
+ * A RenderLoop wraps a {@link Stage} and calls {@link Stage#render} on the next
+ * frame whenever it fires {@link Stage#renderInvalid}. It may be started and
+ * stopped, and is initially in the stopped state, in which no call to
+ * {@link Stage#render} occurs.
+ *
+ * @listens Stage#renderInvalid
+ *
+ * @param {Stage} stage
+ */
+function RenderLoop(stage) {
+
+  var self = this;
+
+  // The stage wrapped by the loop.
+  this._stage = stage;
+
+  // Whether the loop is running.
+  this._running = false;
+
+  // Whether the loop is currently rendering.
+  this._rendering = false;
+
+  // The current requestAnimationFrame handle.
+  this._requestHandle = null;
+
+  // The callback passed into requestAnimationFrame.
+  this._boundLoop = this._loop.bind(this);
+
+  // Handler for renderInvalid events emitted by the stage.
+  this._renderInvalidHandler = function() {
+    // If we are already rendering, there's no need to schedule a new render
+    // on the next frame.
+    if (!self._rendering) {
+      self.renderOnNextFrame();
+    }
+  };
+
+  // Handle renderInvalid events emitted by the stage.
+  this._stage.addEventListener('renderInvalid', this._renderInvalidHandler);
+
+}
+
+eventEmitter(RenderLoop);
+
+
+/**
+ * Destructor.
+ */
+RenderLoop.prototype.destroy = function() {
+  this.stop();
+  this._stage.removeEventListener('renderInvalid', this._renderInvalidHandler);
+  clearOwnProperties(this);
+};
+
+
+/**
+ * Returns the underlying stage.
+ * @return {Stage}
+ */
+RenderLoop.prototype.stage = function() {
+  return this._stage;
+};
+
+
+/**
+ * Starts the render loop.
+ */
+RenderLoop.prototype.start = function() {
+  this._running = true;
+  this.renderOnNextFrame();
+};
+
+
+/**
+ * Stops the render loop.
+ */
+RenderLoop.prototype.stop = function() {
+  if (this._requestHandle) {
+    window.cancelAnimationFrame(this._requestHandle);
+    this._requestHandle = null;
+  }
+  this._running = false;
+};
+
+
+/**
+ * Forces the stage to render on the next frame, even if its contents remain
+ * valid. Does nothing if the loop is stopped.
+ */
+RenderLoop.prototype.renderOnNextFrame = function() {
+  if (this._running && !this._requestHandle) {
+    this._requestHandle = window.requestAnimationFrame(this._boundLoop);
+  }
+};
+
+
+RenderLoop.prototype._loop = function() {
+  if (!this._running) {
+    throw new Error('Render loop running while in stopped state');
+  }
+  this._requestHandle = null;
+  this._rendering = true;
+  this.emit('beforeRender');
+  this._rendering = false;
+  this._stage.render();
+  this.emit('afterRender');
+};
+
+
+module.exports = RenderLoop;
+
+},{"./util/clearOwnProperties":92,"minimal-event-emitter":14}],20:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var Layer = require('./Layer');
+var TextureStore = require('./TextureStore');
+var HotspotContainer = require('./HotspotContainer');
+var eventEmitter = require('minimal-event-emitter');
+var clock = require('./util/clock');
+var noop = require('./util/noop');
+var type = require('./util/type');
+var defaults = require('./util/defaults');
+var clearOwnProperties = require('./util/clearOwnProperties');
+
+/**
+ * Signals that the scene's view has changed. See {@link View#event:change}.
+ * @event Scene#viewChange
+ */
+
+/**
+ * Signals that the scene's layers have changed.
+ * @event Scene#layerChange
+ */
+
+/**
+ * @class Scene
+ * @classdesc
+ *
+ * A Scene is a stack of {@link Layer layers} sharing the same {@link View view}
+ * and {@link HotspotContainer hotspot container}. It belongs to the
+ * {@link Viewer viewer} inside which it is displayed.
+ *
+ * Clients should call {@link Viewer#createScene} instead of invoking the
+ * constructor directly.
+ *
+ * @param {Viewer} viewer The viewer this scene belongs to.
+ * @param {View} view The scene's underlying view.
+ */
+function Scene(viewer, view) {
+  this._viewer = viewer;
+  this._view = view;
+  this._layers = [];
+
+  // Hotspot container. Assume it occupies a full rect.
+  this._hotspotContainer = new HotspotContainer(
+    viewer._controlContainer,
+    viewer.stage(),
+    this._view,
+    viewer.renderLoop());
+
+  // The current movement.
+  this._movement = null;
+  this._movementStartTime = null;
+  this._movementStep = null;
+  this._movementParams = null;
+  this._movementCallback = null;
+
+  // Event listener for updating the view according to the current movement.
+  // The listener is set/unset on the render loop when a movement starts/stops.
+  this._updateMovementHandler = this._updateMovement.bind(this);
+
+  // Show or hide hotspots when scene changes.
+  this._updateHotspotContainerHandler = this._updateHotspotContainer.bind(this);
+  this._viewer.addEventListener('sceneChange', this._updateHotspotContainerHandler);
+
+  // Emit event when view changes.
+  this._viewChangeHandler = this.emit.bind(this, 'viewChange');
+  this._view.addEventListener('change', this._viewChangeHandler);
+
+  // Update the hotspot container.
+  this._updateHotspotContainer();
+}
+
+eventEmitter(Scene);
+
+
+/**
+ * Destructor. Clients should call {@link Viewer#destroyScene} instead.
+ */
+Scene.prototype.destroy = function() {
+  this._view.removeEventListener('change', this._viewChangeHandler);
+  this._viewer.removeEventListener('sceneChange', this._updateHotspotContainerHandler);
+
+  if (this._movement) {
+    this.stopMovement();
+  }
+
+  this._hotspotContainer.destroy();
+
+  this.destroyAllLayers();
+
+  clearOwnProperties(this);
+};
+
+
+
+/**
+ * Returns the {@link HotspotContainer hotspot container} for the scene.
+ * @return {Layer}
+ */
+Scene.prototype.hotspotContainer = function() {
+  return this._hotspotContainer;
+};
+
+/**
+ * Returns the first of the {@link Layer layers} belonging to the scene, or
+ * null if the scene has no layers.
+ *
+ * This method is equivalent to `Scene#listLayers[0]`. It may be removed in the
+ * future.
+ *
+ * @return {Layer}
+ */
+Scene.prototype.layer = function() {
+  return this._layers[0];
+};
+
+/**
+* Returns a list of all {@link Layer layers} belonging to the scene. The
+* returned list is in display order, background to foreground.
+* @return {Layer[]}
+ */
+Scene.prototype.listLayers = function() {
+  return [].concat(this._layers);
+};
+
+
+/**
+ * Returns the scene's underlying {@link View view}.
+ * @return {View}
+ */
+Scene.prototype.view = function() {
+  return this._view;
+};
+
+
+/**
+ * Returns the {@link Viewer viewer} the scene belongs to.
+ * @return {Viewer}
+ */
+Scene.prototype.viewer = function() {
+  return this._viewer;
+};
+
+
+/**
+ * Returns whether the scene is currently visible.
+ * @return {boolean}
+ */
+Scene.prototype.visible = function() {
+  return this._viewer.scene() === this;
+};
+
+
+/**
+ * Creates a new {@link Layer layer} and adds it into the scene in the
+ * foreground position.
+ *
+ * @param {Object} opts Layer creation options.
+ * @param {Source} opts.source The layer's underlying {@link Source}.
+ * @param {Source} opts.geometry The layer's underlying {@link Geometry}.
+ * @param {boolean} [opts.pinFirstLevel=false] Whether to pin the first level to
+ *     provide a fallback of last resort, at the cost of memory consumption.
+ * @param {Object} [opts.textureStoreOpts={}] Options to pass to the
+ *     {@link TextureStore} constructor.
+ * @param {Object} [opts.layerOpts={}] Options to pass to the {@link Layer}
+ *     constructor.
+ * @return {Layer}
+ */
+Scene.prototype.createLayer = function(opts) {
+  opts = opts || {};
+
+  var textureStoreOpts = opts.textureStoreOpts || {};
+  var layerOpts = opts.layerOpts || {};
+
+  var source = opts.source;
+  var geometry = opts.geometry;
+  var view = this._view;
+  var stage = this._viewer.stage();
+  var textureStore = new TextureStore(geometry, source, stage, textureStoreOpts);
+  var layer = new Layer(source, geometry, view, textureStore, layerOpts);
+
+  this._layers.push(layer);
+
+  if (opts.pinFirstLevel) {
+    layer.pinFirstLevel();
+  }
+
+  // Signal that the layers have changed.
+  this.emit('layerChange');
+
+  return layer;
+};
+
+
+/**
+ * Destroys a {@link Layer layer} and removes it from the scene.
+ * @param {Layer} layer
+ * @throws An error if the layer does not belong to the scene.
+ */
+Scene.prototype.destroyLayer = function(layer) {
+  var i = this._layers.indexOf(layer);
+  if (i < 0) {
+    throw new Error('No such layer in scene');
+  }
+
+  this._layers.splice(i, 1);
+
+  // Signal that the layers have changed.
+  this.emit('layerChange');
+
+  layer.textureStore().destroy();
+  layer.destroy();
+};
+
+
+/**
+ * Destroys all {@link Layer layers} and removes them from the scene.
+ */
+Scene.prototype.destroyAllLayers = function() {
+  while (this._layers.length > 0) {
+    this.destroyLayer(this._layers[0]);
+  }
+};
+
+
+/**
+ * Switches to the scene.
+ *
+ * This is equivalent to calling {@link Viewer#switchScene} on this scene.
+ *
+ * @param {Object} opts Options to pass into {@link Viewer#switchScene}.
+ * @param {function} done Function to call when the switch is complete.
+ */
+Scene.prototype.switchTo = function(opts, done) {
+  return this._viewer.switchScene(this, opts, done);
+};
+
+
+/**
+ * Tweens the scene's underlying {@link View view}.
+ *
+ * @param {Object} params Target view parameters.
+ * @param {Object} opts Transition options.
+ * @param {number} [opts.transitionDuration=1000] Tween duration, in
+ *     milliseconds.
+ * @param {number} [opts.closest=true] Whether to tween through the shortest
+ *    path between the initial and final view parameters. This requires
+ *    {@link View#normalizeToClosest} to be implemented, and does nothing
+ *    otherwise.
+ * @param {function} done Function to call when the tween finishes or is
+ *    interrupted.
+ */
+Scene.prototype.lookTo = function(params, opts, done) {
+  // TODO: allow controls to interrupt an ongoing tween.
+  // TODO: provide a way to override the easing function.
+  opts = opts || {};
+  done = done || noop;
+
+  if (type(params) !== 'object') {
+    throw new Error("Target view parameters must be an object");
+  }
+
+  var duration = opts.transitionDuration != null ? opts.transitionDuration : 1000;
+  var shortest = opts.shortest != null ? opts.shortest : true;
+
+  var view = this._view;
+
+  var initialParams = view.parameters();
+
+  var finalParams = {};
+  defaults(finalParams, params);
+  defaults(finalParams, initialParams);
+
+  // Tween through the shortest path if requested.
+  // The view must implement the normalizeToClosest() method.
+  if (shortest && view.normalizeToClosest) {
+    view.normalizeToClosest(finalParams, finalParams);
+  }
+
+  // Quadratic in/out easing.
+  var ease = function (k) {
+    if ((k *= 2) < 1) {
+      return 0.5 * k * k;
+    }
+    return -0.5 * (--k * (k - 2) - 1);
+  };
+
+  var movement = function() {
+
+    var finalUpdate = false;
+
+    return function(params, elapsed) {
+
+      if (elapsed >= duration && finalUpdate) {
+        return null;
+      }
+
+      var delta = Math.min(elapsed / duration, 1);
+
+      for (var param in params) {
+        var start = initialParams[param];
+        var end = finalParams[param];
+        params[param] = start + ease(delta) * (end - start);
+      }
+
+      finalUpdate = elapsed >= duration;
+
+      return params;
+
+    };
+  };
+
+  var controlsEnabled = this._viewer.controls().enabled();
+
+  this._viewer.controls().disable();
+  this.startMovement(movement, function() {
+    if(controlsEnabled) {
+      this._viewer.controls().enable();
+    }
+    done();
+  });
+
+};
+
+
+/**
+ * Starts a movement.
+ *
+ * @param {function} fn The movement function.
+ * @param {function} done Function to be called when the movement finishes or is
+ *     interrupted.
+ */
+Scene.prototype.startMovement = function(fn, done) {
+
+  var renderLoop = this._viewer.renderLoop();
+
+  if (this._movement) {
+    this.stopMovement();
+  }
+
+  var step = fn();
+  if (typeof step !== 'function') {
+    throw new Error('Bad movement');
+  }
+
+  this._movement = fn;
+  this._movementStep = step;
+  this._movementStartTime = clock();
+  this._movementParams = {};
+  this._movementCallback = done;
+
+  renderLoop.addEventListener('beforeRender', this._updateMovementHandler);
+  renderLoop.renderOnNextFrame();
+};
+
+
+/**
+ * Stops the current movement.
+ */
+Scene.prototype.stopMovement = function() {
+
+  var renderLoop = this._viewer.renderLoop();
+
+  if (this._movementCallback) {
+    this._movementCallback();
+  }
+
+  renderLoop.removeEventListener('beforeRender', this._updateMovementHandler);
+
+  this._movement = null;
+  this._movementStep = null;
+  this._movementStartTime = null;
+  this._movementParams = null;
+  this._movementCallback = null;
+};
+
+
+/**
+ * Returns the current movement.
+ * @return {function}
+ */
+Scene.prototype.movement = function() {
+  return this._movement;
+};
+
+
+Scene.prototype._updateMovement = function() {
+
+  if (!this._movement) {
+    throw new Error('Should not call update');
+  }
+
+  var renderLoop = this._viewer.renderLoop();
+  var view = this._view;
+
+  var elapsed = clock() - this._movementStartTime;
+  var step = this._movementStep;
+  var params = this._movementParams;
+
+  params = view.parameters(params);
+  params = step(params, elapsed);
+  if (params == null) {
+    this.stopMovement();
+  } else {
+    view.setParameters(params);
+    renderLoop.renderOnNextFrame();
+  }
+
+};
+
+
+Scene.prototype._updateHotspotContainer = function() {
+  if (this.visible()) {
+    this._hotspotContainer.show();
+  } else {
+    this._hotspotContainer.hide();
+  }
+};
+
+
+module.exports = Scene;
+
+},{"./HotspotContainer":16,"./Layer":17,"./TextureStore":21,"./util/clearOwnProperties":92,"./util/clock":93,"./util/defaults":98,"./util/noop":108,"./util/type":116,"minimal-event-emitter":14}],21:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var Map = require('./collections/Map');
+var Set = require('./collections/Set');
+var LruSet = require('./collections/LruSet');
+var eventEmitter = require('minimal-event-emitter');
+var defaults = require('./util/defaults');
+var retry = require('./util/retry');
+var chain = require('./util/chain');
+var inherits = require('./util/inherits');
+var clearOwnProperties = require('./util/clearOwnProperties');
+
+var debug = typeof MARZIPANODEBUG !== 'undefined' && MARZIPANODEBUG.textureStore;
+
+
+// A Stage informs the TextureStore about the set of visible tiles during a
+// frame by calling startFrame, markTile and endFrame. In a particular frame,
+// TextureStore expects one or more calls to startFrame, followed by zero or
+// more calls to markTile, followed by one or more calls to endFrame. The
+// number of calls to startFrame and endFrame must match. Calls to other
+// TextureStore methods may be freely interleaved with this sequence.
 //
-// Copyright 2016 Google Inc. All rights reserved.
+// At any given time, TextureStore is in one of four states. The START state
+// corresponds to the interval between the first startFrame and the first
+// markTile of a frame. The MARK state corresponds to the interval between the
+// first markTile and the first endFrame. The END state corresponds to the
+// interval between the first and the last endFrame. At any other time, the
+// TextureStore is in the IDLE state.
+var State = {
+  IDLE: 0,
+  START: 1,
+  MARK: 2,
+  END: 3
+};
+
+
+var defaultOptions = {
+  // Maximum number of cached textures for previously visible tiles.
+  previouslyVisibleCacheSize: 32
+};
+
+
+// Assign an id to each operation so we can track its state.
+// We actually only need this in debug mode, but the code is less convoluted
+// if we track unconditionally, and the performance hit is minimal anyway.
+var nextId = 0;
+
+
+// Distinguishes a cancellation from other kinds of errors.
+function CancelError() {}
+inherits(CancelError, Error);
+
+
+/**
+ * @class TextureStoreItem
+ * @classdesc
+ *
+ * An item saved in a {@link TextureStore}.
+ *
+ * Clients do not need to instantiate this. It is automatically instantiated by
+ * a {@link TextureStore} to manage the lifetime of a stored item: loading,
+ * refreshing, unloading and emitting associated events.
+ *
+ * @param {TextureStore} store The underlying {@link TextureStore}.
+ * @param {Tile} tile The underlying tile.
+ */
+function TextureStoreItem(store, tile) {
+
+  var self = this;
+
+  var id = nextId++;
+
+  self._id = id;
+  self._store = store;
+  self._tile = tile;
+
+  self._asset = null;
+  self._texture = null;
+
+  self._changeHandler = function() {
+    store.emit('textureInvalid', tile);
+  };
+
+  var source = store.source();
+  var stage = store.stage();
+
+  var loadAsset = source.loadAsset.bind(source);
+  var createTexture = stage.createTexture.bind(stage);
+
+  // Retry loading the asset until it succeeds, then create the texture from it.
+  // This process may be canceled at any point by calling the destroy() method.
+  var fn = chain(retry(loadAsset), createTexture);
+
+  store.emit('textureStartLoad', tile);
+  if (debug) {
+    console.log('loading', id, tile);
+  }
+
+  self._cancel = fn(stage, tile, function(err, _tile, asset, texture) {
+
+    // Make sure we do not call cancel after the operation is complete.
+    self._cancel = null;
+
+    if (err) {
+      // The loading process was interrupted by an error.
+      // This could either be because the texture creation failed, or because
+      // the operation was canceled before the loading was complete.
+
+      // Destroy the asset and texture, if they exist.
+      if (asset) {
+        asset.destroy();
+      }
+      if (texture) {
+        texture.destroy();
+      }
+
+      // Emit events.
+      if (err instanceof CancelError) {
+        store.emit('textureCancel', tile);
+        if (debug) {
+          console.log('cancel', id, tile);
+        }
+      } else {
+        store.emit('textureError', tile, err);
+        if (debug) {
+          console.log('error', id, tile);
+        }
+      }
+
+      return;
+    }
+
+    // Save a local reference to the texture.
+    self._texture = texture;
+
+    // If the asset is dynamic, save a local reference to it and setup
+    // handler to be called whenever it changes.
+    // Otherwise, destroy the asset as we won't be needing it any more.
+    if (asset.dynamic) {
+      self._asset = asset;
+      asset.addEventListener('change', self._changeHandler);
+    } else {
+      asset.destroy();
+    }
+
+    // Emit event.
+    store.emit('textureLoad', tile);
+    if (debug) {
+      console.log('load', id, tile);
+    }
+  });
+
+}
+
+
+TextureStoreItem.prototype.asset = function() {
+  return this._asset;
+};
+
+
+TextureStoreItem.prototype.texture = function() {
+  return this._texture;
+};
+
+
+TextureStoreItem.prototype.destroy = function() {
+  var id = this._id;
+  var store = this._store;
+  var tile = this._tile;
+  var asset = this._asset;
+  var texture = this._texture;
+  var cancel = this._cancel;
+
+  if (cancel) {
+    // The texture is still loading, so cancel it.
+    cancel(new CancelError('Texture load cancelled'));
+    return;
+  }
+
+  // Destroy asset.
+  if (asset) {
+    asset.removeEventListener('change', this._changeHandler);
+    asset.destroy();
+  }
+
+  // Destroy texture.
+  if (texture) {
+    texture.destroy();
+  }
+
+  // Emit event.
+  store.emit('textureUnload', tile);
+  if (debug) {
+    console.log('unload', id, tile);
+  }
+
+  clearOwnProperties(this);
+};
+
+eventEmitter(TextureStoreItem);
+
+/**
+ * Signals that a texture has started to load.
+ *
+ * This event is followed by either {@link TextureStore#textureLoad},
+ * {@link TextureStore#textureError} or {@link TextureStore#textureCancel}.
+ *
+ * @event TextureStore#textureStartLoad
+ * @param {Tile} tile The tile for which the texture has started to load.
+ */
+
+/**
+ * Signals that a texture has been loaded.
+ *
+ * @event TextureStore#textureLoad
+ * @param {Tile} tile The tile for which the texture was loaded.
+ */
+
+/**
+ * Signals that a texture has been unloaded.
+ *
+ * @event TextureStore#textureUnload
+ * @param {Tile} tile The tile for which the texture was unloaded.
+ */
+
+/**
+ * Signals that a texture has been invalidated.
+ *
+ * This event may be raised for a texture with an underlying dynamic asset. It
+ * may only occur while the texture is loaded, i.e., in between
+ * {@link TextureStore#textureLoad} and {@link TextureStore#textureUnload}.
+ *
+ * @event TextureStore#textureInvalid
+ * @param {Tile} tile The tile for which the texture was invalidated.
+ */
+
+/**
+ * Signals that loading a texture has been cancelled.
+ *
+ * This event may follow {@link TextureStore#textureStartLoad} if the texture
+ * becomes unnecessary before it finishes loading.
+ *
+ * @event TextureStore#textureCancel
+ * @param {Tile} tile The tile for which the texture loading was cancelled.
+ */
+
+/**
+ * Signals that loading a texture has failed.
+ *
+ * This event may follow {@link TextureStore#textureStartLoad} if the texture
+ * fails to load.
+ *
+ * @event TextureStore#textureError
+ * @param {Tile} tile The tile for which the texture loading has failed.
+ */
+
+/**
+ * @class TextureStore
+ * @classdesc
+ *
+ * A TextureStore maintains a cache of textures used to render a {@link Layer}.
+ *
+ * A {@link Stage} communicates with the TextureStore through the startFrame(),
+ * markTile() and endFrame() methods, which indicate the tiles that are visible
+ * in the current frame. Textures for visible tiles are loaded and retained
+ * as long as the tiles remain visible. A limited amount of textures whose
+ * tiles were previously visible are cached according to an LRU policy. Tiles
+ * may be pinned to keep their respective textures cached even when they are
+ * invisible; these textures do not count towards the previously visible limit.
+ *
+ * Multiple layers belonging to the same underlying {@link WebGlStage} may
+ * share the same TextureStore. Layers belonging to distinct {@link WebGlStage}
+ * instances, or belonging to a {@link CssStage} or a {@link FlashStage},
+ * may not do so due to restrictions on the use of textures across stages.
+ *
+ * @param {Geometry} geometry The underlying geometry.
+ * @param {Source} source The underlying source.
+ * @param {Stage} stage The underlying stage.
+ * @param {Object} opts Options.
+ * @param {Number} [opts.previouslyVisibleCacheSize=32] The maximum number of
+ *     previously visible textures to cache according to an LRU policy.
+ */
+function TextureStore(geometry, source, stage, opts) {
+  opts = defaults(opts || {}, defaultOptions);
+
+  var TileClass = geometry.TileClass;
+
+  this._source = source;
+  this._stage = stage;
+
+  // The current state.
+  this._state = State.IDLE;
+
+  // The number of startFrame calls yet to be matched by endFrame calls during
+  // the current frame.
+  this._delimCount = 0;
+
+  // The cache proper: map cached tiles to their respective textures/assets.
+  this._itemMap = new Map(TileClass.equals, TileClass.hash);
+
+  // The subset of cached tiles that are currently visible.
+  this._visible = new Set(TileClass.equals, TileClass.hash);
+
+  // The subset of cached tiles that were visible recently, but are not
+  // visible right now. Newly inserted tiles replace older ones.
+  this._previouslyVisible = new LruSet(TileClass.equals, TileClass.hash, opts.previouslyVisibleCacheSize);
+
+  // The subset of cached tiles that should never be evicted from the cache.
+  // A tile may be pinned more than once; map each tile into a reference count.
+  this._pinMap = new Map(TileClass.equals, TileClass.hash);
+
+  // Temporary variables.
+  this._newVisible = new Set(TileClass.equals, TileClass.hash);
+  this._noLongerVisible = [];
+  this._visibleAgain = [];
+  this._evicted = [];
+}
+
+eventEmitter(TextureStore);
+
+
+/**
+ * Destructor.
+ */
+TextureStore.prototype.destroy = function() {
+  this.clear();
+  clearOwnProperties(this);
+};
+
+
+/**
+ * Return the underlying {@link Stage}.
+ * @return {Stage}
+ */
+TextureStore.prototype.stage = function() {
+  return this._stage;
+};
+
+
+/**
+ * Return the underlying {@link Source}.
+ * @return {Source}
+ */
+TextureStore.prototype.source = function() {
+  return this._source;
+};
+
+
+/**
+ * Remove all textures from the TextureStore, including pinned textures.
+ */
+TextureStore.prototype.clear = function() {
+  var self = this;
+
+  // Collect list of tiles to be evicted.
+  self._evicted.length = 0;
+  self._itemMap.each(function(tile) {
+    self._evicted.push(tile);
+  });
+
+  // Evict tiles.
+  self._evicted.forEach(function(tile) {
+    self._unloadTile(tile);
+  });
+
+  // Clear all internal state.
+  self._itemMap.clear();
+  self._visible.clear();
+  self._previouslyVisible.clear();
+  self._pinMap.clear();
+  self._newVisible.clear();
+  self._noLongerVisible.length = 0;
+  self._visibleAgain.length = 0;
+  self._evicted.length = 0;
+};
+
+
+/**
+ * Remove all textures in the TextureStore, excluding unpinned textures.
+ */
+TextureStore.prototype.clearNotPinned = function() {
+  var self = this;
+
+  // Collect list of tiles to be evicted.
+  self._evicted.length = 0;
+  self._itemMap.each(function(tile) {
+    if (!self._pinMap.has(tile)) {
+      self._evicted.push(tile);
+    }
+  });
+
+  // Evict tiles.
+  self._evicted.forEach(function(tile) {
+    self._unloadTile(tile);
+  });
+
+  // Clear all caches except the pinned set.
+  self._visible.clear();
+  self._previouslyVisible.clear();
+
+  // Clear temporary variables.
+  self._evicted.length = 0;
+};
+
+
+/**
+ * Signal the beginning of a frame. Called from {@link Stage}.
+ */
+TextureStore.prototype.startFrame = function() {
+  // Check that we are in an appropriate state.
+  if (this._state !== State.IDLE) {
+    throw new Error('TextureStore: startFrame called out of sequence');
+  }
+
+  // Enter the START state, if not already there.
+  this._state = State.START;
+
+  // Expect one more endFrame call.
+  this._delimCount++;
+};
+
+
+/**
+ * Mark a tile as visible within the current frame. Called from {@link Stage}.
+ * @param {Tile} tile The tile to mark.
+ */
+TextureStore.prototype.markTile = function(tile) {
+  // Check that we are in an appropriate state.
+  if (this._state !== State.START && this._state !== State.MARK) {
+    throw new Error('TextureStore: markTile called out of sequence');
+  }
+
+  // Enter the MARK state, if not already there.
+  this._state = State.MARK;
+
+  // Refresh texture for dynamic assets.
+  var item = this._itemMap.get(tile);
+  var texture = item && item.texture();
+  var asset = item && item.asset();
+  if (texture && asset) {
+    texture.refresh(tile, asset);
+  }
+
+  // Add tile to the visible set.
+  this._newVisible.add(tile);
+};
+
+
+/**
+ * Signal the end of a frame. Called from {@link Stage}.
+ */
+TextureStore.prototype.endFrame = function() {
+  // Check that we are in an appropriate state.
+  if (this._state !== State.START && this._state !== State.MARK) {
+    throw new Error('TextureStore: endFrame called out of sequence');
+  }
+
+  // Enter the END state, if not already there.
+  this._state = State.END;
+
+  // Expect one less call to endFrame.
+  this._delimCount--;
+
+  // If no further calls are expected, process frame and enter the IDLE state.
+  if (!this._delimCount) {
+    this._update();
+    this._state = State.IDLE;
+  }
+};
+
+
+TextureStore.prototype._update = function() {
+  var self = this;
+
+  // Calculate the set of tiles that used to be visible but no longer are.
+  self._noLongerVisible.length = 0;
+  self._visible.each(function(tile) {
+    if (!self._newVisible.has(tile)) {
+      self._noLongerVisible.push(tile);
+    }
+  });
+
+  // Calculate the set of tiles that were visible recently and have become
+  // visible again.
+  self._visibleAgain.length = 0;
+  self._newVisible.each(function(tile) {
+    if (self._previouslyVisible.has(tile)) {
+      self._visibleAgain.push(tile);
+    }
+  });
+
+  // Remove tiles that have become visible again from the list of previously
+  // visible tiles.
+  self._visibleAgain.forEach(function(tile) {
+    self._previouslyVisible.remove(tile);
+  });
+
+  // Cancel loading of tiles that are no longer visible.
+  // Move no longer visible tiles with a loaded texture into the previously
+  // visible set, and collect the tiles evicted from the latter.
+  self._evicted.length = 0;
+  self._noLongerVisible.forEach(function(tile) {
+    var item = self._itemMap.get(tile);
+    var texture = item && item.texture();
+    if (texture) {
+      var otherTile = self._previouslyVisible.add(tile);
+      if (otherTile != null) {
+        self._evicted.push(otherTile);
+      }
+    } else if (item) {
+      self._unloadTile(tile);
+    }
+  });
+
+  // Unload evicted tiles, unless they are pinned.
+  self._evicted.forEach(function(tile) {
+    if (!self._pinMap.has(tile)) {
+      self._unloadTile(tile);
+    }
+  });
+
+  // Load visible tiles that are not already in the store.
+  // Refresh texture on visible tiles for dynamic assets.
+  self._newVisible.each(function(tile) {
+    var item = self._itemMap.get(tile);
+    if (!item) {
+      self._loadTile(tile);
+    }
+  });
+
+  // Swap the old visible set with the new one.
+  var tmp = self._visible;
+  self._visible = self._newVisible;
+  self._newVisible = tmp;
+
+  // Clear the new visible set.
+  self._newVisible.clear();
+
+  // Clear temporary variables.
+  self._noLongerVisible.length = 0;
+  self._visibleAgain.length = 0;
+  self._evicted.length = 0;
+};
+
+
+TextureStore.prototype._loadTile = function(tile) {
+  if (this._itemMap.has(tile)) {
+    throw new Error('TextureStore: loading texture already in cache');
+  }
+  var item = new TextureStoreItem(this, tile);
+  this._itemMap.set(tile, item);
+};
+
+
+TextureStore.prototype._unloadTile = function(tile) {
+  var item = this._itemMap.del(tile);
+  if (!item) {
+    throw new Error('TextureStore: unloading texture not in cache');
+  }
+  item.destroy();
+};
+
+
+TextureStore.prototype.asset = function(tile) {
+  var item = this._itemMap.get(tile);
+  if (item) {
+    return item.asset();
+  }
+  return null;
+};
+
+
+TextureStore.prototype.texture = function(tile) {
+  var item = this._itemMap.get(tile);
+  if (item) {
+    return item.texture();
+  }
+  return null;
+};
+
+
+/**
+ * Pin a tile. Textures for pinned tiles are never evicted from the store.
+ * Upon pinning, the texture is created if not already present. Pins are
+ * reference-counted; a tile may be pinned multiple times and must be unpinned
+ * the corresponding number of times. Pinning is useful e.g. to ensure that
+ * the lowest-resolution level of an image is always available to fall back
+ * onto.
+ * @param {Tile} tile the tile to pin
+ * @returns {number} the pin reference count.
+ */
+TextureStore.prototype.pin = function(tile) {
+  // Increment reference count.
+  var count = (this._pinMap.get(tile) || 0) + 1;
+  this._pinMap.set(tile, count);
+  // If the texture for the tile is not present, load it now.
+  if (!this._itemMap.has(tile)) {
+    this._loadTile(tile);
+  }
+  return count;
+};
+
+
+/**
+ * Unpin a tile. Pins are reference-counted; a tile may be pinned multiple
+ * times and must be unpinned the corresponding number of times.
+ * @param {Tile} tile the tile to unpin
+ * @returns {number} the pin reference count.
+ */
+TextureStore.prototype.unpin = function(tile) {
+  var count = this._pinMap.get(tile);
+  // Consistency check.
+  if (!count) {
+    throw new Error('TextureStore: unpin when not pinned');
+  } else {
+    // Decrement reference count.
+    count--;
+    if (count > 0) {
+      this._pinMap.set(tile, count);
+    } else {
+      this._pinMap.del(tile);
+      // If the tile does not belong to either the visible or previously
+      // visible sets, evict it from the cache.
+      if (!this._visible.has(tile) && !this._previouslyVisible.has(tile)) {
+        this._unloadTile(tile);
+      }
+    }
+  }
+  return count;
+};
+
+
+/**
+ * Return type for {@link TextureStore#query}.
+ * @typedef {Object} TileState
+ * @property {boolean} visible Whether the tile is in the visible set.
+ * @property {boolean} previouslyVisible Whether the tile is in the previously
+ *     visible set.
+ * @property {boolean} hasAsset Whether the asset for the tile is present.
+ * @property {boolean} hasTexture Whether the texture for the tile is present.
+ * @property {boolean} pinned Whether the tile is in the pinned set.
+ * @property {number} pinCount The pin reference count for the tile.
+ */
+
+
+/**
+ * Return the state of a tile.
+ * @param {Tile} tile The tile to query.
+ * @return {TileState}
+ */
+TextureStore.prototype.query = function(tile) {
+  var item = this._itemMap.get(tile);
+  var pinCount = this._pinMap.get(tile) || 0;
+  return {
+    visible: this._visible.has(tile),
+    previouslyVisible: this._previouslyVisible.has(tile),
+    hasAsset: item != null && item.asset() != null,
+    hasTexture: item != null && item.texture() != null,
+    pinned: pinCount !== 0,
+    pinCount: pinCount
+  };
+};
+
+
+module.exports = TextureStore;
+
+},{"./collections/LruSet":31,"./collections/Map":32,"./collections/Set":33,"./util/chain":90,"./util/clearOwnProperties":92,"./util/defaults":98,"./util/inherits":105,"./util/retry":114,"minimal-event-emitter":14}],22:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var Set = require('./collections/Set');
+
+/**
+ * @class TileSearcher
+ * @classdesc
+ *
+ * A TileSearcher performs searches for visible tiles.
+ *
+ * @param {Geometry} geometry The geometry for which to perform searches.
+ */
+function TileSearcher(geometry) {
+  var TileClass = geometry.TileClass;
+
+  // Stack of tiles to be explored.
+  this._stack = [];
+
+  // Set of already explored tiles.
+  this._visited = new Set(TileClass.equals, TileClass.hash);
+
+  // Tile vertices. Allocated by Tile#vertices on first use.
+  this._vertices = null;
+}
+
+/**
+ * Performs a search for visible tiles by starting at a given tile and
+ * recursively exploring neighbors until no more visible tiles are found.
+ *
+ * @param {View} view The view used to deem whether a tile is visible.
+ * @param {Tile} tile The starting tile.
+ * @param {Tile[]} result An array to append the visible tiles to, including the
+ *     starting tile when visible. Existing array members are preserved.
+ * @return {number} The number of visible tiles found.
+ */
+TileSearcher.prototype.search = function(view, startingTile, result) {
+  var stack = this._stack;
+  var visited = this._visited;
+  var vertices = this._vertices;
+
+  var count = 0;
+
+  // Clear internal state.
+  this._clear();
+
+  stack.push(startingTile);
+
+  while (stack.length > 0) {
+    var tile = stack.pop();
+
+    if (visited.has(tile)) {
+      // Skip already visited tile.
+      continue;
+    }
+
+    if (!view.intersects(tile.vertices(vertices))) {
+      // Skip non-visible tile.
+      continue;
+    }
+
+    // Mark tile as visited.
+    visited.add(tile);
+
+    // Add neighbors to the stack of tiles to explore.
+    var neighbors = tile.neighbors();
+    for (var i = 0; i < neighbors.length; i++) {
+      stack.push(neighbors[i]);
+    }
+
+    // Add to result.
+    result.push(tile);
+
+    count++;
+  }
+
+  // Reuse the vertices array in future searches.
+  this._vertices = vertices;
+
+  // Clear internal state.
+  this._clear();
+
+  return count;
+};
+
+TileSearcher.prototype._clear = function() {
+  this._stack.length = 0;
+  this._visited.clear();
+};
+
+module.exports = TileSearcher;
+
+},{"./collections/Set":33}],23:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var eventEmitter = require('minimal-event-emitter');
+var defaults = require('./util/defaults');
+var clock = require('./util/clock');
+
+var defaultOptions = {
+  duration: Infinity
+};
+
+
+/**
+ * Signals a timeout.
+ * @event Timer#timeout
+ */
+
+
+/**
+ * @class Timer
+ * @classdesc
+ *
+ * A Timer provides a mechanism to receive an event after a timeout.
+ *
+ * A timer has a set duration, and is either started or stopped at a given time.
+ * The timer is initially stopped. When the timer is started, a timeout event is
+ * scheduled to fire once the set duration elapses. When the timer is stopped,
+ * the scheduled timeout event is cancelled. When a timeout event fires, the
+ * timer returns to the stopped state.
+ *
+ * @param {number} [opts.duration=Infinity] Timeout in milliseconds.
+ */
+function Timer(opts) {
+
+  opts = defaults(opts || {}, defaultOptions);
+
+  this._duration = opts.duration;
+
+  this._startTime = null;
+
+  this._handle = null;
+
+  this._check = this._check.bind(this);
+
+}
+
+eventEmitter(Timer);
+
+
+/**
+ * Starts the timer. If the timer is already started, this has the effect of
+ * stopping and starting again (i.e. resetting the timer).
+ */
+Timer.prototype.start = function() {
+  this._startTime = clock();
+  if (this._handle == null && this._duration < Infinity) {
+    this._setup(this._duration);
+  }
+};
+
+
+/**
+ * Returns whether the timer is in the started state.
+ * @return {boolean}
+ */
+Timer.prototype.started = function() {
+  return this._startTime != null;
+};
+
+
+/**
+ * Stops the timer.
+ */
+Timer.prototype.stop = function() {
+  this._startTime = null;
+  if (this._handle != null) {
+    clearTimeout(this._handle);
+    this._handle = null;
+  }
+};
+
+
+Timer.prototype._setup = function(interval) {
+  this._handle = setTimeout(this._check, interval);
+};
+
+
+Timer.prototype._teardown = function() {
+  clearTimeout(this._handle);
+  this._handle = null;
+};
+
+
+Timer.prototype._check = function() {
+  var currentTime = clock();
+  var elapsed = currentTime - this._startTime;
+  var remaining = this._duration - elapsed;
+
+  this._teardown();
+
+  if (remaining <= 0) {
+    this.emit('timeout');
+    this._startTime = null;
+  } else if (remaining < Infinity) {
+    this._setup(remaining);
+  }
+};
+
+
+/**
+ * Returns the currently set duration.
+ */
+Timer.prototype.duration = function() {
+  return this._duration;
+};
+
+
+/**
+ * Sets the duration. If the timer is already started, the timeout event is
+ * rescheduled to occur once the new duration has elapsed since the last call
+ * to start. In particular, if an amount of time larger than the new duration
+ * has already elapsed, the timeout event fires immediately.
+ * @param {number}
+ */
+Timer.prototype.setDuration = function(duration) {
+  this._duration = duration;
+  if (this._startTime != null) {
+    this._check();
+  }
+};
+
+
+module.exports = Timer;
+
+},{"./util/clock":93,"./util/defaults":98,"minimal-event-emitter":14}],24:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var browser = require('bowser');
+var eventEmitter = require('minimal-event-emitter');
+
+var RenderLoop = require('./RenderLoop');
+var Controls = require('./controls/Controls');
+var Scene = require('./Scene');
+var Timer = require('./Timer');
+
+var WebGlStage = require('./stages/WebGl');
+var CssStage = require('./stages/Css');
+var FlashStage = require('./stages/Flash');
+
+var ControlCursor = require('./controls/ControlCursor');
+var HammerGestures = require('./controls/HammerGestures');
+
+var registerDefaultControls = require('./controls/registerDefaultControls');
+var registerDefaultRenderers = require('./renderers/registerDefaultRenderers');
+
+var setOverflowHidden = require('./util/dom').setOverflowHidden;
+var setAbsolute = require('./util/dom').setAbsolute;
+var setFullSize = require('./util/dom').setFullSize;
+var setBlocking = require('./util/dom').setBlocking;
+
+var tween = require('./util/tween');
+var noop = require('./util/noop');
+var clearOwnProperties = require('./util/clearOwnProperties');
+
+var stageMap = {
+  webgl: WebGlStage,
+  css: CssStage,
+  flash: FlashStage
+};
+
+var stagePrefList = [
+  WebGlStage,
+  CssStage,
+  FlashStage
+];
+
+/**
+ * Signals that the current scene has changed.
+ * @event Viewer#sceneChange
+ */
+
+/**
+ * Signals that the view of the current scene has changed. See
+ * {@link View#event:change}.
+ * @event Viewer#viewChange
+ */
+
+/**
+ * @class Viewer
+ * @classdesc
+ *
+ * A Viewer is a container for multiple {@link Scene scenes} to be displayed
+ * inside a {@link Stage stage} contained in the DOM.
+ *
+ * Scenes may be created by calling {@link Viewer#createScene}. Except during a
+ * scene switch, a single one of them, called the current scene, is visible.
+ * Calling {@link Viewer#switchScene} sets the current scene and switches to it.
+ *
+ * @param {Element} domElement The DOM element to contain the stage.
+ * @param {Object} opts Viewer creation options.
+ * @param {(null|'webgl'|'css'|'flash')} [opts.stageType=null] The type of stage
+ *     to create. The default is to choose the most appropriate type depending
+ *     on the browser capabilities.
+ * @param {Object} opts.controls Options to be passed to
+ *     {@link registerDefaultControls}.
+ * @param {Object} opts.stage Options to be passed to the {@link Stage}
+ *     constructor.
+ * @param {Object} opts.cursors Cursor options.
+ * @param {Object} opts.cursors.drag Drag cursor options to be passed to the
+ *     {@link ControlCursor} constructor.
+ */
+function Viewer(domElement, opts) {
+  opts = opts || {};
+
+  this._domElement = domElement;
+
+  // Add `overflow: hidden` to the domElement.
+  setOverflowHidden(domElement);
+
+  // Select the stage type to use.
+  var Stage;
+  if (opts.stageType) {
+    // If a specific stage type was specified, use that one.
+    Stage = stageMap[opts.stageType];
+    if (!Stage) {
+      throw new Error('Unknown stage type: ' + opts.stageType);
+    }
+  } else {
+    // Choose the best supported stage according to the default preference
+    // order. Note that this may yield an unsupported stage for some
+    // geometry/view combinations. Client code is expected to pass in a
+    // specific stage type in those cases.
+    for (var i = 0; i < stagePrefList.length; i++) {
+      if (stagePrefList[i].supported()) {
+        Stage = stagePrefList[i];
+        break;
+      }
+    }
+    if (!Stage) {
+      throw new Error('None of the stage types are supported');
+    }
+  }
+
+  // Create stage.
+  this._stage = new Stage(opts.stage);
+
+  // Register the default renderers for the selected stage.
+  registerDefaultRenderers(this._stage);
+
+  // Add the stage element into the DOM.
+  this._domElement.appendChild(this._stage.domElement());
+
+  // Create control container.
+  // Controls cannot be placed directly on the root DOM element because
+  // Hammer.js will prevent click events from reaching the elements beneath.
+
+  // The hotspot containers will be added inside the controls container.
+  this._controlContainer = document.createElement('div');
+  setAbsolute(this._controlContainer);
+  setFullSize(this._controlContainer);
+
+  // Prevent bounce scroll effect on iOS.
+  // Applied only for iOS, as Android's events must have the default action to allow interaction with hotspots.
+  if (browser.ios) {
+    this._controlContainer.addEventListener('touchmove', function(event) {
+      event.preventDefault();
+    });
+  }
+
+
+  // Old IE does not detect mouse events on elements without background
+  // Add a child element to the controls with full width, a background color
+  // and opacity 0
+  var controlCapture = document.createElement('div');
+  setAbsolute(controlCapture);
+  setFullSize(controlCapture);
+  setBlocking(controlCapture);
+
+  this._controlContainer.appendChild(controlCapture);
+  domElement.appendChild(this._controlContainer);
+
+  // Respond to window size changes.
+  this._size = {};
+  this.updateSize();
+  this._updateSizeListener = this.updateSize.bind(this);
+  window.addEventListener('resize', this._updateSizeListener);
+
+  // Create render loop.
+  this._renderLoop = new RenderLoop(this._stage);
+
+  // Create the controls and register them with the render loop.
+  this._controls = new Controls();
+  this._controlMethods = registerDefaultControls(this._controls, this._controlContainer, opts.controls);
+  this._controls.attach(this._renderLoop);
+
+  // Expose HammerJS.
+  this._hammerManagerTouch = HammerGestures.get(this._controlContainer, 'touch');
+  this._hammerManagerMouse = HammerGestures.get(this._controlContainer, 'mouse');
+
+  // Initialize drag cursor.
+  this._dragCursor = new ControlCursor(this._controls, 'mouseViewDrag', domElement, opts.cursors && opts.cursors.drag || {});
+
+  // Start the render loop.
+  this._renderLoop.start();
+
+  // Scene list.
+  this._scenes = [];
+
+  // The currently visible scene.
+  // During a scene transition, this is the scene being switched to.
+  this._currentScene = null;
+
+  // The scene being switched from during a scene transition.
+  // This is necessary to update the layers correctly when they are added or
+  // removed during a transition.
+  this._replacedScene = null;
+
+  // The current transition.
+  this._cancelCurrentTween = null;
+
+  // The event listener fired when the current scene layers change.
+  // This is attached to the correct scene whenever the current scene changes.
+  this._layerChangeHandler = this._updateSceneLayers.bind(this);
+
+  // The event listener fired when the current scene view changes.
+  // This is attached to the correct scene whenever the current scene changes.
+  this._viewChangeHandler = this.emit.bind(this, 'viewChange');
+
+  // Setup the idle timer.
+  // By default, the timer has an infinite duration so it does nothing.
+  this._idleTimer = new Timer();
+  this._idleTimer.start();
+
+  // Reset the timer whenever the view changes.
+  this._resetIdleTimerHandler = this._resetIdleTimer.bind(this);
+  this.addEventListener('viewChange', this._resetIdleTimerHandler);
+
+  // Start the idle movement when the idle timer fires.
+  this._enterIdleHandler = this._enterIdle.bind(this);
+  this._idleTimer.addEventListener('timeout', this._enterIdleHandler);
+
+  // Stop the idle movement when the controls are activated or when the
+  // scene changes.
+  this._leaveIdleHandler = this._leaveIdle.bind(this);
+  this._controls.addEventListener('active', this._leaveIdleHandler);
+  this.addEventListener('sceneChange', this._leaveIdleHandler);
+
+  // The currently programmed idle movement.
+  this._idleMovement = null;
+}
+
+eventEmitter(Viewer);
+
+
+/**
+ * Destructor.
+ */
+Viewer.prototype.destroy = function() {
+
+  window.removeEventListener('resize', this._updateSizeListener);
+
+  if (this._currentScene) {
+    this._removeSceneEventListeners(this._currentScene);
+  }
+
+  if (this._replacedScene) {
+    this._removeSceneEventListeners(this._replacedScene);
+  }
+
+  this._dragCursor.destroy();
+
+  for (var methodName in this._controlMethods) {
+    this._controlMethods[methodName].destroy();
+  }
+
+  while (this._scenes.length) {
+    this.destroyScene(this._scenes[0]);
+  }
+
+  // The Flash renderer must be torn down before the element is removed from
+  // the DOM, so all scenes must have been destroyed before this point.
+  this._domElement.removeChild(this._stage.domElement());
+
+  this._stage.destroy();
+  this._renderLoop.destroy();
+  this._controls.destroy();
+  this._controls = null;
+
+  if (this._cancelCurrentTween) {
+    this._cancelCurrentTween();
+  }
+
+  clearOwnProperties(this);
+};
+
+
+/**
+ * Updates the stage size to fill the containing element.
+ *
+ * This method is automatically called when the browser window is resized.
+ * Most clients won't need to explicitly call it to keep the size up to date.
+ */
+Viewer.prototype.updateSize = function() {
+  var size = this._size;
+  size.width = this._domElement.clientWidth;
+  size.height = this._domElement.clientHeight;
+  this._stage.setSize(size);
+};
+
+
+/**
+ * Returns the underlying {@link Stage stage}.
+ * @return {Stage}
+ */
+Viewer.prototype.stage = function() {
+  return this._stage;
+};
+
+
+/**
+ * Returns the underlying {@link RenderLoop render loop}.
+ * @return {RenderLoop}
+ */
+Viewer.prototype.renderLoop = function() {
+  return this._renderLoop;
+};
+
+
+/**
+ * Returns the underlying {@link Controls controls}.
+ * @return {Controls}
+ */
+Viewer.prototype.controls = function() {
+  return this._controls;
+};
+
+
+/**
+ * Returns the underlying DOM element.
+ * @return {Element}
+ */
+Viewer.prototype.domElement = function() {
+  return this._domElement;
+};
+
+
+/**
+ * Creates a new {@link Scene scene} with a single layer and adds it to the
+ * viewer.
+ *
+ * The current scene does not change. To switch to the scene, call
+ * {@link Viewer#switchScene}.
+ *
+ * @param {Object} opts Scene creation options.
+ * @param {View} opts.view The scene's underlying {@link View}.
+ * @param {Source} opts.source The layer's underlying {@link Source}.
+ * @param {Geometry} opts.geometry The layer's underlying {@link Geometry}.
+ * @param {boolean} [opts.pinFirstLevel=false] Whether to pin the first level to
+ *     provide a fallback of last resort, at the cost of memory consumption.
+ * @param {Object} [opts.textureStoreOpts={}] Options to pass to the
+ *     {@link TextureStore} constructor.
+ * @param {Object} [opts.layerOpts={}] Options to pass to the {@link Layer}
+ *     constructor.
+ * @return {Scene}
+ */
+Viewer.prototype.createScene = function(opts) {
+  opts = opts || {};
+
+  var scene = this.createEmptyScene({ view: opts.view });
+
+  scene.createLayer({
+    source: opts.source,
+    geometry: opts.geometry,
+    pinFirstLevel: opts.pinFirstLevel,
+    textureStoreOpts: opts.textureStoreOpts,
+    layerOpts: opts.layerOpts
+  });
+
+  return scene;
+};
+
+
+/**
+ * Creates a new {@link Scene scene} with no layers and adds it to the viewer.
+ *
+ * Layers may be added to the scene by calling {@link Scene#createLayer}.
+ * However, if the scene has a single layer, it is simpler to call
+ * {@link Viewer#createScene} instead of this method.
+ *
+ * The current scene does not change. To switch to the scene, call
+ * {@link Viewer#switchScene}.
+ *
+ * @param {Object} opts Scene creation options.
+ * @param {View} opts.view The scene's underlying {@link View}.
+ * @return {Scene}
+ */
+Viewer.prototype.createEmptyScene = function(opts) {
+  opts = opts || {};
+
+  var scene = new Scene(this, opts.view);
+  this._scenes.push(scene);
+
+  return scene;
+};
+
+
+Viewer.prototype._updateSceneLayers = function() {
+  var i;
+  var layer;
+
+  var stage = this._stage;
+  var currentScene = this._currentScene;
+  var replacedScene = this._replacedScene;
+
+  var oldLayers = stage.listLayers();
+
+  // The stage contains layers from at most two scenes: the current one, on top,
+  // and the one currently being switched away from, on the bottom.
+  var newLayers = [];
+  if (replacedScene) {
+    newLayers = newLayers.concat(replacedScene.listLayers());
+  }
+  if (currentScene) {
+    newLayers = newLayers.concat(currentScene.listLayers());
+  }
+
+  // A single layer can be added or removed from the scene at a time.
+  if (Math.abs(oldLayers.length - newLayers.length) !== 1) {
+    throw new Error('Stage and scene out of sync');
+  }
+
+  if (newLayers.length < oldLayers.length) {
+    // A layer was removed.
+    for (i = 0; i < oldLayers.length; i++) {
+      layer = oldLayers[i];
+      if (newLayers.indexOf(layer) < 0) {
+        this._removeLayerFromStage(layer);
+        break;
+      }
+    }
+  }
+  if (newLayers.length > oldLayers.length) {
+    // A layer was added.
+    for (i = 0; i < newLayers.length; i++) {
+      layer = newLayers[i];
+      if (oldLayers.indexOf(layer) < 0) {
+        this._addLayerToStage(layer, i);
+      }
+    }
+  }
+
+  // TODO: When in the middle of a scene transition, call the transition update
+  // function immediately to prevent an added layer from flashing with the wrong
+  // opacity.
+};
+
+
+Viewer.prototype._addLayerToStage = function(layer, i) {
+  // Pin the first level to ensure a fallback while the layer is visible.
+  // Note that this is distinct from the `pinFirstLevel` option passed to
+  // createScene(), which pins the layer even when it's not visible.
+  layer.pinFirstLevel();
+  this._stage.addLayer(layer, i);
+};
+
+
+Viewer.prototype._removeLayerFromStage = function(layer) {
+  this._stage.removeLayer(layer);
+  layer.unpinFirstLevel();
+  layer.textureStore().clearNotPinned();
+};
+
+
+Viewer.prototype._addSceneEventListeners = function(scene) {
+  scene.addEventListener('layerChange', this._layerChangeHandler);
+  scene.addEventListener('viewChange', this._viewChangeHandler);
+};
+
+
+Viewer.prototype._removeSceneEventListeners = function(scene) {
+  scene.removeEventListener('layerChange', this._layerChangeHandler);
+  scene.removeEventListener('viewChange', this._viewChangeHandler);
+};
+
+
+/**
+ * Destroys a {@link Scene scene} and removes it from the viewer.
+ * @param {Scene} scene
+ */
+Viewer.prototype.destroyScene = function(scene) {
+  var i = this._scenes.indexOf(scene);
+  if (i < 0) {
+    throw new Error('No such scene in viewer');
+  }
+
+  var j;
+  var layers;
+
+  if (this._currentScene === scene) {
+    // The destroyed scene is the current scene.
+    // Remove event listeners, remove layers from stage and cancel transition.
+    this._removeSceneEventListeners(scene);
+    layers = scene.listLayers();
+    for (j = 0; j < layers.length; j++) {
+      this._removeLayerFromStage(layers[j]);
+    }
+    if (this._cancelCurrentTween) {
+      this._cancelCurrentTween();
+      this._cancelCurrentTween = null;
+    }
+    this._currentScene = null;
+    this.emit('sceneChange');
+  }
+
+  if (this._replacedScene === scene) {
+    // The destroyed scene is being switched away from.
+    // Remove event listeners and remove layers from stage.
+    this._removeSceneEventListeners(scene);
+    layers = scene.listLayers();
+    for (j = 0; j < layers.length; j++) {
+      this._removeLayerFromStage(layers[j]);
+    }
+    this._replacedScene = null;
+  }
+
+  this._scenes.splice(i, 1);
+
+  scene.destroy();
+};
+
+
+/**
+ * Destroys all {@link Scene scenes} and removes them from the viewer.
+ */
+Viewer.prototype.destroyAllScenes = function() {
+  while (this._scenes.length > 0) {
+    this.destroyScene(this._scenes[0]);
+  }
+};
+
+
+/**
+ * Returns whether the viewer contains a {@link Scene scene}.
+ * @param {Scene} scene
+ * @return {boolean}
+ */
+Viewer.prototype.hasScene = function(scene) {
+  return this._scenes.indexOf(scene) >= 0;
+};
+
+
+/**
+ * Returns a list of all {@link Scene scenes}.
+ * @return {Scene[]}
+ */
+Viewer.prototype.listScenes = function() {
+  return [].concat(this._scenes);
+};
+
+
+/**
+ * Returns the current {@link Scene scene}, or null if there isn't one.
+ *
+ * To change the current scene, call {@link Viewer#switchScene}.
+ *
+ * @return {Scene}
+ */
+Viewer.prototype.scene = function() {
+  return this._currentScene;
+};
+
+
+/**
+ * Returns the {@link View view} for the current {@link Scene scene}, or null
+ * if there isn't one.
+ * @return {View}
+ */
+Viewer.prototype.view = function() {
+  var scene = this._currentScene;
+  if (scene) {
+    return scene.view();
+  }
+  return null;
+};
+
+
+/**
+ * Tweens the {@link View view} for the current {@link Scene scene}.
+ *
+ * This method is equivalent to calling {@link Scene#lookTo} on the current
+ * scene.
+ *
+ * @param {Object} opts Options to pass into {@link Scene#lookTo}.
+ * @param {function} done Function to call when the tween is complete.
+ */
+Viewer.prototype.lookTo = function(params, opts, done) {
+  // TODO: is it an error to call lookTo when no scene is displayed?
+  var scene = this._currentScene;
+  if (scene) {
+    scene.lookTo(params, opts, done);
+  }
+};
+
+
+/**
+ * Starts a movement.
+ *
+ * This method is equivalent to calling {@link Scene#startMovement} on the
+ * current scene.
+ *
+ * @param {function} fn The movement function.
+ * @param {function} done Function to be called when the movement finishes or is
+ *     interrupted.
+ */
+Viewer.prototype.startMovement = function(fn, cb) {
+  // TODO: is it an error to call startMovement when no scene is displayed?
+  var scene = this._currentScene;
+  if (scene) {
+    scene.startMovement(fn, cb);
+  }
+};
+
+
+/**
+ * Stops the current movement.
+ *
+ * This method is equivalent to calling {@link Scene#stopMovement} on the
+ * current scene.
+ */
+Viewer.prototype.stopMovement = function() {
+  var scene = this._currentScene;
+  if (scene) {
+    scene.stopMovement();
+  }
+};
+
+
+/**
+ * Schedules an idle movement to be automatically started when the view remains
+ * unchanged for the given timeout period.
+ *
+ * Changing the view while the idle movement is active stops the movement and
+ * schedules it to start again after the same timeout period. To disable it
+ * permanently, call with a null movement or an infinite timeout.
+ *
+ * @param {number} timeout Timeout period in milliseconds.
+ * @param {function} movement Automatic movement function, or null to disable.
+ */
+Viewer.prototype.setIdleMovement = function(timeout, movement) {
+  this._idleTimer.setDuration(timeout);
+  this._idleMovement = movement;
+};
+
+
+/**
+ * Stops the idle movement. It will be started again after the timeout set by
+ * {@link Viewer#setIdleMovement}.
+ */
+Viewer.prototype.breakIdleMovement = function() {
+  this._leaveIdle();
+  this._resetIdleTimer();
+};
+
+
+Viewer.prototype._resetIdleTimer = function() {
+  this._idleTimer.start();
+};
+
+
+Viewer.prototype._enterIdle = function() {
+  var scene = this._currentScene;
+  var idleMovement = this._idleMovement;
+  if (!scene || !idleMovement) {
+    return;
+  }
+  scene.startMovement(idleMovement);
+};
+
+
+Viewer.prototype._leaveIdle = function() {
+  var scene = this._currentScene;
+  if (!scene) {
+    return;
+  }
+  if (scene.movement() === this._idleMovement) {
+    scene.stopMovement();
+  }
+};
+
+
+var defaultSwitchDuration = 1000;
+
+function defaultTransitionUpdate(val, newScene, oldScene) {
+  var layers = newScene.listLayers();
+  layers.forEach(function(layer) {
+    layer.mergeEffects({ opacity: val });
+  });
+
+  newScene._hotspotContainer.domElement().style.opacity = val;
+}
+
+
+/**
+ * Switches to another {@link Scene scene} with a fade transition. This scene
+ * becomes the current one.
+ *
+ * If a transition is already taking place, it is interrupted before the new one
+ * starts.
+ *
+ * @param {Scene} newScene The scene to switch to.
+ * @param {Object} opts Transition options.
+ * @param {number} [opts.transitionDuration=1000] Transition duration, in
+ *     milliseconds.
+ * @param {number} [opts.transitionUpdate=defaultTransitionUpdate]
+ *     Transition update function, with signature `f(t, newScene, oldScene)`.
+ *     This function is called on each frame with `t` increasing from 0 to 1.
+ *     An initial call with `t=0` and a final call with `t=1` are guaranteed.
+ *     The default function sets the opacity of the new scene to `t`.
+ * @param {function} done Function to call when the transition finishes or is
+ *     interrupted. If the new scene is equal to the old one, no transition
+ *     takes place, but this function is still called.
+ */
+Viewer.prototype.switchScene = function(newScene, opts, done) {
+  var self = this;
+
+  opts = opts || {};
+  done = done || noop;
+
+  var stage = this._stage;
+
+  var oldScene = this._currentScene;
+
+  // Do nothing if the target scene is the current one.
+  if (oldScene === newScene) {
+    done();
+    return;
+  }
+
+  if (this._scenes.indexOf(newScene) < 0) {
+    throw new Error('No such scene in viewer');
+  }
+
+  // Cancel an already ongoing transition. This ensures that the stage contains
+  // layers from exactly one scene before the transition begins.
+  if (this._cancelCurrentTween) {
+    this._cancelCurrentTween();
+    this._cancelCurrentTween = null;
+  }
+
+  var oldSceneLayers = oldScene ? oldScene.listLayers() : [];
+  var newSceneLayers = newScene.listLayers();
+  var stageLayers = stage.listLayers();
+
+  // Check that the stage contains exactly as many layers as the current scene,
+  // and that the top layer is the right one. If this test fails, either there
+  // is a bug or the user tried to modify the stage concurrently.
+  if (oldScene && ((stageLayers.length !== oldSceneLayers.length) ||
+      (stageLayers.length > 1 && stageLayers[0] != oldSceneLayers[0]))) {
+    throw new Error('Stage not in sync with viewer');
+  }
+
+  // Get the transition parameters.
+  var duration = opts.transitionDuration != null ?
+      opts.transitionDuration : defaultSwitchDuration;
+  var update = opts.transitionUpdate != null ?
+      opts.transitionUpdate : defaultTransitionUpdate;
+
+  // Add new scene layers into the stage before starting the transition.
+  for (var i = 0; i < newSceneLayers.length; i++) {
+    this._addLayerToStage(newSceneLayers[i]);
+  }
+
+  // Update function to be called on every frame.
+  function tweenUpdate(val) {
+    update(val, newScene, oldScene);
+  }
+
+  // Once the transition is complete, remove old scene layers from the stage and
+  // remove the event listeners. If the old scene was destroyed during the
+  // transition, this has already been taken care of. Otherwise, we still need
+  // to get a fresh copy of the scene's layers, since they might have changed
+  // during the transition.
+  function tweenDone() {
+    if (self._replacedScene) {
+      self._removeSceneEventListeners(self._replacedScene);
+      oldSceneLayers = self._replacedScene.listLayers();
+      for (var i = 0; i < oldSceneLayers.length; i++) {
+        self._removeLayerFromStage(oldSceneLayers[i]);
+      }
+      self._replacedScene = null;
+    }
+    self._cancelCurrentTween = null;
+    done();
+  }
+
+  // Store the cancelable for the transition.
+  this._cancelCurrentTween = tween(duration, tweenUpdate, tweenDone);
+
+  // Update the current and replaced scene.
+  this._currentScene = newScene;
+  this._replacedScene = oldScene;
+
+  // Emit scene and view change events.
+  this.emit('sceneChange');
+  this.emit('viewChange');
+
+  // Add event listeners to the new scene.
+  // Note that event listeners can only be removed from the old scene once the
+  // transition is complete, since layers might get added or removed in the
+  // interim.
+  this._addSceneEventListeners(newScene);
+};
+
+
+module.exports = Viewer;
+
+},{"./RenderLoop":19,"./Scene":20,"./Timer":23,"./controls/ControlCursor":38,"./controls/Controls":39,"./controls/HammerGestures":43,"./controls/registerDefaultControls":50,"./renderers/registerDefaultRenderers":71,"./stages/Css":78,"./stages/Flash":79,"./stages/WebGl":82,"./util/clearOwnProperties":92,"./util/dom":102,"./util/noop":108,"./util/tween":115,"bowser":1,"minimal-event-emitter":14}],25:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var eventEmitter = require('minimal-event-emitter');
+var clearOwnProperties = require('../util/clearOwnProperties');
+
+/**
+ * @class DynamicCanvasAsset
+ * @implements Asset
+ * @classdesc
+ *
+ * Dynamic asset containing an HTML canvas element.
+ *
+ * Call {@link DynamicCanvasAsset#changed} to notify that the contents of the
+ * canvas were modified and derived textures need to be refreshed.
+ *
+ * @param {Element} element
+ */
+function DynamicCanvasAsset(element, opts) {
+  opts = opts || {};
+
+  this._opts = opts;
+
+  this._element = element;
+  this._timestamp = 0;
+}
+
+eventEmitter(DynamicCanvasAsset);
+
+DynamicCanvasAsset.prototype.dynamic = true;
+
+/**
+ * Destructor.
+ */
+DynamicCanvasAsset.prototype.destroy = function() {
+  clearOwnProperties(this);
+};
+
+DynamicCanvasAsset.prototype.element = function() {
+  return this._element;
+};
+
+DynamicCanvasAsset.prototype.width = function() {
+  return this._element.width;
+};
+
+DynamicCanvasAsset.prototype.height = function() {
+  return this._element.height;
+};
+
+DynamicCanvasAsset.prototype.timestamp = function() {
+  return this._timestamp;
+};
+
+/**
+ * Notifies that the contents of the canvas were modified.
+ */
+DynamicCanvasAsset.prototype.changed = function() {
+  this._timestamp++;
+  this.emit('change');
+};
+
+module.exports = DynamicCanvasAsset;
+
+},{"../util/clearOwnProperties":92,"minimal-event-emitter":14}],26:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var clearOwnProperties = require('../util/clearOwnProperties');
+
+/**
+ * @class FlashImageAsset
+ * @implements Asset
+ * @classdesc
+ *
+ * Static asset referencing an image loaded by a Flash application.
+ *
+ * @param {Element} flashElement HTML element with the Flash application that
+ *     loaded the image.
+ * @param {number} imageId Unique ID of the image inside the Flash application.
+ */
+function FlashImageAsset(flashElement, imageId) {
+  this._flashElement = flashElement;
+  this._imageId = imageId;
+}
+
+FlashImageAsset.prototype.dynamic = false;
+
+/**
+ * Destructor.
+ */
+FlashImageAsset.prototype.destroy = function() {
+  this._flashElement.unloadImage(this._imageId);
+  clearOwnProperties(this);
+};
+
+FlashImageAsset.prototype.element = function() {
+  return this._imageId;
+};
+
+FlashImageAsset.prototype.width = function() {
+  // TODO: Return the real value.
+  return 0;
+};
+
+FlashImageAsset.prototype.height = function() {
+  // TODO: Return the real value.
+  return 0;
+};
+
+FlashImageAsset.prototype.timestamp = function() {
+  return 0;
+};
+
+module.exports = FlashImageAsset;
+
+},{"../util/clearOwnProperties":92}],27:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var clearOwnProperties = require('../util/clearOwnProperties');
+
+/**
+ * @class StaticCanvasAsset
+ * @implements Asset
+ * @classdesc
+ *
+ * Static asset containing an HTML canvas element.
+ *
+ * @param {Element} element
+ */
+function StaticCanvasAsset(element) {
+  this._element = element;
+}
+
+StaticCanvasAsset.prototype.dynamic = false;
+
+/**
+ * Destructor.
+ */
+StaticCanvasAsset.prototype.destroy = function() {
+  clearOwnProperties(this);
+};
+
+StaticCanvasAsset.prototype.element = function() {
+  return this._element;
+};
+
+StaticCanvasAsset.prototype.width = function() {
+  return this._element.width;
+};
+
+StaticCanvasAsset.prototype.height = function() {
+  return this._element.height;
+};
+
+StaticCanvasAsset.prototype.timestamp = function() {
+  return 0;
+};
+
+module.exports = StaticCanvasAsset;
+
+},{"../util/clearOwnProperties":92}],28:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var clearOwnProperties = require('../util/clearOwnProperties');
+
+/**
+ * @class StaticImageAsset
+ * @implements Asset
+ * @classdesc
+ *
+ * Static asset containing an HTML image element.
+ *
+ * @param {Element} element
+ */
+function StaticImageAsset(element) {
+  this._element = element;
+}
+
+StaticImageAsset.prototype.dynamic = false;
+
+/**
+ * Destructor.
+ */
+StaticImageAsset.prototype.destroy = function() {
+  clearOwnProperties(this);
+};
+
+StaticImageAsset.prototype.element = function() {
+  return this._element;
+};
+
+StaticImageAsset.prototype.width = function() {
+  // TODO: Would need fallback to work on IE8. Right now it's not necessary
+  // since IE8 uses FlashImageAsset.
+  return this._element.naturalWidth;
+};
+
+StaticImageAsset.prototype.height = function() {
+  // TODO: Would need fallback to work on IE8. Right now it's not necessary
+  // since IE8 uses FlashImageAsset.
+  return this._element.naturalHeight;
+};
+
+StaticImageAsset.prototype.timestamp = function() {
+  return 0;
+};
+
+module.exports = StaticImageAsset;
+
+},{"../util/clearOwnProperties":92}],29:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var defaults = require('./util/defaults');
+
+var defaultSpeed = 0.1;
+var defaultAccel = 0.01;
+
+var defaultOptions = {
+  yawSpeed: defaultSpeed,
+  pitchSpeed: defaultSpeed,
+  fovSpeed: defaultSpeed,
+  yawAccel: defaultAccel,
+  pitchAccel: defaultAccel,
+  fovAccel: defaultAccel,
+  targetPitch: 0,
+  targetFov: null
+};
+
+/**
+ * @param {Object} opts
+ * @param {Number} [opts.yawSpeed=0.1] Yaw maximum speed
+ * @param {Number} [opts.pitchSpeed=0.1] Pitch maximum speed
+ * @param {Number} [opts.fovSpeed=0.1] Fov maximum speed
+ * @param {Number} [opts.yawAccel=0.01] Yaw acceleration
+ * @param {Number} [opts.pitchAccel=0.01] Pitch acceleration
+ * @param {Number} [opts.fovAccel=0.01] Fov acceleration
+ * @param {Number} [opts.targetPitch=0] Value that pitch converges to. `null` means that the pitch will not change.
+ * @param {Number} [opts.targetFov=null] Value that fov converges to. `null` means that the fov will not change.
+ * @returns Movement function that can be passed to {@link Viewer#setIdleMovement} or {@link Scene#startMovement}
+*/
+function autorotate(opts) {
+
+  opts = defaults(opts || {}, defaultOptions);
+
+  var yawSpeed = opts.yawSpeed;
+  var pitchSpeed = opts.pitchSpeed;
+  var fovSpeed = opts.fovSpeed;
+  var yawAccel = opts.yawAccel;
+  var pitchAccel = opts.pitchAccel;
+  var fovAccel = opts.fovAccel;
+  var targetPitch = opts.targetPitch;
+  var targetFov = opts.targetFov;
+
+  return function start() {
+
+    var lastTime = 0;
+    var lastYawSpeed = 0;
+    var lastPitchSpeed = 0;
+    var lastFovSpeed = 0;
+
+    var currentYawSpeed = 0;
+    var currentPitchSpeed = 0;
+    var currentFovSpeed = 0;
+
+    var timeDelta;
+    var yawDelta;
+    var pitchDelta;
+    var fovDelta;
+
+    return function step(params, currentTime) {
+
+      timeDelta = (currentTime - lastTime) / 1000;
+      currentYawSpeed = Math.min(lastYawSpeed + timeDelta * yawAccel, yawSpeed);
+      yawDelta = currentYawSpeed * timeDelta;
+      params.yaw = params.yaw + yawDelta;
+
+      if (targetPitch != null && params.pitch !== targetPitch) {
+        var pitchThresh = 0.5 * lastPitchSpeed * lastPitchSpeed / pitchAccel;
+        if (Math.abs(targetPitch - params.pitch) > pitchThresh) {
+          // Acceleration phase
+          currentPitchSpeed = Math.min(lastPitchSpeed + timeDelta * pitchAccel, pitchSpeed);
+        } else {
+          // Deceleration phase
+          currentPitchSpeed = Math.max(lastPitchSpeed - timeDelta * pitchAccel, 0);
+        }
+        // currentPitchSpeed is the absolute value (>= 0)
+        pitchDelta = currentPitchSpeed * timeDelta;
+        if (targetPitch < params.pitch) {
+          params.pitch = Math.max(targetPitch, params.pitch - pitchDelta);
+        }
+        if (targetPitch > params.pitch) {
+          params.pitch = Math.min(targetPitch, params.pitch + pitchDelta);
+        }
+      }
+
+      if (targetFov != null && params.fov !== targetPitch) {
+        var fovThresh = 0.5 * lastFovSpeed * lastFovSpeed / fovAccel;
+        if (Math.abs(targetFov - params.fov) > fovThresh) {
+          // Acceleration phase
+          currentFovSpeed = Math.min(lastFovSpeed + timeDelta * fovAccel, fovSpeed);
+        } else {
+          // Deceleration phase
+          currentFovSpeed = Math.max(lastFovSpeed - timeDelta * fovAccel, 0);
+        }
+        // currentFovSpeed is the absolute value (>= 0)
+        fovDelta = currentFovSpeed * timeDelta;
+        if (targetFov < params.fov) {
+          params.fov = Math.max(targetFov, params.fov - fovDelta);
+        }
+        if (targetFov > params.fov) {
+          params.fov = Math.min(targetFov, params.fov + fovDelta);
+        }
+      }
+
+      lastTime = currentTime;
+      lastYawSpeed = currentYawSpeed;
+      lastPitchSpeed = currentPitchSpeed;
+      lastFovSpeed = currentFovSpeed;
+
+      return params;
+
+    };
+
+  };
+
+}
+
+module.exports = autorotate;
+},{"./util/defaults":98}],30:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+
+var mod = require('../util/mod');
+
+
+// Creates a new LRU map given an equality predicate, hash function and
+// maximum size. An LRU map holds up to a maximum number of items, ordered
+// by their age. When the addition of an item would cause the maximum size
+// to be exceeded, the new item replaces the oldest item in the map.
+// As a special case, an LRU map with maximum size 0 always rejects the
+// insertion of an item.
+function LruMap(equals, hash, maxsize) {
+
+  if (typeof equals !== 'function') {
+    throw new Error('LruMap: bad equals function');
+  }
+  this._equals = equals;
+
+  if (typeof hash !== 'function') {
+    throw new Error('LruMap: bad hash function');
+  }
+  this._hash = hash;
+
+  if (typeof maxsize != 'number' || isNaN(maxsize) || maxsize < 0) {
+    throw new Error('LruMap: bad maximum size');
+  }
+  this._maxsize = maxsize;
+
+  // Keys and values are stored in circular arrays ordered by decreasing age.
+  // Pivot is the index where the next insertion will take place.
+  this._keys = [];
+  this._values = [];
+  this._pivot = 0;
+}
+
+
+LruMap.prototype._modulus = function() {
+  if (this._maxsize > this._keys.length) {
+    return this._keys.length + 1;
+  }
+  return this._maxsize;
+};
+
+
+// Returns the value associated to the specified key, or null if not found.
+LruMap.prototype.get = function(key) {
+  for (var i = 0; i < this._keys.length; i++) {
+    var elemKey = this._keys[i];
+    if (this._equals(key, elemKey)) {
+      var elemValue = this._values[i];
+      return elemValue;
+    }
+  }
+  return null;
+};
+
+
+// Sets the specified key to the specified value, replacing either an existing
+// item with the same key, or the oldest item when the maximum size would be
+// exceeded; the added item becomes the newest. Returns the replaced key if it
+// does not equal the inserted key, otherwise null.
 //
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
+// If the maximum size is 0, do nothing and return the key.
+LruMap.prototype.set = function(key, value) {
+
+  var oldest = null;
+  var found = false;
+
+  if (this._maxsize === 0) {
+    return key;
+  }
+
+  for (var i = 0; i < this._keys.length; i++) {
+    var elemKey = this._keys[i];
+    if (this._equals(key, elemKey)) {
+      var j = i;
+      var modulus = this._modulus();
+      while (j !== this._pivot) {
+        var k = mod(j + 1, modulus);
+        this._keys[j] = this._keys[k];
+        this._values[j] = this._values[k];
+        j = k;
+      }
+      found = true;
+      break;
+    }
+  }
+
+  if (!found) {
+    oldest = this._pivot < this._keys.length ? this._keys[this._pivot] : null;
+  }
+
+  this._keys[this._pivot] = key;
+  this._values[this._pivot] = value;
+  this._pivot = mod(this._pivot + 1, this._modulus());
+
+  return oldest;
+};
+
+
+// Removes the item associated with the specified key.
+// Returns the removed value, or null if not found.
+LruMap.prototype.del = function(key) {
+  for (var i = 0; i < this._keys.length; i++) {
+    var elemKey = this._keys[i];
+    if (this._equals(key, elemKey)) {
+      var elemValue = this._values[i];
+      for (var j = i; j < this._keys.length - 1; j++) {
+        this._keys[j] = this._keys[j + 1];
+        this._values[j] = this._values[j + 1];
+      }
+      this._keys.length = this._keys.length - 1;
+      this._values.length = this._values.length - 1;
+      if (i < this._pivot) {
+        this._pivot = mod(this._pivot - 1, this._modulus());
+      }
+      return elemValue;
+    }
+  }
+  return null;
+};
+
+
+// Returns whether there is a value associated with the specified key.
+LruMap.prototype.has = function(key) {
+  for (var i = 0; i < this._keys.length; i++) {
+    var elemKey = this._keys[i];
+    if (this._equals(key, elemKey)) {
+      return true;
+    }
+  }
+  return false;
+};
+
+
+// Returns the number of items in the map.
+LruMap.prototype.size = function() {
+  return this._keys.length;
+};
+
+
+// Removes all items from the map.
+LruMap.prototype.clear = function() {
+  this._keys.length = 0;
+  this._values.length = 0;
+  this._pivot = 0;
+};
+
+
+// Calls fn(key, value) for each item in the map, in an undefined order.
+// Returns the number of times fn was called.
+// The result is undefined if the map is mutated during iteration.
+LruMap.prototype.each = function(fn) {
+  var count = 0;
+  for (var i = 0; i < this._keys.length; i++) {
+    var key = this._keys[i];
+    var value = this._values[i];
+    fn(key, value);
+    count += 1;
+  }
+  return count;
+};
+
+
+module.exports = LruMap;
+
+},{"../util/mod":107}],31:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+
+var mod = require('../util/mod');
+
+
+// Creates a new LRU set given an equality predicate, hash function and
+// maximum size. An LRU set holds up to a maximum number of items, ordered
+// by their age. When the addition of an item would cause the maximum size
+// to be exceeded, the new item replaces the oldest item in the set.
+// As a special case, an LRU set with maximum size 0 always rejects the
+// insertion of an item.
+function LruSet(equals, hash, maxsize) {
+
+  if (typeof equals !== 'function') {
+    throw new Error('LruSet: bad equals function');
+  }
+  this._equals = equals;
+
+  if (typeof hash !== 'function') {
+    throw new Error('LruSet: bad hash function');
+  }
+  this._hash = hash;
+
+  if (typeof maxsize != 'number' || isNaN(maxsize) || maxsize < 0) {
+    throw new Error('LruSet: bad maximum size');
+  }
+  this._maxsize = maxsize;
+
+  // Items are stored in a circular array ordered by decreasing age.
+  // Pivot is the index where the next insertion will take place.
+  this._items = [];
+  this._pivot = 0;
+}
+
+
+LruSet.prototype._modulus = function() {
+  if (this._maxsize > this._items.length) {
+    return this._items.length + 1;
+  }
+  return this._maxsize;
+};
+
+
+// Adds an item, replacing either an existing equal item, or the oldest item
+// when the maximum size would be exceeded; the added item becomes the newest.
+// Returns the replaced item if it does not equal the inserted item, otherwise
+// null.
 //
-//   http://www.apache.org/licenses/LICENSE-2.0
+// If the maximum size is 0, do nothing and return the item.
+LruSet.prototype.add = function(item) {
+
+  var oldest = null;
+  var found = false;
+
+  if (this._maxsize === 0) {
+    return item;
+  }
+
+  for (var i = 0; i < this._items.length; i++) {
+    var elem = this._items[i];
+    if (this._equals(item, elem)) {
+      var j = i;
+      var modulus = this._modulus();
+      while (j !== this._pivot) {
+        var k = mod(j + 1, modulus);
+        this._items[j] = this._items[k];
+        j = k;
+      }
+      found = true;
+      break;
+    }
+  }
+
+  if (!found) {
+    oldest = this._pivot < this._items.length ? this._items[this._pivot] : null;
+  }
+
+  this._items[this._pivot] = item;
+  this._pivot = mod(this._pivot + 1, this._modulus());
+
+  return oldest;
+};
+
+
+// Removes an item.
+// Returns the removed item, or null if the item was not found.
+LruSet.prototype.remove = function(item) {
+  for (var i = 0; i < this._items.length; i++) {
+    var elem = this._items[i];
+    if (this._equals(item, elem)) {
+      for (var j = i; j < this._items.length - 1; j++) {
+        this._items[j] = this._items[j + 1];
+      }
+      this._items.length = this._items.length - 1;
+      if (i < this._pivot) {
+        this._pivot = mod(this._pivot - 1, this._modulus());
+      }
+      return elem;
+    }
+  }
+  return null;
+};
+
+
+// Returns whether an item is in the set.
+LruSet.prototype.has = function(item) {
+  for (var i = 0; i < this._items.length; i++) {
+    var elem = this._items[i];
+    if (this._equals(item, elem)) {
+      return true;
+    }
+  }
+  return false;
+};
+
+
+// Returns the number of items in the set.
+LruSet.prototype.size = function() {
+  return this._items.length;
+};
+
+
+// Removes all items from the set.
+LruSet.prototype.clear = function() {
+  this._items.length = 0;
+  this._pivot = 0;
+};
+
+
+// Calls fn(item) for each item in the set, in an undefined order.
+// Returns the number of times fn was called.
+// The result is undefined if the set is mutated during iteration.
+LruSet.prototype.each = function(fn) {
+  var count = 0;
+  for (var i = 0; i < this._items.length; i++) {
+    var item = this._items[i];
+    fn(item);
+    count += 1;
+  }
+  return count;
+};
+
+
+module.exports = LruSet;
+
+},{"../util/mod":107}],32:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+
+var defaultBuckets = 32;
+
+
+// Creates a new map given an equality predicate and hash function.
+function Map(equals, hash, nbuckets) {
+
+  if (typeof equals !== 'function') {
+    throw new Error('Map: bad equals function');
+  }
+  this._equals = equals;
+
+  if (typeof hash !== 'function') {
+    throw new Error('Map: bad hash function');
+  }
+  this._hash = hash;
+
+  if (nbuckets != null) {
+    if (typeof nbuckets != 'number' || isNaN(nbuckets) || nbuckets < 1) {
+      throw new Error('Map: bad number of buckets');
+    }
+    this._nbuckets = nbuckets;
+  } else {
+    this._nbuckets = defaultBuckets;
+  }
+
+  this._keyBuckets = [];
+  this._valBuckets = [];
+  for (var i = 0; i < this._nbuckets; i++) {
+    this._keyBuckets.push([]);
+    this._valBuckets.push([]);
+  }
+
+}
+
+
+Map.prototype._hashmod = function(x) {
+  return this._hash(x) % this._nbuckets;
+};
+
+
+// Returns the value associated to the specified key, or null if not found.
+Map.prototype.get = function(key) {
+  var h = this._hashmod(key);
+  var keyBucket = this._keyBuckets[h];
+  for (var i = 0; i < keyBucket.length; i++) {
+    var elemKey = keyBucket[i];
+    if (this._equals(key, elemKey)) {
+      var valBucket = this._valBuckets[h];
+      var elemValue = valBucket[i];
+      return elemValue;
+    }
+  }
+  return null;
+};
+
+
+// Sets the specified key to the specified value, replacing the previous value.
+// Returns the replaced value, or null if no value was replaced.
+Map.prototype.set = function(key, val) {
+  var h = this._hashmod(key);
+  var keyBucket = this._keyBuckets[h];
+  var valBucket = this._valBuckets[h];
+  for (var i = 0; i < keyBucket.length; i++) {
+    var elemKey = keyBucket[i];
+    if (this._equals(key, elemKey)) {
+      var elemVal = valBucket[i];
+      keyBucket[i] = key;
+      valBucket[i] = val;
+      return elemVal;
+    }
+  }
+  keyBucket.push(key);
+  valBucket.push(val);
+  return null;
+};
+
+
+// Removes the item associated with the specified key.
+// Returns the removed value, or null if not found.
+Map.prototype.del = function(key) {
+  var h = this._hashmod(key);
+  var keyBucket = this._keyBuckets[h];
+  var valBucket = this._valBuckets[h];
+  for (var i = 0; i < keyBucket.length; i++) {
+    var elemKey = keyBucket[i];
+    if (this._equals(key, elemKey)) {
+      var elemVal = valBucket[i];
+      // Splice manually to avoid Array#splice return value allocation.
+      for (var j = i; j < keyBucket.length - 1; j++) {
+        keyBucket[j] = keyBucket[j+1];
+        valBucket[j] = valBucket[j+1];
+      }
+      keyBucket.length = keyBucket.length - 1;
+      valBucket.length = valBucket.length - 1;
+      return elemVal;
+    }
+  }
+  return null;
+};
+
+
+// Returns whether there is a value associated with the specified key.
+Map.prototype.has = function(key) {
+  var h = this._hashmod(key);
+  var keyBucket = this._keyBuckets[h];
+  for (var i = 0; i < keyBucket.length; i++) {
+    var elemKey = keyBucket[i];
+    if (this._equals(key, elemKey)) {
+      return true;
+    }
+  }
+  return false;
+};
+
+
+// Returns the number of items in the map.
+Map.prototype.size = function() {
+  var size = 0;
+  for (var i = 0; i < this._nbuckets; i++) {
+    var keyBucket = this._keyBuckets[i];
+    size += keyBucket.length;
+  }
+  return size;
+};
+
+
+// Removes all items from the map.
+Map.prototype.clear = function() {
+  for (var i = 0; i < this._nbuckets; i++) {
+    var keyBucket = this._keyBuckets[i];
+    var valBucket = this._valBuckets[i];
+    keyBucket.length = 0;
+    valBucket.length = 0;
+  }
+};
+
+
+// Calls fn(key, value) for each item in the map, in an undefined order.
+// Returns the number of times fn was called.
+// The result is undefined if the map is mutated during iteration.
+Map.prototype.each = function(fn) {
+  var count = 0;
+  for (var i = 0; i < this._nbuckets; i++) {
+    var keyBucket = this._keyBuckets[i];
+    var valBucket = this._valBuckets[i];
+    for (var j = 0; j < keyBucket.length; j++) {
+      var key = keyBucket[j];
+      var val = valBucket[j];
+      fn(key, val);
+      count += 1;
+    }
+  }
+  return count;
+};
+
+
+module.exports = Map;
+
+},{}],33:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+
+var defaultBuckets = 32;
+
+
+// Creates a new set given an equality predicate and hash function.
+function Set(equals, hash, nbuckets) {
+
+  if (typeof equals !== 'function') {
+    throw new Error('Set: bad equals function');
+  }
+  this._equals = equals;
+
+  if (typeof hash !== 'function') {
+    throw new Error('Set: bad hash function');
+  }
+  this._hash = hash;
+
+  if (nbuckets != null) {
+    if (typeof nbuckets != 'number' || isNaN(nbuckets) || nbuckets < 1) {
+      throw new Error('Set: bad number of buckets');
+    }
+    this._nbuckets = nbuckets;
+  } else {
+    this._nbuckets = defaultBuckets;
+  }
+
+  this._buckets = [];
+  for (var i = 0; i < this._nbuckets; i++) {
+    this._buckets.push([]);
+  }
+
+}
+
+
+Set.prototype._hashmod = function(x) {
+  return this._hash(x) % this._nbuckets;
+};
+
+
+// Adds an item, replacing an existing item.
+// Returns the replaced item, or null if no item was replaced.
+Set.prototype.add = function(item) {
+  var h = this._hashmod(item);
+  var bucket = this._buckets[h];
+  for (var i = 0; i < bucket.length; i++) {
+    var elem = bucket[i];
+    if (this._equals(item, elem)) {
+      bucket[i] = item;
+      return elem;
+    }
+  }
+  bucket.push(item);
+  return null;
+};
+
+
+// Removes an item.
+// Returns the removed item, or null if the item was not found.
+Set.prototype.remove = function(item) {
+  var h = this._hashmod(item);
+  var bucket = this._buckets[h];
+  for (var i = 0; i < bucket.length; i++) {
+    var elem = bucket[i];
+    if (this._equals(item, elem)) {
+      // Splice manually to avoid Array#splice return value allocation.
+      for (var j = i; j < bucket.length - 1; j++) {
+        bucket[j] = bucket[j+1];
+      }
+      bucket.length = bucket.length - 1;
+      return elem;
+    }
+  }
+  return null;
+};
+
+
+// Returns whether an item is in the set.
+Set.prototype.has = function(item) {
+  var h = this._hashmod(item);
+  var bucket = this._buckets[h];
+  for (var i = 0; i < bucket.length; i++) {
+    var elem = bucket[i];
+    if (this._equals(item, elem)) {
+      return true;
+    }
+  }
+  return false;
+};
+
+
+// Returns the number of items in the set.
+Set.prototype.size = function() {
+  var size = 0;
+  for (var i = 0; i < this._nbuckets; i++) {
+    var bucket = this._buckets[i];
+    size += bucket.length;
+  }
+  return size;
+};
+
+
+// Removes all items.
+Set.prototype.clear = function() {
+  for (var i = 0; i < this._nbuckets; i++) {
+    var bucket = this._buckets[i];
+    bucket.length = 0;
+  }
+};
+
+
+// Calls fn(item) for each item in the set, in an undefined order.
+// Returns the number of times fn was called.
+// The result is undefined if the set is mutated during iteration.
+Set.prototype.each = function(fn) {
+  var count = 0;
+  for (var i = 0; i < this._nbuckets; i++) {
+    var bucket = this._buckets[i];
+    for (var j = 0; j < bucket.length; j++) {
+      var item = bucket[j];
+      fn(item);
+      count += 1;
+    }
+  }
+  return count;
+};
+
+
+module.exports = Set;
+
+},{}],34:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var WorkQueue = require('./WorkQueue');
+var mod = require('../util/mod');
+
+
+function WorkPool(opts) {
+  this._concurrency = opts && opts.concurrency || 1;
+  this._paused = opts && !!opts.paused || false;
+
+  this._pool = [];
+  for (var i = 0; i < this._concurrency; i++) {
+    this._pool.push(new WorkQueue(opts));
+  }
+
+  this._next = 0;
+}
+
+
+WorkPool.prototype.length = function() {
+  var len = 0;
+  for (var i = 0; i < this._pool.length; i++) {
+    len += this._pool[i].length();
+  }
+  return len;
+};
+
+
+WorkPool.prototype.push = function(fn, cb) {
+  var i = this._next;
+  var cancel = this._pool[i].push(fn, cb);
+  this._next = mod(this._next + 1, this._concurrency);
+  return cancel;
+};
+
+
+WorkPool.prototype.pause = function() {
+  if (!this._paused) {
+    this._paused = true;
+    for (var i = 0; i < this._concurrency; i++) {
+      this._pool[i].pause();
+    }
+  }
+};
+
+
+WorkPool.prototype.resume = function() {
+  if (this._paused) {
+    this._paused = false;
+    for (var i = 0; i < this._concurrency; i++) {
+      this._pool[i].resume();
+    }
+  }
+};
+
+
+module.exports = WorkPool;
+
+},{"../util/mod":107,"./WorkQueue":35}],35:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var clock = require('../util/clock');
+
+
+function WorkTask(fn, cb) {
+  this.fn = fn;
+  this.cb = cb;
+  this.cfn = null;
+}
+
+
+function WorkQueue(opts) {
+  this._queue = [];
+  this._delay = opts && opts.delay || 0;
+  this._paused = opts && !!opts.paused || false;
+  this._currentTask = null;
+  this._lastFinished = null;
+}
+
+
+WorkQueue.prototype.length = function() {
+  return this._queue.length;
+};
+
+
+WorkQueue.prototype.push = function(fn, cb) {
+
+  var task = new WorkTask(fn, cb);
+
+  var cancel = this._cancel.bind(this, task);
+
+  // Push the task into the queue.
+  this._queue.push(task);
+
+  // Run the task if idle.
+  this._next();
+
+  return cancel;
+
+};
+
+
+WorkQueue.prototype.pause = function() {
+  if (!this._paused) {
+    this._paused = true;
+  }
+};
+
+
+WorkQueue.prototype.resume = function() {
+  if (this._paused) {
+    this._paused = false;
+    this._next();
+  }
+};
+
+
+WorkQueue.prototype._start = function(task) {
+
+  // Consistency check.
+  if (this._currentTask) {
+    throw new Error('WorkQueue: called start while running task');
+  }
+
+  // Mark queue as busy, so that concurrent tasks wait.
+  this._currentTask = task;
+
+  // Execute the task.
+  var finish = this._finish.bind(this, task);
+  task.cfn = task.fn(finish);
+
+  // Detect when a non-cancellable function has been queued.
+  if (typeof task.cfn !== 'function') {
+    throw new Error('WorkQueue: function is not cancellable');
+  }
+
+};
+
+
+WorkQueue.prototype._finish = function(task) {
+
+  var args = Array.prototype.slice.call(arguments, 1);
+
+  // Consistency check.
+  if (this._currentTask !== task) {
+    throw new Error('WorkQueue: called finish on wrong task');
+  }
+
+  // Call the task callback on the return values.
+  task.cb.apply(null, args);
+
+  // Mark as not busy and record task finish time, then advance to next task.
+  this._currentTask = null;
+  this._lastFinished = clock();
+  this._next();
+
+};
+
+
+WorkQueue.prototype._cancel = function(task) {
+
+  var args = Array.prototype.slice.call(arguments, 1);
+
+  if (this._currentTask === task) {
+
+    // Cancel running task. Because cancel passes control to the _finish
+    // callback we passed into fn, the cleanup logic will be handled there.
+    task.cfn.apply(null, args);
+
+  } else {
+
+    // Remove task from queue.
+    var pos = this._queue.indexOf(task);
+    if (pos >= 0) {
+      this._queue.splice(pos, 1);
+      task.cb.apply(null, args);
+    }
+
+  }
+
+};
+
+
+WorkQueue.prototype._next = function() {
+
+  if (this._paused) {
+    // Do not start tasks while paused.
+    return;
+  }
+
+  if (!this._queue.length) {
+    // No tasks to run.
+    return;
+  }
+
+  if (this._currentTask) {
+    // Will be called again when the current task finishes.
+    return;
+  }
+
+  if (this._lastFinished != null) {
+    var elapsed = clock() - this._lastFinished;
+    var remaining = this._delay - elapsed;
+    if (remaining > 0) {
+      // Too soon. Run again after the inter-task delay.
+      setTimeout(this._next.bind(this), remaining);
+      return;
+    }
+  }
+
+  // Run the next task.
+  var task = this._queue.shift();
+  this._start(task);
+
+};
+
+
+module.exports = WorkQueue;
+
+},{"../util/clock":93}],36:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var vec4 = require('gl-matrix').vec4;
+var mat4 = require('gl-matrix').mat4;
+
+/**
+ * Helper functions for color transformation {@link Effects}.
+ *
+ * References:
+ *
+ *   - [ColorMatrix Guide](http://docs.rainmeter.net/tips/colormatrix-guide)
+ *   - [Matrix Operations for Image Processing](http://www.graficaobscura.com/matrix/index.html)
+ *   - [WebGLImageFilter](https://github.com/phoboslab/WebGLImageFilter)
+ *   - [glfx.js](https://github.com/evanw/glfx.js)
+ *
+ * @namespace colorEffects
+ */
+
+/**
+ * A vector and matrix corresponding to an identity transformation.
+ *
+ * @param {Object} result Object to store result
+ * @param {vec4} result.colorOffset Array with zeroes.
+ * @param {mat4} result.colorMatrix Identity matrix.
+ *
+ * @memberof colorEffects
+ */
+function identity(resultArg) {
+  var result = resultArg || {};
+  result.colorOffset = result.colorOffset || vec4.create();
+  result.colorMatrix = result.colorMatrix || mat4.create();
+  return result;
+}
+
+/**
+ * Apply color effects to a single pixel
+ *
+ * @param {vec4} pixel Values in range [0,1]
+ * @param {Object} effect
+ * @param {vec4} effect.colorOffset
+ * @param {mat4} effect.colorMatrix
+ * @param {vec4} result Object to store result
+ *
+ * @memberof colorEffects
+ */
+function applyToPixel(pixel, effect, result) {
+  vec4TransformMat4Transposed(result, pixel, effect.colorMatrix);
+  vec4.add(result, result, effect.colorOffset);
+}
+
+// Oddly, the colorTransform matrix needs to be transposed to be used with
+// vec4.transformMat4. It is strange that transformMat4 dosn't work the same
+// way as multiplying on the shader.
+// TODO: investigate this further
+function vec4TransformMat4Transposed(out, a, m) {
+  var x = a[0], y = a[1], z = a[2], w = a[3];
+  out[0] = m[0] * x + m[1] * y + m[2] * z + m[3] * w;
+  out[1] = m[4] * x + m[5] * y + m[6] * z + m[7] * w;
+  out[2] = m[8] * x + m[9] * y + m[10] * z + m[11] * w;
+  out[3] = m[12] * x + m[13] * y + m[14] * z + m[15] * w;
+  return out;
+}
+
+/**
+ * Apply color effects to an ImageData
+ *
+ * @param {ImageData} imageData This object will be mutated
+ * @param {Object} effect
+ * @param {vec4} effect.colorOffset
+ * @param {mat4} effect.colorMatrix
+ *
+ * @memberof colorEffects
+ */
+var tmpPixel = vec4.create();
+function applyToImageData(imageData, effect) {
+  var width = imageData.width;
+  var height = imageData.height;
+  var data = imageData.data;
+
+  for(var i = 0; i < width * height; i++) {
+    vec4.set(tmpPixel, data[i*4+0]/255, data[i*4+1]/255, data[i*4+2]/255, data[i*4+3]/255);
+    applyToPixel(tmpPixel, effect, tmpPixel);
+    data[i*4+0] = tmpPixel[0]*255;
+    data[i*4+1] = tmpPixel[1]*255;
+    data[i*4+2] = tmpPixel[2]*255;
+    data[i*4+3] = tmpPixel[3]*255;
+  }
+}
+
+module.exports = {
+  identity: identity,
+  applyToPixel: applyToPixel,
+  applyToImageData: applyToImageData
+};
+
+},{"gl-matrix":3}],37:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var eventEmitter = require('minimal-event-emitter');
+var Dynamics = require('./Dynamics');
+var defaultClock = require('../util/clock');
+var clearOwnProperties = require('../util/clearOwnProperties');
+
+/**
+ * @class ControlComposer
+ * @classdesc
+ *
+ * Combines changes in parameters triggered by multiple {@link ControlMethod}
+ * instances.
+ *
+ * @listens ControlMethod#parameterDynamics
+ */
+function ControlComposer(opts) {
+  opts = opts || {};
+
+  this._methods = [];
+
+  this._parameters = [ 'x' ,'y', 'axisScaledX', 'axisScaledY', 'zoom', 'yaw', 'pitch', 'roll' ];
+
+  this._clock = opts.clock || defaultClock;
+
+  this._composedOffsets = { };
+
+  this._composeReturn = { offsets: this._composedOffsets, changing: null };
+}
+
+eventEmitter(ControlComposer);
+
+
+ControlComposer.prototype.add = function(instance) {
+  if (this.has(instance)) {
+    return;
+  }
+
+  var dynamics = {};
+  this._parameters.forEach(function(parameter) {
+    dynamics[parameter] = {
+      dynamics: new Dynamics(),
+      time: null
+    };
+  });
+
+  var parameterDynamicsHandler = this._updateDynamics.bind(this, dynamics);
+
+  var method = {
+    instance: instance,
+    dynamics: dynamics,
+    parameterDynamicsHandler: parameterDynamicsHandler
+  };
+
+  instance.addEventListener('parameterDynamics', parameterDynamicsHandler);
+
+  this._methods.push(method);
+};
+
+
+ControlComposer.prototype.remove = function(instance) {
+  var index = this._indexOfInstance(instance);
+  if (index >= 0) {
+    var method = this._methods.splice(index, 1)[0];
+    method.instance.removeEventListener('parameterDynamics', method.parameterDynamicsHandler);
+  }
+};
+
+
+ControlComposer.prototype.has = function(instance) {
+  return this._indexOfInstance(instance) >= 0;
+};
+
+
+ControlComposer.prototype._indexOfInstance = function(instance) {
+  for (var i = 0; i < this._methods.length; i++) {
+    if (this._methods[i].instance === instance) {
+      return i;
+    }
+  }
+  return -1;
+};
+
+
+ControlComposer.prototype.list = function() {
+  var instances = [];
+  for (var i = 0; i < this._methods.length; i++) {
+    instances.push(this._methods[i].instance);
+  }
+  return instances;
+};
+
+
+ControlComposer.prototype._updateDynamics = function(storedDynamics, parameter, dynamics) {
+  var parameterDynamics = storedDynamics[parameter];
+
+  if (!parameterDynamics) {
+    throw new Error("Unknown control parameter " + parameter);
+  }
+
+  var newTime = this._clock();
+  parameterDynamics.dynamics.update(dynamics, (newTime - parameterDynamics.time)/1000);
+  parameterDynamics.time = newTime;
+
+  this.emit('change');
+};
+
+
+ControlComposer.prototype._resetComposedOffsets = function() {
+  for (var i = 0; i < this._parameters.length; i++) {
+    this._composedOffsets[this._parameters[i]] = 0;
+  }
+};
+
+
+ControlComposer.prototype.offsets = function() {
+  var parameter;
+  var changing = false;
+
+  var currentTime = this._clock();
+
+  this._resetComposedOffsets();
+
+  for (var i = 0; i < this._methods.length; i++) {
+    var methodDynamics = this._methods[i].dynamics;
+
+    for (var p = 0; p < this._parameters.length; p++) {
+      parameter = this._parameters[p];
+      var parameterDynamics = methodDynamics[parameter];
+      var dynamics = parameterDynamics.dynamics;
+
+
+      // Add offset to composed offset
+      if (dynamics.offset != null) {
+        this._composedOffsets[parameter] += dynamics.offset;
+        // Reset offset
+        dynamics.offset = null;
+      }
+
+      // Calculate offset from velocity and add it
+      var elapsed = (currentTime - parameterDynamics.time)/1000;
+      var offsetFromVelocity = dynamics.offsetFromVelocity(elapsed);
+
+      if(offsetFromVelocity) {
+        this._composedOffsets[parameter] += offsetFromVelocity;
+      }
+
+      // Update velocity on dynamics
+      var currentVelocity = dynamics.velocityAfter(elapsed);
+      dynamics.velocity = currentVelocity;
+
+      // If there is still a velocity, set changing
+      if(currentVelocity) {
+        changing = true;
+      }
+
+      parameterDynamics.time = currentTime;
+    }
+  }
+
+  this._composeReturn.changing = changing;
+  return this._composeReturn;
+};
+
+
+ControlComposer.prototype.destroy = function() {
+  var instances = this.list();
+  for (var i = 0; i < instances.length; i++) {
+    this.remove(instances[i]);
+  }
+
+  clearOwnProperties(this);
+};
+
+
+module.exports = ControlComposer;
+
+},{"../util/clearOwnProperties":92,"../util/clock":93,"./Dynamics":41,"minimal-event-emitter":14}],38:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var defaults = require('../util/defaults');
+var clearOwnProperties = require('../util/clearOwnProperties');
+
+var defaultOpts = {
+  active: 'move',
+  inactive: 'default',
+  disabled: 'default'
+};
+
+/**
+ * @class ControlCursor
+ * @classdesc
+ *
+ * Sets the CSS cursor on a DOM element according to the state of a
+ * {@link ControlMethod}.
+ *
+ * @param {Controls} controls Controls instance containing the control method.
+ * @param {string} id ID of the control method.
+ * @param {Element} element DOM element where the cursor should be set.
+ * @param {Object} opts The control cursors. Each field must be a valid value
+ *     for the `cursor` CSS property.
+ * @param {string} [opts.active='move'] Cursor to set when the control method
+ *     is enabled and active.
+ * @param {string} [opts.inactive='default'] Cursor to set when the control
+ *     method is enabled and inactive.
+ * @param {string} [opts.disabled='default'] Cursor to set when the control
+ *     method is disabled.
+ */
+function ControlCursor(controls, id, element, opts) {
+  opts = defaults(opts || {}, defaultOpts);
+
+  // TODO: This class may misbehave if the control method is unregistered and a
+  // different control method is registered under the same id.
+
+  this._element = element;
+  this._controls = controls;
+  this._id = id;
+
+  this._attached = false;
+
+  this._setActiveCursor = this._setCursor.bind(this, opts.active);
+  this._setInactiveCursor = this._setCursor.bind(this, opts.inactive);
+  this._setDisabledCursor = this._setCursor.bind(this, opts.disabled);
+  this._setOriginalCursor = this._setCursor.bind(this, this._element.style.cursor);
+
+  this._updateAttachmentHandler = this._updateAttachment.bind(this);
+
+  controls.addEventListener('methodEnabled', this._updateAttachmentHandler);
+  controls.addEventListener('methodDisabled', this._updateAttachmentHandler);
+  controls.addEventListener('enabled', this._updateAttachmentHandler);
+  controls.addEventListener('disabled', this._updateAttachmentHandler);
+
+  this._updateAttachment();
+}
+
+/**
+ * Destructor.
+ */
+ControlCursor.prototype.destroy = function() {
+  this._detachFromControlMethod(this._controls.method(this._id));
+  this._setOriginalCursor();
+
+  this._controls.removeEventListener('methodEnabled',
+      this._updateAttachmentHandler);
+  this._controls.removeEventListener('methodDisabled',
+      this._updateAttachmentHandler);
+  this._controls.removeEventListener('enabled',
+      this._updateAttachmentHandler);
+  this._controls.removeEventListener('disabled',
+      this._updateAttachmentHandler);
+
+  clearOwnProperties(this);
+};
+
+ControlCursor.prototype._updateAttachment = function() {
+  var controls = this._controls;
+  var id = this._id;
+  if (controls.enabled() && controls.method(id).enabled) {
+    this._attachToControlMethod(controls.method(id));
+  } else {
+    this._detachFromControlMethod(controls.method(id));
+  }
+};
+
+ControlCursor.prototype._attachToControlMethod = function(controlMethod) {
+  if (!this._attached) {
+    controlMethod.instance.addEventListener('active', this._setActiveCursor);
+    controlMethod.instance.addEventListener('inactive', this._setInactiveCursor);
+
+    if (controlMethod.active) {
+      this._setActiveCursor();
+    } else {
+      this._setInactiveCursor();
+    }
+
+    this._attached = true;
+  }
+};
+
+ControlCursor.prototype._detachFromControlMethod = function(controlMethod) {
+  if (this._attached) {
+    controlMethod.instance.removeEventListener('active', this._setActiveCursor);
+    controlMethod.instance.removeEventListener('inactive', this._setInactiveCursor);
+
+    this._setDisabledCursor();
+
+    this._attached = false;
+  }
+};
+
+ControlCursor.prototype._setCursor = function(cursor) {
+  this._element.style.cursor = cursor;
+}
+
+module.exports = ControlCursor;
+
+},{"../util/clearOwnProperties":92,"../util/defaults":98}],39:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var eventEmitter = require('minimal-event-emitter');
+var Composer = require('./Composer');
+var clearOwnProperties = require('../util/clearOwnProperties');
+
+var debug = typeof MARZIPANODEBUG !== 'undefined' && MARZIPANODEBUG.controls;
+
+/**
+ * @class Controls
+ * @classdesc
+ *
+ * Set of controls which affect a view (e.g. keyboard, touch)
+ *
+ * {@link ControlMethod} instances can be registered on this class. The methods
+ * are then combined to calculate the final parameters to change the {@link View}.
+ *
+ * Controls is attached to a {@link RenderLoop}. Currently it affects the
+ * {@link view} of all {@link Layer} on the {@link Stage} of the
+ * {@link RenderLoop} it is attached to. A more flexible API may be provided
+ * in the future.
+ *
+ * The ControlMethod instances are registered with an id and may be enabled,
+ * disabled and unregistered using that id. The whole Control can also be
+ * enabled or disabled.
+ *
+ */
+function Controls(opts) {
+  opts = opts || {};
+
+  this._methods = {};
+  this._methodGroups = {};
+  this._composer = new Composer();
+
+  // Whether the controls are enabled.
+  this._enabled = (opts && opts.enabled) ? !!opts.enabled : true;
+
+  // How many control methods are enabled and in the active state.
+  this._activeCount = 0;
+
+  this.updatedViews_ = [];
+
+  this._attachedRenderLoop = null;
+}
+
+eventEmitter(Controls);
+
+/**
+ * Destructor.
+ */
+Controls.prototype.destroy = function() {
+  this.detach();
+  this._composer.destroy();
+  clearOwnProperties(this);
+};
+
+
+/**
+ * @return {ControlMethod[]} List of registered @{link ControlMethod instances}
+ */
+Controls.prototype.methods = function() {
+  var obj = {};
+  for (var id in this._methods) {
+    obj[id] = this._methods[id];
+  }
+  return obj;
+};
+
+/**
+ * @param {String} id
+ * @return {ControlMethod}
+ */
+Controls.prototype.method = function(id) {
+  return this._methods[id];
+};
+
+/**
+ * @param {String} id
+ * @param {ControlMethod} instance
+ * @param {Boolean} [enable=false]
+ */
+Controls.prototype.registerMethod = function(id, instance, enable) {
+  if (this._methods[id]) {
+    throw new Error('Control method already registered with id ' + id);
+  }
+
+  this._methods[id] = {
+    instance: instance,
+    enabled: false,
+    active: false,
+    activeHandler: this._handleActive.bind(this, id),
+    inactiveHandler: this._handleInactive.bind(this, id)
+  };
+
+  if(enable) {
+    this.enableMethod(id, instance);
+  }
+};
+
+
+/**
+ * @param {String} id
+ */
+Controls.prototype.unregisterMethod = function(id) {
+  var method = this._methods[id];
+  if (!method) {
+    throw new Error('No control method registered with id ' + id);
+  }
+  if (method.enabled) {
+    this.disableMethod(id);
+  }
+  delete this._methods[id];
+};
+
+/**
+ * @param {String} id
+ */
+Controls.prototype.enableMethod = function(id) {
+  var method = this._methods[id];
+  if (!method) {
+    throw new Error('No control method registered with id ' + id);
+  }
+  if (!method.enabled) {
+    method.enabled = true;
+    if (method.active) {
+      this._incrementActiveCount();
+    }
+    this._listen(id);
+    this._updateComposer();
+    this.emit('methodEnabled', id);
+  }
+};
+
+
+/**
+ * @param {String} id
+ */
+Controls.prototype.disableMethod = function(id) {
+  var method = this._methods[id];
+  if (!method) {
+    throw new Error('No control method registered with id ' + id);
+  }
+  if (method.enabled) {
+    method.enabled = false;
+    if (method.active) {
+      this._decrementActiveCount();
+    }
+    this._unlisten(id);
+    this._updateComposer();
+    this.emit('methodDisabled', id);
+  }
+};
+
+
+/**
+ * Create a method group, which can be used to more conveniently enable or
+ * disable several control methods at once
+ * @param {String} groupId
+ * @param {String[]} methodIds
+ */
+Controls.prototype.addMethodGroup = function(groupId, methodIds) {
+  this._methodGroups[groupId] = methodIds;
+}
+
+/**
+ * @param {String} groupId
+ */
+Controls.prototype.removeMethodGroup = function(id) {
+  delete this._methodGroups[id];
+}
+
+/**
+ * @return {ControlMethodGroup[]} List of control method groups
+ */
+Controls.prototype.methodGroups = function() {
+  var obj = {};
+  for (var id in this._methodGroups) {
+    obj[id] = this._methodGroups[id];
+  }
+  return obj;
+}
+
+/**
+ * Enables all the control methods in the group
+ * @param {String} groupId
+ */
+Controls.prototype.enableMethodGroup = function(id) {
+  var self = this;
+  self._methodGroups[id].forEach(function(methodId) {
+    self.enableMethod(methodId);
+  });
+}
+
+/**
+ * Disables all the control methods in the group
+ * @param {String} groupId
+ */
+Controls.prototype.disableMethodGroup = function(id) {
+  var self = this;
+  self._methodGroups[id].forEach(function(methodId) {
+    self.disableMethod(methodId);
+  });
+}
+
+/**
+ * @returns {Boolean}
+ */
+Controls.prototype.enabled = function() {
+  return this._enabled;
+};
+
+/**
+ * Enables the controls
+ */
+Controls.prototype.enable = function() {
+  this._enabled = true;
+  if (this._activeCount > 0) {
+    this.emit('active');
+  }
+  this.emit('enabled');
+  this._updateComposer();
+};
+
+
+/**
+ * Disables the controls
+ */
+Controls.prototype.disable = function() {
+  this._enabled = false;
+  if (this._activeCount > 0) {
+    this.emit('inactive');
+  }
+  this.emit('disabled');
+  this._updateComposer();
+};
+
+
+
+/**
+ * Attaches the controls to a {@link RenderLoop}. The RenderLoop will be woken
+ * up when the controls are activated
+ *
+ * @param {RenderLoop}
+ */
+Controls.prototype.attach = function(renderLoop) {
+  if (this._attachedRenderLoop) {
+    this.detach();
+  }
+
+  this._attachedRenderLoop = renderLoop;
+  this._beforeRenderHandler = this._updateViewsWithControls.bind(this);
+  this._changeHandler = renderLoop.renderOnNextFrame.bind(renderLoop);
+
+  this._attachedRenderLoop.addEventListener('beforeRender', this._beforeRenderHandler);
+  this._composer.addEventListener('change', this._changeHandler);
+};
+
+/**
+ * Detaches the controls
+ */
+Controls.prototype.detach = function() {
+  if (!this._attachedRenderLoop) {
+    return;
+  }
+
+  this._attachedRenderLoop.removeEventListener('beforeRender', this._beforeRenderHandler);
+  this._composer.removeEventListener('change', this._changeHandler);
+
+  this._beforeRenderHandler = null;
+  this._changeHandler = null;
+  this._attachedRenderLoop = null;
+};
+
+/**
+ * @param {Boolean}
+ */
+Controls.prototype.attached = function() {
+  return this._attachedRenderLoop != null;
+};
+
+
+Controls.prototype._listen = function(id) {
+  var method = this._methods[id];
+  if (!method) {
+    throw new Error('Bad method id');
+  }
+  method.instance.addEventListener('active', method.activeHandler);
+  method.instance.addEventListener('inactive', method.inactiveHandler);
+};
+
+
+Controls.prototype._unlisten = function(id) {
+  var method = this._methods[id];
+  if (!method) {
+    throw new Error('Bad method id');
+  }
+  method.instance.removeEventListener('active', method.activeHandler);
+  method.instance.removeEventListener('inactive', method.inactiveHandler);
+};
+
+
+Controls.prototype._handleActive = function(id) {
+  var method = this._methods[id];
+  if (!method) {
+    throw new Error('Bad method id');
+  }
+  if (!method.enabled) {
+    throw new Error('Should not receive event from disabled control method');
+  }
+  if (!method.active) {
+    method.active = true;
+    this._incrementActiveCount();
+  }
+};
+
+
+Controls.prototype._handleInactive = function(id) {
+  var method = this._methods[id];
+  if (!method) {
+    throw new Error('Bad method id');
+  }
+  if (!method.enabled) {
+    throw new Error('Should not receive event from disabled control method');
+  }
+  if (method.active) {
+    method.active = false;
+    this._decrementActiveCount();
+  }
+};
+
+
+Controls.prototype._incrementActiveCount = function() {
+  this._activeCount++;
+  if (debug) {
+    this._checkActiveCount();
+  }
+  if (this._enabled && this._activeCount === 1) {
+    this.emit('active');
+  }
+};
+
+
+Controls.prototype._decrementActiveCount = function() {
+  this._activeCount--;
+  if (debug) {
+    this._checkActiveCount();
+  }
+  if (this._enabled && this._activeCount === 0) {
+    this.emit('inactive');
+  }
+};
+
+
+Controls.prototype._checkActiveCount = function() {
+  var count = 0;
+  for (var id in this._methods) {
+    var method = this._methods[id];
+    if (method.enabled && method.active) {
+      count++;
+    }
+  }
+  if (count != this._activeCount) {
+    throw new Error('Bad control state');
+  }
+};
+
+
+Controls.prototype._updateComposer = function() {
+  var composer = this._composer;
+
+  for (var id in this._methods) {
+    var method = this._methods[id];
+    var enabled = this._enabled && method.enabled;
+
+    if (enabled && !composer.has(method.instance)) {
+      composer.add(method.instance);
+    }
+    if (!enabled && composer.has(method.instance)) {
+      composer.remove(method.instance);
+    }
+  }
+};
+
+
+Controls.prototype._updateViewsWithControls = function() {
+  var controlData = this._composer.offsets();
+  if (controlData.changing) {
+    this._attachedRenderLoop.renderOnNextFrame();
+  }
+
+  // Update each view at most once, even when shared by multiple layers.
+  // The number of views is expected to be small, so use an array to keep track.
+  this.updatedViews_.length = 0;
+
+  var layers = this._attachedRenderLoop.stage().listLayers();
+  for (var i = 0; i < layers.length; i++) {
+    var view = layers[i].view();
+    if (this.updatedViews_.indexOf(view) < 0) {
+      layers[i].view().updateWithControlParameters(controlData.offsets);
+      this.updatedViews_.push(view);
+    }
+  }
+};
+
+
+module.exports = Controls;
+
+},{"../util/clearOwnProperties":92,"./Composer":37,"minimal-event-emitter":14}],40:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var eventEmitter = require('minimal-event-emitter');
+var Dynamics = require('./Dynamics');
+var HammerGestures = require('./HammerGestures');
+var defaults = require('../util/defaults');
+var maxFriction = require('./util').maxFriction;
+var clearOwnProperties = require('../util/clearOwnProperties');
+
+var defaultOptions = {
+  friction: 6,
+  maxFrictionTime: 0.3
+};
+
+var debug = typeof MARZIPANODEBUG !== 'undefined' && MARZIPANODEBUG.controls;
+
+/**
+ * @class DragControlMethod
+ * @implements ControlMethod
+ * @classdesc
+ *
+ * Controls the view by clicking/tapping and dragging.
+ *
+ * @param {Element} element Element to listen for events.
+ * @param {string} pointerType Which Hammer.js pointer type to use (e.g.
+ * `mouse` or `touch`).
+ * @param {Object} opts
+ * @param {number} opts.friction
+ * @param {number} opts.maxFrictionTime
+ */
+function DragControlMethod(element, pointerType, opts) {
+  this._element = element;
+
+  this._opts = defaults(opts || {}, defaultOptions);
+
+  this._startEvent = null;
+  this._lastEvent = null;
+
+  this._active = false;
+
+  this._dynamics = {
+    x: new Dynamics(),
+    y: new Dynamics()
+  };
+
+  this._hammer = HammerGestures.get(element, pointerType);
+
+  this._hammer.on("hammer.input", this._handleHammerEvent.bind(this));
+
+  this._hammer.on('panstart', this._handleStart.bind(this));
+  this._hammer.on('panmove', this._handleMove.bind(this));
+  this._hammer.on('panend', this._handleEnd.bind(this));
+  this._hammer.on('pancancel', this._handleEnd.bind(this));
+
+}
+
+eventEmitter(DragControlMethod);
+
+/**
+ * Destructor.
+ */
+DragControlMethod.prototype.destroy = function() {
+  this._hammer.release();
+  clearOwnProperties(this);
+};
+
+DragControlMethod.prototype._handleHammerEvent = function(e) {
+  if (e.isFirst) {
+    if (debug && this._active) {
+      throw new Error('DragControlMethod active detected when already active');
+    }
+    this._active = true;
+    this.emit('active');
+  }
+  if (e.isFinal) {
+    if (debug && !this._active) {
+      throw new Error('DragControlMethod inactive detected when already inactive');
+    }
+    this._active = false;
+    this.emit('inactive');
+  }
+};
+
+DragControlMethod.prototype._handleStart = function(e) {
+  // Prevent this event from dragging other DOM elements, causing
+  // unexpected behavior on Chrome.
+  e.preventDefault();
+
+  this._startEvent = e;
+};
+
+
+DragControlMethod.prototype._handleMove = function(e) {
+  // Prevent this event from dragging other DOM elements, causing
+  // unexpected behavior on Chrome.
+  e.preventDefault();
+
+  if (this._startEvent) {
+    this._updateDynamicsMove(e);
+    this.emit('parameterDynamics', 'axisScaledX', this._dynamics.x);
+    this.emit('parameterDynamics', 'axisScaledY', this._dynamics.y);
+  }
+};
+
+
+DragControlMethod.prototype._handleEnd = function(e) {
+  // Prevent this event from dragging other DOM elements, causing
+  // unexpected behavior on Chrome.
+  e.preventDefault();
+
+  if (this._startEvent) {
+    this._updateDynamicsRelease(e);
+    this.emit('parameterDynamics', 'axisScaledX', this._dynamics.x);
+    this.emit('parameterDynamics', 'axisScaledY', this._dynamics.y);
+  }
+
+  this._startEvent = false;
+  this._lastEvent = false;
+};
+
+
+DragControlMethod.prototype._updateDynamicsMove = function(e) {
+  var x = e.deltaX;
+  var y = e.deltaY;
+
+  // When a second finger touches the screen, panstart sometimes has a large
+  // offset at start; subtract that offset to prevent a sudden jump.
+  var eventToSubtract = this._lastEvent || this._startEvent;
+
+  if (eventToSubtract) {
+    x -= eventToSubtract.deltaX;
+    y -= eventToSubtract.deltaY;
+  }
+
+  var elementRect = this._element.getBoundingClientRect();
+  var width = elementRect.right - elementRect.left;
+  var height = elementRect.bottom - elementRect.top;
+
+  x /= width;
+  y /= height;
+
+  this._dynamics.x.reset();
+  this._dynamics.y.reset();
+  this._dynamics.x.offset = -x;
+  this._dynamics.y.offset = -y;
+
+  this._lastEvent = e;
+};
+
+
+var tmpReleaseFriction = [ null, null ];
+DragControlMethod.prototype._updateDynamicsRelease = function(e) {
+  var elementRect = this._element.getBoundingClientRect();
+  var width = elementRect.right - elementRect.left;
+  var height = elementRect.bottom - elementRect.top;
+
+  var x = 1000 * e.velocityX / width;
+  var y = 1000 * e.velocityY / height;
+
+  this._dynamics.x.reset();
+  this._dynamics.y.reset();
+  this._dynamics.x.velocity = x;
+  this._dynamics.y.velocity = y;
+
+  maxFriction(this._opts.friction, this._dynamics.x.velocity, this._dynamics.y.velocity, this._opts.maxFrictionTime, tmpReleaseFriction);
+  this._dynamics.x.friction = tmpReleaseFriction[0];
+  this._dynamics.y.friction = tmpReleaseFriction[1];
+};
+
+
+module.exports = DragControlMethod;
+
+},{"../util/clearOwnProperties":92,"../util/defaults":98,"./Dynamics":41,"./HammerGestures":43,"./util":51,"minimal-event-emitter":14}],41:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+/**
+ * @class Dynamics
+ * @classdesc
+ *
+ * Represents how a control parameter changes. Used in the events emitted by
+ * {@link ControlMethod}.
+ *
+ * @property {number} offset Parameter changed by a fixed value
+ * @property {number} velocity Parameter is changing at this velocity
+ * @property {number} friction The velocity will decrease at this rate
+ */
+function Dynamics() {
+  this.velocity = null;
+  this.friction = null;
+  this.offset = null;
+}
+
+Dynamics.equals = function(d1, d2) {
+  return d1.velocity === d2.velocity && d1.friction === d2.friction && d1.offset === d2.offset;
+};
+
+Dynamics.prototype.equals = function(other) {
+  return Dynamics.equals(this, other);
+};
+
+Dynamics.prototype.update = function(other, elapsed) {
+  if (other.offset) {
+    // If other has an offset, make this.offset a number instead of null
+    this.offset = this.offset || 0;
+    this.offset += other.offset;
+  }
+
+  var offsetFromVelocity = this.offsetFromVelocity(elapsed);
+  if (offsetFromVelocity) {
+    // If there is an offset to add from the velocity, make this offset a number instead of null
+    this.offset = this.offset || 0;
+    this.offset += offsetFromVelocity;
+  }
+
+  this.velocity = other.velocity;
+  this.friction = other.friction;
+};
+
+Dynamics.prototype.reset = function() {
+  this.velocity = null;
+  this.friction = null;
+  this.offset = null;
+};
+
+
+Dynamics.prototype.velocityAfter = function(elapsed) {
+  if (!this.velocity) {
+    return null;
+  }
+  if (this.friction) {
+    return decreaseAbs(this.velocity, this.friction *elapsed);
+  }
+  return this.velocity;
+};
+
+Dynamics.prototype.offsetFromVelocity = function(elapsed) {
+  elapsed = Math.min(elapsed, this.nullVelocityTime());
+
+  var velocityEnd = this.velocityAfter(elapsed);
+  var averageVelocity = (this.velocity + velocityEnd) / 2;
+
+  return averageVelocity * elapsed;
+};
+
+
+Dynamics.prototype.nullVelocityTime = function() {
+  if (this.velocity == null) {
+    return 0;
+  }
+  if (this.velocity && !this.friction) {
+    return Infinity;
+  }
+  return Math.abs(this.velocity / this.friction);
+};
+
+function decreaseAbs(num, dec) {
+  if (num < 0) {
+    return Math.min(0, num + dec);
+  }
+  if (num > 0) {
+    return Math.max(0, num - dec);
+  }
+  return 0;
+}
+
+module.exports = Dynamics;
+
+},{}],42:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var eventEmitter = require('minimal-event-emitter');
+var Dynamics = require('./Dynamics');
+var clearOwnProperties = require('../util/clearOwnProperties');
+
+/**
+ * @class ElementPressControlMethod
+ * @implements ControlMethod
+ * @classdesc
+ *
+ * Sets the velocity and friction of a single parameter by pressing and
+ * unpressing a DOM element.
+ *
+ * @param {Element} element Element which activates the method when pressed
+ * @param {string} parameter The parameter to be controlled (e.g. `x`, `y` or `zoom`)
+ * @param {number} velocity Velocity at which the parameter changes. Use a
+ * negative number for opposite direction
+ * @param {number} friction Friction at which the parameter stops
+*/
+function ElementPressControlMethod(element, parameter, velocity, friction) {
+  if(!element) {
+    throw new Error("ElementPressControlMethod: element must be defined");
+  }
+  if(!parameter) {
+    throw new Error("ElementPressControlMethod: parameter must be defined");
+  }
+  if(!velocity) {
+    throw new Error("ElementPressControlMethod: velocity must be defined");
+  }
+  if(!friction) {
+    throw new Error("ElementPressControlMethod: friction must be defined");
+  }
+
+  this._element = element;
+
+  this._pressHandler = this._handlePress.bind(this);
+  this._releaseHandler = this._handleRelease.bind(this);
+
+  element.addEventListener('mousedown', this._pressHandler);
+  element.addEventListener('mouseup', this._releaseHandler);
+  element.addEventListener('mouseleave', this._releaseHandler);
+  element.addEventListener('touchstart', this._pressHandler);
+  element.addEventListener('touchmove', this._releaseHandler);
+  element.addEventListener('touchend', this._releaseHandler);
+
+  this._parameter = parameter;
+  this._velocity = velocity;
+  this._friction = friction;
+  this._dynamics = new Dynamics();
+
+  this._pressing = false;
+}
+eventEmitter(ElementPressControlMethod);
+
+/**
+ * Destructor.
+ */
+ElementPressControlMethod.prototype.destroy = function() {
+  this._element.removeEventListener('mousedown', this._pressHandler);
+  this._element.removeEventListener('mouseup', this._releaseHandler);
+  this._element.removeEventListener('mouseleave', this._releaseHandler);
+  this._element.removeEventListener('touchstart', this._pressHandler);
+  this._element.removeEventListener('touchmove', this._releaseHandler);
+  this._element.removeEventListener('touchend', this._releaseHandler);
+  clearOwnProperties(this);
+};
+
+ElementPressControlMethod.prototype._handlePress = function() {
+  this._pressing = true;
+
+  this._dynamics.velocity = this._velocity;
+  this._dynamics.friction = 0;
+  this.emit('parameterDynamics', this._parameter, this._dynamics);
+  this.emit('active');
+};
+
+ElementPressControlMethod.prototype._handleRelease = function() {
+  if(this._pressing) {
+    this._dynamics.friction = this._friction;
+    this.emit('parameterDynamics', this._parameter, this._dynamics);
+    this.emit('inactive');
+  }
+
+  this._pressing = false;
+};
+
+module.exports = ElementPressControlMethod;
+
+},{"../util/clearOwnProperties":92,"./Dynamics":41,"minimal-event-emitter":14}],43:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var Hammer = require('hammerjs');
+var browser = require('bowser');
+
+var nextId = 1;
+var idProperty = 'MarzipanoHammerElementId';
+function getKeyForElementAndType(element, type) {
+  if (!element[idProperty]) {
+    element[idProperty] = nextId++;
+  }
+  return type + element[idProperty];
+}
+
+
+/**
+ * @class HammerGestures
+ * @classdesc
+ *
+ * Manages Hammer.js instances. One instance is created for each combination of
+ * DOM element and pointer type.
+ */
+function HammerGestures() {
+  this._managers = {};
+  this._refCount = {};
+}
+
+
+HammerGestures.prototype.get = function(element, type) {
+  var key = getKeyForElementAndType(element, type);
+  if (!this._managers[key]) {
+    this._managers[key] = this._createManager(element, type);
+    this._refCount[key] = 0;
+  }
+  this._refCount[key]++;
+  return new HammerGesturesHandle(this, this._managers[key], element, type);
+};
+
+
+HammerGestures.prototype._createManager = function(element, type) {
+  var manager = new Hammer.Manager(element);
+
+  // Managers are created with different parameters for different pointer
+  // types.
+  if (type === 'mouse') {
+    manager.add(new Hammer.Pan({ direction: Hammer.DIRECTION_ALL, threshold: 0 }));
+  }
+  else if (type === 'touch' || type === 'pen' || type === 'kinect') {
+    // On touch one wants to have both panning and pinching. The panning
+    // recognizer needs a threshold to allow the pinch to be recognized.
+    manager.add(new Hammer.Pan({ direction: Hammer.DIRECTION_ALL, threshold: 20, pointers: 1 }));
+    if (!(browser.msie && parseFloat(browser.version) < 10)) {
+      // Do not add pinch to IE8-9 to prevent focus issues which prevent wheel scrolling from
+      // working.
+      manager.add(new Hammer.Pinch());
+    }
+  }
+
+  return manager;
+};
+
+
+HammerGestures.prototype._releaseHandle = function(element, type) {
+  var key = getKeyForElementAndType(element, type);
+  if (this._refCount[key]) {
+    this._refCount[key]--;
+    if (!this._refCount[key]) {
+      this._managers[key].destroy();
+      delete this._managers[key];
+      delete this._refCount[key];
+    }
+  }
+};
+
+
+function HammerGesturesHandle(hammerGestures, manager, element, type) {
+  this._manager = manager;
+  this._element = element;
+  this._type = type;
+  this._hammerGestures = hammerGestures;
+  this._eventHandlers = [];
+}
+
+
+HammerGesturesHandle.prototype.on = function(events, handler) {
+  var type = this._type;
+  var handlerFilteredEvents = function(e) {
+    if (type === e.pointerType) {
+      handler(e);
+    }
+  };
+
+  this._eventHandlers.push({ events: events, handler: handlerFilteredEvents });
+  this._manager.on(events, handlerFilteredEvents);
+};
+
+
+HammerGesturesHandle.prototype.release = function() {
+  for (var i = 0; i < this._eventHandlers.length; i++) {
+    var eventHandler = this._eventHandlers[i];
+    this._manager.off(eventHandler.events, eventHandler.handler);
+  }
+
+  this._hammerGestures._releaseHandle(this._element, this._type);
+  this._manager = null;
+  this._element = null;
+  this._type = null;
+  this._hammerGestures = null;
+};
+
+
+HammerGesturesHandle.prototype.manager = function() {
+  return this._manager;
+};
+
+
+module.exports = new HammerGestures();
+
+},{"bowser":1,"hammerjs":13}],44:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var eventEmitter = require('minimal-event-emitter');
+var Dynamics = require('./Dynamics');
+var clearOwnProperties = require('../util/clearOwnProperties');
+
+/**
+ * @class KeyControlMethod
+ * @implements ControlMethod
+ * @classdesc
+ *
+ * Sets the velocity and friction of a single parameter by pressing and
+ * unpressing a key.
+ *
+ * @param {number} keyCode Key which activates the method when pressed
+ * @param {string} parameter The parameter to be controlled (e.g. `x`, `y` or `zoom`)
+ * @param {number} velocity Velocity at which the parameter changes. Use a
+ * negative number for opposite direction
+ * @param {number} friction Friction at which the parameter stops
+ * @param {Element} [element=document] DOM element where the key events are listened to
+ */
+function KeyControlMethod(keyCode, parameter, velocity, friction, element) {
+  if(!keyCode) {
+    throw new Error("KeyControlMethod: keyCode must be defined");
+  }
+  if(!parameter) {
+    throw new Error("KeyControlMethod: parameter must be defined");
+  }
+  if(!velocity) {
+    throw new Error("KeyControlMethod: velocity must be defined");
+  }
+  if(!friction) {
+    throw new Error("KeyControlMethod: friction must be defined");
+  }
+
+  element = element || document;
+
+  this._keyCode = keyCode;
+  this._parameter = parameter;
+  this._velocity = velocity;
+  this._friction = friction;
+  this._element = element;
+
+  this._keydownHandler = this._handlePress.bind(this);
+  this._keyupHandler = this._handleRelease.bind(this);
+  this._blurHandler = this._handleBlur.bind(this);
+
+  this._element.addEventListener('keydown', this._keydownHandler);
+  this._element.addEventListener('keyup', this._keyupHandler);
+  window.addEventListener('blur', this._blurHandler);
+
+  this._dynamics = new Dynamics();
+  this._pressing = false;
+}
+eventEmitter(KeyControlMethod);
+
+/**
+ * Destructor.
+ */
+KeyControlMethod.prototype.destroy = function() {
+  this._element.removeEventListener('keydown', this._keydownHandler);
+  this._element.removeEventListener('keyup', this._keyupHandler);
+  window.removeEventListener('blur', this._blurHandler);
+  clearOwnProperties(this);
+};
+
+KeyControlMethod.prototype._handlePress = function(e) {
+  if(e.keyCode !== this._keyCode) { return; }
+
+  this._pressing = true;
+
+  this._dynamics.velocity = this._velocity;
+  this._dynamics.friction = 0;
+  this.emit('parameterDynamics', this._parameter, this._dynamics);
+  this.emit('active');
+};
+
+KeyControlMethod.prototype._handleRelease = function(e) {
+  if(e.keyCode !== this._keyCode) { return; }
+
+  if(this._pressing) {
+    this._dynamics.friction = this._friction;
+    this.emit('parameterDynamics', this._parameter, this._dynamics);
+    this.emit('inactive');
+  }
+
+  this._pressing = false;
+};
+
+KeyControlMethod.prototype._handleBlur = function() {
+  this._dynamics.velocity = 0;
+  this.emit('parameterDynamics', this._parameter, this._dynamics);
+  this.emit('inactive');
+
+  this._pressing = false;
+};
+
+module.exports = KeyControlMethod;
+
+},{"../util/clearOwnProperties":92,"./Dynamics":41,"minimal-event-emitter":14}],45:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var eventEmitter = require('minimal-event-emitter');
+var Dynamics = require('./Dynamics');
+var HammerGestures = require('./HammerGestures');
+var clearOwnProperties = require('../util/clearOwnProperties');
+
+/**
+ * @class PinchZoomControlMethod
+ * @implements ControlMethod
+ * @classdesc
+ *
+ * Control the view fov/zoom by pinching with two fingers.
+ *
+ * @param {Element} element Element to listen for events.
+ * @param {string} pointerType Which Hammer.js pointer type to use
+ * @param {Object} opts
+ */
+function PinchZoomControlMethod(element, pointerType, opts) {
+  this._hammer = HammerGestures.get(element, pointerType);
+
+  this._lastEvent = null;
+
+  this._active = false;
+
+  this._dynamics = new Dynamics();
+
+  this._hammer.on('pinchstart', this._handleStart.bind(this));
+  this._hammer.on('pinch', this._handleEvent.bind(this));
+  this._hammer.on('pinchend', this._handleEnd.bind(this));
+  this._hammer.on('pinchcancel', this._handleEnd.bind(this));
+}
+
+eventEmitter(PinchZoomControlMethod);
+
+/**
+ * Destructor.
+ */
+PinchZoomControlMethod.prototype.destroy = function() {
+  this._hammer.release();
+  clearOwnProperties(this);
+};
+
+
+PinchZoomControlMethod.prototype._handleStart = function() {
+  if (!this._active) {
+    this._active = true;
+    this.emit('active');
+  }
+};
+
+
+PinchZoomControlMethod.prototype._handleEnd = function() {
+  this._lastEvent = null;
+
+  if (this._active) {
+    this._active = false;
+    this.emit('inactive');
+  }
+};
+
+
+PinchZoomControlMethod.prototype._handleEvent = function(e) {
+  var scale = e.scale;
+
+  if (this._lastEvent) {
+    scale /= this._lastEvent.scale;
+  }
+
+  this._dynamics.offset = (scale - 1) * -1;
+  this.emit('parameterDynamics', 'zoom', this._dynamics);
+
+  this._lastEvent = e;
+};
+
+
+module.exports = PinchZoomControlMethod;
+
+},{"../util/clearOwnProperties":92,"./Dynamics":41,"./HammerGestures":43,"minimal-event-emitter":14}],46:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var eventEmitter = require('minimal-event-emitter');
+var Dynamics = require('./Dynamics');
+var HammerGestures = require('./HammerGestures');
+var defaults = require('../util/defaults');
+var maxFriction = require('./util').maxFriction;
+var clearOwnProperties = require('../util/clearOwnProperties');
+
+
+var defaultOptions = {
+  speed: 8,
+  friction: 6,
+  maxFrictionTime: 0.3
+};
+
+
+/**
+ * @class QtvrControlMethod
+ * @implements ControlMethod
+ * @classdesc
+ *
+ * Controls the view by holding the mouse button down and moving it.
+ * Also known as "QTVR" control mode.
+ *
+ * @param {Element} element Element to listen for events.
+ * @param {string} pointerType Which Hammer.js pointer type to use (e.g.
+ * `mouse` or `touch`).
+ * @param {Object} opts
+ * @param {number} opts.speed
+ * @param {number} opts.friction
+ * @param {number} opts.maxFrictionTime
+ */
+// TODO: allow speed not change linearly with distance to click spot.
+// Quadratic or other would allow a larger speed range.
+function QtvrControlMethod(element, pointerType, opts) {
+  this._element = element;
+
+  this._opts = defaults(opts || {}, defaultOptions);
+
+  this._active = false;
+
+  this._hammer = HammerGestures.get(element, pointerType);
+
+  this._dynamics = {
+    x: new Dynamics(),
+    y: new Dynamics()
+  };
+
+  this._hammer.on('panstart', this._handleStart.bind(this));
+  this._hammer.on('panmove', this._handleMove.bind(this));
+  this._hammer.on('panend', this._handleRelease.bind(this));
+  this._hammer.on('pancancel', this._handleRelease.bind(this));
+}
+
+eventEmitter(QtvrControlMethod);
+
+/**
+ * Destructor.
+ */
+QtvrControlMethod.prototype.destroy = function() {
+  this._hammer.release();
+  clearOwnProperties(this);
+};
+
+
+QtvrControlMethod.prototype._handleStart = function(e) {
+  // Prevent event dragging other DOM elements and causing strange behavior on Chrome
+  e.preventDefault();
+
+  if (!this._active) {
+    this._active = true;
+    this.emit('active');
+  }
+};
+
+
+QtvrControlMethod.prototype._handleMove = function(e) {
+  // Prevent event dragging other DOM elements and causing strange behavior on Chrome
+  e.preventDefault();
+
+  this._updateDynamics(e, false);
+};
+
+
+QtvrControlMethod.prototype._handleRelease = function(e) {
+  // Prevent event dragging other DOM elements and causing strange behavior on Chrome
+  e.preventDefault();
+
+  this._updateDynamics(e, true);
+
+  if (this._active) {
+    this._active = false;
+    this.emit('inactive');
+  }
+};
+
+
+var tmpReleaseFriction = [ null, null ];
+QtvrControlMethod.prototype._updateDynamics = function(e, release) {
+  var elementRect = this._element.getBoundingClientRect();
+  var width = elementRect.right - elementRect.left;
+  var height = elementRect.bottom - elementRect.top;
+  var maxDim = Math.max(width, height);
+
+  var x = e.deltaX / maxDim * this._opts.speed;
+  var y = e.deltaY / maxDim * this._opts.speed;
+
+  this._dynamics.x.reset();
+  this._dynamics.y.reset();
+  this._dynamics.x.velocity = x;
+  this._dynamics.y.velocity = y;
+
+  if (release) {
+    maxFriction(this._opts.friction, this._dynamics.x.velocity, this._dynamics.y.velocity, this._opts.maxFrictionTime, tmpReleaseFriction);
+    this._dynamics.x.friction = tmpReleaseFriction[0];
+    this._dynamics.y.friction = tmpReleaseFriction[1];
+  }
+
+  this.emit('parameterDynamics', 'x', this._dynamics.x);
+  this.emit('parameterDynamics', 'y', this._dynamics.y);
+};
+
+
+module.exports = QtvrControlMethod;
+
+},{"../util/clearOwnProperties":92,"../util/defaults":98,"./Dynamics":41,"./HammerGestures":43,"./util":51,"minimal-event-emitter":14}],47:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var eventEmitter = require('minimal-event-emitter');
+var Dynamics = require('./Dynamics');
+var WheelListener = require('./WheelListener');
+var defaults = require('../util/defaults');
+var clearOwnProperties = require('../util/clearOwnProperties');
+
+var defaultOptions = {
+  frictionTime: 0.2,
+  zoomDelta: 0.001
+};
+
+/**
+ * @class ScrollZoomControlMethod
+ * @implements ControlMethod
+ * @classdesc
+ *
+ * Controls the fov/zoom through the mouse wheel.
+ *
+ * @param {Element} element Element to listen for events.
+ * @param {Object} opts
+ * @param {number} [opts.frictionTime=0.2]
+ * @param {number} [opts.zoomDelta=0.001]
+ */
+function ScrollZoomControlMethod(element, opts) {
+  this._opts = defaults(opts || {}, defaultOptions);
+
+  this._dynamics = new Dynamics();
+
+  this._eventList = [];
+
+  var fn = this._opts.frictionTime ? this.withSmoothing : this.withoutSmoothing;
+  this._wheelListener = new WheelListener(element, fn.bind(this));
+}
+
+eventEmitter(ScrollZoomControlMethod);
+
+/**
+ * Destructor.
+ */
+ScrollZoomControlMethod.prototype.destroy = function() {
+  this._wheelListener.destroy();
+  clearOwnProperties(this);
+};
+
+
+ScrollZoomControlMethod.prototype.withoutSmoothing = function(e) {
+  this._dynamics.offset = wheelEventDelta(e) * this._opts.zoomDelta;
+  this.emit('parameterDynamics', 'zoom', this._dynamics);
+
+  e.preventDefault();
+
+  this.emit('active');
+  this.emit('inactive');
+};
+
+
+ScrollZoomControlMethod.prototype.withSmoothing = function(e) {
+  var currentTime = e.timeStamp;
+
+  // Record event.
+  this._eventList.push(e);
+
+  // Remove events whose smoothing has already expired.
+  while (this._eventList[0].timeStamp < currentTime - this._opts.frictionTime*1000) {
+    this._eventList.shift(0);
+  }
+
+  // Get the current velocity from the recorded events.
+  // Each wheel movement causes a velocity of change/frictionTime during frictionTime.
+  var velocity = 0;
+  for (var i = 0; i < this._eventList.length; i++) {
+    var zoomChangeFromEvent = wheelEventDelta(this._eventList[i]) * this._opts.zoomDelta;
+    velocity += zoomChangeFromEvent / this._opts.frictionTime;
+  }
+
+  this._dynamics.velocity = velocity;
+  this._dynamics.friction = Math.abs(velocity) / this._opts.frictionTime;
+
+  this.emit('parameterDynamics', 'zoom', this._dynamics);
+
+  e.preventDefault();
+
+  this.emit('active');
+  this.emit('inactive');
+};
+
+
+function wheelEventDelta(e) {
+  var multiplier = e.deltaMode == 1 ? 20 : 1;
+  return e.deltaY * multiplier;
+}
+
+
+module.exports = ScrollZoomControlMethod;
+
+},{"../util/clearOwnProperties":92,"../util/defaults":98,"./Dynamics":41,"./WheelListener":49,"minimal-event-emitter":14}],48:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var eventEmitter = require('minimal-event-emitter');
+var Dynamics = require('./Dynamics');
+var clearOwnProperties = require('../util/clearOwnProperties');
+
+/**
+ * @class VelocityControlMethod
+ * @implements ControlMethod
+ * @classdesc
+ *
+ * Sets the velocity and friction of a single parameter.
+ *
+ * The user should emit 'active' and 'inactive' events if required.
+ *
+ * @param {String} parameter The parameter to be controlled (e.g. `x`, `y` or `zoom`)
+*/
+function VelocityControlMethod(parameter) {
+  if(!parameter) {
+    throw new Error("VelocityControlMethod: parameter must be defined");
+  }
+
+  this._parameter = parameter;
+  this._dynamics = new Dynamics();
+}
+eventEmitter(VelocityControlMethod);
+
+/**
+ * Destructor.
+ */
+VelocityControlMethod.prototype.destroy = function() {
+  clearOwnProperties(this);
+};
+
+/**
+ * Set the parameter's velocity.
+ * @param {Number} velocity
+ */
+VelocityControlMethod.prototype.setVelocity = function(velocity) {
+  this._dynamics.velocity = velocity;
+  this.emit('parameterDynamics', this._parameter, this._dynamics);
+};
+
+/**
+ * Set the parameter's friction.
+ * @param {Number} friction
+ */
+VelocityControlMethod.prototype.setFriction = function(friction) {
+  this._dynamics.friction = friction;
+  this.emit('parameterDynamics', this._parameter, this._dynamics);
+};
+
+module.exports = VelocityControlMethod;
+
+},{"../util/clearOwnProperties":92,"./Dynamics":41,"minimal-event-emitter":14}],49:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var clearOwnProperties = require('../util/clearOwnProperties');
+
+// Cross-browser mouse wheel event listener.
+// Adapted from: https://developer.mozilla.org/en-US/docs/Web/Events/wheel
+// This version requires eventShim.
+function WheelListener(elem, callback, useCapture) {
+  var eventName = getEventName();
+
+  if (eventName === 'wheel') {
+    this._fun = callback;
+    this._elem = elem;
+    this._elem.addEventListener('wheel', this._fun, useCapture);
+  } else if (eventName === 'mousewheel') {
+    this._fun = fallbackHandler(callback);
+    this._elem = elem;
+    this._elem.addEventListener('mousewheel', this._fun, useCapture);
+  } else {
+    throw new Error('Browser does not support mouse wheel events');
+  }
+}
+
+/**
+ * Destructor.
+ */
+WheelListener.prototype.destroy = function() {
+  this._elem.removeEventListener(getEventName(), this._fun);
+  clearOwnProperties(this);
+};
+
+function fallbackHandler(callback) {
+  return function handleWheelEvent(originalEvent) {
+    if (!originalEvent) {
+      originalEvent = window.event;
+    }
+
+    // Create a normalized event object.
+    var event = {
+      originalEvent: originalEvent,
+      target: originalEvent.target || originalEvent.srcElement,
+      type: "wheel",
+      deltaMode: 1,
+      deltaX: 0,
+      deltaZ: 0,
+      timeStamp: originalEvent.timeStamp || Date.now(),
+      preventDefault: originalEvent.preventDefault.bind(originalEvent)
+    };
+
+    // Calculate deltaY.
+    event.deltaY = - 1/40 * originalEvent.wheelDelta;
+    if (originalEvent.wheelDeltaX) {
+      // Calculate deltaX.
+      event.deltaX = - 1/40 * originalEvent.wheelDeltaX;
+    }
+
+    // Fire the callback.
+    return callback(event);
+  };
+}
+
+// Detect the supported wheel event name and cache the result.
+var eventName;
+function getEventName() {
+  if (eventName !== undefined) {
+    return eventName;
+  }
+  if ('onwheel' in document.createElement('div')) {
+    // Modern browsers support 'wheel'.
+    return (eventName = 'wheel');
+  } else if (document.onmousewheel !== undefined) {
+    // Webkit and IE support at least 'mousewheel'.
+    return (eventName = 'mousewheel');
+  } else {
+    return (eventName = null);
+  }
+}
+
+module.exports = WheelListener;
+
+},{"../util/clearOwnProperties":92}],50:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var defaults = require('../util/defaults');
+var DragControlMethod = require('./Drag');
+var QtvrControlMethod = require('./Qtvr');
+var ScrollZoomControlMethod = require('./ScrollZoom');
+var PinchZoomControlMethod = require('./PinchZoom');
+var KeyControlMethod = require('./Key');
+
+var defaultOptions = {
+  mouseViewMode: 'drag'
+};
+
+/**
+ * Instantiate and register some commonly used {@link ControlMethod} instances.
+ *
+ * The following instances are registered:
+ *   - mouseViewDrag
+ *   - mouseViewQtvr
+ *   - touchView
+ *   - pinch
+ *   - arrowKeys
+ *   - plusMinusKeys
+ *   - wasdKeys
+ *   - qeKeys
+ *
+ * @param {Controls} controls Where to register the instances.
+ * @param {Element} element Element to listen for events.
+ * @param {Object} opts
+ * @param {'drag'|'qtvr'} mouseViewMode
+ */
+function registerDefaultControls(controls, element, opts) {
+  opts = defaults(opts || {}, defaultOptions);
+
+  var controlMethods = {
+    mouseViewDrag: new DragControlMethod(element, 'mouse'),
+    mouseViewQtvr: new QtvrControlMethod(element, 'mouse'),
+    touchView: new DragControlMethod(element, 'touch'),
+    pinch: new PinchZoomControlMethod(element, 'touch'),
+
+    leftArrowKey: new KeyControlMethod(37, 'x', -2, 3),
+    rightArrowKey: new KeyControlMethod(39, 'x', 2, 3),
+    upArrowKey: new KeyControlMethod(38, 'pitch', -2, 3),
+    downArrowKey: new KeyControlMethod(40, 'pitch', 2, 3),
+    plusKey: new KeyControlMethod(107, 'zoom', -0.7, 3),
+    minusKey: new KeyControlMethod(109, 'zoom', 0.7, 3),
+
+    wKey: new KeyControlMethod(87, 'y', -0.7, 3),
+    aKey: new KeyControlMethod(65, 'x', -0.7, 3),
+    sKey: new KeyControlMethod(83, 'y', 0.7, 3),
+    dKey: new KeyControlMethod(68, 'x', 0.7, 3),
+    qKey: new KeyControlMethod(81, 'roll', 0.7, 3),
+    eKey: new KeyControlMethod(69, 'roll', -0.7, 3)
+  };
+
+  if(opts.scrollZoom !== false) {
+    controlMethods.scrollZoom = new ScrollZoomControlMethod(element); //{ frictionTime: 0 }
+  }
+
+  var controlMethodGroups = {
+    arrowKeys: [ 'leftArrowKey', 'rightArrowKey', 'upArrowKey', 'downArrowKey' ],
+    plusMinusKeys: [ 'plusKey', 'minusKey' ],
+    wasdKeys: [ 'wKey', 'aKey', 'sKey', 'dKey' ],
+    qeKeys: [ 'qKey', 'eKey' ]
+  };
+
+
+  var enabledControls = [ 'scrollZoom', 'touchView', 'pinch' ];
+  switch (opts.mouseViewMode) {
+    case 'drag':
+      enabledControls.push('mouseViewDrag');
+      break;
+    case 'qtvr':
+      enabledControls.push('mouseViewQtvr');
+      break;
+    default:
+      throw new Error("Unknown mouse view mode: " + opts.mouseViewMode);
+  }
+
+  for (var id in controlMethods) {
+    var method = controlMethods[id];
+    controls.registerMethod(id, method);
+    if (enabledControls.indexOf(id) >= 0) {
+      controls.enableMethod(id);
+    }
+  }
+
+  for (var groupId in controlMethodGroups) {
+    var methodGroup = controlMethodGroups[groupId];
+    controls.addMethodGroup(groupId, methodGroup);
+  }
+
+  return controlMethods;
+}
+
+module.exports = registerDefaultControls;
+},{"../util/defaults":98,"./Drag":40,"./Key":44,"./PinchZoom":45,"./Qtvr":46,"./ScrollZoom":47}],51:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+function maxFriction(friction, velocityX, velocityY, maxFrictionTime, result) {
+  var velocity = Math.sqrt(Math.pow(velocityX,2) + Math.pow(velocityY,2));
+  friction = Math.max(friction, velocity/maxFrictionTime);
+  changeVectorNorm(velocityX, velocityY, friction, result);
+  result[0] = Math.abs(result[0]);
+  result[1] = Math.abs(result[1]);
+}
+
+function changeVectorNorm(x, y, n, result) {
+  var theta = Math.atan(y/x);
+  result[0] = n * Math.cos(theta);
+  result[1] = n * Math.sin(theta);
+}
+
+module.exports = {
+  maxFriction: maxFriction,
+  changeVectorNorm: changeVectorNorm
+};
+},{}],52:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var inherits = require('../util/inherits');
+var hash = require('../util/hash');
+var TileSearcher = require('../TileSearcher');
+var LruMap = require('../collections/LruMap');
+var Level = require('./Level');
+var makeLevelList = require('./common').makeLevelList;
+var makeSelectableLevelList = require('./common').makeSelectableLevelList;
+var clamp = require('../util/clamp');
+var cmp = require('../util/cmp');
+var type = require('../util/type');
+var vec3 = require('gl-matrix').vec3;
+var vec4 = require('gl-matrix').vec4;
+
+// Some renderer implementations require tiles to be padded around with
+// repeated pixels to prevent the appearance of visible seams between tiles.
 //
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-!function(t){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=t();else if("function"==typeof define&&define.amd)define([],t);else{var e;e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof self?self:this,e.Marzipano=t()}}(function(){var t;return function(){function t(e,i,r){function n(s,a){if(!i[s]){if(!e[s]){var l="function"==typeof require&&require;if(!a&&l)return l(s,!0);if(o)return o(s,!0);var h=new Error("Cannot find module '"+s+"'");throw h.code="MODULE_NOT_FOUND",h}var u=i[s]={exports:{}};e[s][0].call(u.exports,function(t){return n(e[s][1][t]||t)},u,u.exports,t,e,i,r)}return i[s].exports}for(var o="function"==typeof require&&require,s=0;s<r.length;s++)n(r[s]);return n}return t}()({1:[function(e,i,r){!function(e,r,n){void 0!==i&&i.exports?i.exports=n():"function"==typeof t&&t.amd?t("bowser",n):e.bowser=n()}(this,0,function(){function t(t){function e(e){var i=t.match(e);return i&&i.length>1&&i[1]||""}function i(e){var i=t.match(e);return i&&i.length>1&&i[2]||""}var n,o=e(/(ipod|iphone|ipad)/i).toLowerCase(),a=/like android/i.test(t),l=!a&&/android/i.test(t),h=/nexus\s*[0-6]\s*/i.test(t),u=!h&&/nexus\s*[0-9]+/i.test(t),c=/CrOS/.test(t),p=/silk/i.test(t),d=/sailfish/i.test(t),f=/tizen/i.test(t),m=/(web|hpw)(o|0)s/i.test(t),v=/windows phone/i.test(t),_=(/SamsungBrowser/i.test(t),!v&&/windows/i.test(t)),y=!o&&!p&&/macintosh/i.test(t),g=!l&&!d&&!f&&!m&&/linux/i.test(t),x=i(/edg([ea]|ios)\/(\d+(\.\d+)?)/i),w=e(/version\/(\d+(\.\d+)?)/i),M=/tablet/i.test(t)&&!/tablet pc/i.test(t),b=!M&&/[^-]mobi/i.test(t),S=/xbox/i.test(t);/opera/i.test(t)?n={name:"Opera",opera:s,version:w||e(/(?:opera|opr|opios)[\s\/](\d+(\.\d+)?)/i)}:/opr\/|opios/i.test(t)?n={name:"Opera",opera:s,version:e(/(?:opr|opios)[\s\/](\d+(\.\d+)?)/i)||w}:/SamsungBrowser/i.test(t)?n={name:"Samsung Internet for Android",samsungBrowser:s,version:w||e(/(?:SamsungBrowser)[\s\/](\d+(\.\d+)?)/i)}:/Whale/i.test(t)?n={name:"NAVER Whale browser",whale:s,version:e(/(?:whale)[\s\/](\d+(?:\.\d+)+)/i)}:/MZBrowser/i.test(t)?n={name:"MZ Browser",mzbrowser:s,version:e(/(?:MZBrowser)[\s\/](\d+(?:\.\d+)+)/i)}:/coast/i.test(t)?n={name:"Opera Coast",coast:s,version:w||e(/(?:coast)[\s\/](\d+(\.\d+)?)/i)}:/focus/i.test(t)?n={name:"Focus",focus:s,version:e(/(?:focus)[\s\/](\d+(?:\.\d+)+)/i)}:/yabrowser/i.test(t)?n={name:"Yandex Browser",yandexbrowser:s,version:w||e(/(?:yabrowser)[\s\/](\d+(\.\d+)?)/i)}:/ucbrowser/i.test(t)?n={name:"UC Browser",ucbrowser:s,version:e(/(?:ucbrowser)[\s\/](\d+(?:\.\d+)+)/i)}:/mxios/i.test(t)?n={name:"Maxthon",maxthon:s,version:e(/(?:mxios)[\s\/](\d+(?:\.\d+)+)/i)}:/epiphany/i.test(t)?n={name:"Epiphany",epiphany:s,version:e(/(?:epiphany)[\s\/](\d+(?:\.\d+)+)/i)}:/puffin/i.test(t)?n={name:"Puffin",puffin:s,version:e(/(?:puffin)[\s\/](\d+(?:\.\d+)?)/i)}:/sleipnir/i.test(t)?n={name:"Sleipnir",sleipnir:s,version:e(/(?:sleipnir)[\s\/](\d+(?:\.\d+)+)/i)}:/k-meleon/i.test(t)?n={name:"K-Meleon",kMeleon:s,version:e(/(?:k-meleon)[\s\/](\d+(?:\.\d+)+)/i)}:v?(n={name:"Windows Phone",osname:"Windows Phone",windowsphone:s},x?(n.msedge=s,n.version=x):(n.msie=s,n.version=e(/iemobile\/(\d+(\.\d+)?)/i))):/msie|trident/i.test(t)?n={name:"Internet Explorer",msie:s,version:e(/(?:msie |rv:)(\d+(\.\d+)?)/i)}:c?n={name:"Chrome",osname:"Chrome OS",chromeos:s,chromeBook:s,chrome:s,version:e(/(?:chrome|crios|crmo)\/(\d+(\.\d+)?)/i)}:/edg([ea]|ios)/i.test(t)?n={name:"Microsoft Edge",msedge:s,version:x}:/vivaldi/i.test(t)?n={name:"Vivaldi",vivaldi:s,version:e(/vivaldi\/(\d+(\.\d+)?)/i)||w}:d?n={name:"Sailfish",osname:"Sailfish OS",sailfish:s,version:e(/sailfish\s?browser\/(\d+(\.\d+)?)/i)}:/seamonkey\//i.test(t)?n={name:"SeaMonkey",seamonkey:s,version:e(/seamonkey\/(\d+(\.\d+)?)/i)}:/firefox|iceweasel|fxios/i.test(t)?(n={name:"Firefox",firefox:s,version:e(/(?:firefox|iceweasel|fxios)[ \/](\d+(\.\d+)?)/i)},/\((mobile|tablet);[^\)]*rv:[\d\.]+\)/i.test(t)&&(n.firefoxos=s,n.osname="Firefox OS")):p?n={name:"Amazon Silk",silk:s,version:e(/silk\/(\d+(\.\d+)?)/i)}:/phantom/i.test(t)?n={name:"PhantomJS",phantom:s,version:e(/phantomjs\/(\d+(\.\d+)?)/i)}:/slimerjs/i.test(t)?n={name:"SlimerJS",slimer:s,version:e(/slimerjs\/(\d+(\.\d+)?)/i)}:/blackberry|\bbb\d+/i.test(t)||/rim\stablet/i.test(t)?n={name:"BlackBerry",osname:"BlackBerry OS",blackberry:s,version:w||e(/blackberry[\d]+\/(\d+(\.\d+)?)/i)}:m?(n={name:"WebOS",osname:"WebOS",webos:s,version:w||e(/w(?:eb)?osbrowser\/(\d+(\.\d+)?)/i)},/touchpad\//i.test(t)&&(n.touchpad=s)):/bada/i.test(t)?n={name:"Bada",osname:"Bada",bada:s,version:e(/dolfin\/(\d+(\.\d+)?)/i)}:f?n={name:"Tizen",osname:"Tizen",tizen:s,version:e(/(?:tizen\s?)?browser\/(\d+(\.\d+)?)/i)||w}:/qupzilla/i.test(t)?n={name:"QupZilla",qupzilla:s,version:e(/(?:qupzilla)[\s\/](\d+(?:\.\d+)+)/i)||w}:/chromium/i.test(t)?n={name:"Chromium",chromium:s,version:e(/(?:chromium)[\s\/](\d+(?:\.\d+)?)/i)||w}:/chrome|crios|crmo/i.test(t)?n={name:"Chrome",chrome:s,version:e(/(?:chrome|crios|crmo)\/(\d+(\.\d+)?)/i)}:l?n={name:"Android",version:w}:/safari|applewebkit/i.test(t)?(n={name:"Safari",safari:s},w&&(n.version=w)):o?(n={name:"iphone"==o?"iPhone":"ipad"==o?"iPad":"iPod"},w&&(n.version=w)):n=/googlebot/i.test(t)?{name:"Googlebot",googlebot:s,version:e(/googlebot\/(\d+(\.\d+))/i)||w}:{name:e(/^(.*)\/(.*) /),version:i(/^(.*)\/(.*) /)},!n.msedge&&/(apple)?webkit/i.test(t)?(/(apple)?webkit\/537\.36/i.test(t)?(n.name=n.name||"Blink",n.blink=s):(n.name=n.name||"Webkit",n.webkit=s),!n.version&&w&&(n.version=w)):!n.opera&&/gecko\//i.test(t)&&(n.name=n.name||"Gecko",n.gecko=s,n.version=n.version||e(/gecko\/(\d+(\.\d+)?)/i)),n.windowsphone||!l&&!n.silk?!n.windowsphone&&o?(n[o]=s,n.ios=s,n.osname="iOS"):y?(n.mac=s,n.osname="macOS"):S?(n.xbox=s,n.osname="Xbox"):_?(n.windows=s,n.osname="Windows"):g&&(n.linux=s,n.osname="Linux"):(n.android=s,n.osname="Android");var E="";n.windows?E=function(t){switch(t){case"NT":return"NT";case"XP":return"XP";case"NT 5.0":return"2000";case"NT 5.1":return"XP";case"NT 5.2":return"2003";case"NT 6.0":return"Vista";case"NT 6.1":return"7";case"NT 6.2":return"8";case"NT 6.3":return"8.1";case"NT 10.0":return"10";default:return undefined}}(e(/Windows ((NT|XP)( \d\d?.\d)?)/i)):n.windowsphone?E=e(/windows phone (?:os)?\s?(\d+(\.\d+)*)/i):n.mac?(E=e(/Mac OS X (\d+([_\.\s]\d+)*)/i),E=E.replace(/[_\s]/g,".")):o?(E=e(/os (\d+([_\s]\d+)*) like mac os x/i),E=E.replace(/[_\s]/g,".")):l?E=e(/android[ \/-](\d+(\.\d+)*)/i):n.webos?E=e(/(?:web|hpw)os\/(\d+(\.\d+)*)/i):n.blackberry?E=e(/rim\stablet\sos\s(\d+(\.\d+)*)/i):n.bada?E=e(/bada\/(\d+(\.\d+)*)/i):n.tizen&&(E=e(/tizen[\/\s](\d+(\.\d+)*)/i)),E&&(n.osversion=E);var I=!n.windows&&E.split(".")[0];return M||u||"ipad"==o||l&&(3==I||I>=4&&!b)||n.silk?n.tablet=s:(b||"iphone"==o||"ipod"==o||l||h||n.blackberry||n.webos||n.bada)&&(n.mobile=s),n.msedge||n.msie&&n.version>=10||n.yandexbrowser&&n.version>=15||n.vivaldi&&n.version>=1||n.chrome&&n.version>=20||n.samsungBrowser&&n.version>=4||n.whale&&1===r([n.version,"1.0"])||n.mzbrowser&&1===r([n.version,"6.0"])||n.focus&&1===r([n.version,"1.0"])||n.firefox&&n.version>=20||n.safari&&n.version>=6||n.opera&&n.version>=10||n.ios&&n.osversion&&n.osversion.split(".")[0]>=6||n.blackberry&&n.version>=10.1||n.chromium&&n.version>=20?n.a=s:n.msie&&n.version<10||n.chrome&&n.version<20||n.firefox&&n.version<20||n.safari&&n.version<6||n.opera&&n.version<10||n.ios&&n.osversion&&n.osversion.split(".")[0]<6||n.chromium&&n.version<20?n.c=s:n.x=s,n}function e(t){return t.split(".").length}function i(t,e){var i,r=[];if(Array.prototype.map)return Array.prototype.map.call(t,e);for(i=0;i<t.length;i++)r.push(e(t[i]));return r}function r(t){for(var r=Math.max(e(t[0]),e(t[1])),n=i(t,function(t){var n=r-e(t);return t+=new Array(n+1).join(".0"),i(t.split("."),function(t){return new Array(20-t.length).join("0")+t}).reverse()});--r>=0;){if(n[0][r]>n[1][r])return 1;if(n[0][r]!==n[1][r])return-1;if(0===r)return 0}}function n(e,i,n){var o=a;"string"==typeof i&&(n=i,i=void 0),void 0===i&&(i=!1),n&&(o=t(n));var s=""+o.version;for(var l in e)if(e.hasOwnProperty(l)&&o[l]){if("string"!=typeof e[l])throw new Error("Browser version in the minVersion map should be a string: "+l+": "+String(e));return r([s,e[l]])<0}return i}function o(t,e,i){return!n(t,e,i)}var s=!0,a=t("undefined"!=typeof navigator?navigator.userAgent||"":"");return a.test=function(t){for(var e=0;e<t.length;++e){var i=t[e];if("string"==typeof i&&i in a)return!0}return!1},a.isUnsupportedBrowser=n,a.compareVersions=r,a.check=o,a._detect=t,a.detect=t,a})},{}],2:[function(t,e,i){i.glMatrix=t("./gl-matrix/common.js"),i.mat2=t("./gl-matrix/mat2.js"),i.mat2d=t("./gl-matrix/mat2d.js"),i.mat3=t("./gl-matrix/mat3.js"),i.mat4=t("./gl-matrix/mat4.js"),i.quat=t("./gl-matrix/quat.js"),i.vec2=t("./gl-matrix/vec2.js"),i.vec3=t("./gl-matrix/vec3.js"),i.vec4=t("./gl-matrix/vec4.js")},{"./gl-matrix/common.js":3,"./gl-matrix/mat2.js":4,"./gl-matrix/mat2d.js":5,"./gl-matrix/mat3.js":6,"./gl-matrix/mat4.js":7,"./gl-matrix/quat.js":8,"./gl-matrix/vec2.js":9,"./gl-matrix/vec3.js":10,"./gl-matrix/vec4.js":11}],3:[function(t,e,i){var r={};r.EPSILON=1e-6,r.ARRAY_TYPE="undefined"!=typeof Float32Array?Float32Array:Array,r.RANDOM=Math.random,r.ENABLE_SIMD=!1,r.SIMD_AVAILABLE=r.ARRAY_TYPE===this.Float32Array&&"undefined"!=typeof SIMD,r.USE_SIMD=r.ENABLE_SIMD&&r.SIMD_AVAILABLE,r.setMatrixArrayType=function(t){r.ARRAY_TYPE=t};var n=Math.PI/180;r.toRadian=function(t){return t*n},r.equals=function(t,e){return Math.abs(t-e)<=r.EPSILON*Math.max(1,Math.abs(t),Math.abs(e))},e.exports=r},{}],4:[function(t,e,i){var r=t("./common.js"),n={};n.create=function(){var t=new r.ARRAY_TYPE(4);return t[0]=1,t[1]=0,t[2]=0,t[3]=1,t},n.clone=function(t){var e=new r.ARRAY_TYPE(4);return e[0]=t[0],e[1]=t[1],e[2]=t[2],e[3]=t[3],e},n.copy=function(t,e){return t[0]=e[0],t[1]=e[1],t[2]=e[2],t[3]=e[3],t},n.identity=function(t){return t[0]=1,t[1]=0,t[2]=0,t[3]=1,t},n.fromValues=function(t,e,i,n){var o=new r.ARRAY_TYPE(4);return o[0]=t,o[1]=e,o[2]=i,o[3]=n,o},n.set=function(t,e,i,r,n){return t[0]=e,t[1]=i,t[2]=r,t[3]=n,t},n.transpose=function(t,e){if(t===e){var i=e[1];t[1]=e[2],t[2]=i}else t[0]=e[0],t[1]=e[2],t[2]=e[1],t[3]=e[3];return t},n.invert=function(t,e){var i=e[0],r=e[1],n=e[2],o=e[3],s=i*o-n*r;return s?(s=1/s,t[0]=o*s,t[1]=-r*s,t[2]=-n*s,t[3]=i*s,t):null},n.adjoint=function(t,e){var i=e[0];return t[0]=e[3],t[1]=-e[1],t[2]=-e[2],t[3]=i,t},n.determinant=function(t){return t[0]*t[3]-t[2]*t[1]},n.multiply=function(t,e,i){var r=e[0],n=e[1],o=e[2],s=e[3],a=i[0],l=i[1],h=i[2],u=i[3];return t[0]=r*a+o*l,t[1]=n*a+s*l,t[2]=r*h+o*u,t[3]=n*h+s*u,t},n.mul=n.multiply,n.rotate=function(t,e,i){var r=e[0],n=e[1],o=e[2],s=e[3],a=Math.sin(i),l=Math.cos(i);return t[0]=r*l+o*a,t[1]=n*l+s*a,t[2]=r*-a+o*l,t[3]=n*-a+s*l,t},n.scale=function(t,e,i){var r=e[0],n=e[1],o=e[2],s=e[3],a=i[0],l=i[1];return t[0]=r*a,t[1]=n*a,t[2]=o*l,t[3]=s*l,t},n.fromRotation=function(t,e){var i=Math.sin(e),r=Math.cos(e);return t[0]=r,t[1]=i,t[2]=-i,t[3]=r,t},n.fromScaling=function(t,e){return t[0]=e[0],t[1]=0,t[2]=0,t[3]=e[1],t},n.str=function(t){return"mat2("+t[0]+", "+t[1]+", "+t[2]+", "+t[3]+")"},n.frob=function(t){return Math.sqrt(Math.pow(t[0],2)+Math.pow(t[1],2)+Math.pow(t[2],2)+Math.pow(t[3],2))},n.LDU=function(t,e,i,r){return t[2]=r[2]/r[0],i[0]=r[0],i[1]=r[1],i[3]=r[3]-t[2]*i[1],[t,e,i]},n.add=function(t,e,i){return t[0]=e[0]+i[0],t[1]=e[1]+i[1],t[2]=e[2]+i[2],t[3]=e[3]+i[3],t},n.subtract=function(t,e,i){return t[0]=e[0]-i[0],t[1]=e[1]-i[1],t[2]=e[2]-i[2],t[3]=e[3]-i[3],t},n.sub=n.subtract,n.exactEquals=function(t,e){return t[0]===e[0]&&t[1]===e[1]&&t[2]===e[2]&&t[3]===e[3]},n.equals=function(t,e){var i=t[0],n=t[1],o=t[2],s=t[3],a=e[0],l=e[1],h=e[2],u=e[3];return Math.abs(i-a)<=r.EPSILON*Math.max(1,Math.abs(i),Math.abs(a))&&Math.abs(n-l)<=r.EPSILON*Math.max(1,Math.abs(n),Math.abs(l))&&Math.abs(o-h)<=r.EPSILON*Math.max(1,Math.abs(o),Math.abs(h))&&Math.abs(s-u)<=r.EPSILON*Math.max(1,Math.abs(s),Math.abs(u))},n.multiplyScalar=function(t,e,i){return t[0]=e[0]*i,t[1]=e[1]*i,t[2]=e[2]*i,t[3]=e[3]*i,t},n.multiplyScalarAndAdd=function(t,e,i,r){return t[0]=e[0]+i[0]*r,t[1]=e[1]+i[1]*r,t[2]=e[2]+i[2]*r,t[3]=e[3]+i[3]*r,t},e.exports=n},{"./common.js":3}],5:[function(t,e,i){var r=t("./common.js"),n={};n.create=function(){var t=new r.ARRAY_TYPE(6);return t[0]=1,t[1]=0,t[2]=0,t[3]=1,t[4]=0,t[5]=0,t},n.clone=function(t){var e=new r.ARRAY_TYPE(6);return e[0]=t[0],e[1]=t[1],e[2]=t[2],e[3]=t[3],e[4]=t[4],e[5]=t[5],e},n.copy=function(t,e){return t[0]=e[0],t[1]=e[1],t[2]=e[2],t[3]=e[3],t[4]=e[4],t[5]=e[5],t},n.identity=function(t){return t[0]=1,t[1]=0,t[2]=0,t[3]=1,t[4]=0,t[5]=0,t},n.fromValues=function(t,e,i,n,o,s){var a=new r.ARRAY_TYPE(6);return a[0]=t,a[1]=e,a[2]=i,a[3]=n,a[4]=o,a[5]=s,a},n.set=function(t,e,i,r,n,o,s){return t[0]=e,t[1]=i,t[2]=r,t[3]=n,t[4]=o,t[5]=s,t},n.invert=function(t,e){var i=e[0],r=e[1],n=e[2],o=e[3],s=e[4],a=e[5],l=i*o-r*n;return l?(l=1/l,t[0]=o*l,t[1]=-r*l,t[2]=-n*l,t[3]=i*l,t[4]=(n*a-o*s)*l,t[5]=(r*s-i*a)*l,t):null},n.determinant=function(t){return t[0]*t[3]-t[1]*t[2]},n.multiply=function(t,e,i){var r=e[0],n=e[1],o=e[2],s=e[3],a=e[4],l=e[5],h=i[0],u=i[1],c=i[2],p=i[3],d=i[4],f=i[5];return t[0]=r*h+o*u,t[1]=n*h+s*u,t[2]=r*c+o*p,t[3]=n*c+s*p,t[4]=r*d+o*f+a,t[5]=n*d+s*f+l,t},n.mul=n.multiply,n.rotate=function(t,e,i){var r=e[0],n=e[1],o=e[2],s=e[3],a=e[4],l=e[5],h=Math.sin(i),u=Math.cos(i);return t[0]=r*u+o*h,t[1]=n*u+s*h,t[2]=r*-h+o*u,t[3]=n*-h+s*u,t[4]=a,t[5]=l,t},n.scale=function(t,e,i){var r=e[0],n=e[1],o=e[2],s=e[3],a=e[4],l=e[5],h=i[0],u=i[1];return t[0]=r*h,t[1]=n*h,t[2]=o*u,t[3]=s*u,t[4]=a,t[5]=l,t},n.translate=function(t,e,i){var r=e[0],n=e[1],o=e[2],s=e[3],a=e[4],l=e[5],h=i[0],u=i[1];return t[0]=r,t[1]=n,t[2]=o,t[3]=s,t[4]=r*h+o*u+a,t[5]=n*h+s*u+l,t},n.fromRotation=function(t,e){var i=Math.sin(e),r=Math.cos(e);return t[0]=r,t[1]=i,t[2]=-i,t[3]=r,t[4]=0,t[5]=0,t},n.fromScaling=function(t,e){return t[0]=e[0],t[1]=0,t[2]=0,t[3]=e[1],t[4]=0,t[5]=0,t},n.fromTranslation=function(t,e){return t[0]=1,t[1]=0,t[2]=0,t[3]=1,t[4]=e[0],t[5]=e[1],t},n.str=function(t){return"mat2d("+t[0]+", "+t[1]+", "+t[2]+", "+t[3]+", "+t[4]+", "+t[5]+")"},n.frob=function(t){return Math.sqrt(Math.pow(t[0],2)+Math.pow(t[1],2)+Math.pow(t[2],2)+Math.pow(t[3],2)+Math.pow(t[4],2)+Math.pow(t[5],2)+1)},n.add=function(t,e,i){return t[0]=e[0]+i[0],t[1]=e[1]+i[1],t[2]=e[2]+i[2],t[3]=e[3]+i[3],t[4]=e[4]+i[4],t[5]=e[5]+i[5],t},n.subtract=function(t,e,i){return t[0]=e[0]-i[0],t[1]=e[1]-i[1],t[2]=e[2]-i[2],t[3]=e[3]-i[3],t[4]=e[4]-i[4],t[5]=e[5]-i[5],t},n.sub=n.subtract,n.multiplyScalar=function(t,e,i){return t[0]=e[0]*i,t[1]=e[1]*i,t[2]=e[2]*i,t[3]=e[3]*i,t[4]=e[4]*i,t[5]=e[5]*i,t},n.multiplyScalarAndAdd=function(t,e,i,r){return t[0]=e[0]+i[0]*r,t[1]=e[1]+i[1]*r,t[2]=e[2]+i[2]*r,t[3]=e[3]+i[3]*r,t[4]=e[4]+i[4]*r,t[5]=e[5]+i[5]*r,t},n.exactEquals=function(t,e){return t[0]===e[0]&&t[1]===e[1]&&t[2]===e[2]&&t[3]===e[3]&&t[4]===e[4]&&t[5]===e[5]},n.equals=function(t,e){var i=t[0],n=t[1],o=t[2],s=t[3],a=t[4],l=t[5],h=e[0],u=e[1],c=e[2],p=e[3],d=e[4],f=e[5];return Math.abs(i-h)<=r.EPSILON*Math.max(1,Math.abs(i),Math.abs(h))&&Math.abs(n-u)<=r.EPSILON*Math.max(1,Math.abs(n),Math.abs(u))&&Math.abs(o-c)<=r.EPSILON*Math.max(1,Math.abs(o),Math.abs(c))&&Math.abs(s-p)<=r.EPSILON*Math.max(1,Math.abs(s),Math.abs(p))&&Math.abs(a-d)<=r.EPSILON*Math.max(1,Math.abs(a),Math.abs(d))&&Math.abs(l-f)<=r.EPSILON*Math.max(1,Math.abs(l),Math.abs(f))},e.exports=n},{"./common.js":3}],6:[function(t,e,i){var r=t("./common.js"),n={};n.create=function(){var t=new r.ARRAY_TYPE(9);return t[0]=1,t[1]=0,t[2]=0,t[3]=0,t[4]=1,t[5]=0,t[6]=0,t[7]=0,t[8]=1,t},n.fromMat4=function(t,e){return t[0]=e[0],t[1]=e[1],t[2]=e[2],t[3]=e[4],t[4]=e[5],t[5]=e[6],t[6]=e[8],t[7]=e[9],t[8]=e[10],t},n.clone=function(t){var e=new r.ARRAY_TYPE(9);return e[0]=t[0],e[1]=t[1],e[2]=t[2],e[3]=t[3],e[4]=t[4],e[5]=t[5],e[6]=t[6],e[7]=t[7],e[8]=t[8],e},n.copy=function(t,e){return t[0]=e[0],t[1]=e[1],t[2]=e[2],t[3]=e[3],t[4]=e[4],t[5]=e[5],t[6]=e[6],t[7]=e[7],t[8]=e[8],t},n.fromValues=function(t,e,i,n,o,s,a,l,h){var u=new r.ARRAY_TYPE(9);return u[0]=t,u[1]=e,u[2]=i,u[3]=n,u[4]=o,u[5]=s,u[6]=a,u[7]=l,u[8]=h,u},n.set=function(t,e,i,r,n,o,s,a,l,h){return t[0]=e,t[1]=i,t[2]=r,t[3]=n,t[4]=o,t[5]=s,t[6]=a,t[7]=l,t[8]=h,t},n.identity=function(t){return t[0]=1,t[1]=0,t[2]=0,t[3]=0,t[4]=1,t[5]=0,t[6]=0,t[7]=0,t[8]=1,t},n.transpose=function(t,e){if(t===e){var i=e[1],r=e[2],n=e[5];t[1]=e[3],t[2]=e[6],t[3]=i,t[5]=e[7],t[6]=r,t[7]=n}else t[0]=e[0],t[1]=e[3],t[2]=e[6],t[3]=e[1],t[4]=e[4],t[5]=e[7],t[6]=e[2],t[7]=e[5],t[8]=e[8];return t},n.invert=function(t,e){var i=e[0],r=e[1],n=e[2],o=e[3],s=e[4],a=e[5],l=e[6],h=e[7],u=e[8],c=u*s-a*h,p=-u*o+a*l,d=h*o-s*l,f=i*c+r*p+n*d;return f?(f=1/f,t[0]=c*f,t[1]=(-u*r+n*h)*f,t[2]=(a*r-n*s)*f,t[3]=p*f,t[4]=(u*i-n*l)*f,t[5]=(-a*i+n*o)*f,t[6]=d*f,t[7]=(-h*i+r*l)*f,t[8]=(s*i-r*o)*f,t):null},n.adjoint=function(t,e){var i=e[0],r=e[1],n=e[2],o=e[3],s=e[4],a=e[5],l=e[6],h=e[7],u=e[8];return t[0]=s*u-a*h,t[1]=n*h-r*u,t[2]=r*a-n*s,t[3]=a*l-o*u,t[4]=i*u-n*l,t[5]=n*o-i*a,t[6]=o*h-s*l,t[7]=r*l-i*h,t[8]=i*s-r*o,t},n.determinant=function(t){var e=t[0],i=t[1],r=t[2],n=t[3],o=t[4],s=t[5],a=t[6],l=t[7],h=t[8];return e*(h*o-s*l)+i*(-h*n+s*a)+r*(l*n-o*a)},n.multiply=function(t,e,i){var r=e[0],n=e[1],o=e[2],s=e[3],a=e[4],l=e[5],h=e[6],u=e[7],c=e[8],p=i[0],d=i[1],f=i[2],m=i[3],v=i[4],_=i[5],y=i[6],g=i[7],x=i[8];return t[0]=p*r+d*s+f*h,t[1]=p*n+d*a+f*u,t[2]=p*o+d*l+f*c,t[3]=m*r+v*s+_*h,t[4]=m*n+v*a+_*u,t[5]=m*o+v*l+_*c,t[6]=y*r+g*s+x*h,t[7]=y*n+g*a+x*u,t[8]=y*o+g*l+x*c,t},n.mul=n.multiply,n.translate=function(t,e,i){var r=e[0],n=e[1],o=e[2],s=e[3],a=e[4],l=e[5],h=e[6],u=e[7],c=e[8],p=i[0],d=i[1];return t[0]=r,t[1]=n,t[2]=o,t[3]=s,t[4]=a,t[5]=l,t[6]=p*r+d*s+h,t[7]=p*n+d*a+u,t[8]=p*o+d*l+c,t},n.rotate=function(t,e,i){var r=e[0],n=e[1],o=e[2],s=e[3],a=e[4],l=e[5],h=e[6],u=e[7],c=e[8],p=Math.sin(i),d=Math.cos(i);return t[0]=d*r+p*s,t[1]=d*n+p*a,t[2]=d*o+p*l,t[3]=d*s-p*r,t[4]=d*a-p*n,t[5]=d*l-p*o,t[6]=h,t[7]=u,t[8]=c,t},n.scale=function(t,e,i){var r=i[0],n=i[1];return t[0]=r*e[0],t[1]=r*e[1],t[2]=r*e[2],t[3]=n*e[3],t[4]=n*e[4],t[5]=n*e[5],t[6]=e[6],t[7]=e[7],t[8]=e[8],t},n.fromTranslation=function(t,e){return t[0]=1,t[1]=0,t[2]=0,t[3]=0,t[4]=1,t[5]=0,t[6]=e[0],t[7]=e[1],t[8]=1,t},n.fromRotation=function(t,e){var i=Math.sin(e),r=Math.cos(e);return t[0]=r,t[1]=i,t[2]=0,t[3]=-i,t[4]=r,t[5]=0,t[6]=0,t[7]=0,t[8]=1,t},n.fromScaling=function(t,e){return t[0]=e[0],t[1]=0,t[2]=0,t[3]=0,t[4]=e[1],t[5]=0,t[6]=0,t[7]=0,t[8]=1,t},n.fromMat2d=function(t,e){return t[0]=e[0],t[1]=e[1],t[2]=0,t[3]=e[2],t[4]=e[3],t[5]=0,t[6]=e[4],t[7]=e[5],t[8]=1,t},n.fromQuat=function(t,e){var i=e[0],r=e[1],n=e[2],o=e[3],s=i+i,a=r+r,l=n+n,h=i*s,u=r*s,c=r*a,p=n*s,d=n*a,f=n*l,m=o*s,v=o*a,_=o*l;return t[0]=1-c-f,t[3]=u-_,t[6]=p+v,t[1]=u+_,t[4]=1-h-f,t[7]=d-m,t[2]=p-v,t[5]=d+m,t[8]=1-h-c,t},n.normalFromMat4=function(t,e){var i=e[0],r=e[1],n=e[2],o=e[3],s=e[4],a=e[5],l=e[6],h=e[7],u=e[8],c=e[9],p=e[10],d=e[11],f=e[12],m=e[13],v=e[14],_=e[15],y=i*a-r*s,g=i*l-n*s,x=i*h-o*s,w=r*l-n*a,M=r*h-o*a,b=n*h-o*l,S=u*m-c*f,E=u*v-p*f,I=u*_-d*f,D=c*v-p*m,T=c*_-d*m,F=p*_-d*v,L=y*F-g*T+x*D+w*I-M*E+b*S;return L?(L=1/L,t[0]=(a*F-l*T+h*D)*L,t[1]=(l*I-s*F-h*E)*L,t[2]=(s*T-a*I+h*S)*L,t[3]=(n*T-r*F-o*D)*L,t[4]=(i*F-n*I+o*E)*L,t[5]=(r*I-i*T-o*S)*L,t[6]=(m*b-v*M+_*w)*L,t[7]=(v*x-f*b-_*g)*L,t[8]=(f*M-m*x+_*y)*L,t):null},n.str=function(t){return"mat3("+t[0]+", "+t[1]+", "+t[2]+", "+t[3]+", "+t[4]+", "+t[5]+", "+t[6]+", "+t[7]+", "+t[8]+")"},n.frob=function(t){return Math.sqrt(Math.pow(t[0],2)+Math.pow(t[1],2)+Math.pow(t[2],2)+Math.pow(t[3],2)+Math.pow(t[4],2)+Math.pow(t[5],2)+Math.pow(t[6],2)+Math.pow(t[7],2)+Math.pow(t[8],2))},n.add=function(t,e,i){return t[0]=e[0]+i[0],t[1]=e[1]+i[1],t[2]=e[2]+i[2],t[3]=e[3]+i[3],t[4]=e[4]+i[4],t[5]=e[5]+i[5],t[6]=e[6]+i[6],t[7]=e[7]+i[7],t[8]=e[8]+i[8],t},n.subtract=function(t,e,i){return t[0]=e[0]-i[0],t[1]=e[1]-i[1],t[2]=e[2]-i[2],t[3]=e[3]-i[3],t[4]=e[4]-i[4],t[5]=e[5]-i[5],t[6]=e[6]-i[6],t[7]=e[7]-i[7],t[8]=e[8]-i[8],t},n.sub=n.subtract,n.multiplyScalar=function(t,e,i){return t[0]=e[0]*i,t[1]=e[1]*i,t[2]=e[2]*i,t[3]=e[3]*i,t[4]=e[4]*i,t[5]=e[5]*i,t[6]=e[6]*i,t[7]=e[7]*i,t[8]=e[8]*i,t},n.multiplyScalarAndAdd=function(t,e,i,r){return t[0]=e[0]+i[0]*r,t[1]=e[1]+i[1]*r,t[2]=e[2]+i[2]*r,t[3]=e[3]+i[3]*r,t[4]=e[4]+i[4]*r,t[5]=e[5]+i[5]*r,t[6]=e[6]+i[6]*r,t[7]=e[7]+i[7]*r,t[8]=e[8]+i[8]*r,t},n.exactEquals=function(t,e){return t[0]===e[0]&&t[1]===e[1]&&t[2]===e[2]&&t[3]===e[3]&&t[4]===e[4]&&t[5]===e[5]&&t[6]===e[6]&&t[7]===e[7]&&t[8]===e[8]},n.equals=function(t,e){var i=t[0],n=t[1],o=t[2],s=t[3],a=t[4],l=t[5],h=t[6],u=t[7],c=t[8],p=e[0],d=e[1],f=e[2],m=e[3],v=e[4],_=e[5],y=e[6],g=e[7],x=e[8];return Math.abs(i-p)<=r.EPSILON*Math.max(1,Math.abs(i),Math.abs(p))&&Math.abs(n-d)<=r.EPSILON*Math.max(1,Math.abs(n),Math.abs(d))&&Math.abs(o-f)<=r.EPSILON*Math.max(1,Math.abs(o),Math.abs(f))&&Math.abs(s-m)<=r.EPSILON*Math.max(1,Math.abs(s),Math.abs(m))&&Math.abs(a-v)<=r.EPSILON*Math.max(1,Math.abs(a),Math.abs(v))&&Math.abs(l-_)<=r.EPSILON*Math.max(1,Math.abs(l),Math.abs(_))&&Math.abs(h-y)<=r.EPSILON*Math.max(1,Math.abs(h),Math.abs(y))&&Math.abs(u-g)<=r.EPSILON*Math.max(1,Math.abs(u),Math.abs(g))&&Math.abs(c-x)<=r.EPSILON*Math.max(1,Math.abs(c),Math.abs(x))},e.exports=n},{"./common.js":3}],7:[function(t,e,i){var r=t("./common.js"),n={scalar:{},SIMD:{}};n.create=function(){var t=new r.ARRAY_TYPE(16);return t[0]=1,t[1]=0,t[2]=0,t[3]=0,t[4]=0,t[5]=1,t[6]=0,t[7]=0,t[8]=0,t[9]=0,t[10]=1,t[11]=0,t[12]=0,t[13]=0,t[14]=0,t[15]=1,t},n.clone=function(t){var e=new r.ARRAY_TYPE(16);return e[0]=t[0],e[1]=t[1],e[2]=t[2],e[3]=t[3],e[4]=t[4],e[5]=t[5],e[6]=t[6],e[7]=t[7],e[8]=t[8],e[9]=t[9],e[10]=t[10],e[11]=t[11],e[12]=t[12],e[13]=t[13],e[14]=t[14],e[15]=t[15],e},n.copy=function(t,e){return t[0]=e[0],t[1]=e[1],t[2]=e[2],t[3]=e[3],t[4]=e[4],t[5]=e[5],t[6]=e[6],t[7]=e[7],t[8]=e[8],t[9]=e[9],t[10]=e[10],t[11]=e[11],t[12]=e[12],t[13]=e[13],t[14]=e[14],t[15]=e[15],t},n.fromValues=function(t,e,i,n,o,s,a,l,h,u,c,p,d,f,m,v){var _=new r.ARRAY_TYPE(16);return _[0]=t,_[1]=e,_[2]=i,_[3]=n,_[4]=o,_[5]=s,_[6]=a,_[7]=l,_[8]=h,_[9]=u,_[10]=c,_[11]=p,_[12]=d,_[13]=f,_[14]=m,_[15]=v,_},n.set=function(t,e,i,r,n,o,s,a,l,h,u,c,p,d,f,m,v){return t[0]=e,t[1]=i,t[2]=r,t[3]=n,t[4]=o,t[5]=s,t[6]=a,t[7]=l,t[8]=h,t[9]=u,t[10]=c,t[11]=p,t[12]=d,t[13]=f,t[14]=m,t[15]=v,t},n.identity=function(t){return t[0]=1,t[1]=0,t[2]=0,t[3]=0,t[4]=0,t[5]=1,t[6]=0,t[7]=0,t[8]=0,t[9]=0,t[10]=1,t[11]=0,t[12]=0,t[13]=0,t[14]=0,t[15]=1,t},n.scalar.transpose=function(t,e){if(t===e){var i=e[1],r=e[2],n=e[3],o=e[6],s=e[7],a=e[11];t[1]=e[4],t[2]=e[8],t[3]=e[12],t[4]=i,t[6]=e[9],t[7]=e[13],t[8]=r,t[9]=o,t[11]=e[14],t[12]=n,t[13]=s,t[14]=a}else t[0]=e[0],t[1]=e[4],t[2]=e[8],t[3]=e[12],t[4]=e[1],t[5]=e[5],t[6]=e[9],t[7]=e[13],t[8]=e[2],t[9]=e[6],t[10]=e[10],t[11]=e[14],t[12]=e[3],t[13]=e[7],t[14]=e[11],t[15]=e[15];return t},n.SIMD.transpose=function(t,e){var i,r,n,o,s,a,l,h,u,c;return i=SIMD.Float32x4.load(e,0),r=SIMD.Float32x4.load(e,4),n=SIMD.Float32x4.load(e,8),o=SIMD.Float32x4.load(e,12),s=SIMD.Float32x4.shuffle(i,r,0,1,4,5),a=SIMD.Float32x4.shuffle(n,o,0,1,4,5),l=SIMD.Float32x4.shuffle(s,a,0,2,4,6),h=SIMD.Float32x4.shuffle(s,a,1,3,5,7),SIMD.Float32x4.store(t,0,l),SIMD.Float32x4.store(t,4,h),s=SIMD.Float32x4.shuffle(i,r,2,3,6,7),a=SIMD.Float32x4.shuffle(n,o,2,3,6,7),u=SIMD.Float32x4.shuffle(s,a,0,2,4,6),c=SIMD.Float32x4.shuffle(s,a,1,3,5,7),SIMD.Float32x4.store(t,8,u),SIMD.Float32x4.store(t,12,c),t},n.transpose=r.USE_SIMD?n.SIMD.transpose:n.scalar.transpose,n.scalar.invert=function(t,e){var i=e[0],r=e[1],n=e[2],o=e[3],s=e[4],a=e[5],l=e[6],h=e[7],u=e[8],c=e[9],p=e[10],d=e[11],f=e[12],m=e[13],v=e[14],_=e[15],y=i*a-r*s,g=i*l-n*s,x=i*h-o*s,w=r*l-n*a,M=r*h-o*a,b=n*h-o*l,S=u*m-c*f,E=u*v-p*f,I=u*_-d*f,D=c*v-p*m,T=c*_-d*m,F=p*_-d*v,L=y*F-g*T+x*D+w*I-M*E+b*S;return L?(L=1/L,t[0]=(a*F-l*T+h*D)*L,t[1]=(n*T-r*F-o*D)*L,t[2]=(m*b-v*M+_*w)*L,t[3]=(p*M-c*b-d*w)*L,t[4]=(l*I-s*F-h*E)*L,t[5]=(i*F-n*I+o*E)*L,t[6]=(v*x-f*b-_*g)*L,t[7]=(u*b-p*x+d*g)*L,t[8]=(s*T-a*I+h*S)*L,t[9]=(r*I-i*T-o*S)*L,t[10]=(f*M-m*x+_*y)*L,t[11]=(c*x-u*M-d*y)*L,t[12]=(a*E-s*D-l*S)*L,t[13]=(i*D-r*E+n*S)*L,t[14]=(m*g-f*w-v*y)*L,t[15]=(u*w-c*g+p*y)*L,t):null},n.SIMD.invert=function(t,e){var i,r,n,o,s,a,l,h,u,c,p=SIMD.Float32x4.load(e,0),d=SIMD.Float32x4.load(e,4),f=SIMD.Float32x4.load(e,8),m=SIMD.Float32x4.load(e,12);return s=SIMD.Float32x4.shuffle(p,d,0,1,4,5),r=SIMD.Float32x4.shuffle(f,m,0,1,4,5),i=SIMD.Float32x4.shuffle(s,r,0,2,4,6),r=SIMD.Float32x4.shuffle(r,s,1,3,5,7),s=SIMD.Float32x4.shuffle(p,d,2,3,6,7),o=SIMD.Float32x4.shuffle(f,m,2,3,6,7),n=SIMD.Float32x4.shuffle(s,o,0,2,4,6),o=SIMD.Float32x4.shuffle(o,s,1,3,5,7),s=SIMD.Float32x4.mul(n,o),s=SIMD.Float32x4.swizzle(s,1,0,3,2),a=SIMD.Float32x4.mul(r,s),l=SIMD.Float32x4.mul(i,s),s=SIMD.Float32x4.swizzle(s,2,3,0,1),a=SIMD.Float32x4.sub(SIMD.Float32x4.mul(r,s),a),l=SIMD.Float32x4.sub(SIMD.Float32x4.mul(i,s),l),l=SIMD.Float32x4.swizzle(l,2,3,0,1),s=SIMD.Float32x4.mul(r,n),s=SIMD.Float32x4.swizzle(s,1,0,3,2),a=SIMD.Float32x4.add(SIMD.Float32x4.mul(o,s),a),u=SIMD.Float32x4.mul(i,s),s=SIMD.Float32x4.swizzle(s,2,3,0,1),a=SIMD.Float32x4.sub(a,SIMD.Float32x4.mul(o,s)),u=SIMD.Float32x4.sub(SIMD.Float32x4.mul(i,s),u),u=SIMD.Float32x4.swizzle(u,2,3,0,1),s=SIMD.Float32x4.mul(SIMD.Float32x4.swizzle(r,2,3,0,1),o),s=SIMD.Float32x4.swizzle(s,1,0,3,2),n=SIMD.Float32x4.swizzle(n,2,3,0,1),a=SIMD.Float32x4.add(SIMD.Float32x4.mul(n,s),a),h=SIMD.Float32x4.mul(i,s),s=SIMD.Float32x4.swizzle(s,2,3,0,1),a=SIMD.Float32x4.sub(a,SIMD.Float32x4.mul(n,s)),h=SIMD.Float32x4.sub(SIMD.Float32x4.mul(i,s),h),h=SIMD.Float32x4.swizzle(h,2,3,0,1),s=SIMD.Float32x4.mul(i,r),s=SIMD.Float32x4.swizzle(s,1,0,3,2),h=SIMD.Float32x4.add(SIMD.Float32x4.mul(o,s),h),u=SIMD.Float32x4.sub(SIMD.Float32x4.mul(n,s),u),s=SIMD.Float32x4.swizzle(s,2,3,0,1),h=SIMD.Float32x4.sub(SIMD.Float32x4.mul(o,s),h),u=SIMD.Float32x4.sub(u,SIMD.Float32x4.mul(n,s)),s=SIMD.Float32x4.mul(i,o),s=SIMD.Float32x4.swizzle(s,1,0,3,2),l=SIMD.Float32x4.sub(l,SIMD.Float32x4.mul(n,s)),h=SIMD.Float32x4.add(SIMD.Float32x4.mul(r,s),h),s=SIMD.Float32x4.swizzle(s,2,3,0,1),l=SIMD.Float32x4.add(SIMD.Float32x4.mul(n,s),l),h=SIMD.Float32x4.sub(h,SIMD.Float32x4.mul(r,s)),s=SIMD.Float32x4.mul(i,n),s=SIMD.Float32x4.swizzle(s,1,0,3,2),l=SIMD.Float32x4.add(SIMD.Float32x4.mul(o,s),l),u=SIMD.Float32x4.sub(u,SIMD.Float32x4.mul(r,s)),s=SIMD.Float32x4.swizzle(s,2,3,0,1),l=SIMD.Float32x4.sub(l,SIMD.Float32x4.mul(o,s)),u=SIMD.Float32x4.add(SIMD.Float32x4.mul(r,s),u),c=SIMD.Float32x4.mul(i,a),c=SIMD.Float32x4.add(SIMD.Float32x4.swizzle(c,2,3,0,1),c),c=SIMD.Float32x4.add(SIMD.Float32x4.swizzle(c,1,0,3,2),c),s=SIMD.Float32x4.reciprocalApproximation(c),c=SIMD.Float32x4.sub(SIMD.Float32x4.add(s,s),SIMD.Float32x4.mul(c,SIMD.Float32x4.mul(s,s))),(c=SIMD.Float32x4.swizzle(c,0,0,0,0))?(SIMD.Float32x4.store(t,0,SIMD.Float32x4.mul(c,a)),SIMD.Float32x4.store(t,4,SIMD.Float32x4.mul(c,l)),SIMD.Float32x4.store(t,8,SIMD.Float32x4.mul(c,h)),SIMD.Float32x4.store(t,12,SIMD.Float32x4.mul(c,u)),t):null},n.invert=r.USE_SIMD?n.SIMD.invert:n.scalar.invert,n.scalar.adjoint=function(t,e){var i=e[0],r=e[1],n=e[2],o=e[3],s=e[4],a=e[5],l=e[6],h=e[7],u=e[8],c=e[9],p=e[10],d=e[11],f=e[12],m=e[13],v=e[14],_=e[15];return t[0]=a*(p*_-d*v)-c*(l*_-h*v)+m*(l*d-h*p),t[1]=-(r*(p*_-d*v)-c*(n*_-o*v)+m*(n*d-o*p)),t[2]=r*(l*_-h*v)-a*(n*_-o*v)+m*(n*h-o*l),t[3]=-(r*(l*d-h*p)-a*(n*d-o*p)+c*(n*h-o*l)),t[4]=-(s*(p*_-d*v)-u*(l*_-h*v)+f*(l*d-h*p)),t[5]=i*(p*_-d*v)-u*(n*_-o*v)+f*(n*d-o*p),t[6]=-(i*(l*_-h*v)-s*(n*_-o*v)+f*(n*h-o*l)),t[7]=i*(l*d-h*p)-s*(n*d-o*p)+u*(n*h-o*l),t[8]=s*(c*_-d*m)-u*(a*_-h*m)+f*(a*d-h*c),t[9]=-(i*(c*_-d*m)-u*(r*_-o*m)+f*(r*d-o*c)),t[10]=i*(a*_-h*m)-s*(r*_-o*m)+f*(r*h-o*a),t[11]=-(i*(a*d-h*c)-s*(r*d-o*c)+u*(r*h-o*a)),t[12]=-(s*(c*v-p*m)-u*(a*v-l*m)+f*(a*p-l*c)),t[13]=i*(c*v-p*m)-u*(r*v-n*m)+f*(r*p-n*c),t[14]=-(i*(a*v-l*m)-s*(r*v-n*m)+f*(r*l-n*a)),t[15]=i*(a*p-l*c)-s*(r*p-n*c)+u*(r*l-n*a),t},n.SIMD.adjoint=function(t,e){var i,r,n,o,s,a,l,h,u,c,p,d,f;return i=SIMD.Float32x4.load(e,0),r=SIMD.Float32x4.load(e,4),n=SIMD.Float32x4.load(e,8),o=SIMD.Float32x4.load(e,12),u=SIMD.Float32x4.shuffle(i,r,0,1,4,5),a=SIMD.Float32x4.shuffle(n,o,0,1,4,5),s=SIMD.Float32x4.shuffle(u,a,0,2,4,6),a=SIMD.Float32x4.shuffle(a,u,1,3,5,7),u=SIMD.Float32x4.shuffle(i,r,2,3,6,7),h=SIMD.Float32x4.shuffle(n,o,2,3,6,7),l=SIMD.Float32x4.shuffle(u,h,0,2,4,6),h=SIMD.Float32x4.shuffle(h,u,1,3,5,7),u=SIMD.Float32x4.mul(l,h),u=SIMD.Float32x4.swizzle(u,1,0,3,2),c=SIMD.Float32x4.mul(a,u),p=SIMD.Float32x4.mul(s,u),u=SIMD.Float32x4.swizzle(u,2,3,0,1),c=SIMD.Float32x4.sub(SIMD.Float32x4.mul(a,u),c),p=SIMD.Float32x4.sub(SIMD.Float32x4.mul(s,u),p),p=SIMD.Float32x4.swizzle(p,2,3,0,1),u=SIMD.Float32x4.mul(a,l),u=SIMD.Float32x4.swizzle(u,1,0,3,2),c=SIMD.Float32x4.add(SIMD.Float32x4.mul(h,u),c),f=SIMD.Float32x4.mul(s,u),u=SIMD.Float32x4.swizzle(u,2,3,0,1),c=SIMD.Float32x4.sub(c,SIMD.Float32x4.mul(h,u)),f=SIMD.Float32x4.sub(SIMD.Float32x4.mul(s,u),f),f=SIMD.Float32x4.swizzle(f,2,3,0,1),u=SIMD.Float32x4.mul(SIMD.Float32x4.swizzle(a,2,3,0,1),h),u=SIMD.Float32x4.swizzle(u,1,0,3,2),l=SIMD.Float32x4.swizzle(l,2,3,0,1),c=SIMD.Float32x4.add(SIMD.Float32x4.mul(l,u),c),d=SIMD.Float32x4.mul(s,u),u=SIMD.Float32x4.swizzle(u,2,3,0,1),c=SIMD.Float32x4.sub(c,SIMD.Float32x4.mul(l,u)),d=SIMD.Float32x4.sub(SIMD.Float32x4.mul(s,u),d),d=SIMD.Float32x4.swizzle(d,2,3,0,1),u=SIMD.Float32x4.mul(s,a),u=SIMD.Float32x4.swizzle(u,1,0,3,2),d=SIMD.Float32x4.add(SIMD.Float32x4.mul(h,u),d),f=SIMD.Float32x4.sub(SIMD.Float32x4.mul(l,u),f),u=SIMD.Float32x4.swizzle(u,2,3,0,1),d=SIMD.Float32x4.sub(SIMD.Float32x4.mul(h,u),d),f=SIMD.Float32x4.sub(f,SIMD.Float32x4.mul(l,u)),u=SIMD.Float32x4.mul(s,h),u=SIMD.Float32x4.swizzle(u,1,0,3,2),p=SIMD.Float32x4.sub(p,SIMD.Float32x4.mul(l,u)),d=SIMD.Float32x4.add(SIMD.Float32x4.mul(a,u),d),u=SIMD.Float32x4.swizzle(u,2,3,0,1),p=SIMD.Float32x4.add(SIMD.Float32x4.mul(l,u),p),d=SIMD.Float32x4.sub(d,SIMD.Float32x4.mul(a,u)),u=SIMD.Float32x4.mul(s,l),u=SIMD.Float32x4.swizzle(u,1,0,3,2),p=SIMD.Float32x4.add(SIMD.Float32x4.mul(h,u),p),f=SIMD.Float32x4.sub(f,SIMD.Float32x4.mul(a,u)),u=SIMD.Float32x4.swizzle(u,2,3,0,1),p=SIMD.Float32x4.sub(p,SIMD.Float32x4.mul(h,u)),f=SIMD.Float32x4.add(SIMD.Float32x4.mul(a,u),f),SIMD.Float32x4.store(t,0,c),SIMD.Float32x4.store(t,4,p),SIMD.Float32x4.store(t,8,d),SIMD.Float32x4.store(t,12,f),t},n.adjoint=r.USE_SIMD?n.SIMD.adjoint:n.scalar.adjoint,n.determinant=function(t){var e=t[0],i=t[1],r=t[2],n=t[3],o=t[4],s=t[5],a=t[6],l=t[7],h=t[8],u=t[9],c=t[10],p=t[11],d=t[12],f=t[13],m=t[14],v=t[15];return(e*s-i*o)*(c*v-p*m)-(e*a-r*o)*(u*v-p*f)+(e*l-n*o)*(u*m-c*f)+(i*a-r*s)*(h*v-p*d)-(i*l-n*s)*(h*m-c*d)+(r*l-n*a)*(h*f-u*d)},n.SIMD.multiply=function(t,e,i){var r=SIMD.Float32x4.load(e,0),n=SIMD.Float32x4.load(e,4),o=SIMD.Float32x4.load(e,8),s=SIMD.Float32x4.load(e,12),a=SIMD.Float32x4.load(i,0),l=SIMD.Float32x4.add(SIMD.Float32x4.mul(SIMD.Float32x4.swizzle(a,0,0,0,0),r),SIMD.Float32x4.add(SIMD.Float32x4.mul(SIMD.Float32x4.swizzle(a,1,1,1,1),n),SIMD.Float32x4.add(SIMD.Float32x4.mul(SIMD.Float32x4.swizzle(a,2,2,2,2),o),SIMD.Float32x4.mul(SIMD.Float32x4.swizzle(a,3,3,3,3),s))));SIMD.Float32x4.store(t,0,l);var h=SIMD.Float32x4.load(i,4),u=SIMD.Float32x4.add(SIMD.Float32x4.mul(SIMD.Float32x4.swizzle(h,0,0,0,0),r),SIMD.Float32x4.add(SIMD.Float32x4.mul(SIMD.Float32x4.swizzle(h,1,1,1,1),n),SIMD.Float32x4.add(SIMD.Float32x4.mul(SIMD.Float32x4.swizzle(h,2,2,2,2),o),SIMD.Float32x4.mul(SIMD.Float32x4.swizzle(h,3,3,3,3),s))));SIMD.Float32x4.store(t,4,u);var c=SIMD.Float32x4.load(i,8),p=SIMD.Float32x4.add(SIMD.Float32x4.mul(SIMD.Float32x4.swizzle(c,0,0,0,0),r),SIMD.Float32x4.add(SIMD.Float32x4.mul(SIMD.Float32x4.swizzle(c,1,1,1,1),n),SIMD.Float32x4.add(SIMD.Float32x4.mul(SIMD.Float32x4.swizzle(c,2,2,2,2),o),SIMD.Float32x4.mul(SIMD.Float32x4.swizzle(c,3,3,3,3),s))));SIMD.Float32x4.store(t,8,p)
-;var d=SIMD.Float32x4.load(i,12),f=SIMD.Float32x4.add(SIMD.Float32x4.mul(SIMD.Float32x4.swizzle(d,0,0,0,0),r),SIMD.Float32x4.add(SIMD.Float32x4.mul(SIMD.Float32x4.swizzle(d,1,1,1,1),n),SIMD.Float32x4.add(SIMD.Float32x4.mul(SIMD.Float32x4.swizzle(d,2,2,2,2),o),SIMD.Float32x4.mul(SIMD.Float32x4.swizzle(d,3,3,3,3),s))));return SIMD.Float32x4.store(t,12,f),t},n.scalar.multiply=function(t,e,i){var r=e[0],n=e[1],o=e[2],s=e[3],a=e[4],l=e[5],h=e[6],u=e[7],c=e[8],p=e[9],d=e[10],f=e[11],m=e[12],v=e[13],_=e[14],y=e[15],g=i[0],x=i[1],w=i[2],M=i[3];return t[0]=g*r+x*a+w*c+M*m,t[1]=g*n+x*l+w*p+M*v,t[2]=g*o+x*h+w*d+M*_,t[3]=g*s+x*u+w*f+M*y,g=i[4],x=i[5],w=i[6],M=i[7],t[4]=g*r+x*a+w*c+M*m,t[5]=g*n+x*l+w*p+M*v,t[6]=g*o+x*h+w*d+M*_,t[7]=g*s+x*u+w*f+M*y,g=i[8],x=i[9],w=i[10],M=i[11],t[8]=g*r+x*a+w*c+M*m,t[9]=g*n+x*l+w*p+M*v,t[10]=g*o+x*h+w*d+M*_,t[11]=g*s+x*u+w*f+M*y,g=i[12],x=i[13],w=i[14],M=i[15],t[12]=g*r+x*a+w*c+M*m,t[13]=g*n+x*l+w*p+M*v,t[14]=g*o+x*h+w*d+M*_,t[15]=g*s+x*u+w*f+M*y,t},n.multiply=r.USE_SIMD?n.SIMD.multiply:n.scalar.multiply,n.mul=n.multiply,n.scalar.translate=function(t,e,i){var r,n,o,s,a,l,h,u,c,p,d,f,m=i[0],v=i[1],_=i[2];return e===t?(t[12]=e[0]*m+e[4]*v+e[8]*_+e[12],t[13]=e[1]*m+e[5]*v+e[9]*_+e[13],t[14]=e[2]*m+e[6]*v+e[10]*_+e[14],t[15]=e[3]*m+e[7]*v+e[11]*_+e[15]):(r=e[0],n=e[1],o=e[2],s=e[3],a=e[4],l=e[5],h=e[6],u=e[7],c=e[8],p=e[9],d=e[10],f=e[11],t[0]=r,t[1]=n,t[2]=o,t[3]=s,t[4]=a,t[5]=l,t[6]=h,t[7]=u,t[8]=c,t[9]=p,t[10]=d,t[11]=f,t[12]=r*m+a*v+c*_+e[12],t[13]=n*m+l*v+p*_+e[13],t[14]=o*m+h*v+d*_+e[14],t[15]=s*m+u*v+f*_+e[15]),t},n.SIMD.translate=function(t,e,i){var r=SIMD.Float32x4.load(e,0),n=SIMD.Float32x4.load(e,4),o=SIMD.Float32x4.load(e,8),s=SIMD.Float32x4.load(e,12),a=SIMD.Float32x4(i[0],i[1],i[2],0);e!==t&&(t[0]=e[0],t[1]=e[1],t[2]=e[2],t[3]=e[3],t[4]=e[4],t[5]=e[5],t[6]=e[6],t[7]=e[7],t[8]=e[8],t[9]=e[9],t[10]=e[10],t[11]=e[11]),r=SIMD.Float32x4.mul(r,SIMD.Float32x4.swizzle(a,0,0,0,0)),n=SIMD.Float32x4.mul(n,SIMD.Float32x4.swizzle(a,1,1,1,1)),o=SIMD.Float32x4.mul(o,SIMD.Float32x4.swizzle(a,2,2,2,2));var l=SIMD.Float32x4.add(r,SIMD.Float32x4.add(n,SIMD.Float32x4.add(o,s)));return SIMD.Float32x4.store(t,12,l),t},n.translate=r.USE_SIMD?n.SIMD.translate:n.scalar.translate,n.scalar.scale=function(t,e,i){var r=i[0],n=i[1],o=i[2];return t[0]=e[0]*r,t[1]=e[1]*r,t[2]=e[2]*r,t[3]=e[3]*r,t[4]=e[4]*n,t[5]=e[5]*n,t[6]=e[6]*n,t[7]=e[7]*n,t[8]=e[8]*o,t[9]=e[9]*o,t[10]=e[10]*o,t[11]=e[11]*o,t[12]=e[12],t[13]=e[13],t[14]=e[14],t[15]=e[15],t},n.SIMD.scale=function(t,e,i){var r,n,o,s=SIMD.Float32x4(i[0],i[1],i[2],0);return r=SIMD.Float32x4.load(e,0),SIMD.Float32x4.store(t,0,SIMD.Float32x4.mul(r,SIMD.Float32x4.swizzle(s,0,0,0,0))),n=SIMD.Float32x4.load(e,4),SIMD.Float32x4.store(t,4,SIMD.Float32x4.mul(n,SIMD.Float32x4.swizzle(s,1,1,1,1))),o=SIMD.Float32x4.load(e,8),SIMD.Float32x4.store(t,8,SIMD.Float32x4.mul(o,SIMD.Float32x4.swizzle(s,2,2,2,2))),t[12]=e[12],t[13]=e[13],t[14]=e[14],t[15]=e[15],t},n.scale=r.USE_SIMD?n.SIMD.scale:n.scalar.scale,n.rotate=function(t,e,i,n){var o,s,a,l,h,u,c,p,d,f,m,v,_,y,g,x,w,M,b,S,E,I,D,T,F=n[0],L=n[1],C=n[2],P=Math.sqrt(F*F+L*L+C*C);return Math.abs(P)<r.EPSILON?null:(P=1/P,F*=P,L*=P,C*=P,o=Math.sin(i),s=Math.cos(i),a=1-s,l=e[0],h=e[1],u=e[2],c=e[3],p=e[4],d=e[5],f=e[6],m=e[7],v=e[8],_=e[9],y=e[10],g=e[11],x=F*F*a+s,w=L*F*a+C*o,M=C*F*a-L*o,b=F*L*a-C*o,S=L*L*a+s,E=C*L*a+F*o,I=F*C*a+L*o,D=L*C*a-F*o,T=C*C*a+s,t[0]=l*x+p*w+v*M,t[1]=h*x+d*w+_*M,t[2]=u*x+f*w+y*M,t[3]=c*x+m*w+g*M,t[4]=l*b+p*S+v*E,t[5]=h*b+d*S+_*E,t[6]=u*b+f*S+y*E,t[7]=c*b+m*S+g*E,t[8]=l*I+p*D+v*T,t[9]=h*I+d*D+_*T,t[10]=u*I+f*D+y*T,t[11]=c*I+m*D+g*T,e!==t&&(t[12]=e[12],t[13]=e[13],t[14]=e[14],t[15]=e[15]),t)},n.scalar.rotateX=function(t,e,i){var r=Math.sin(i),n=Math.cos(i),o=e[4],s=e[5],a=e[6],l=e[7],h=e[8],u=e[9],c=e[10],p=e[11];return e!==t&&(t[0]=e[0],t[1]=e[1],t[2]=e[2],t[3]=e[3],t[12]=e[12],t[13]=e[13],t[14]=e[14],t[15]=e[15]),t[4]=o*n+h*r,t[5]=s*n+u*r,t[6]=a*n+c*r,t[7]=l*n+p*r,t[8]=h*n-o*r,t[9]=u*n-s*r,t[10]=c*n-a*r,t[11]=p*n-l*r,t},n.SIMD.rotateX=function(t,e,i){var r=SIMD.Float32x4.splat(Math.sin(i)),n=SIMD.Float32x4.splat(Math.cos(i));e!==t&&(t[0]=e[0],t[1]=e[1],t[2]=e[2],t[3]=e[3],t[12]=e[12],t[13]=e[13],t[14]=e[14],t[15]=e[15]);var o=SIMD.Float32x4.load(e,4),s=SIMD.Float32x4.load(e,8);return SIMD.Float32x4.store(t,4,SIMD.Float32x4.add(SIMD.Float32x4.mul(o,n),SIMD.Float32x4.mul(s,r))),SIMD.Float32x4.store(t,8,SIMD.Float32x4.sub(SIMD.Float32x4.mul(s,n),SIMD.Float32x4.mul(o,r))),t},n.rotateX=r.USE_SIMD?n.SIMD.rotateX:n.scalar.rotateX,n.scalar.rotateY=function(t,e,i){var r=Math.sin(i),n=Math.cos(i),o=e[0],s=e[1],a=e[2],l=e[3],h=e[8],u=e[9],c=e[10],p=e[11];return e!==t&&(t[4]=e[4],t[5]=e[5],t[6]=e[6],t[7]=e[7],t[12]=e[12],t[13]=e[13],t[14]=e[14],t[15]=e[15]),t[0]=o*n-h*r,t[1]=s*n-u*r,t[2]=a*n-c*r,t[3]=l*n-p*r,t[8]=o*r+h*n,t[9]=s*r+u*n,t[10]=a*r+c*n,t[11]=l*r+p*n,t},n.SIMD.rotateY=function(t,e,i){var r=SIMD.Float32x4.splat(Math.sin(i)),n=SIMD.Float32x4.splat(Math.cos(i));e!==t&&(t[4]=e[4],t[5]=e[5],t[6]=e[6],t[7]=e[7],t[12]=e[12],t[13]=e[13],t[14]=e[14],t[15]=e[15]);var o=SIMD.Float32x4.load(e,0),s=SIMD.Float32x4.load(e,8);return SIMD.Float32x4.store(t,0,SIMD.Float32x4.sub(SIMD.Float32x4.mul(o,n),SIMD.Float32x4.mul(s,r))),SIMD.Float32x4.store(t,8,SIMD.Float32x4.add(SIMD.Float32x4.mul(o,r),SIMD.Float32x4.mul(s,n))),t},n.rotateY=r.USE_SIMD?n.SIMD.rotateY:n.scalar.rotateY,n.scalar.rotateZ=function(t,e,i){var r=Math.sin(i),n=Math.cos(i),o=e[0],s=e[1],a=e[2],l=e[3],h=e[4],u=e[5],c=e[6],p=e[7];return e!==t&&(t[8]=e[8],t[9]=e[9],t[10]=e[10],t[11]=e[11],t[12]=e[12],t[13]=e[13],t[14]=e[14],t[15]=e[15]),t[0]=o*n+h*r,t[1]=s*n+u*r,t[2]=a*n+c*r,t[3]=l*n+p*r,t[4]=h*n-o*r,t[5]=u*n-s*r,t[6]=c*n-a*r,t[7]=p*n-l*r,t},n.SIMD.rotateZ=function(t,e,i){var r=SIMD.Float32x4.splat(Math.sin(i)),n=SIMD.Float32x4.splat(Math.cos(i));e!==t&&(t[8]=e[8],t[9]=e[9],t[10]=e[10],t[11]=e[11],t[12]=e[12],t[13]=e[13],t[14]=e[14],t[15]=e[15]);var o=SIMD.Float32x4.load(e,0),s=SIMD.Float32x4.load(e,4);return SIMD.Float32x4.store(t,0,SIMD.Float32x4.add(SIMD.Float32x4.mul(o,n),SIMD.Float32x4.mul(s,r))),SIMD.Float32x4.store(t,4,SIMD.Float32x4.sub(SIMD.Float32x4.mul(s,n),SIMD.Float32x4.mul(o,r))),t},n.rotateZ=r.USE_SIMD?n.SIMD.rotateZ:n.scalar.rotateZ,n.fromTranslation=function(t,e){return t[0]=1,t[1]=0,t[2]=0,t[3]=0,t[4]=0,t[5]=1,t[6]=0,t[7]=0,t[8]=0,t[9]=0,t[10]=1,t[11]=0,t[12]=e[0],t[13]=e[1],t[14]=e[2],t[15]=1,t},n.fromScaling=function(t,e){return t[0]=e[0],t[1]=0,t[2]=0,t[3]=0,t[4]=0,t[5]=e[1],t[6]=0,t[7]=0,t[8]=0,t[9]=0,t[10]=e[2],t[11]=0,t[12]=0,t[13]=0,t[14]=0,t[15]=1,t},n.fromRotation=function(t,e,i){var n,o,s,a=i[0],l=i[1],h=i[2],u=Math.sqrt(a*a+l*l+h*h);return Math.abs(u)<r.EPSILON?null:(u=1/u,a*=u,l*=u,h*=u,n=Math.sin(e),o=Math.cos(e),s=1-o,t[0]=a*a*s+o,t[1]=l*a*s+h*n,t[2]=h*a*s-l*n,t[3]=0,t[4]=a*l*s-h*n,t[5]=l*l*s+o,t[6]=h*l*s+a*n,t[7]=0,t[8]=a*h*s+l*n,t[9]=l*h*s-a*n,t[10]=h*h*s+o,t[11]=0,t[12]=0,t[13]=0,t[14]=0,t[15]=1,t)},n.fromXRotation=function(t,e){var i=Math.sin(e),r=Math.cos(e);return t[0]=1,t[1]=0,t[2]=0,t[3]=0,t[4]=0,t[5]=r,t[6]=i,t[7]=0,t[8]=0,t[9]=-i,t[10]=r,t[11]=0,t[12]=0,t[13]=0,t[14]=0,t[15]=1,t},n.fromYRotation=function(t,e){var i=Math.sin(e),r=Math.cos(e);return t[0]=r,t[1]=0,t[2]=-i,t[3]=0,t[4]=0,t[5]=1,t[6]=0,t[7]=0,t[8]=i,t[9]=0,t[10]=r,t[11]=0,t[12]=0,t[13]=0,t[14]=0,t[15]=1,t},n.fromZRotation=function(t,e){var i=Math.sin(e),r=Math.cos(e);return t[0]=r,t[1]=i,t[2]=0,t[3]=0,t[4]=-i,t[5]=r,t[6]=0,t[7]=0,t[8]=0,t[9]=0,t[10]=1,t[11]=0,t[12]=0,t[13]=0,t[14]=0,t[15]=1,t},n.fromRotationTranslation=function(t,e,i){var r=e[0],n=e[1],o=e[2],s=e[3],a=r+r,l=n+n,h=o+o,u=r*a,c=r*l,p=r*h,d=n*l,f=n*h,m=o*h,v=s*a,_=s*l,y=s*h;return t[0]=1-(d+m),t[1]=c+y,t[2]=p-_,t[3]=0,t[4]=c-y,t[5]=1-(u+m),t[6]=f+v,t[7]=0,t[8]=p+_,t[9]=f-v,t[10]=1-(u+d),t[11]=0,t[12]=i[0],t[13]=i[1],t[14]=i[2],t[15]=1,t},n.getTranslation=function(t,e){return t[0]=e[12],t[1]=e[13],t[2]=e[14],t},n.getScaling=function(t,e){var i=e[0],r=e[1],n=e[2],o=e[4],s=e[5],a=e[6],l=e[8],h=e[9],u=e[10];return t[0]=Math.sqrt(i*i+r*r+n*n),t[1]=Math.sqrt(o*o+s*s+a*a),t[2]=Math.sqrt(l*l+h*h+u*u),t},n.getRotation=function(t,e){var i=e[0]+e[5]+e[10],r=0;return i>0?(r=2*Math.sqrt(i+1),t[3]=.25*r,t[0]=(e[6]-e[9])/r,t[1]=(e[8]-e[2])/r,t[2]=(e[1]-e[4])/r):e[0]>e[5]&e[0]>e[10]?(r=2*Math.sqrt(1+e[0]-e[5]-e[10]),t[3]=(e[6]-e[9])/r,t[0]=.25*r,t[1]=(e[1]+e[4])/r,t[2]=(e[8]+e[2])/r):e[5]>e[10]?(r=2*Math.sqrt(1+e[5]-e[0]-e[10]),t[3]=(e[8]-e[2])/r,t[0]=(e[1]+e[4])/r,t[1]=.25*r,t[2]=(e[6]+e[9])/r):(r=2*Math.sqrt(1+e[10]-e[0]-e[5]),t[3]=(e[1]-e[4])/r,t[0]=(e[8]+e[2])/r,t[1]=(e[6]+e[9])/r,t[2]=.25*r),t},n.fromRotationTranslationScale=function(t,e,i,r){var n=e[0],o=e[1],s=e[2],a=e[3],l=n+n,h=o+o,u=s+s,c=n*l,p=n*h,d=n*u,f=o*h,m=o*u,v=s*u,_=a*l,y=a*h,g=a*u,x=r[0],w=r[1],M=r[2];return t[0]=(1-(f+v))*x,t[1]=(p+g)*x,t[2]=(d-y)*x,t[3]=0,t[4]=(p-g)*w,t[5]=(1-(c+v))*w,t[6]=(m+_)*w,t[7]=0,t[8]=(d+y)*M,t[9]=(m-_)*M,t[10]=(1-(c+f))*M,t[11]=0,t[12]=i[0],t[13]=i[1],t[14]=i[2],t[15]=1,t},n.fromRotationTranslationScaleOrigin=function(t,e,i,r,n){var o=e[0],s=e[1],a=e[2],l=e[3],h=o+o,u=s+s,c=a+a,p=o*h,d=o*u,f=o*c,m=s*u,v=s*c,_=a*c,y=l*h,g=l*u,x=l*c,w=r[0],M=r[1],b=r[2],S=n[0],E=n[1],I=n[2];return t[0]=(1-(m+_))*w,t[1]=(d+x)*w,t[2]=(f-g)*w,t[3]=0,t[4]=(d-x)*M,t[5]=(1-(p+_))*M,t[6]=(v+y)*M,t[7]=0,t[8]=(f+g)*b,t[9]=(v-y)*b,t[10]=(1-(p+m))*b,t[11]=0,t[12]=i[0]+S-(t[0]*S+t[4]*E+t[8]*I),t[13]=i[1]+E-(t[1]*S+t[5]*E+t[9]*I),t[14]=i[2]+I-(t[2]*S+t[6]*E+t[10]*I),t[15]=1,t},n.fromQuat=function(t,e){var i=e[0],r=e[1],n=e[2],o=e[3],s=i+i,a=r+r,l=n+n,h=i*s,u=r*s,c=r*a,p=n*s,d=n*a,f=n*l,m=o*s,v=o*a,_=o*l;return t[0]=1-c-f,t[1]=u+_,t[2]=p-v,t[3]=0,t[4]=u-_,t[5]=1-h-f,t[6]=d+m,t[7]=0,t[8]=p+v,t[9]=d-m,t[10]=1-h-c,t[11]=0,t[12]=0,t[13]=0,t[14]=0,t[15]=1,t},n.frustum=function(t,e,i,r,n,o,s){var a=1/(i-e),l=1/(n-r),h=1/(o-s);return t[0]=2*o*a,t[1]=0,t[2]=0,t[3]=0,t[4]=0,t[5]=2*o*l,t[6]=0,t[7]=0,t[8]=(i+e)*a,t[9]=(n+r)*l,t[10]=(s+o)*h,t[11]=-1,t[12]=0,t[13]=0,t[14]=s*o*2*h,t[15]=0,t},n.perspective=function(t,e,i,r,n){var o=1/Math.tan(e/2),s=1/(r-n);return t[0]=o/i,t[1]=0,t[2]=0,t[3]=0,t[4]=0,t[5]=o,t[6]=0,t[7]=0,t[8]=0,t[9]=0,t[10]=(n+r)*s,t[11]=-1,t[12]=0,t[13]=0,t[14]=2*n*r*s,t[15]=0,t},n.perspectiveFromFieldOfView=function(t,e,i,r){var n=Math.tan(e.upDegrees*Math.PI/180),o=Math.tan(e.downDegrees*Math.PI/180),s=Math.tan(e.leftDegrees*Math.PI/180),a=Math.tan(e.rightDegrees*Math.PI/180),l=2/(s+a),h=2/(n+o);return t[0]=l,t[1]=0,t[2]=0,t[3]=0,t[4]=0,t[5]=h,t[6]=0,t[7]=0,t[8]=-(s-a)*l*.5,t[9]=(n-o)*h*.5,t[10]=r/(i-r),t[11]=-1,t[12]=0,t[13]=0,t[14]=r*i/(i-r),t[15]=0,t},n.ortho=function(t,e,i,r,n,o,s){var a=1/(e-i),l=1/(r-n),h=1/(o-s);return t[0]=-2*a,t[1]=0,t[2]=0,t[3]=0,t[4]=0,t[5]=-2*l,t[6]=0,t[7]=0,t[8]=0,t[9]=0,t[10]=2*h,t[11]=0,t[12]=(e+i)*a,t[13]=(n+r)*l,t[14]=(s+o)*h,t[15]=1,t},n.lookAt=function(t,e,i,o){var s,a,l,h,u,c,p,d,f,m,v=e[0],_=e[1],y=e[2],g=o[0],x=o[1],w=o[2],M=i[0],b=i[1],S=i[2];return Math.abs(v-M)<r.EPSILON&&Math.abs(_-b)<r.EPSILON&&Math.abs(y-S)<r.EPSILON?n.identity(t):(p=v-M,d=_-b,f=y-S,m=1/Math.sqrt(p*p+d*d+f*f),p*=m,d*=m,f*=m,s=x*f-w*d,a=w*p-g*f,l=g*d-x*p,m=Math.sqrt(s*s+a*a+l*l),m?(m=1/m,s*=m,a*=m,l*=m):(s=0,a=0,l=0),h=d*l-f*a,u=f*s-p*l,c=p*a-d*s,m=Math.sqrt(h*h+u*u+c*c),m?(m=1/m,h*=m,u*=m,c*=m):(h=0,u=0,c=0),t[0]=s,t[1]=h,t[2]=p,t[3]=0,t[4]=a,t[5]=u,t[6]=d,t[7]=0,t[8]=l,t[9]=c,t[10]=f,t[11]=0,t[12]=-(s*v+a*_+l*y),t[13]=-(h*v+u*_+c*y),t[14]=-(p*v+d*_+f*y),t[15]=1,t)},n.str=function(t){return"mat4("+t[0]+", "+t[1]+", "+t[2]+", "+t[3]+", "+t[4]+", "+t[5]+", "+t[6]+", "+t[7]+", "+t[8]+", "+t[9]+", "+t[10]+", "+t[11]+", "+t[12]+", "+t[13]+", "+t[14]+", "+t[15]+")"},n.frob=function(t){return Math.sqrt(Math.pow(t[0],2)+Math.pow(t[1],2)+Math.pow(t[2],2)+Math.pow(t[3],2)+Math.pow(t[4],2)+Math.pow(t[5],2)+Math.pow(t[6],2)+Math.pow(t[7],2)+Math.pow(t[8],2)+Math.pow(t[9],2)+Math.pow(t[10],2)+Math.pow(t[11],2)+Math.pow(t[12],2)+Math.pow(t[13],2)+Math.pow(t[14],2)+Math.pow(t[15],2))},n.add=function(t,e,i){return t[0]=e[0]+i[0],t[1]=e[1]+i[1],t[2]=e[2]+i[2],t[3]=e[3]+i[3],t[4]=e[4]+i[4],t[5]=e[5]+i[5],t[6]=e[6]+i[6],t[7]=e[7]+i[7],t[8]=e[8]+i[8],t[9]=e[9]+i[9],t[10]=e[10]+i[10],t[11]=e[11]+i[11],t[12]=e[12]+i[12],t[13]=e[13]+i[13],t[14]=e[14]+i[14],t[15]=e[15]+i[15],t},n.subtract=function(t,e,i){return t[0]=e[0]-i[0],t[1]=e[1]-i[1],t[2]=e[2]-i[2],t[3]=e[3]-i[3],t[4]=e[4]-i[4],t[5]=e[5]-i[5],t[6]=e[6]-i[6],t[7]=e[7]-i[7],t[8]=e[8]-i[8],t[9]=e[9]-i[9],t[10]=e[10]-i[10],t[11]=e[11]-i[11],t[12]=e[12]-i[12],t[13]=e[13]-i[13],t[14]=e[14]-i[14],t[15]=e[15]-i[15],t},n.sub=n.subtract,n.multiplyScalar=function(t,e,i){return t[0]=e[0]*i,t[1]=e[1]*i,t[2]=e[2]*i,t[3]=e[3]*i,t[4]=e[4]*i,t[5]=e[5]*i,t[6]=e[6]*i,t[7]=e[7]*i,t[8]=e[8]*i,t[9]=e[9]*i,t[10]=e[10]*i,t[11]=e[11]*i,t[12]=e[12]*i,t[13]=e[13]*i,t[14]=e[14]*i,t[15]=e[15]*i,t},n.multiplyScalarAndAdd=function(t,e,i,r){return t[0]=e[0]+i[0]*r,t[1]=e[1]+i[1]*r,t[2]=e[2]+i[2]*r,t[3]=e[3]+i[3]*r,t[4]=e[4]+i[4]*r,t[5]=e[5]+i[5]*r,t[6]=e[6]+i[6]*r,t[7]=e[7]+i[7]*r,t[8]=e[8]+i[8]*r,t[9]=e[9]+i[9]*r,t[10]=e[10]+i[10]*r,t[11]=e[11]+i[11]*r,t[12]=e[12]+i[12]*r,t[13]=e[13]+i[13]*r,t[14]=e[14]+i[14]*r,t[15]=e[15]+i[15]*r,t},n.exactEquals=function(t,e){return t[0]===e[0]&&t[1]===e[1]&&t[2]===e[2]&&t[3]===e[3]&&t[4]===e[4]&&t[5]===e[5]&&t[6]===e[6]&&t[7]===e[7]&&t[8]===e[8]&&t[9]===e[9]&&t[10]===e[10]&&t[11]===e[11]&&t[12]===e[12]&&t[13]===e[13]&&t[14]===e[14]&&t[15]===e[15]},n.equals=function(t,e){var i=t[0],n=t[1],o=t[2],s=t[3],a=t[4],l=t[5],h=t[6],u=t[7],c=t[8],p=t[9],d=t[10],f=t[11],m=t[12],v=t[13],_=t[14],y=t[15],g=e[0],x=e[1],w=e[2],M=e[3],b=e[4],S=e[5],E=e[6],I=e[7],D=e[8],T=e[9],F=e[10],L=e[11],C=e[12],P=e[13],z=e[14],R=e[15];return Math.abs(i-g)<=r.EPSILON*Math.max(1,Math.abs(i),Math.abs(g))&&Math.abs(n-x)<=r.EPSILON*Math.max(1,Math.abs(n),Math.abs(x))&&Math.abs(o-w)<=r.EPSILON*Math.max(1,Math.abs(o),Math.abs(w))&&Math.abs(s-M)<=r.EPSILON*Math.max(1,Math.abs(s),Math.abs(M))&&Math.abs(a-b)<=r.EPSILON*Math.max(1,Math.abs(a),Math.abs(b))&&Math.abs(l-S)<=r.EPSILON*Math.max(1,Math.abs(l),Math.abs(S))&&Math.abs(h-E)<=r.EPSILON*Math.max(1,Math.abs(h),Math.abs(E))&&Math.abs(u-I)<=r.EPSILON*Math.max(1,Math.abs(u),Math.abs(I))&&Math.abs(c-D)<=r.EPSILON*Math.max(1,Math.abs(c),Math.abs(D))&&Math.abs(p-T)<=r.EPSILON*Math.max(1,Math.abs(p),Math.abs(T))&&Math.abs(d-F)<=r.EPSILON*Math.max(1,Math.abs(d),Math.abs(F))&&Math.abs(f-L)<=r.EPSILON*Math.max(1,Math.abs(f),Math.abs(L))&&Math.abs(m-C)<=r.EPSILON*Math.max(1,Math.abs(m),Math.abs(C))&&Math.abs(v-P)<=r.EPSILON*Math.max(1,Math.abs(v),Math.abs(P))&&Math.abs(_-z)<=r.EPSILON*Math.max(1,Math.abs(_),Math.abs(z))&&Math.abs(y-R)<=r.EPSILON*Math.max(1,Math.abs(y),Math.abs(R))},e.exports=n},{"./common.js":3}],8:[function(t,e,i){var r=t("./common.js"),n=t("./mat3.js"),o=t("./vec3.js"),s=t("./vec4.js"),a={};a.create=function(){var t=new r.ARRAY_TYPE(4);return t[0]=0,t[1]=0,t[2]=0,t[3]=1,t},a.rotationTo=function(){var t=o.create(),e=o.fromValues(1,0,0),i=o.fromValues(0,1,0);return function(r,n,s){var l=o.dot(n,s);return l<-.999999?(o.cross(t,e,n),o.length(t)<1e-6&&o.cross(t,i,n),o.normalize(t,t),a.setAxisAngle(r,t,Math.PI),r):l>.999999?(r[0]=0,r[1]=0,r[2]=0,r[3]=1,r):(o.cross(t,n,s),r[0]=t[0],r[1]=t[1],r[2]=t[2],r[3]=1+l,a.normalize(r,r))}}(),a.setAxes=function(){var t=n.create();return function(e,i,r,n){return t[0]=r[0],t[3]=r[1],t[6]=r[2],t[1]=n[0],t[4]=n[1],t[7]=n[2],t[2]=-i[0],t[5]=-i[1],t[8]=-i[2],a.normalize(e,a.fromMat3(e,t))}}(),a.clone=s.clone,a.fromValues=s.fromValues,a.copy=s.copy,a.set=s.set,a.identity=function(t){return t[0]=0,t[1]=0,t[2]=0,t[3]=1,t},a.setAxisAngle=function(t,e,i){i*=.5;var r=Math.sin(i);return t[0]=r*e[0],t[1]=r*e[1],t[2]=r*e[2],t[3]=Math.cos(i),t},a.getAxisAngle=function(t,e){var i=2*Math.acos(e[3]),r=Math.sin(i/2);return 0!=r?(t[0]=e[0]/r,t[1]=e[1]/r,t[2]=e[2]/r):(t[0]=1,t[1]=0,t[2]=0),i},a.add=s.add,a.multiply=function(t,e,i){var r=e[0],n=e[1],o=e[2],s=e[3],a=i[0],l=i[1],h=i[2],u=i[3];return t[0]=r*u+s*a+n*h-o*l,t[1]=n*u+s*l+o*a-r*h,t[2]=o*u+s*h+r*l-n*a,t[3]=s*u-r*a-n*l-o*h,t},a.mul=a.multiply,a.scale=s.scale,a.rotateX=function(t,e,i){i*=.5;var r=e[0],n=e[1],o=e[2],s=e[3],a=Math.sin(i),l=Math.cos(i);return t[0]=r*l+s*a,t[1]=n*l+o*a,t[2]=o*l-n*a,t[3]=s*l-r*a,t},a.rotateY=function(t,e,i){i*=.5;var r=e[0],n=e[1],o=e[2],s=e[3],a=Math.sin(i),l=Math.cos(i);return t[0]=r*l-o*a,t[1]=n*l+s*a,t[2]=o*l+r*a,t[3]=s*l-n*a,t},a.rotateZ=function(t,e,i){i*=.5;var r=e[0],n=e[1],o=e[2],s=e[3],a=Math.sin(i),l=Math.cos(i);return t[0]=r*l+n*a,t[1]=n*l-r*a,t[2]=o*l+s*a,t[3]=s*l-o*a,t},a.calculateW=function(t,e){var i=e[0],r=e[1],n=e[2];return t[0]=i,t[1]=r,t[2]=n,t[3]=Math.sqrt(Math.abs(1-i*i-r*r-n*n)),t},a.dot=s.dot,a.lerp=s.lerp,a.slerp=function(t,e,i,r){var n,o,s,a,l,h=e[0],u=e[1],c=e[2],p=e[3],d=i[0],f=i[1],m=i[2],v=i[3];return o=h*d+u*f+c*m+p*v,o<0&&(o=-o,d=-d,f=-f,m=-m,v=-v),1-o>1e-6?(n=Math.acos(o),s=Math.sin(n),a=Math.sin((1-r)*n)/s,l=Math.sin(r*n)/s):(a=1-r,l=r),t[0]=a*h+l*d,t[1]=a*u+l*f,t[2]=a*c+l*m,t[3]=a*p+l*v,t},a.sqlerp=function(){var t=a.create(),e=a.create();return function(i,r,n,o,s,l){return a.slerp(t,r,s,l),a.slerp(e,n,o,l),a.slerp(i,t,e,2*l*(1-l)),i}}(),a.invert=function(t,e){var i=e[0],r=e[1],n=e[2],o=e[3],s=i*i+r*r+n*n+o*o,a=s?1/s:0;return t[0]=-i*a,t[1]=-r*a,t[2]=-n*a,t[3]=o*a,t},a.conjugate=function(t,e){return t[0]=-e[0],t[1]=-e[1],t[2]=-e[2],t[3]=e[3],t},a.length=s.length,a.len=a.length,a.squaredLength=s.squaredLength,a.sqrLen=a.squaredLength,a.normalize=s.normalize,a.fromMat3=function(t,e){var i,r=e[0]+e[4]+e[8];if(r>0)i=Math.sqrt(r+1),t[3]=.5*i,i=.5/i,t[0]=(e[5]-e[7])*i,t[1]=(e[6]-e[2])*i,t[2]=(e[1]-e[3])*i;else{var n=0;e[4]>e[0]&&(n=1),e[8]>e[3*n+n]&&(n=2);var o=(n+1)%3,s=(n+2)%3;i=Math.sqrt(e[3*n+n]-e[3*o+o]-e[3*s+s]+1),t[n]=.5*i,i=.5/i,t[3]=(e[3*o+s]-e[3*s+o])*i,t[o]=(e[3*o+n]+e[3*n+o])*i,t[s]=(e[3*s+n]+e[3*n+s])*i}return t},a.str=function(t){return"quat("+t[0]+", "+t[1]+", "+t[2]+", "+t[3]+")"},a.exactEquals=s.exactEquals,a.equals=s.equals,e.exports=a},{"./common.js":3,"./mat3.js":6,"./vec3.js":10,"./vec4.js":11}],9:[function(t,e,i){var r=t("./common.js"),n={};n.create=function(){var t=new r.ARRAY_TYPE(2);return t[0]=0,t[1]=0,t},n.clone=function(t){var e=new r.ARRAY_TYPE(2);return e[0]=t[0],e[1]=t[1],e},n.fromValues=function(t,e){var i=new r.ARRAY_TYPE(2);return i[0]=t,i[1]=e,i},n.copy=function(t,e){return t[0]=e[0],t[1]=e[1],t},n.set=function(t,e,i){return t[0]=e,t[1]=i,t},n.add=function(t,e,i){return t[0]=e[0]+i[0],t[1]=e[1]+i[1],t},n.subtract=function(t,e,i){return t[0]=e[0]-i[0],t[1]=e[1]-i[1],t},n.sub=n.subtract,n.multiply=function(t,e,i){return t[0]=e[0]*i[0],t[1]=e[1]*i[1],t},n.mul=n.multiply,n.divide=function(t,e,i){return t[0]=e[0]/i[0],t[1]=e[1]/i[1],t},n.div=n.divide,n.ceil=function(t,e){return t[0]=Math.ceil(e[0]),t[1]=Math.ceil(e[1]),t},n.floor=function(t,e){return t[0]=Math.floor(e[0]),t[1]=Math.floor(e[1]),t},n.min=function(t,e,i){return t[0]=Math.min(e[0],i[0]),t[1]=Math.min(e[1],i[1]),t},n.max=function(t,e,i){return t[0]=Math.max(e[0],i[0]),t[1]=Math.max(e[1],i[1]),t},n.round=function(t,e){return t[0]=Math.round(e[0]),t[1]=Math.round(e[1]),t},n.scale=function(t,e,i){return t[0]=e[0]*i,t[1]=e[1]*i,t},n.scaleAndAdd=function(t,e,i,r){return t[0]=e[0]+i[0]*r,t[1]=e[1]+i[1]*r,t},n.distance=function(t,e){var i=e[0]-t[0],r=e[1]-t[1];return Math.sqrt(i*i+r*r)},n.dist=n.distance,n.squaredDistance=function(t,e){var i=e[0]-t[0],r=e[1]-t[1];return i*i+r*r},n.sqrDist=n.squaredDistance,n.length=function(t){var e=t[0],i=t[1];return Math.sqrt(e*e+i*i)},n.len=n.length,n.squaredLength=function(t){var e=t[0],i=t[1];return e*e+i*i},n.sqrLen=n.squaredLength,n.negate=function(t,e){return t[0]=-e[0],t[1]=-e[1],t},n.inverse=function(t,e){return t[0]=1/e[0],t[1]=1/e[1],t},n.normalize=function(t,e){var i=e[0],r=e[1],n=i*i+r*r;return n>0&&(n=1/Math.sqrt(n),t[0]=e[0]*n,t[1]=e[1]*n),t},n.dot=function(t,e){return t[0]*e[0]+t[1]*e[1]},n.cross=function(t,e,i){var r=e[0]*i[1]-e[1]*i[0];return t[0]=t[1]=0,t[2]=r,t},n.lerp=function(t,e,i,r){var n=e[0],o=e[1];return t[0]=n+r*(i[0]-n),t[1]=o+r*(i[1]-o),t},n.random=function(t,e){e=e||1;var i=2*r.RANDOM()*Math.PI;return t[0]=Math.cos(i)*e,t[1]=Math.sin(i)*e,t},n.transformMat2=function(t,e,i){var r=e[0],n=e[1];return t[0]=i[0]*r+i[2]*n,t[1]=i[1]*r+i[3]*n,t},n.transformMat2d=function(t,e,i){var r=e[0],n=e[1];return t[0]=i[0]*r+i[2]*n+i[4],t[1]=i[1]*r+i[3]*n+i[5],t},n.transformMat3=function(t,e,i){var r=e[0],n=e[1];return t[0]=i[0]*r+i[3]*n+i[6],t[1]=i[1]*r+i[4]*n+i[7],t},n.transformMat4=function(t,e,i){var r=e[0],n=e[1];return t[0]=i[0]*r+i[4]*n+i[12],t[1]=i[1]*r+i[5]*n+i[13],t},n.forEach=function(){var t=n.create();return function(e,i,r,n,o,s){var a,l;for(i||(i=2),r||(r=0),l=n?Math.min(n*i+r,e.length):e.length,a=r;a<l;a+=i)t[0]=e[a],t[1]=e[a+1],o(t,t,s),e[a]=t[0],e[a+1]=t[1];return e}}(),n.str=function(t){return"vec2("+t[0]+", "+t[1]+")"},n.exactEquals=function(t,e){return t[0]===e[0]&&t[1]===e[1]},n.equals=function(t,e){var i=t[0],n=t[1],o=e[0],s=e[1];return Math.abs(i-o)<=r.EPSILON*Math.max(1,Math.abs(i),Math.abs(o))&&Math.abs(n-s)<=r.EPSILON*Math.max(1,Math.abs(n),Math.abs(s))},e.exports=n},{"./common.js":3}],10:[function(t,e,i){var r=t("./common.js"),n={};n.create=function(){var t=new r.ARRAY_TYPE(3);return t[0]=0,t[1]=0,t[2]=0,t},n.clone=function(t){var e=new r.ARRAY_TYPE(3);return e[0]=t[0],e[1]=t[1],e[2]=t[2],e},n.fromValues=function(t,e,i){var n=new r.ARRAY_TYPE(3);return n[0]=t,n[1]=e,n[2]=i,n},n.copy=function(t,e){return t[0]=e[0],t[1]=e[1],t[2]=e[2],t},n.set=function(t,e,i,r){return t[0]=e,t[1]=i,t[2]=r,t},n.add=function(t,e,i){return t[0]=e[0]+i[0],t[1]=e[1]+i[1],t[2]=e[2]+i[2],t},n.subtract=function(t,e,i){return t[0]=e[0]-i[0],t[1]=e[1]-i[1],t[2]=e[2]-i[2],t},n.sub=n.subtract,n.multiply=function(t,e,i){return t[0]=e[0]*i[0],t[1]=e[1]*i[1],t[2]=e[2]*i[2],t},n.mul=n.multiply,n.divide=function(t,e,i){return t[0]=e[0]/i[0],t[1]=e[1]/i[1],t[2]=e[2]/i[2],t},n.div=n.divide,n.ceil=function(t,e){return t[0]=Math.ceil(e[0]),t[1]=Math.ceil(e[1]),t[2]=Math.ceil(e[2]),t},n.floor=function(t,e){return t[0]=Math.floor(e[0]),t[1]=Math.floor(e[1]),t[2]=Math.floor(e[2]),t},n.min=function(t,e,i){return t[0]=Math.min(e[0],i[0]),t[1]=Math.min(e[1],i[1]),t[2]=Math.min(e[2],i[2]),t},n.max=function(t,e,i){return t[0]=Math.max(e[0],i[0]),t[1]=Math.max(e[1],i[1]),t[2]=Math.max(e[2],i[2]),t},n.round=function(t,e){return t[0]=Math.round(e[0]),t[1]=Math.round(e[1]),t[2]=Math.round(e[2]),t},n.scale=function(t,e,i){return t[0]=e[0]*i,t[1]=e[1]*i,t[2]=e[2]*i,t},n.scaleAndAdd=function(t,e,i,r){return t[0]=e[0]+i[0]*r,t[1]=e[1]+i[1]*r,t[2]=e[2]+i[2]*r,t},n.distance=function(t,e){var i=e[0]-t[0],r=e[1]-t[1],n=e[2]-t[2];return Math.sqrt(i*i+r*r+n*n)},n.dist=n.distance,n.squaredDistance=function(t,e){var i=e[0]-t[0],r=e[1]-t[1],n=e[2]-t[2];return i*i+r*r+n*n},n.sqrDist=n.squaredDistance,n.length=function(t){var e=t[0],i=t[1],r=t[2];return Math.sqrt(e*e+i*i+r*r)},n.len=n.length,n.squaredLength=function(t){var e=t[0],i=t[1],r=t[2];return e*e+i*i+r*r},n.sqrLen=n.squaredLength,n.negate=function(t,e){return t[0]=-e[0],t[1]=-e[1],t[2]=-e[2],t},n.inverse=function(t,e){return t[0]=1/e[0],t[1]=1/e[1],t[2]=1/e[2],t},n.normalize=function(t,e){var i=e[0],r=e[1],n=e[2],o=i*i+r*r+n*n;return o>0&&(o=1/Math.sqrt(o),t[0]=e[0]*o,t[1]=e[1]*o,t[2]=e[2]*o),t},n.dot=function(t,e){return t[0]*e[0]+t[1]*e[1]+t[2]*e[2]},n.cross=function(t,e,i){var r=e[0],n=e[1],o=e[2],s=i[0],a=i[1],l=i[2];return t[0]=n*l-o*a,t[1]=o*s-r*l,t[2]=r*a-n*s,t},n.lerp=function(t,e,i,r){var n=e[0],o=e[1],s=e[2];return t[0]=n+r*(i[0]-n),t[1]=o+r*(i[1]-o),t[2]=s+r*(i[2]-s),t},n.hermite=function(t,e,i,r,n,o){var s=o*o,a=s*(2*o-3)+1,l=s*(o-2)+o,h=s*(o-1),u=s*(3-2*o);return t[0]=e[0]*a+i[0]*l+r[0]*h+n[0]*u,t[1]=e[1]*a+i[1]*l+r[1]*h+n[1]*u,t[2]=e[2]*a+i[2]*l+r[2]*h+n[2]*u,t},n.bezier=function(t,e,i,r,n,o){var s=1-o,a=s*s,l=o*o,h=a*s,u=3*o*a,c=3*l*s,p=l*o;return t[0]=e[0]*h+i[0]*u+r[0]*c+n[0]*p,t[1]=e[1]*h+i[1]*u+r[1]*c+n[1]*p,t[2]=e[2]*h+i[2]*u+r[2]*c+n[2]*p,t},n.random=function(t,e){e=e||1;var i=2*r.RANDOM()*Math.PI,n=2*r.RANDOM()-1,o=Math.sqrt(1-n*n)*e;return t[0]=Math.cos(i)*o,t[1]=Math.sin(i)*o,t[2]=n*e,t},n.transformMat4=function(t,e,i){var r=e[0],n=e[1],o=e[2],s=i[3]*r+i[7]*n+i[11]*o+i[15];return s=s||1,t[0]=(i[0]*r+i[4]*n+i[8]*o+i[12])/s,t[1]=(i[1]*r+i[5]*n+i[9]*o+i[13])/s,t[2]=(i[2]*r+i[6]*n+i[10]*o+i[14])/s,t},n.transformMat3=function(t,e,i){var r=e[0],n=e[1],o=e[2];return t[0]=r*i[0]+n*i[3]+o*i[6],t[1]=r*i[1]+n*i[4]+o*i[7],t[2]=r*i[2]+n*i[5]+o*i[8],t},n.transformQuat=function(t,e,i){var r=e[0],n=e[1],o=e[2],s=i[0],a=i[1],l=i[2],h=i[3],u=h*r+a*o-l*n,c=h*n+l*r-s*o,p=h*o+s*n-a*r,d=-s*r-a*n-l*o;return t[0]=u*h+d*-s+c*-l-p*-a,t[1]=c*h+d*-a+p*-s-u*-l,t[2]=p*h+d*-l+u*-a-c*-s,t},n.rotateX=function(t,e,i,r){var n=[],o=[];return n[0]=e[0]-i[0],n[1]=e[1]-i[1],n[2]=e[2]-i[2],o[0]=n[0],o[1]=n[1]*Math.cos(r)-n[2]*Math.sin(r),o[2]=n[1]*Math.sin(r)+n[2]*Math.cos(r),t[0]=o[0]+i[0],t[1]=o[1]+i[1],t[2]=o[2]+i[2],t},n.rotateY=function(t,e,i,r){var n=[],o=[];return n[0]=e[0]-i[0],n[1]=e[1]-i[1],n[2]=e[2]-i[2],o[0]=n[2]*Math.sin(r)+n[0]*Math.cos(r),o[1]=n[1],o[2]=n[2]*Math.cos(r)-n[0]*Math.sin(r),t[0]=o[0]+i[0],t[1]=o[1]+i[1],t[2]=o[2]+i[2],t},n.rotateZ=function(t,e,i,r){var n=[],o=[];return n[0]=e[0]-i[0],n[1]=e[1]-i[1],n[2]=e[2]-i[2],o[0]=n[0]*Math.cos(r)-n[1]*Math.sin(r),o[1]=n[0]*Math.sin(r)+n[1]*Math.cos(r),o[2]=n[2],t[0]=o[0]+i[0],t[1]=o[1]+i[1],t[2]=o[2]+i[2],t},n.forEach=function(){var t=n.create();return function(e,i,r,n,o,s){var a,l;for(i||(i=3),r||(r=0),l=n?Math.min(n*i+r,e.length):e.length,a=r;a<l;a+=i)t[0]=e[a],t[1]=e[a+1],t[2]=e[a+2],o(t,t,s),e[a]=t[0],e[a+1]=t[1],e[a+2]=t[2];return e}}(),n.angle=function(t,e){var i=n.fromValues(t[0],t[1],t[2]),r=n.fromValues(e[0],e[1],e[2]);n.normalize(i,i),n.normalize(r,r);var o=n.dot(i,r);return o>1?0:o<-1?Math.PI:Math.acos(o)},n.str=function(t){return"vec3("+t[0]+", "+t[1]+", "+t[2]+")"},n.exactEquals=function(t,e){return t[0]===e[0]&&t[1]===e[1]&&t[2]===e[2]},n.equals=function(t,e){var i=t[0],n=t[1],o=t[2],s=e[0],a=e[1],l=e[2];return Math.abs(i-s)<=r.EPSILON*Math.max(1,Math.abs(i),Math.abs(s))&&Math.abs(n-a)<=r.EPSILON*Math.max(1,Math.abs(n),Math.abs(a))&&Math.abs(o-l)<=r.EPSILON*Math.max(1,Math.abs(o),Math.abs(l))},e.exports=n},{"./common.js":3}],11:[function(t,e,i){var r=t("./common.js"),n={};n.create=function(){var t=new r.ARRAY_TYPE(4);return t[0]=0,t[1]=0,t[2]=0,t[3]=0,t},n.clone=function(t){var e=new r.ARRAY_TYPE(4);return e[0]=t[0],e[1]=t[1],e[2]=t[2],e[3]=t[3],e},n.fromValues=function(t,e,i,n){var o=new r.ARRAY_TYPE(4);return o[0]=t,o[1]=e,o[2]=i,o[3]=n,o},n.copy=function(t,e){return t[0]=e[0],t[1]=e[1],t[2]=e[2],t[3]=e[3],t},n.set=function(t,e,i,r,n){return t[0]=e,t[1]=i,t[2]=r,t[3]=n,t},n.add=function(t,e,i){return t[0]=e[0]+i[0],t[1]=e[1]+i[1],t[2]=e[2]+i[2],t[3]=e[3]+i[3],t},n.subtract=function(t,e,i){return t[0]=e[0]-i[0],t[1]=e[1]-i[1],t[2]=e[2]-i[2],t[3]=e[3]-i[3],t},n.sub=n.subtract,n.multiply=function(t,e,i){return t[0]=e[0]*i[0],t[1]=e[1]*i[1],t[2]=e[2]*i[2],t[3]=e[3]*i[3],t},n.mul=n.multiply,n.divide=function(t,e,i){return t[0]=e[0]/i[0],t[1]=e[1]/i[1],t[2]=e[2]/i[2],t[3]=e[3]/i[3],t},n.div=n.divide,n.ceil=function(t,e){return t[0]=Math.ceil(e[0]),t[1]=Math.ceil(e[1]),t[2]=Math.ceil(e[2]),t[3]=Math.ceil(e[3]),t},n.floor=function(t,e){return t[0]=Math.floor(e[0]),t[1]=Math.floor(e[1]),t[2]=Math.floor(e[2]),t[3]=Math.floor(e[3]),t},n.min=function(t,e,i){return t[0]=Math.min(e[0],i[0]),t[1]=Math.min(e[1],i[1]),t[2]=Math.min(e[2],i[2]),t[3]=Math.min(e[3],i[3]),t},n.max=function(t,e,i){return t[0]=Math.max(e[0],i[0]),t[1]=Math.max(e[1],i[1]),t[2]=Math.max(e[2],i[2]),t[3]=Math.max(e[3],i[3]),t},n.round=function(t,e){return t[0]=Math.round(e[0]),t[1]=Math.round(e[1]),t[2]=Math.round(e[2]),t[3]=Math.round(e[3]),t},n.scale=function(t,e,i){return t[0]=e[0]*i,t[1]=e[1]*i,t[2]=e[2]*i,t[3]=e[3]*i,t},n.scaleAndAdd=function(t,e,i,r){return t[0]=e[0]+i[0]*r,t[1]=e[1]+i[1]*r,t[2]=e[2]+i[2]*r,t[3]=e[3]+i[3]*r,t},n.distance=function(t,e){var i=e[0]-t[0],r=e[1]-t[1],n=e[2]-t[2],o=e[3]-t[3];return Math.sqrt(i*i+r*r+n*n+o*o)},n.dist=n.distance,n.squaredDistance=function(t,e){var i=e[0]-t[0],r=e[1]-t[1],n=e[2]-t[2],o=e[3]-t[3];return i*i+r*r+n*n+o*o},n.sqrDist=n.squaredDistance,n.length=function(t){var e=t[0],i=t[1],r=t[2],n=t[3];return Math.sqrt(e*e+i*i+r*r+n*n)},n.len=n.length,n.squaredLength=function(t){var e=t[0],i=t[1],r=t[2],n=t[3];return e*e+i*i+r*r+n*n},n.sqrLen=n.squaredLength,n.negate=function(t,e){return t[0]=-e[0],t[1]=-e[1],t[2]=-e[2],t[3]=-e[3],t},n.inverse=function(t,e){return t[0]=1/e[0],t[1]=1/e[1],t[2]=1/e[2],t[3]=1/e[3],t},n.normalize=function(t,e){var i=e[0],r=e[1],n=e[2],o=e[3],s=i*i+r*r+n*n+o*o;return s>0&&(s=1/Math.sqrt(s),t[0]=i*s,t[1]=r*s,t[2]=n*s,t[3]=o*s),t},n.dot=function(t,e){return t[0]*e[0]+t[1]*e[1]+t[2]*e[2]+t[3]*e[3]},n.lerp=function(t,e,i,r){var n=e[0],o=e[1],s=e[2],a=e[3];return t[0]=n+r*(i[0]-n),t[1]=o+r*(i[1]-o),t[2]=s+r*(i[2]-s),t[3]=a+r*(i[3]-a),t},n.random=function(t,e){return e=e||1,t[0]=r.RANDOM(),t[1]=r.RANDOM(),t[2]=r.RANDOM(),t[3]=r.RANDOM(),n.normalize(t,t),n.scale(t,t,e),t},n.transformMat4=function(t,e,i){var r=e[0],n=e[1],o=e[2],s=e[3];return t[0]=i[0]*r+i[4]*n+i[8]*o+i[12]*s,t[1]=i[1]*r+i[5]*n+i[9]*o+i[13]*s,t[2]=i[2]*r+i[6]*n+i[10]*o+i[14]*s,t[3]=i[3]*r+i[7]*n+i[11]*o+i[15]*s,t},n.transformQuat=function(t,e,i){var r=e[0],n=e[1],o=e[2],s=i[0],a=i[1],l=i[2],h=i[3],u=h*r+a*o-l*n,c=h*n+l*r-s*o,p=h*o+s*n-a*r,d=-s*r-a*n-l*o;return t[0]=u*h+d*-s+c*-l-p*-a,t[1]=c*h+d*-a+p*-s-u*-l,t[2]=p*h+d*-l+u*-a-c*-s,t[3]=e[3],t},n.forEach=function(){var t=n.create();return function(e,i,r,n,o,s){var a,l;for(i||(i=4),r||(r=0),l=n?Math.min(n*i+r,e.length):e.length,a=r;a<l;a+=i)t[0]=e[a],t[1]=e[a+1],t[2]=e[a+2],t[3]=e[a+3],o(t,t,s),e[a]=t[0],e[a+1]=t[1],e[a+2]=t[2],e[a+3]=t[3];return e}}(),n.str=function(t){return"vec4("+t[0]+", "+t[1]+", "+t[2]+", "+t[3]+")"},n.exactEquals=function(t,e){return t[0]===e[0]&&t[1]===e[1]&&t[2]===e[2]&&t[3]===e[3]},n.equals=function(t,e){var i=t[0],n=t[1],o=t[2],s=t[3],a=e[0],l=e[1],h=e[2],u=e[3];return Math.abs(i-a)<=r.EPSILON*Math.max(1,Math.abs(i),Math.abs(a))&&Math.abs(n-l)<=r.EPSILON*Math.max(1,Math.abs(n),Math.abs(l))&&Math.abs(o-h)<=r.EPSILON*Math.max(1,Math.abs(o),Math.abs(h))&&Math.abs(s-u)<=r.EPSILON*Math.max(1,Math.abs(s),Math.abs(u))},e.exports=n},{"./common.js":3}],12:[function(e,i,r){!function(e,r,n,o){"use strict";function s(t,e,i){return setTimeout(d(t,i),e)}function a(t,e,i){return!!Array.isArray(t)&&(l(t,i[e],i),!0)}function l(t,e,i){var r;if(t)if(t.forEach)t.forEach(e,i);else if(t.length!==o)for(r=0;r<t.length;)e.call(i,t[r],r,t),r++;else for(r in t)t.hasOwnProperty(r)&&e.call(i,t[r],r,t)}function h(t,e,i){for(var r=Object.keys(e),n=0;n<r.length;)(!i||i&&t[r[n]]===o)&&(t[r[n]]=e[r[n]]),n++;return t}function u(t,e){return h(t,e,!0)}function c(t){if(Object.create)return Object.create(t);var e=function(){};e.prototype=t;var i=new e;return e.prototype=null,i}function p(t,e,i){var r,n=e.prototype;r=t.prototype=c(n),r.constructor=t,r._super=n,i&&h(r,i)}function d(t,e){return function(){return t.apply(e,arguments)}}function f(t,e){return typeof t==dt?t.apply(e?e[0]||o:o,e):t}function m(t,e){return t===o?e:t}function v(t,e,i){l(x(e),function(e){t.addEventListener(e,i,!1)})}function _(t,e,i){l(x(e),function(e){t.removeEventListener(e,i,!1)})}function y(t,e){for(;t;){if(t==e)return!0;t=t.parentNode}return!1}function g(t,e){return t.indexOf(e)>-1}function x(t){return t.trim().split(/\s+/g)}function w(t,e,i){if(t.indexOf&&!i)return t.indexOf(e);for(var r=0;r<t.length;){if(i&&t[r][i]==e||!i&&t[r]===e)return r;r++}return-1}function M(t){return Array.prototype.slice.call(t,0)}function b(t,e,i){for(var r=[],n=[],o=0;o<t.length;){var s=e?t[o][e]:t[o];w(n,s)<0&&r.push(t[o]),n[o]=s,o++}return i&&(r=e?r.sort(function(t,i){return t[e]>i[e]}):r.sort()),r}function S(t,e){for(var i,r,n=e[0].toUpperCase()+e.slice(1),s=0;s<ct.length;){if(i=ct[s],(r=i?i+n:e)in t)return r;s++}return o}function E(){return _t++}function I(t){var i=t.ownerDocument||t;return i.defaultView||i.parentWindow||e}function D(t,e){var i=this;this.manager=t,this.callback=e,this.element=t.element,
-this.target=t.options.inputTarget,this.domHandler=function(e){f(t.options.enable,[t])&&i.handler(e)},this.init()}function T(t){var e=t.options.inputClass;return new(e||(xt?B:wt?j:gt?G:Y))(t,F)}function F(t,e,i){var r=i.pointers.length,n=i.changedPointers.length,o=e&bt&&r-n==0,s=e&(Et|It)&&r-n==0;i.isFirst=!!o,i.isFinal=!!s,o&&(t.session={}),i.eventType=e,L(t,i),t.emit("hammer.input",i),t.recognize(i),t.session.prevInput=i}function L(t,e){var i=t.session,r=e.pointers,n=r.length;i.firstInput||(i.firstInput=z(e)),n>1&&!i.firstMultiple?i.firstMultiple=z(e):1===n&&(i.firstMultiple=!1);var o=i.firstInput,s=i.firstMultiple,a=s?s.center:o.center,l=e.center=R(r);e.timeStamp=vt(),e.deltaTime=e.timeStamp-o.timeStamp,e.angle=H(a,l),e.distance=k(a,l),C(i,e),e.offsetDirection=O(e.deltaX,e.deltaY),e.scale=s?q(s.pointers,r):1,e.rotation=s?N(s.pointers,r):0,P(i,e);var h=t.element;y(e.srcEvent.target,h)&&(h=e.srcEvent.target),e.target=h}function C(t,e){var i=e.center,r=t.offsetDelta||{},n=t.prevDelta||{},o=t.prevInput||{};e.eventType!==bt&&o.eventType!==Et||(n=t.prevDelta={x:o.deltaX||0,y:o.deltaY||0},r=t.offsetDelta={x:i.x,y:i.y}),e.deltaX=n.x+(i.x-r.x),e.deltaY=n.y+(i.y-r.y)}function P(t,e){var i,r,n,s,a=t.lastInterval||e,l=e.timeStamp-a.timeStamp;if(e.eventType!=It&&(l>Mt||a.velocity===o)){var h=a.deltaX-e.deltaX,u=a.deltaY-e.deltaY,c=A(l,h,u);r=c.x,n=c.y,i=mt(c.x)>mt(c.y)?c.x:c.y,s=O(h,u),t.lastInterval=e}else i=a.velocity,r=a.velocityX,n=a.velocityY,s=a.direction;e.velocity=i,e.velocityX=r,e.velocityY=n,e.direction=s}function z(t){for(var e=[],i=0;i<t.pointers.length;)e[i]={clientX:ft(t.pointers[i].clientX),clientY:ft(t.pointers[i].clientY)},i++;return{timeStamp:vt(),pointers:e,center:R(e),deltaX:t.deltaX,deltaY:t.deltaY}}function R(t){var e=t.length;if(1===e)return{x:ft(t[0].clientX),y:ft(t[0].clientY)};for(var i=0,r=0,n=0;n<e;)i+=t[n].clientX,r+=t[n].clientY,n++;return{x:ft(i/e),y:ft(r/e)}}function A(t,e,i){return{x:e/t||0,y:i/t||0}}function O(t,e){return t===e?Dt:mt(t)>=mt(e)?t>0?Tt:Ft:e>0?Lt:Ct}function k(t,e,i){i||(i=At);var r=e[i[0]]-t[i[0]],n=e[i[1]]-t[i[1]];return Math.sqrt(r*r+n*n)}function H(t,e,i){i||(i=At);var r=e[i[0]]-t[i[0]],n=e[i[1]]-t[i[1]];return 180*Math.atan2(n,r)/Math.PI}function N(t,e){return H(e[1],e[0],Ot)-H(t[1],t[0],Ot)}function q(t,e){return k(e[0],e[1],Ot)/k(t[0],t[1],Ot)}function Y(){this.evEl=Ht,qt?this.evDoc=Nt:this.evWin=Nt,this.allow=!0,this.pressed=!1,D.apply(this,arguments)}function B(){this.evEl=Xt,this.evWin=Wt,D.apply(this,arguments),this.store=this.manager.session.pointerEvents=[]}function X(){this.evTarget=Vt,this.evWin=Gt,this.started=!1,D.apply(this,arguments)}function W(t,e){var i=M(t.touches),r=M(t.changedTouches);return e&(Et|It)&&(i=b(i.concat(r),"identifier",!0)),[i,r]}function j(){this.evTarget=Zt,this.targetIds={},D.apply(this,arguments)}function V(t,e){var i=M(t.touches),r=this.targetIds;if(e&(bt|St)&&1===i.length)return r[i[0].identifier]=!0,[i,i];var n,o,s=M(t.changedTouches),a=[],l=this.target;if(o=i.filter(function(t){return y(t.target,l)}),e===bt)for(n=0;n<o.length;)r[o[n].identifier]=!0,n++;for(n=0;n<s.length;)r[s[n].identifier]&&a.push(s[n]),e&(Et|It)&&delete r[s[n].identifier],n++;return a.length?[b(o.concat(a),"identifier",!0),a]:void 0}function G(){D.apply(this,arguments);var t=d(this.handler,this);this.touch=new j(this.manager,t),this.mouse=new Y(this.manager,t)}function U(t,e){this.manager=t,this.set(e)}function Z(t){if(g(t,te))return te;var e=g(t,ee),i=g(t,ie);return e&&i?ee+" "+ie:e||i?e?ee:ie:g(t,Jt)?Jt:$t}function K(t){this.id=E(),this.manager=null,this.options=u(t||{},this.defaults),this.options.enable=m(this.options.enable,!0),this.state=re,this.simultaneous={},this.requireFail=[]}function Q(t){return t&le?"cancel":t&se?"end":t&oe?"move":t&ne?"start":""}function $(t){return t==Ct?"down":t==Lt?"up":t==Tt?"left":t==Ft?"right":""}function J(t,e){var i=e.manager;return i?i.get(t):t}function tt(){K.apply(this,arguments)}function et(){tt.apply(this,arguments),this.pX=null,this.pY=null}function it(){tt.apply(this,arguments)}function rt(){K.apply(this,arguments),this._timer=null,this._input=null}function nt(){tt.apply(this,arguments)}function ot(){tt.apply(this,arguments)}function st(){K.apply(this,arguments),this.pTime=!1,this.pCenter=!1,this._timer=null,this._input=null,this.count=0}function at(t,e){return e=e||{},e.recognizers=m(e.recognizers,at.defaults.preset),new lt(t,e)}function lt(t,e){e=e||{},this.options=u(e,at.defaults),this.options.inputTarget=this.options.inputTarget||t,this.handlers={},this.session={},this.recognizers=[],this.element=t,this.input=T(this),this.touchAction=new U(this,this.options.touchAction),ht(this,!0),l(e.recognizers,function(t){var e=this.add(new t[0](t[1]));t[2]&&e.recognizeWith(t[2]),t[3]&&e.requireFailure(t[3])},this)}function ht(t,e){var i=t.element;i.style&&l(t.options.cssProps,function(t,r){i.style[S(i.style,r)]=e?t:""})}function ut(t,e){var i=r.createEvent("Event");i.initEvent(t,!0,!0),i.gesture=e,e.target.dispatchEvent(i)}var ct=["","webkit","moz","MS","ms","o"],pt=r.createElement("div"),dt="function",ft=Math.round,mt=Math.abs,vt=Date.now,_t=1,yt=/mobile|tablet|ip(ad|hone|od)|android/i,gt="ontouchstart"in e,xt=S(e,"PointerEvent")!==o,wt=gt&&yt.test(navigator.userAgent),Mt=25,bt=1,St=2,Et=4,It=8,Dt=1,Tt=2,Ft=4,Lt=8,Ct=16,Pt=Tt|Ft,zt=Lt|Ct,Rt=Pt|zt,At=["x","y"],Ot=["clientX","clientY"];D.prototype={handler:function(){},init:function(){this.evEl&&v(this.element,this.evEl,this.domHandler),this.evTarget&&v(this.target,this.evTarget,this.domHandler),this.evWin&&v(I(this.element),this.evWin,this.domHandler),this.evDoc&&v(r,this.evDoc,this.domHandler),this.evBody&&v(r.body,this.evBody,this.domHandler)},destroy:function(){this.evEl&&_(this.element,this.evEl,this.domHandler),this.evTarget&&_(this.target,this.evTarget,this.domHandler),this.evWin&&_(I(this.element),this.evWin,this.domHandler),this.evDoc&&_(r,this.evDoc,this.domHandler),this.evBody&&_(r.body,this.evBody,this.domHandler)}};var kt={mousedown:bt,mousemove:St,mouseup:Et},Ht="mousedown",Nt="mousemove mouseup",qt=e.navigator.userAgent.indexOf("MSIE 8")>0;p(Y,D,{handler:function(t){var e=kt[t.type],i=0;qt&&(i=1),e&bt&&t.button===i&&(this.pressed=!0),e&St&&t.button!==i&&(e=Et),this.pressed&&this.allow&&(e&Et&&(this.pressed=!1),this.callback(this.manager,e,{pointers:[t],changedPointers:[t],pointerType:"mouse",srcEvent:t}))}});var Yt={pointerdown:bt,pointermove:St,pointerup:Et,pointercancel:It,pointerout:It},Bt={2:"touch",3:"pen",4:"mouse",5:"kinect"},Xt="pointerdown",Wt="pointermove pointerup pointercancel";e.MSPointerEvent&&(Xt="MSPointerDown",Wt="MSPointerMove MSPointerUp MSPointerCancel"),p(B,D,{handler:function(t){var e=this.store,i=!1,r=t.type.toLowerCase().replace("ms",""),n=Yt[r],o=Bt[t.pointerType]||t.pointerType,s="touch"==o,a=w(e,t.pointerId,"pointerId");n&bt&&(0===t.button||s)?a<0&&(e.push(t),a=e.length-1):n&(Et|It)&&(i=!0),a<0||(e[a]=t,this.callback(this.manager,n,{pointers:e,changedPointers:[t],pointerType:o,srcEvent:t}),i&&e.splice(a,1))}});var jt={touchstart:bt,touchmove:St,touchend:Et,touchcancel:It},Vt="touchstart",Gt="touchstart touchmove touchend touchcancel";p(X,D,{handler:function(t){var e=jt[t.type];if(e===bt&&(this.started=!0),this.started){var i=W.call(this,t,e);e&(Et|It)&&i[0].length-i[1].length==0&&(this.started=!1),this.callback(this.manager,e,{pointers:i[0],changedPointers:i[1],pointerType:"touch",srcEvent:t})}}});var Ut={touchstart:bt,touchmove:St,touchend:Et,touchcancel:It},Zt="touchstart touchmove touchend touchcancel";p(j,D,{handler:function(t){var e=Ut[t.type],i=V.call(this,t,e);i&&this.callback(this.manager,e,{pointers:i[0],changedPointers:i[1],pointerType:"touch",srcEvent:t})}}),p(G,D,{handler:function(t,e,i){var r="touch"==i.pointerType,n="mouse"==i.pointerType;if(r)this.mouse.allow=!1;else if(n&&!this.mouse.allow)return;e&(Et|It)&&(this.mouse.allow=!0),this.callback(t,e,i)},destroy:function(){this.touch.destroy(),this.mouse.destroy()}});var Kt=S(pt.style,"touchAction"),Qt=Kt!==o,$t="auto",Jt="manipulation",te="none",ee="pan-x",ie="pan-y";U.prototype={set:function(t){"compute"==t&&(t=this.compute()),Qt&&this.manager.element.style&&(this.manager.element.style[Kt]=t),this.actions=t.toLowerCase().trim()},update:function(){this.set(this.manager.options.touchAction)},compute:function(){var t=[];return l(this.manager.recognizers,function(e){f(e.options.enable,[e])&&(t=t.concat(e.getTouchAction()))}),Z(t.join(" "))},preventDefaults:function(t){if(!Qt){var e=t.srcEvent,i=t.offsetDirection;if(this.manager.session.prevented)return void e.preventDefault();var r=this.actions,n=g(r,te),o=g(r,ie),s=g(r,ee);return n||o&&i&Pt||s&&i&zt?this.preventSrc(e):void 0}},preventSrc:function(t){this.manager.session.prevented=!0,t.preventDefault()}};var re=1,ne=2,oe=4,se=8,ae=se,le=16;K.prototype={defaults:{},set:function(t){return h(this.options,t),this.manager&&this.manager.touchAction.update(),this},recognizeWith:function(t){if(a(t,"recognizeWith",this))return this;var e=this.simultaneous;return t=J(t,this),e[t.id]||(e[t.id]=t,t.recognizeWith(this)),this},dropRecognizeWith:function(t){return a(t,"dropRecognizeWith",this)?this:(t=J(t,this),delete this.simultaneous[t.id],this)},requireFailure:function(t){if(a(t,"requireFailure",this))return this;var e=this.requireFail;return t=J(t,this),-1===w(e,t)&&(e.push(t),t.requireFailure(this)),this},dropRequireFailure:function(t){if(a(t,"dropRequireFailure",this))return this;t=J(t,this);var e=w(this.requireFail,t);return e>-1&&this.requireFail.splice(e,1),this},hasRequireFailures:function(){return this.requireFail.length>0},canRecognizeWith:function(t){return!!this.simultaneous[t.id]},emit:function(t){function e(e){i.manager.emit(i.options.event+(e?Q(r):""),t)}var i=this,r=this.state;r<se&&e(!0),e(),r>=se&&e(!0)},tryEmit:function(t){if(this.canEmit())return this.emit(t);this.state=32},canEmit:function(){for(var t=0;t<this.requireFail.length;){if(!(this.requireFail[t].state&(32|re)))return!1;t++}return!0},recognize:function(t){var e=h({},t);if(!f(this.options.enable,[this,e]))return this.reset(),void(this.state=32);this.state&(ae|le|32)&&(this.state=re),this.state=this.process(e),this.state&(ne|oe|se|le)&&this.tryEmit(e)},process:function(t){},getTouchAction:function(){},reset:function(){}},p(tt,K,{defaults:{pointers:1},attrTest:function(t){var e=this.options.pointers;return 0===e||t.pointers.length===e},process:function(t){var e=this.state,i=t.eventType,r=e&(ne|oe),n=this.attrTest(t);return r&&(i&It||!n)?e|le:r||n?i&Et?e|se:e&ne?e|oe:ne:32}}),p(et,tt,{defaults:{event:"pan",threshold:10,pointers:1,direction:Rt},getTouchAction:function(){var t=this.options.direction,e=[];return t&Pt&&e.push(ie),t&zt&&e.push(ee),e},directionTest:function(t){var e=this.options,i=!0,r=t.distance,n=t.direction,o=t.deltaX,s=t.deltaY;return n&e.direction||(e.direction&Pt?(n=0===o?Dt:o<0?Tt:Ft,i=o!=this.pX,r=Math.abs(t.deltaX)):(n=0===s?Dt:s<0?Lt:Ct,i=s!=this.pY,r=Math.abs(t.deltaY))),t.direction=n,i&&r>e.threshold&&n&e.direction},attrTest:function(t){return tt.prototype.attrTest.call(this,t)&&(this.state&ne||!(this.state&ne)&&this.directionTest(t))},emit:function(t){this.pX=t.deltaX,this.pY=t.deltaY;var e=$(t.direction);e&&this.manager.emit(this.options.event+e,t),this._super.emit.call(this,t)}}),p(it,tt,{defaults:{event:"pinch",threshold:0,pointers:2},getTouchAction:function(){return[te]},attrTest:function(t){return this._super.attrTest.call(this,t)&&(Math.abs(t.scale-1)>this.options.threshold||this.state&ne)},emit:function(t){if(this._super.emit.call(this,t),1!==t.scale){var e=t.scale<1?"in":"out";this.manager.emit(this.options.event+e,t)}}}),p(rt,K,{defaults:{event:"press",pointers:1,time:500,threshold:5},getTouchAction:function(){return[$t]},process:function(t){var e=this.options,i=t.pointers.length===e.pointers,r=t.distance<e.threshold,n=t.deltaTime>e.time;if(this._input=t,!r||!i||t.eventType&(Et|It)&&!n)this.reset();else if(t.eventType&bt)this.reset(),this._timer=s(function(){this.state=ae,this.tryEmit()},e.time,this);else if(t.eventType&Et)return ae;return 32},reset:function(){clearTimeout(this._timer)},emit:function(t){this.state===ae&&(t&&t.eventType&Et?this.manager.emit(this.options.event+"up",t):(this._input.timeStamp=vt(),this.manager.emit(this.options.event,this._input)))}}),p(nt,tt,{defaults:{event:"rotate",threshold:0,pointers:2},getTouchAction:function(){return[te]},attrTest:function(t){return this._super.attrTest.call(this,t)&&(Math.abs(t.rotation)>this.options.threshold||this.state&ne)}}),p(ot,tt,{defaults:{event:"swipe",threshold:10,velocity:.65,direction:Pt|zt,pointers:1},getTouchAction:function(){return et.prototype.getTouchAction.call(this)},attrTest:function(t){var e,i=this.options.direction;return i&(Pt|zt)?e=t.velocity:i&Pt?e=t.velocityX:i&zt&&(e=t.velocityY),this._super.attrTest.call(this,t)&&i&t.direction&&t.distance>this.options.threshold&&mt(e)>this.options.velocity&&t.eventType&Et},emit:function(t){var e=$(t.direction);e&&this.manager.emit(this.options.event+e,t),this.manager.emit(this.options.event,t)}}),p(st,K,{defaults:{event:"tap",pointers:1,taps:1,interval:300,time:250,threshold:2,posThreshold:10},getTouchAction:function(){return[Jt]},process:function(t){var e=this.options,i=t.pointers.length===e.pointers,r=t.distance<e.threshold,n=t.deltaTime<e.time;if(this.reset(),t.eventType&bt&&0===this.count)return this.failTimeout();if(r&&n&&i){if(t.eventType!=Et)return this.failTimeout();var o=!this.pTime||t.timeStamp-this.pTime<e.interval,a=!this.pCenter||k(this.pCenter,t.center)<e.posThreshold;this.pTime=t.timeStamp,this.pCenter=t.center,a&&o?this.count+=1:this.count=1,this._input=t;if(0===this.count%e.taps)return this.hasRequireFailures()?(this._timer=s(function(){this.state=ae,this.tryEmit()},e.interval,this),ne):ae}return 32},failTimeout:function(){return this._timer=s(function(){this.state=32},this.options.interval,this),32},reset:function(){clearTimeout(this._timer)},emit:function(){this.state==ae&&(this._input.tapCount=this.count,this.manager.emit(this.options.event,this._input))}}),at.VERSION="2.0.4",at.defaults={domEvents:!1,touchAction:"compute",enable:!0,inputTarget:null,inputClass:null,preset:[[nt,{enable:!1}],[it,{enable:!1},["rotate"]],[ot,{direction:Pt}],[et,{direction:Pt},["swipe"]],[st],[st,{event:"doubletap",taps:2},["tap"]],[rt]],cssProps:{userSelect:"none",touchSelect:"none",touchCallout:"none",contentZooming:"none",userDrag:"none",tapHighlightColor:"rgba(0,0,0,0)"}};lt.prototype={set:function(t){return h(this.options,t),t.touchAction&&this.touchAction.update(),t.inputTarget&&(this.input.destroy(),this.input.target=t.inputTarget,this.input.init()),this},stop:function(t){this.session.stopped=t?2:1},recognize:function(t){var e=this.session;if(!e.stopped){this.touchAction.preventDefaults(t);var i,r=this.recognizers,n=e.curRecognizer;(!n||n&&n.state&ae)&&(n=e.curRecognizer=null);for(var o=0;o<r.length;)i=r[o],2===e.stopped||n&&i!=n&&!i.canRecognizeWith(n)?i.reset():i.recognize(t),!n&&i.state&(ne|oe|se)&&(n=e.curRecognizer=i),o++}},get:function(t){if(t instanceof K)return t;for(var e=this.recognizers,i=0;i<e.length;i++)if(e[i].options.event==t)return e[i];return null},add:function(t){if(a(t,"add",this))return this;var e=this.get(t.options.event);return e&&this.remove(e),this.recognizers.push(t),t.manager=this,this.touchAction.update(),t},remove:function(t){if(a(t,"remove",this))return this;var e=this.recognizers;return t=this.get(t),e.splice(w(e,t),1),this.touchAction.update(),this},on:function(t,e){var i=this.handlers;return l(x(t),function(t){i[t]=i[t]||[],i[t].push(e)}),this},off:function(t,e){var i=this.handlers;return l(x(t),function(t){e?i[t].splice(w(i[t],e),1):delete i[t]}),this},emit:function(t,e){this.options.domEvents&&ut(t,e);var i=this.handlers[t]&&this.handlers[t].slice();if(i&&i.length){e.type=t,e.preventDefault=function(){e.srcEvent.preventDefault()};for(var r=0;r<i.length;)i[r](e),r++}},destroy:function(){this.element&&ht(this,!1),this.handlers={},this.session={},this.input.destroy(),this.element=null}},h(at,{INPUT_START:bt,INPUT_MOVE:St,INPUT_END:Et,INPUT_CANCEL:It,STATE_POSSIBLE:re,STATE_BEGAN:ne,STATE_CHANGED:oe,STATE_ENDED:se,STATE_RECOGNIZED:ae,STATE_CANCELLED:le,STATE_FAILED:32,DIRECTION_NONE:Dt,DIRECTION_LEFT:Tt,DIRECTION_RIGHT:Ft,DIRECTION_UP:Lt,DIRECTION_DOWN:Ct,DIRECTION_HORIZONTAL:Pt,DIRECTION_VERTICAL:zt,DIRECTION_ALL:Rt,Manager:lt,Input:D,TouchAction:U,TouchInput:j,MouseInput:Y,PointerEventInput:B,TouchMouseInput:G,SingleTouchInput:X,Recognizer:K,AttrRecognizer:tt,Tap:st,Pan:et,Swipe:ot,Pinch:it,Rotate:nt,Press:rt,on:v,off:_,each:l,merge:u,extend:h,inherit:p,bindFn:d,prefixed:S}),typeof t==dt&&t.amd?t(function(){return at}):void 0!==i&&i.exports?i.exports=at:e.Hammer=at}(window,document)},{}],13:[function(t,e,i){"use strict";function r(){}function n(t){for(var e in r.prototype)r.prototype.hasOwnProperty(e)&&(t.prototype[e]=r.prototype[e])}r.prototype.addEventListener=function(t,e){var i=this.__events=this.__events||{},r=i[t]=i[t]||[];r.indexOf(e)<0&&r.push(e)},r.prototype.removeEventListener=function(t,e){var i=this.__events=this.__events||{},r=i[t];if(r){var n=r.indexOf(e);n>=0&&r.splice(n,1)}},r.prototype.emit=function(t,e){var i=this.__events=this.__events||{},r=i[t],n=Array.prototype.slice.call(arguments,1);if(r)for(var o=0;o<r.length;o++){var s=r[o];s.apply(this,n)}},e.exports=n},{}],14:[function(t,e,i){"use strict";function r(t,e){this._equals=t,this._hash=e,this._queue=[],this._visited=new n(t,e),this._neighborsFun=null,this._exploreFun=null}var n=t("./collections/Set");r.prototype.start=function(t,e,i){if(this._neighborsFun||this._exploreFun)throw new Error("GraphFinder: search already in progress");this.reset(),this._neighborsFun=e,this._exploreFun=i,this._queue.push(t)},r.prototype.reset=function(){this._neighborsFun=null,this._exploreFun=null,this._queue.length=0,this._visited.clear()},r.prototype.next=function(){var t=this._queue,e=this._visited,i=this._neighborsFun,r=this._exploreFun;if(!i||!r)throw new Error("GraphFinder: no search in progress");for(;t.length>0;){var n=this._queue.shift();if(!e.has(n)&&r(n)){e.add(n);for(var o=i(n),s=0;s<o.length;s++)t.push(o[s]);return n}}return this.reset(),null},e.exports=r},{"./collections/Set":32}],15:[function(t,e,i){"use strict";function r(t,e,i,r,n){if(n=n||{},n.perspective=n.perspective||{},n.perspective.extraRotations=null!=n.perspective.extraRotations?n.perspective.extraRotations:"",n.perspective.radius&&!o())throw new Error("Embedded hotspots are not supported on this browser");this._domElement=t,this._parentDomElement=e,this._view=i,this._params={},this._perspective={},this.setPosition(r),this._parentDomElement.appendChild(this._domElement),this.setPerspective(n.perspective),this._visible=!0,this._position={x:0,y:0}}var n=t("minimal-event-emitter"),o=t("./support/Css"),s=t("./util/positionAbsolutely"),a=t("./util/dom").setTransform,l=t("./util/clearOwnProperties");n(r),r.prototype.destroy=function(){this._parentDomElement.removeChild(this._domElement),l(this)},r.prototype.domElement=function(){return this._domElement},r.prototype.position=function(){return this._params},r.prototype.setPosition=function(t){for(var e in t)this._params[e]=t[e];this._update()},r.prototype.perspective=function(){return this._perspective},r.prototype.setPerspective=function(t){for(var e in t)this._perspective[e]=t[e];this._update()},r.prototype.show=function(){this._visible||(this._visible=!0,this._update())},r.prototype.hide=function(){this._visible&&(this._visible=!1,this._update())},r.prototype._update=function(){var t,e,i=this._domElement,r=this._params,n=this._position,o=!1;if(this._visible){var s=this._view;this._perspective.radius?(o=!0,this._setEmbeddedPosition(s,r)):(s.coordinatesToScreen(r,n),t=n.x,e=n.y,null!=t&&null!=e&&(o=!0,this._setPosition(t,e)))}o?(i.style.display="block",i.style.position="absolute"):(i.style.display="none",i.style.position="")},r.prototype._setEmbeddedPosition=function(t,e){var i=t.coordinatesToPerspectiveTransform(e,this._perspective.radius,this._perspective.extraRotations);a(this._domElement,i)},r.prototype._setPosition=function(t,e){s(this._domElement,t,e)},e.exports=r},{"./support/Css":82,"./util/clearOwnProperties":91,"./util/dom":101,"./util/positionAbsolutely":110,"minimal-event-emitter":13}],16:[function(t,e,i){"use strict";function r(t,e,i,r,n){n=n||{},this._parentDomElement=t,this._stage=e,this._view=i,this._renderLoop=r,this._hotspots=[],this._visible=!0,this._rect=n.rect,this._visibilityOrRectChanged=!0,this._stageWidth=null,this._stageHeight=null,this._tmpRect={},this._hotspotContainerWrapper=document.createElement("div"),h(this._hotspotContainerWrapper),f(this._hotspotContainerWrapper,"none"),this._parentDomElement.appendChild(this._hotspotContainerWrapper),this._hotspotContainer=document.createElement("div"),h(this._hotspotContainer),f(this._hotspotContainer,"all"),this._hotspotContainerWrapper.appendChild(this._hotspotContainer),this._updateHandler=this._update.bind(this),this._renderLoop.addEventListener("afterRender",this._updateHandler)}var n=t("minimal-event-emitter"),o=t("./Hotspot"),s=t("./util/calcRect"),a=t("./support/cssPointerEvents"),l=t("./util/positionAbsolutely"),h=t("./util/dom").setAbsolute,u=t("./util/dom").setOverflowHidden,c=t("./util/dom").setOverflowVisible,p=t("./util/dom").setNullSize,d=t("./util/dom").setPixelSize,f=t("./util/dom").setWithVendorPrefix("pointer-events"),m=t("./util/clearOwnProperties");n(r),r.prototype.destroy=function(){for(;this._hotspots.length;)this.destroyHotspot(this._hotspots[0]);this._parentDomElement.removeChild(this._hotspotContainerWrapper),this._renderLoop.removeEventListener("afterRender",this._updateHandler),m(this)},r.prototype.domElement=function(){return this._hotspotContainer},r.prototype.setRect=function(t){t&&!a()&&"undefined"!=typeof console&&console.warn("Using a rect effect is not fully supported on this browser. Hotspots may not be shown."),this._rect=t,this._visibilityOrRectChanged=!0},r.prototype.rect=function(){return this._rect},r.prototype.createHotspot=function(t,e,i){e=e||{};var r=new o(t,this._hotspotContainer,this._view,e,i);return this._hotspots.push(r),r._update(),this.emit("hotspotsChange"),r},r.prototype.hasHotspot=function(t){return this._hotspots.indexOf(t)>=0},r.prototype.listHotspots=function(){return[].concat(this._hotspots)},r.prototype.destroyHotspot=function(t){var e=this._hotspots.indexOf(t);if(e<0)throw new Error("No such hotspot");this._hotspots.splice(e,1),t.destroy(),this.emit("hotspotsChange")},r.prototype.hide=function(){this._visible&&(this._visible=!1,this._visibilityOrRectChanged=!0,this._update())},r.prototype.show=function(){this._visible||(this._visible=!0,this._visibilityOrRectChanged=!0,this._update())},r.prototype._update=function(){var t=this._hotspotContainerWrapper,e=this._stage.width(),i=this._stage.height(),r=this._tmpRect;if(this._visibilityOrRectChanged||this._rect&&(e!==this._stageWidth||i!==this._stageHeight)){var n=this._visible&&!(this._rect&&!a());t.style.display=n?"block":"none",n&&(this._rect?(s(e,i,this._rect,r),l(t,e*r.x,i*r.y),d(t,e*r.width,i*r.height),u(t)):(l(t,0,0),p(t),c(t))),this._stageWidth=e,this._stageHeight=i,this._visibilityOrRectChanged=!1}for(var o=0;o<this._hotspots.length;o++)this._hotspots[o]._update()},e.exports=r},{"./Hotspot":15,"./support/cssPointerEvents":85,"./util/calcRect":87,"./util/clearOwnProperties":91,"./util/dom":101,"./util/positionAbsolutely":110,"minimal-event-emitter":13}],17:[function(t,e,i){"use strict";function r(t,e,i,r,n){n=n||{};var o=this;this._source=t,this._geometry=e,this._view=i,this._textureStore=r,this._effects=n.effects||{},this._fixedLevelIndex=null,this._viewChangeHandler=function(){o.emit("viewChange",o.view())},this._view.addEventListener("change",this._viewChangeHandler),this._textureStoreChangeHandler=function(){o.emit("textureStoreChange",o.textureStore())},this._textureStore.addEventListener("textureLoad",this._textureStoreChangeHandler),this._textureStore.addEventListener("textureError",this._textureStoreChangeHandler),this._textureStore.addEventListener("textureInvalid",this._textureStoreChangeHandler)}var n=t("minimal-event-emitter"),o=t("./util/extend"),s=t("./util/clearOwnProperties");n(r),r.prototype.destroy=function(){this._view.removeEventListener("change",this._viewChangeHandler),this._textureStore.removeEventListener("textureLoad",this._textureStoreChangeHandler),this._textureStore.removeEventListener("textureError",this._textureStoreChangeHandler),this._textureStore.removeEventListener("textureInvalid",this._textureStoreChangeHandler),s(this)},r.prototype.source=function(){return this._source},r.prototype.geometry=function(){return this._geometry},r.prototype.view=function(){return this._view},r.prototype.textureStore=function(){return this._textureStore},r.prototype.effects=function(){return this._effects},r.prototype.setEffects=function(t){this._effects=t,this.emit("effectsChange",this._effects)},r.prototype.mergeEffects=function(t){o(this._effects,t),this.emit("effectsChange",this._effects)},r.prototype.fixedLevel=function(){return this._fixedLevelIndex},r.prototype.setFixedLevel=function(t){if(t!==this._fixedLevelIndex){if(null!=t&&(t>=this._geometry.levelList.length||t<0))throw new Error("Level index out of range: "+t);this._fixedLevelIndex=t,this.emit("fixedLevelChange",this._fixedLevelIndex)}},r.prototype._selectLevel=function(){return null!=this._fixedLevelIndex?this._geometry.levelList[this._fixedLevelIndex]:this._view.selectLevel(this._geometry.selectableLevelList)},r.prototype.visibleTiles=function(t){var e=this._selectLevel();return this._geometry.visibleTiles(this._view,e,t)},r.prototype.pinLevel=function(t){for(var e=this._geometry.levelList[t],i=this._geometry.levelTiles(e),r=0;r<i.length;r++)this._textureStore.pin(i[r])},r.prototype.unpinLevel=function(t){for(var e=this._geometry.levelList[t],i=this._geometry.levelTiles(e),r=0;r<i.length;r++)this._textureStore.unpin(i[r])},r.prototype.pinFirstLevel=function(){return this.pinLevel(0)},r.prototype.unpinFirstLevel=function(){return this.unpinLevel(0)},e.exports=r},{"./util/clearOwnProperties":91,"./util/extend":102,"minimal-event-emitter":13}],18:[function(t,e,i){"use strict";function r(t){this.constructor.super_.apply(this,arguments),this.message=t}t("./util/inherits")(r,Error),e.exports=r},{"./util/inherits":104}],19:[function(t,e,i){"use strict";function r(t){var e=this;this._stage=t,this._running=!1,this._rendering=!1,this._requestHandle=null,this._boundLoop=this._loop.bind(this),this._renderInvalidHandler=function(){e._rendering||e.renderOnNextFrame()},this._stage.addEventListener("renderInvalid",this._renderInvalidHandler)}var n=t("minimal-event-emitter"),o=t("./util/clearOwnProperties");n(r),r.prototype.destroy=function(){this.stop(),this._stage.removeEventListener("renderInvalid",this._renderInvalidHandler),o(this)},r.prototype.stage=function(){return this._stage},r.prototype.start=function(){this._running=!0,this.renderOnNextFrame()},r.prototype.stop=function(){this._requestHandle&&(window.cancelAnimationFrame(this._requestHandle),this._requestHandle=null),this._running=!1},r.prototype.renderOnNextFrame=function(){this._running&&!this._requestHandle&&(this._requestHandle=window.requestAnimationFrame(this._boundLoop))},r.prototype._loop=function(){if(!this._running)throw new Error("Render loop running while in stopped state");this._requestHandle=null,this._rendering=!0,this.emit("beforeRender"),this._rendering=!1,this._stage.render(),this.emit("afterRender")},e.exports=r},{"./util/clearOwnProperties":91,"minimal-event-emitter":13}],20:[function(t,e,i){"use strict";function r(t,e){this._viewer=t,this._view=e,this._layers=[],this._hotspotContainer=new s(t._controlContainer,t.stage(),this._view,t.renderLoop()),this._movement=null,this._movementStartTime=null,this._movementStep=null,this._movementParams=null,this._movementCallback=null,this._updateMovementHandler=this._updateMovement.bind(this),this._updateHotspotContainerHandler=this._updateHotspotContainer.bind(this),this._viewer.addEventListener("sceneChange",this._updateHotspotContainerHandler),this._viewChangeHandler=this.emit.bind(this,"viewChange"),this._view.addEventListener("change",this._viewChangeHandler),this._updateHotspotContainer()}var n=t("./Layer"),o=t("./TextureStore"),s=t("./HotspotContainer"),a=t("minimal-event-emitter"),l=t("./util/clock"),h=t("./util/noop"),u=t("./util/type"),c=t("./util/defaults"),p=t("./util/clearOwnProperties");a(r),r.prototype.destroy=function(){this._view.removeEventListener("change",this._viewChangeHandler),this._viewer.removeEventListener("sceneChange",this._updateHotspotContainerHandler),this._movement&&this.stopMovement(),this._hotspotContainer.destroy(),this.destroyAllLayers(),p(this)},r.prototype.hotspotContainer=function(){return this._hotspotContainer},r.prototype.layer=function(){return this._layers[0]},r.prototype.listLayers=function(){return[].concat(this._layers)},r.prototype.view=function(){return this._view},r.prototype.viewer=function(){return this._viewer},r.prototype.visible=function(){return this._viewer.scene()===this},r.prototype.createLayer=function(t){t=t||{};var e=t.textureStoreOpts||{},i=t.layerOpts||{},r=t.source,s=t.geometry,a=this._view,l=this._viewer.stage(),h=new o(s,r,l,e),u=new n(r,s,a,h,i);return this._layers.push(u),t.pinFirstLevel&&u.pinFirstLevel(),this.emit("layerChange"),u},r.prototype.destroyLayer=function(t){var e=this._layers.indexOf(t);if(e<0)throw new Error("No such layer in scene");this._layers.splice(e,1),this.emit("layerChange"),t.textureStore().destroy(),t.destroy()},r.prototype.destroyAllLayers=function(){for(;this._layers.length>0;)this.destroyLayer(this._layers[0])},r.prototype.switchTo=function(t,e){return this._viewer.switchScene(this,t,e)},r.prototype.lookTo=function(t,e,i){if(e=e||{},i=i||h,"object"!==u(t))throw new Error("Target view parameters must be an object");var r=null!=e.transitionDuration?e.transitionDuration:1e3,n=null==e.shortest||e.shortest,o=this._view,s=o.parameters(),a={};c(a,t),c(a,s),n&&o.normalizeToClosest&&o.normalizeToClosest(a,a);var l=function(t){return(t*=2)<1?.5*t*t:-.5*(--t*(t-2)-1)},p=function(){var t=!1;return function(e,i){if(i>=r&&t)return null;var n=Math.min(i/r,1);for(var o in e){var h=s[o],u=a[o];e[o]=h+l(n)*(u-h)}return t=i>=r,e}},d=this._viewer.controls().enabled();this._viewer.controls().disable(),this.startMovement(p,function(){d&&this._viewer.controls().enable(),i()})},r.prototype.startMovement=function(t,e){var i=this._viewer.renderLoop();this._movement&&this.stopMovement();var r=t();if("function"!=typeof r)throw new Error("Bad movement");this._movement=t,this._movementStep=r,this._movementStartTime=l(),this._movementParams={},this._movementCallback=e,i.addEventListener("beforeRender",this._updateMovementHandler),i.renderOnNextFrame()},r.prototype.stopMovement=function(){var t=this._viewer.renderLoop();this._movementCallback&&this._movementCallback(),t.removeEventListener("beforeRender",this._updateMovementHandler),this._movement=null,this._movementStep=null,this._movementStartTime=null,this._movementParams=null,this._movementCallback=null},r.prototype.movement=function(){return this._movement},r.prototype._updateMovement=function(){if(!this._movement)throw new Error("Should not call update");var t=this._viewer.renderLoop(),e=this._view,i=l()-this._movementStartTime,r=this._movementStep,n=this._movementParams;n=e.parameters(n),n=r(n,i),null==n?this.stopMovement():(e.setParameters(n),t.renderOnNextFrame())},r.prototype._updateHotspotContainer=function(){this.visible()?this._hotspotContainer.show():this._hotspotContainer.hide()},e.exports=r},{"./HotspotContainer":16,"./Layer":17,"./TextureStore":21,"./util/clearOwnProperties":91,"./util/clock":92,"./util/defaults":97,"./util/noop":107,"./util/type":116,"minimal-event-emitter":13}],21:[function(t,e,i){"use strict";function r(){}function n(t,e){var i=this,n=y++;i._id=n,i._store=t,
-i._tile=e,i._asset=null,i._texture=null,i._changeHandler=function(){t.emit("textureInvalid",e)};var o=t.source(),s=t.stage(),a=o.loadAsset.bind(o),l=s.createTexture.bind(s),h=p(c(a),l);t.emit("textureStartLoad",e),m&&console.log("loading",n,e),i._cancel=h(s,e,function(o,s,a,l){if(i._cancel=null,o)return a&&a.destroy(),l&&l.destroy(),void(o instanceof r?(t.emit("textureCancel",e),m&&console.log("cancel",n,e)):(t.emit("textureError",e,o),m&&console.log("error",n,e)));i._texture=l,a.dynamic?(i._asset=a,a.addEventListener("change",i._changeHandler)):a.destroy(),t.emit("textureLoad",e),m&&console.log("load",n,e)})}function o(t,e,i,r){r=u(r||{},_);var n=t.TileClass;this._source=e,this._stage=i,this._state=v.IDLE,this._delimCount=0,this._itemMap=new s(n.equals,n.hash),this._visible=new a(n.equals,n.hash),this._previouslyVisible=new l(n.equals,n.hash,r.previouslyVisibleCacheSize),this._pinMap=new s(n.equals,n.hash),this._newVisible=new a(n.equals,n.hash),this._noLongerVisible=[],this._visibleAgain=[],this._evicted=[]}var s=t("./collections/Map"),a=t("./collections/Set"),l=t("./collections/LruSet"),h=t("minimal-event-emitter"),u=t("./util/defaults"),c=t("./util/retry"),p=t("./util/chain"),d=t("./util/inherits"),f=t("./util/clearOwnProperties"),m="undefined"!=typeof MARZIPANODEBUG&&MARZIPANODEBUG.textureStore,v={IDLE:0,START:1,MARK:2,END:3},_={previouslyVisibleCacheSize:32},y=0;d(r,Error),n.prototype.asset=function(){return this._asset},n.prototype.texture=function(){return this._texture},n.prototype.destroy=function(){var t=this._id,e=this._store,i=this._tile,n=this._asset,o=this._texture,s=this._cancel;if(s)return void s(new r("Texture load cancelled"));n&&(n.removeEventListener("change",this._changeHandler),n.destroy()),o&&o.destroy(),e.emit("textureUnload",i),m&&console.log("unload",t,i),f(this)},h(n),h(o),o.prototype.destroy=function(){this.clear(),f(this)},o.prototype.stage=function(){return this._stage},o.prototype.source=function(){return this._source},o.prototype.clear=function(){var t=this;t._evicted.length=0,t._itemMap.each(function(e){t._evicted.push(e)}),t._evicted.forEach(function(e){t._unloadTile(e)}),t._itemMap.clear(),t._visible.clear(),t._previouslyVisible.clear(),t._pinMap.clear(),t._newVisible.clear(),t._noLongerVisible.length=0,t._visibleAgain.length=0,t._evicted.length=0},o.prototype.clearNotPinned=function(){var t=this;t._evicted.length=0,t._itemMap.each(function(e){t._pinMap.has(e)||t._evicted.push(e)}),t._evicted.forEach(function(e){t._unloadTile(e)}),t._visible.clear(),t._previouslyVisible.clear(),t._evicted.length=0},o.prototype.startFrame=function(){if(this._state!==v.IDLE)throw new Error("TextureStore: startFrame called out of sequence");this._state=v.START,this._delimCount++},o.prototype.markTile=function(t){if(this._state!==v.START&&this._state!==v.MARK)throw new Error("TextureStore: markTile called out of sequence");this._state=v.MARK;var e=this._itemMap.get(t),i=e&&e.texture(),r=e&&e.asset();i&&r&&i.refresh(t,r),this._newVisible.add(t)},o.prototype.endFrame=function(){if(this._state!==v.START&&this._state!==v.MARK)throw new Error("TextureStore: endFrame called out of sequence");this._state=v.END,--this._delimCount||(this._update(),this._state=v.IDLE)},o.prototype._update=function(){var t=this;t._noLongerVisible.length=0,t._visible.each(function(e){t._newVisible.has(e)||t._noLongerVisible.push(e)}),t._visibleAgain.length=0,t._newVisible.each(function(e){t._previouslyVisible.has(e)&&t._visibleAgain.push(e)}),t._visibleAgain.forEach(function(e){t._previouslyVisible.remove(e)}),t._evicted.length=0,t._noLongerVisible.forEach(function(e){var i=t._itemMap.get(e);if(i&&i.texture()){var r=t._previouslyVisible.add(e);null!=r&&t._evicted.push(r)}else i&&t._unloadTile(e)}),t._evicted.forEach(function(e){t._pinMap.has(e)||t._unloadTile(e)}),t._newVisible.each(function(e){t._itemMap.get(e)||t._loadTile(e)});var e=t._visible;t._visible=t._newVisible,t._newVisible=e,t._newVisible.clear(),t._noLongerVisible.length=0,t._visibleAgain.length=0,t._evicted.length=0},o.prototype._loadTile=function(t){if(this._itemMap.has(t))throw new Error("TextureStore: loading texture already in cache");var e=new n(this,t);this._itemMap.set(t,e)},o.prototype._unloadTile=function(t){var e=this._itemMap.del(t);if(!e)throw new Error("TextureStore: unloading texture not in cache");e.destroy()},o.prototype.asset=function(t){var e=this._itemMap.get(t);return e?e.asset():null},o.prototype.texture=function(t){var e=this._itemMap.get(t);return e?e.texture():null},o.prototype.pin=function(t){var e=(this._pinMap.get(t)||0)+1;return this._pinMap.set(t,e),this._itemMap.has(t)||this._loadTile(t),e},o.prototype.unpin=function(t){var e=this._pinMap.get(t);if(!e)throw new Error("TextureStore: unpin when not pinned");return e--,e>0?this._pinMap.set(t,e):(this._pinMap.del(t),this._visible.has(t)||this._previouslyVisible.has(t)||this._unloadTile(t)),e},o.prototype.query=function(t){var e=this._itemMap.get(t),i=this._pinMap.get(t)||0;return{visible:this._visible.has(t),previouslyVisible:this._previouslyVisible.has(t),hasAsset:null!=e&&null!=e.asset(),hasTexture:null!=e&&null!=e.texture(),pinned:0!==i,pinCount:i}},e.exports=o},{"./collections/LruSet":30,"./collections/Map":31,"./collections/Set":32,"./util/chain":89,"./util/clearOwnProperties":91,"./util/defaults":97,"./util/inherits":104,"./util/retry":113,"minimal-event-emitter":13}],22:[function(t,e,i){"use strict";function r(t){t=o(t||{},a),this._duration=t.duration,this._startTime=null,this._handle=null,this._check=this._check.bind(this)}var n=t("minimal-event-emitter"),o=t("./util/defaults"),s=t("./util/clock"),a={duration:Infinity};n(r),r.prototype.start=function(){this._startTime=s(),null==this._handle&&this._duration<Infinity&&this._setup(this._duration)},r.prototype.started=function(){return null!=this._startTime},r.prototype.stop=function(){this._startTime=null,null!=this._handle&&(clearTimeout(this._handle),this._handle=null)},r.prototype._setup=function(t){this._handle=setTimeout(this._check,t)},r.prototype._teardown=function(){clearTimeout(this._handle),this._handle=null},r.prototype._check=function(){var t=s(),e=t-this._startTime,i=this._duration-e;this._teardown(),i<=0?(this.emit("timeout"),this._startTime=null):i<Infinity&&this._setup(i)},r.prototype.duration=function(){return this._duration},r.prototype.setDuration=function(t){this._duration=t,null!=this._startTime&&this._check()},e.exports=r},{"./util/clock":92,"./util/defaults":97,"minimal-event-emitter":13}],23:[function(t,e,i){"use strict";function r(t,e){e=e||{},this._domElement=t,y(t);var i;if(e.stageType){if(!(i=E[e.stageType]))throw new Error("Unknown stage type: "+e.stageType)}else{for(var r=0;r<I.length;r++)if(I[r].supported()){i=I[r];break}if(!i)throw new Error("None of the stage types are supported")}this._stage=new i(e.stage),_(this._stage),this._domElement.appendChild(this._stage.domElement()),this._controlContainer=document.createElement("div"),g(this._controlContainer),x(this._controlContainer),o.ios&&this._controlContainer.addEventListener("touchmove",function(t){t.preventDefault()});var n=document.createElement("div");g(n),x(n),w(n),this._controlContainer.appendChild(n),t.appendChild(this._controlContainer),this._size={},this.updateSize(),this._updateSizeListener=this.updateSize.bind(this),window.addEventListener("resize",this._updateSizeListener),this._renderLoop=new a(this._stage),this._controls=new l,this._controlMethods=v(this._controls,this._controlContainer,e.controls),this._controls.attach(this._renderLoop),this._hammerManagerTouch=m.get(this._controlContainer,"touch"),this._hammerManagerMouse=m.get(this._controlContainer,"mouse"),this._dragCursor=new f(this._controls,"mouseViewDrag",t,e.cursors&&e.cursors.drag||{}),this._renderLoop.start(),this._scenes=[],this._currentScene=null,this._replacedScene=null,this._cancelCurrentTween=null,this._layerChangeHandler=this._updateSceneLayers.bind(this),this._viewChangeHandler=this.emit.bind(this,"viewChange"),this._idleTimer=new u,this._idleTimer.start(),this._resetIdleTimerHandler=this._resetIdleTimer.bind(this),this.addEventListener("viewChange",this._resetIdleTimerHandler),this._enterIdleHandler=this._enterIdle.bind(this),this._idleTimer.addEventListener("timeout",this._enterIdleHandler),this._leaveIdleHandler=this._leaveIdle.bind(this),this._controls.addEventListener("active",this._leaveIdleHandler),this.addEventListener("sceneChange",this._leaveIdleHandler),this._idleMovement=null}function n(t,e,i){e.listLayers().forEach(function(e){e.mergeEffects({opacity:t})}),e._hotspotContainer.domElement().style.opacity=t}var o=t("bowser"),s=t("minimal-event-emitter"),a=t("./RenderLoop"),l=t("./controls/Controls"),h=t("./Scene"),u=t("./Timer"),c=t("./stages/WebGl"),p=t("./stages/Css"),d=t("./stages/Flash"),f=t("./controls/ControlCursor"),m=t("./controls/HammerGestures"),v=t("./controls/registerDefaultControls"),_=t("./renderers/registerDefaultRenderers"),y=t("./util/dom").setOverflowHidden,g=t("./util/dom").setAbsolute,x=t("./util/dom").setFullSize,w=t("./util/dom").setBlocking,M=t("./util/tween"),b=t("./util/noop"),S=t("./util/clearOwnProperties"),E={webgl:c,css:p,flash:d},I=[c,p,d];s(r),r.prototype.destroy=function(){window.removeEventListener("resize",this._updateSizeListener),this._currentScene&&this._removeSceneEventListeners(this._currentScene),this._replacedScene&&this._removeSceneEventListeners(this._replacedScene),this._dragCursor.destroy();for(var t in this._controlMethods)this._controlMethods[t].destroy();for(;this._scenes.length;)this.destroyScene(this._scenes[0]);this._domElement.removeChild(this._stage.domElement()),this._stage.destroy(),this._renderLoop.destroy(),this._controls.destroy(),this._controls=null,this._cancelCurrentTween&&this._cancelCurrentTween(),S(this)},r.prototype.updateSize=function(){var t=this._size;t.width=this._domElement.clientWidth,t.height=this._domElement.clientHeight,this._stage.setSize(t)},r.prototype.stage=function(){return this._stage},r.prototype.renderLoop=function(){return this._renderLoop},r.prototype.controls=function(){return this._controls},r.prototype.domElement=function(){return this._domElement},r.prototype.createScene=function(t){t=t||{};var e=this.createEmptyScene({view:t.view});return e.createLayer({source:t.source,geometry:t.geometry,pinFirstLevel:t.pinFirstLevel,textureStoreOpts:t.textureStoreOpts,layerOpts:t.layerOpts}),e},r.prototype.createEmptyScene=function(t){t=t||{};var e=new h(this,t.view);return this._scenes.push(e),e},r.prototype._updateSceneLayers=function(){var t,e,i=this._stage,r=this._currentScene,n=this._replacedScene,o=i.listLayers(),s=[];if(n&&(s=s.concat(n.listLayers())),r&&(s=s.concat(r.listLayers())),1!==Math.abs(o.length-s.length))throw new Error("Stage and scene out of sync");if(s.length<o.length)for(t=0;t<o.length;t++)if(e=o[t],s.indexOf(e)<0){this._removeLayerFromStage(e);break}if(s.length>o.length)for(t=0;t<s.length;t++)e=s[t],o.indexOf(e)<0&&this._addLayerToStage(e,t)},r.prototype._addLayerToStage=function(t,e){t.pinFirstLevel(),this._stage.addLayer(t,e)},r.prototype._removeLayerFromStage=function(t){this._stage.removeLayer(t),t.unpinFirstLevel(),t.textureStore().clearNotPinned()},r.prototype._addSceneEventListeners=function(t){t.addEventListener("layerChange",this._layerChangeHandler),t.addEventListener("viewChange",this._viewChangeHandler)},r.prototype._removeSceneEventListeners=function(t){t.removeEventListener("layerChange",this._layerChangeHandler),t.removeEventListener("viewChange",this._viewChangeHandler)},r.prototype.destroyScene=function(t){var e=this._scenes.indexOf(t);if(e<0)throw new Error("No such scene in viewer");var i,r;if(this._currentScene===t){for(this._removeSceneEventListeners(t),r=t.listLayers(),i=0;i<r.length;i++)this._removeLayerFromStage(r[i]);this._cancelCurrentTween&&(this._cancelCurrentTween(),this._cancelCurrentTween=null),this._currentScene=null,this.emit("sceneChange")}if(this._replacedScene===t){for(this._removeSceneEventListeners(t),r=t.listLayers(),i=0;i<r.length;i++)this._removeLayerFromStage(r[i]);this._replacedScene=null}this._scenes.splice(e,1),t.destroy()},r.prototype.destroyAllScenes=function(){for(;this._scenes.length>0;)this.destroyScene(this._scenes[0])},r.prototype.hasScene=function(t){return this._scenes.indexOf(t)>=0},r.prototype.listScenes=function(){return[].concat(this._scenes)},r.prototype.scene=function(){return this._currentScene},r.prototype.view=function(){var t=this._currentScene;return t?t.view():null},r.prototype.lookTo=function(t,e,i){var r=this._currentScene;r&&r.lookTo(t,e,i)},r.prototype.startMovement=function(t,e){var i=this._currentScene;i&&i.startMovement(t,e)},r.prototype.stopMovement=function(){var t=this._currentScene;t&&t.stopMovement()},r.prototype.setIdleMovement=function(t,e){this._idleTimer.setDuration(t),this._idleMovement=e},r.prototype.breakIdleMovement=function(){this._leaveIdle(),this._resetIdleTimer()},r.prototype._resetIdleTimer=function(){this._idleTimer.start()},r.prototype._enterIdle=function(){var t=this._currentScene,e=this._idleMovement;t&&e&&t.startMovement(e)},r.prototype._leaveIdle=function(){var t=this._currentScene;t&&t.movement()===this._idleMovement&&t.stopMovement()};r.prototype.switchScene=function(t,e,i){function r(e){d(e,t,l)}function o(){if(s._replacedScene){s._removeSceneEventListeners(s._replacedScene),h=s._replacedScene.listLayers();for(var t=0;t<h.length;t++)s._removeLayerFromStage(h[t]);s._replacedScene=null}s._cancelCurrentTween=null,i()}var s=this;e=e||{},i=i||b;var a=this._stage,l=this._currentScene;if(l===t)return void i();if(this._scenes.indexOf(t)<0)throw new Error("No such scene in viewer");this._cancelCurrentTween&&(this._cancelCurrentTween(),this._cancelCurrentTween=null);var h=l?l.listLayers():[],u=t.listLayers(),c=a.listLayers();if(l&&(c.length!==h.length||c.length>1&&c[0]!=h[0]))throw new Error("Stage not in sync with viewer");for(var p=null!=e.transitionDuration?e.transitionDuration:1e3,d=null!=e.transitionUpdate?e.transitionUpdate:n,f=0;f<u.length;f++)this._addLayerToStage(u[f]);this._cancelCurrentTween=M(p,r,o),this._currentScene=t,this._replacedScene=l,this.emit("sceneChange"),this.emit("viewChange"),this._addSceneEventListeners(t)},e.exports=r},{"./RenderLoop":19,"./Scene":20,"./Timer":22,"./controls/ControlCursor":37,"./controls/Controls":38,"./controls/HammerGestures":42,"./controls/registerDefaultControls":49,"./renderers/registerDefaultRenderers":70,"./stages/Css":77,"./stages/Flash":78,"./stages/WebGl":81,"./util/clearOwnProperties":91,"./util/dom":101,"./util/noop":107,"./util/tween":115,bowser:1,"minimal-event-emitter":13}],24:[function(t,e,i){"use strict";function r(t,e){e=e||{},this._opts=e,this._element=t,this._timestamp=0}var n=t("minimal-event-emitter"),o=t("../util/clearOwnProperties");n(r),r.prototype.dynamic=!0,r.prototype.destroy=function(){o(this)},r.prototype.element=function(){return this._element},r.prototype.width=function(){return this._element.width},r.prototype.height=function(){return this._element.height},r.prototype.timestamp=function(){return this._timestamp},r.prototype.changed=function(){this._timestamp++,this.emit("change")},e.exports=r},{"../util/clearOwnProperties":91,"minimal-event-emitter":13}],25:[function(t,e,i){"use strict";function r(t,e){this._flashElement=t,this._imageId=e}var n=t("../util/clearOwnProperties");r.prototype.dynamic=!1,r.prototype.destroy=function(){this._flashElement.unloadImage(this._imageId),n(this)},r.prototype.element=function(){return this._imageId},r.prototype.width=function(){return 0},r.prototype.height=function(){return 0},r.prototype.timestamp=function(){return 0},e.exports=r},{"../util/clearOwnProperties":91}],26:[function(t,e,i){"use strict";function r(t){this._element=t}var n=t("../util/clearOwnProperties");r.prototype.dynamic=!1,r.prototype.destroy=function(){n(this)},r.prototype.element=function(){return this._element},r.prototype.width=function(){return this._element.width},r.prototype.height=function(){return this._element.height},r.prototype.timestamp=function(){return 0},e.exports=r},{"../util/clearOwnProperties":91}],27:[function(t,e,i){"use strict";function r(t){this._element=t}var n=t("../util/clearOwnProperties");r.prototype.dynamic=!1,r.prototype.destroy=function(){n(this)},r.prototype.element=function(){return this._element},r.prototype.width=function(){return this._element.naturalWidth},r.prototype.height=function(){return this._element.naturalHeight},r.prototype.timestamp=function(){return 0},e.exports=r},{"../util/clearOwnProperties":91}],28:[function(t,e,i){"use strict";function r(t){t=n(t||{},o);var e=t.yawSpeed,i=t.pitchSpeed,r=t.fovSpeed,s=t.yawAccel,a=t.pitchAccel,l=t.fovAccel,h=t.targetPitch,u=t.targetFov;return function(){var t,n,o,c,p=0,d=0,f=0,m=0,v=0,_=0,y=0;return function(g,x){if(t=(x-p)/1e3,v=Math.min(d+t*s,e),n=v*t,g.yaw=g.yaw+n,null!=h&&g.pitch!==h){var w=.5*f*f/a;_=Math.abs(h-g.pitch)>w?Math.min(f+t*a,i):Math.max(f-t*a,0),o=_*t,h<g.pitch&&(g.pitch=Math.max(h,g.pitch-o)),h>g.pitch&&(g.pitch=Math.min(h,g.pitch+o))}if(null!=u&&g.fov!==h){var M=.5*m*m/l;y=Math.abs(u-g.fov)>M?Math.min(m+t*l,r):Math.max(m-t*l,0),c=y*t,u<g.fov&&(g.fov=Math.max(u,g.fov-c)),u>g.fov&&(g.fov=Math.min(u,g.fov+c))}return p=x,d=v,f=_,m=y,g}}}var n=t("./util/defaults"),o={yawSpeed:.1,pitchSpeed:.1,fovSpeed:.1,yawAccel:.01,pitchAccel:.01,fovAccel:.01,targetPitch:0,targetFov:null};e.exports=r},{"./util/defaults":97}],29:[function(t,e,i){"use strict";function r(t,e,i){if("function"!=typeof t)throw new Error("LruMap: bad equals function");if(this._equals=t,"function"!=typeof e)throw new Error("LruMap: bad hash function");if(this._hash=e,"number"!=typeof i||isNaN(i)||i<0)throw new Error("LruMap: bad maximum size");this._maxsize=i,this._keys=[],this._values=[],this._pivot=0}var n=t("../util/mod");r.prototype._modulus=function(){return this._maxsize>this._keys.length?this._keys.length+1:this._maxsize},r.prototype.get=function(t){for(var e=0;e<this._keys.length;e++){var i=this._keys[e];if(this._equals(t,i)){return this._values[e]}}return null},r.prototype.set=function(t,e){var i=null,r=!1;if(0===this._maxsize)return t;for(var o=0;o<this._keys.length;o++){var s=this._keys[o];if(this._equals(t,s)){for(var a=o,l=this._modulus();a!==this._pivot;){var h=n(a+1,l);this._keys[a]=this._keys[h],this._values[a]=this._values[h],a=h}r=!0;break}}return r||(i=this._pivot<this._keys.length?this._keys[this._pivot]:null),this._keys[this._pivot]=t,this._values[this._pivot]=e,this._pivot=n(this._pivot+1,this._modulus()),i},r.prototype.del=function(t){for(var e=0;e<this._keys.length;e++){var i=this._keys[e];if(this._equals(t,i)){for(var r=this._values[e],o=e;o<this._keys.length-1;o++)this._keys[o]=this._keys[o+1],this._values[o]=this._values[o+1];return this._keys.length=this._keys.length-1,this._values.length=this._values.length-1,e<this._pivot&&(this._pivot=n(this._pivot-1,this._modulus())),r}}return null},r.prototype.has=function(t){for(var e=0;e<this._keys.length;e++){var i=this._keys[e];if(this._equals(t,i))return!0}return!1},r.prototype.size=function(){return this._keys.length},r.prototype.clear=function(){this._keys.length=0,this._values.length=0,this._pivot=0},r.prototype.each=function(t){for(var e=0,i=0;i<this._keys.length;i++){t(this._keys[i],this._values[i]),e+=1}return e},e.exports=r},{"../util/mod":106}],30:[function(t,e,i){"use strict";function r(t,e,i){if("function"!=typeof t)throw new Error("LruSet: bad equals function");if(this._equals=t,"function"!=typeof e)throw new Error("LruSet: bad hash function");if(this._hash=e,"number"!=typeof i||isNaN(i)||i<0)throw new Error("LruSet: bad maximum size");this._maxsize=i,this._items=[],this._pivot=0}var n=t("../util/mod");r.prototype._modulus=function(){return this._maxsize>this._items.length?this._items.length+1:this._maxsize},r.prototype.add=function(t){var e=null,i=!1;if(0===this._maxsize)return t;for(var r=0;r<this._items.length;r++){var o=this._items[r];if(this._equals(t,o)){for(var s=r,a=this._modulus();s!==this._pivot;){var l=n(s+1,a);this._items[s]=this._items[l],s=l}i=!0;break}}return i||(e=this._pivot<this._items.length?this._items[this._pivot]:null),this._items[this._pivot]=t,this._pivot=n(this._pivot+1,this._modulus()),e},r.prototype.remove=function(t){for(var e=0;e<this._items.length;e++){var i=this._items[e];if(this._equals(t,i)){for(var r=e;r<this._items.length-1;r++)this._items[r]=this._items[r+1];return this._items.length=this._items.length-1,e<this._pivot&&(this._pivot=n(this._pivot-1,this._modulus())),i}}return null},r.prototype.has=function(t){for(var e=0;e<this._items.length;e++){var i=this._items[e];if(this._equals(t,i))return!0}return!1},r.prototype.size=function(){return this._items.length},r.prototype.clear=function(){this._items.length=0,this._pivot=0},r.prototype.each=function(t){for(var e=0,i=0;i<this._items.length;i++){t(this._items[i]),e+=1}return e},e.exports=r},{"../util/mod":106}],31:[function(t,e,i){"use strict";function r(t,e,i){if("function"!=typeof t)throw new Error("Map: bad equals function");if(this._equals=t,"function"!=typeof e)throw new Error("Map: bad hash function");if(this._hash=e,null!=i){if("number"!=typeof i||isNaN(i)||i<1)throw new Error("Map: bad number of buckets");this._nbuckets=i}else this._nbuckets=n;this._keyBuckets=[],this._valBuckets=[];for(var r=0;r<this._nbuckets;r++)this._keyBuckets.push([]),this._valBuckets.push([])}var n=32;r.prototype._hashmod=function(t){return this._hash(t)%this._nbuckets},r.prototype.get=function(t){for(var e=this._hashmod(t),i=this._keyBuckets[e],r=0;r<i.length;r++){var n=i[r];if(this._equals(t,n)){return this._valBuckets[e][r]}}return null},r.prototype.set=function(t,e){for(var i=this._hashmod(t),r=this._keyBuckets[i],n=this._valBuckets[i],o=0;o<r.length;o++){var s=r[o];if(this._equals(t,s)){var a=n[o];return r[o]=t,n[o]=e,a}}return r.push(t),n.push(e),null},r.prototype.del=function(t){for(var e=this._hashmod(t),i=this._keyBuckets[e],r=this._valBuckets[e],n=0;n<i.length;n++){var o=i[n];if(this._equals(t,o)){for(var s=r[n],a=n;a<i.length-1;a++)i[a]=i[a+1],r[a]=r[a+1];return i.length=i.length-1,r.length=r.length-1,s}}return null},r.prototype.has=function(t){for(var e=this._hashmod(t),i=this._keyBuckets[e],r=0;r<i.length;r++){var n=i[r];if(this._equals(t,n))return!0}return!1},r.prototype.size=function(){for(var t=0,e=0;e<this._nbuckets;e++){t+=this._keyBuckets[e].length}return t},r.prototype.clear=function(){for(var t=0;t<this._nbuckets;t++){var e=this._keyBuckets[t],i=this._valBuckets[t];e.length=0,i.length=0}},r.prototype.each=function(t){for(var e=0,i=0;i<this._nbuckets;i++)for(var r=this._keyBuckets[i],n=this._valBuckets[i],o=0;o<r.length;o++){var s=r[o],a=n[o];t(s,a),e+=1}return e},e.exports=r},{}],32:[function(t,e,i){"use strict";function r(t,e,i){if("function"!=typeof t)throw new Error("Set: bad equals function");if(this._equals=t,"function"!=typeof e)throw new Error("Set: bad hash function");if(this._hash=e,null!=i){if("number"!=typeof i||isNaN(i)||i<1)throw new Error("Set: bad number of buckets");this._nbuckets=i}else this._nbuckets=n;this._buckets=[];for(var r=0;r<this._nbuckets;r++)this._buckets.push([])}var n=32;r.prototype._hashmod=function(t){return this._hash(t)%this._nbuckets},r.prototype.add=function(t){for(var e=this._hashmod(t),i=this._buckets[e],r=0;r<i.length;r++){var n=i[r];if(this._equals(t,n))return i[r]=t,n}return i.push(t),null},r.prototype.remove=function(t){for(var e=this._hashmod(t),i=this._buckets[e],r=0;r<i.length;r++){var n=i[r];if(this._equals(t,n)){for(var o=r;o<i.length-1;o++)i[o]=i[o+1];return i.length=i.length-1,n}}return null},r.prototype.has=function(t){for(var e=this._hashmod(t),i=this._buckets[e],r=0;r<i.length;r++){var n=i[r];if(this._equals(t,n))return!0}return!1},r.prototype.size=function(){for(var t=0,e=0;e<this._nbuckets;e++){t+=this._buckets[e].length}return t},r.prototype.clear=function(){for(var t=0;t<this._nbuckets;t++){this._buckets[t].length=0}},r.prototype.each=function(t){for(var e=0,i=0;i<this._nbuckets;i++)for(var r=this._buckets[i],n=0;n<r.length;n++){var o=r[n];t(o),e+=1}return e},e.exports=r},{}],33:[function(t,e,i){"use strict";function r(t){this._concurrency=t&&t.concurrency||1,this._paused=t&&!!t.paused||!1,this._pool=[];for(var e=0;e<this._concurrency;e++)this._pool.push(new n(t));this._next=0}var n=t("./WorkQueue"),o=t("../util/mod");r.prototype.length=function(){for(var t=0,e=0;e<this._pool.length;e++)t+=this._pool[e].length();return t},r.prototype.push=function(t,e){var i=this._next,r=this._pool[i].push(t,e);return this._next=o(this._next+1,this._concurrency),r},r.prototype.pause=function(){if(!this._paused){this._paused=!0;for(var t=0;t<this._concurrency;t++)this._pool[t].pause()}},r.prototype.resume=function(){if(this._paused){this._paused=!1;for(var t=0;t<this._concurrency;t++)this._pool[t].resume()}},e.exports=r},{"../util/mod":106,"./WorkQueue":34}],34:[function(t,e,i){"use strict";function r(t,e){this.fn=t,this.cb=e,this.cfn=null}function n(t){this._queue=[],this._delay=t&&t.delay||0,this._paused=t&&!!t.paused||!1,this._currentTask=null,this._lastFinished=null}var o=t("../util/clock");n.prototype.length=function(){return this._queue.length},n.prototype.push=function(t,e){var i=new r(t,e),n=this._cancel.bind(this,i);return this._queue.push(i),this._next(),n},n.prototype.pause=function(){this._paused||(this._paused=!0)},n.prototype.resume=function(){this._paused&&(this._paused=!1,this._next())},n.prototype._start=function(t){if(this._currentTask)throw new Error("WorkQueue: called start while running task");this._currentTask=t;var e=this._finish.bind(this,t);if(t.cfn=t.fn(e),"function"!=typeof t.cfn)throw new Error("WorkQueue: function is not cancellable")},n.prototype._finish=function(t){var e=Array.prototype.slice.call(arguments,1);if(this._currentTask!==t)throw new Error("WorkQueue: called finish on wrong task");t.cb.apply(null,e),this._currentTask=null,this._lastFinished=o(),this._next()},n.prototype._cancel=function(t){var e=Array.prototype.slice.call(arguments,1);if(this._currentTask===t)t.cfn.apply(null,e);else{var i=this._queue.indexOf(t);i>=0&&(this._queue.splice(i,1),t.cb.apply(null,e))}},n.prototype._next=function(){if(!this._paused&&this._queue.length&&!this._currentTask){if(null!=this._lastFinished){var t=o()-this._lastFinished,e=this._delay-t;if(e>0)return void setTimeout(this._next.bind(this),e)}var i=this._queue.shift();this._start(i)}},e.exports=n},{"../util/clock":92}],35:[function(t,e,i){"use strict";function r(t){var e=t||{};return e.colorOffset=e.colorOffset||a.create(),e.colorMatrix=e.colorMatrix||l.create(),e}function n(t,e,i){o(i,t,e.colorMatrix),a.add(i,i,e.colorOffset)}function o(t,e,i){var r=e[0],n=e[1],o=e[2],s=e[3];return t[0]=i[0]*r+i[1]*n+i[2]*o+i[3]*s,t[1]=i[4]*r+i[5]*n+i[6]*o+i[7]*s,t[2]=i[8]*r+i[9]*n+i[10]*o+i[11]*s,t[3]=i[12]*r+i[13]*n+i[14]*o+i[15]*s,t}function s(t,e){for(var i=t.width,r=t.height,o=t.data,s=0;s<i*r;s++)a.set(h,o[4*s+0]/255,o[4*s+1]/255,o[4*s+2]/255,o[4*s+3]/255),n(h,e,h),o[4*s+0]=255*h[0],o[4*s+1]=255*h[1],o[4*s+2]=255*h[2],o[4*s+3]=255*h[3]}var a=t("gl-matrix/src/gl-matrix/vec4"),l=t("gl-matrix/src/gl-matrix/mat4"),h=a.create();e.exports={identity:r,applyToPixel:n,applyToImageData:s}},{"gl-matrix/src/gl-matrix/mat4":7,"gl-matrix/src/gl-matrix/vec4":11}],36:[function(t,e,i){"use strict";function r(t){t=t||{},this._methods=[],this._parameters=["x","y","axisScaledX","axisScaledY","zoom","yaw","pitch","roll"],this._clock=t.clock||s,this._composedOffsets={},this._composeReturn={offsets:this._composedOffsets,changing:null}}var n=t("minimal-event-emitter"),o=t("./Dynamics"),s=t("../util/clock"),a=t("../util/clearOwnProperties");n(r),r.prototype.add=function(t){if(!this.has(t)){var e={};this._parameters.forEach(function(t){e[t]={dynamics:new o,time:null}});var i=this._updateDynamics.bind(this,e),r={instance:t,dynamics:e,parameterDynamicsHandler:i};t.addEventListener("parameterDynamics",i),this._methods.push(r)}},r.prototype.remove=function(t){var e=this._indexOfInstance(t);if(e>=0){var i=this._methods.splice(e,1)[0];i.instance.removeEventListener("parameterDynamics",i.parameterDynamicsHandler)}},r.prototype.has=function(t){return this._indexOfInstance(t)>=0},r.prototype._indexOfInstance=function(t){for(var e=0;e<this._methods.length;e++)if(this._methods[e].instance===t)return e;return-1},r.prototype.list=function(){for(var t=[],e=0;e<this._methods.length;e++)t.push(this._methods[e].instance);return t},r.prototype._updateDynamics=function(t,e,i){var r=t[e];if(!r)throw new Error("Unknown control parameter "+e);var n=this._clock();r.dynamics.update(i,(n-r.time)/1e3),r.time=n,this.emit("change")},r.prototype._resetComposedOffsets=function(){for(var t=0;t<this._parameters.length;t++)this._composedOffsets[this._parameters[t]]=0},r.prototype.offsets=function(){var t,e=!1,i=this._clock();this._resetComposedOffsets();for(var r=0;r<this._methods.length;r++)for(var n=this._methods[r].dynamics,o=0;o<this._parameters.length;o++){t=this._parameters[o];var s=n[t],a=s.dynamics;null!=a.offset&&(this._composedOffsets[t]+=a.offset,a.offset=null);var l=(i-s.time)/1e3,h=a.offsetFromVelocity(l);h&&(this._composedOffsets[t]+=h);var u=a.velocityAfter(l);a.velocity=u,u&&(e=!0),s.time=i}return this._composeReturn.changing=e,this._composeReturn},r.prototype.destroy=function(){for(var t=this.list(),e=0;e<t.length;e++)this.remove(t[e]);a(this)},e.exports=r},{"../util/clearOwnProperties":91,"../util/clock":92,"./Dynamics":40,"minimal-event-emitter":13}],37:[function(t,e,i){"use strict";function r(t,e,i,r){r=n(r||{},s),this._element=i,this._controls=t,this._id=e,this._attached=!1,this._setActiveCursor=this._setCursor.bind(this,r.active),this._setInactiveCursor=this._setCursor.bind(this,r.inactive),this._setDisabledCursor=this._setCursor.bind(this,r.disabled),this._setOriginalCursor=this._setCursor.bind(this,this._element.style.cursor),this._updateAttachmentHandler=this._updateAttachment.bind(this),t.addEventListener("methodEnabled",this._updateAttachmentHandler),t.addEventListener("methodDisabled",this._updateAttachmentHandler),t.addEventListener("enabled",this._updateAttachmentHandler),t.addEventListener("disabled",this._updateAttachmentHandler),this._updateAttachment()}var n=t("../util/defaults"),o=t("../util/clearOwnProperties"),s={active:"move",inactive:"default",disabled:"default"};r.prototype.destroy=function(){this._detachFromControlMethod(this._controls.method(this._id)),this._setOriginalCursor(),this._controls.removeEventListener("methodEnabled",this._updateAttachmentHandler),this._controls.removeEventListener("methodDisabled",this._updateAttachmentHandler),this._controls.removeEventListener("enabled",this._updateAttachmentHandler),this._controls.removeEventListener("disabled",this._updateAttachmentHandler),o(this)},r.prototype._updateAttachment=function(){var t=this._controls,e=this._id;t.enabled()&&t.method(e).enabled?this._attachToControlMethod(t.method(e)):this._detachFromControlMethod(t.method(e))},r.prototype._attachToControlMethod=function(t){this._attached||(t.instance.addEventListener("active",this._setActiveCursor),t.instance.addEventListener("inactive",this._setInactiveCursor),t.active?this._setActiveCursor():this._setInactiveCursor(),this._attached=!0)},r.prototype._detachFromControlMethod=function(t){this._attached&&(t.instance.removeEventListener("active",this._setActiveCursor),t.instance.removeEventListener("inactive",this._setInactiveCursor),this._setDisabledCursor(),this._attached=!1)},r.prototype._setCursor=function(t){this._element.style.cursor=t},e.exports=r},{"../util/clearOwnProperties":91,"../util/defaults":97}],38:[function(t,e,i){"use strict";function r(t){t=t||{},this._methods={},this._methodGroups={},this._composer=new o,this._enabled=!t||!t.enabled||!!t.enabled,this._activeCount=0,this.updatedViews_=[],this._attachedRenderLoop=null}
-var n=t("minimal-event-emitter"),o=t("./Composer"),s=t("../util/clearOwnProperties"),a="undefined"!=typeof MARZIPANODEBUG&&MARZIPANODEBUG.controls;n(r),r.prototype.destroy=function(){this.detach(),this._composer.destroy(),s(this)},r.prototype.methods=function(){var t={};for(var e in this._methods)t[e]=this._methods[e];return t},r.prototype.method=function(t){return this._methods[t]},r.prototype.registerMethod=function(t,e,i){if(this._methods[t])throw new Error("Control method already registered with id "+t);this._methods[t]={instance:e,enabled:!1,active:!1,activeHandler:this._handleActive.bind(this,t),inactiveHandler:this._handleInactive.bind(this,t)},i&&this.enableMethod(t,e)},r.prototype.unregisterMethod=function(t){var e=this._methods[t];if(!e)throw new Error("No control method registered with id "+t);e.enabled&&this.disableMethod(t),delete this._methods[t]},r.prototype.enableMethod=function(t){var e=this._methods[t];if(!e)throw new Error("No control method registered with id "+t);e.enabled||(e.enabled=!0,e.active&&this._incrementActiveCount(),this._listen(t),this._updateComposer(),this.emit("methodEnabled",t))},r.prototype.disableMethod=function(t){var e=this._methods[t];if(!e)throw new Error("No control method registered with id "+t);e.enabled&&(e.enabled=!1,e.active&&this._decrementActiveCount(),this._unlisten(t),this._updateComposer(),this.emit("methodDisabled",t))},r.prototype.addMethodGroup=function(t,e){this._methodGroups[t]=e},r.prototype.removeMethodGroup=function(t){delete this._methodGroups[t]},r.prototype.methodGroups=function(){var t={};for(var e in this._methodGroups)t[e]=this._methodGroups[e];return t},r.prototype.enableMethodGroup=function(t){var e=this;e._methodGroups[t].forEach(function(t){e.enableMethod(t)})},r.prototype.disableMethodGroup=function(t){var e=this;e._methodGroups[t].forEach(function(t){e.disableMethod(t)})},r.prototype.enabled=function(){return this._enabled},r.prototype.enable=function(){this._enabled=!0,this._activeCount>0&&this.emit("active"),this.emit("enabled"),this._updateComposer()},r.prototype.disable=function(){this._enabled=!1,this._activeCount>0&&this.emit("inactive"),this.emit("disabled"),this._updateComposer()},r.prototype.attach=function(t){this._attachedRenderLoop&&this.detach(),this._attachedRenderLoop=t,this._beforeRenderHandler=this._updateViewsWithControls.bind(this),this._changeHandler=t.renderOnNextFrame.bind(t),this._attachedRenderLoop.addEventListener("beforeRender",this._beforeRenderHandler),this._composer.addEventListener("change",this._changeHandler)},r.prototype.detach=function(){this._attachedRenderLoop&&(this._attachedRenderLoop.removeEventListener("beforeRender",this._beforeRenderHandler),this._composer.removeEventListener("change",this._changeHandler),this._beforeRenderHandler=null,this._changeHandler=null,this._attachedRenderLoop=null)},r.prototype.attached=function(){return null!=this._attachedRenderLoop},r.prototype._listen=function(t){var e=this._methods[t];if(!e)throw new Error("Bad method id");e.instance.addEventListener("active",e.activeHandler),e.instance.addEventListener("inactive",e.inactiveHandler)},r.prototype._unlisten=function(t){var e=this._methods[t];if(!e)throw new Error("Bad method id");e.instance.removeEventListener("active",e.activeHandler),e.instance.removeEventListener("inactive",e.inactiveHandler)},r.prototype._handleActive=function(t){var e=this._methods[t];if(!e)throw new Error("Bad method id");if(!e.enabled)throw new Error("Should not receive event from disabled control method");e.active||(e.active=!0,this._incrementActiveCount())},r.prototype._handleInactive=function(t){var e=this._methods[t];if(!e)throw new Error("Bad method id");if(!e.enabled)throw new Error("Should not receive event from disabled control method");e.active&&(e.active=!1,this._decrementActiveCount())},r.prototype._incrementActiveCount=function(){this._activeCount++,a&&this._checkActiveCount(),this._enabled&&1===this._activeCount&&this.emit("active")},r.prototype._decrementActiveCount=function(){this._activeCount--,a&&this._checkActiveCount(),this._enabled&&0===this._activeCount&&this.emit("inactive")},r.prototype._checkActiveCount=function(){var t=0;for(var e in this._methods){var i=this._methods[e];i.enabled&&i.active&&t++}if(t!=this._activeCount)throw new Error("Bad control state")},r.prototype._updateComposer=function(){var t=this._composer;for(var e in this._methods){var i=this._methods[e],r=this._enabled&&i.enabled;r&&!t.has(i.instance)&&t.add(i.instance),!r&&t.has(i.instance)&&t.remove(i.instance)}},r.prototype._updateViewsWithControls=function(){var t=this._composer.offsets();t.changing&&this._attachedRenderLoop.renderOnNextFrame(),this.updatedViews_.length=0;for(var e=this._attachedRenderLoop.stage().listLayers(),i=0;i<e.length;i++){var r=e[i].view();this.updatedViews_.indexOf(r)<0&&(e[i].view().updateWithControlParameters(t.offsets),this.updatedViews_.push(r))}},e.exports=r},{"../util/clearOwnProperties":91,"./Composer":36,"minimal-event-emitter":13}],39:[function(t,e,i){"use strict";function r(t,e,i){this._element=t,this._opts=a(i||{},u),this._startEvent=null,this._lastEvent=null,this._active=!1,this._dynamics={x:new o,y:new o},this._hammer=s.get(t,e),this._hammer.on("hammer.input",this._handleHammerEvent.bind(this)),this._hammer.on("panstart",this._handleStart.bind(this)),this._hammer.on("panmove",this._handleMove.bind(this)),this._hammer.on("panend",this._handleEnd.bind(this)),this._hammer.on("pancancel",this._handleEnd.bind(this))}var n=t("minimal-event-emitter"),o=t("./Dynamics"),s=t("./HammerGestures"),a=t("../util/defaults"),l=t("./util").maxFriction,h=t("../util/clearOwnProperties"),u={friction:6,maxFrictionTime:.3},c="undefined"!=typeof MARZIPANODEBUG&&MARZIPANODEBUG.controls;n(r),r.prototype.destroy=function(){this._hammer.release(),h(this)},r.prototype._handleHammerEvent=function(t){if(t.isFirst){if(c&&this._active)throw new Error("DragControlMethod active detected when already active");this._active=!0,this.emit("active")}if(t.isFinal){if(c&&!this._active)throw new Error("DragControlMethod inactive detected when already inactive");this._active=!1,this.emit("inactive")}},r.prototype._handleStart=function(t){t.preventDefault(),this._startEvent=t},r.prototype._handleMove=function(t){t.preventDefault(),this._startEvent&&(this._updateDynamicsMove(t),this.emit("parameterDynamics","axisScaledX",this._dynamics.x),this.emit("parameterDynamics","axisScaledY",this._dynamics.y))},r.prototype._handleEnd=function(t){t.preventDefault(),this._startEvent&&(this._updateDynamicsRelease(t),this.emit("parameterDynamics","axisScaledX",this._dynamics.x),this.emit("parameterDynamics","axisScaledY",this._dynamics.y)),this._startEvent=!1,this._lastEvent=!1},r.prototype._updateDynamicsMove=function(t){var e=t.deltaX,i=t.deltaY,r=this._lastEvent||this._startEvent;r&&(e-=r.deltaX,i-=r.deltaY);var n=this._element.getBoundingClientRect(),o=n.right-n.left,s=n.bottom-n.top;e/=o,i/=s,this._dynamics.x.reset(),this._dynamics.y.reset(),this._dynamics.x.offset=-e,this._dynamics.y.offset=-i,this._lastEvent=t};var p=[null,null];r.prototype._updateDynamicsRelease=function(t){var e=this._element.getBoundingClientRect(),i=e.right-e.left,r=e.bottom-e.top,n=1e3*t.velocityX/i,o=1e3*t.velocityY/r;this._dynamics.x.reset(),this._dynamics.y.reset(),this._dynamics.x.velocity=n,this._dynamics.y.velocity=o,l(this._opts.friction,this._dynamics.x.velocity,this._dynamics.y.velocity,this._opts.maxFrictionTime,p),this._dynamics.x.friction=p[0],this._dynamics.y.friction=p[1]},e.exports=r},{"../util/clearOwnProperties":91,"../util/defaults":97,"./Dynamics":40,"./HammerGestures":42,"./util":50,"minimal-event-emitter":13}],40:[function(t,e,i){"use strict";function r(){this.velocity=null,this.friction=null,this.offset=null}function n(t,e){return t<0?Math.min(0,t+e):t>0?Math.max(0,t-e):0}r.equals=function(t,e){return t.velocity===e.velocity&&t.friction===e.friction&&t.offset===e.offset},r.prototype.equals=function(t){return r.equals(this,t)},r.prototype.update=function(t,e){t.offset&&(this.offset=this.offset||0,this.offset+=t.offset);var i=this.offsetFromVelocity(e);i&&(this.offset=this.offset||0,this.offset+=i),this.velocity=t.velocity,this.friction=t.friction},r.prototype.reset=function(){this.velocity=null,this.friction=null,this.offset=null},r.prototype.velocityAfter=function(t){return this.velocity?this.friction?n(this.velocity,this.friction*t):this.velocity:null},r.prototype.offsetFromVelocity=function(t){t=Math.min(t,this.nullVelocityTime());var e=this.velocityAfter(t);return(this.velocity+e)/2*t},r.prototype.nullVelocityTime=function(){return null==this.velocity?0:this.velocity&&!this.friction?Infinity:Math.abs(this.velocity/this.friction)},e.exports=r},{}],41:[function(t,e,i){"use strict";function r(t,e,i,r){if(!t)throw new Error("ElementPressControlMethod: element must be defined");if(!e)throw new Error("ElementPressControlMethod: parameter must be defined");if(!i)throw new Error("ElementPressControlMethod: velocity must be defined");if(!r)throw new Error("ElementPressControlMethod: friction must be defined");this._element=t,this._pressHandler=this._handlePress.bind(this),this._releaseHandler=this._handleRelease.bind(this),t.addEventListener("mousedown",this._pressHandler),t.addEventListener("mouseup",this._releaseHandler),t.addEventListener("mouseleave",this._releaseHandler),t.addEventListener("touchstart",this._pressHandler),t.addEventListener("touchmove",this._releaseHandler),t.addEventListener("touchend",this._releaseHandler),this._parameter=e,this._velocity=i,this._friction=r,this._dynamics=new o,this._pressing=!1}var n=t("minimal-event-emitter"),o=t("./Dynamics"),s=t("../util/clearOwnProperties");n(r),r.prototype.destroy=function(){this._element.removeEventListener("mousedown",this._pressHandler),this._element.removeEventListener("mouseup",this._releaseHandler),this._element.removeEventListener("mouseleave",this._releaseHandler),this._element.removeEventListener("touchstart",this._pressHandler),this._element.removeEventListener("touchmove",this._releaseHandler),this._element.removeEventListener("touchend",this._releaseHandler),s(this)},r.prototype._handlePress=function(){this._pressing=!0,this._dynamics.velocity=this._velocity,this._dynamics.friction=0,this.emit("parameterDynamics",this._parameter,this._dynamics),this.emit("active")},r.prototype._handleRelease=function(){this._pressing&&(this._dynamics.friction=this._friction,this.emit("parameterDynamics",this._parameter,this._dynamics),this.emit("inactive")),this._pressing=!1},e.exports=r},{"../util/clearOwnProperties":91,"./Dynamics":40,"minimal-event-emitter":13}],42:[function(t,e,i){"use strict";function r(){this._managers=new l(n,o)}function n(t,e){return t===e}function o(t){for(var e=t.id||t.toString();e.length<5;)e+="0";return h(e.charCodeAt(0),e.charCodeAt(1),e.charCodeAt(2),e.charCodeAt(3),e.charCodeAt(4))}function s(t,e,i,r){this._manager=e,this._element=i,this._type=r,this._hammerGestures=t,this._eventHandlers=[]}var a=t("hammerjs"),l=t("../collections/Map"),h=t("../util/hash"),u=t("bowser");r.prototype.get=function(t,e){this._managers.has(t)||this._managers.set(t,{});var i=this._managers.get(t);i[e]||(i[e]=this._createManager(t,e));var r=i[e];return r.refs+=1,new s(this,r.manager,t,e)},r.prototype._createManager=function(t,e){var i=new a.Manager(t);return"mouse"===e?i.add(new a.Pan({direction:a.DIRECTION_ALL,threshold:0})):"touch"!==e&&"pen"!==e&&"kinect"!==e||(i.add(new a.Pan({direction:a.DIRECTION_ALL,threshold:20,pointers:1})),u.msie&&parseFloat(u.version)<10||i.add(new a.Pinch)),{manager:i,refs:0}},r.prototype._releaseHandle=function(t,e){var i=this._managers.get(t)[e];i.refs-=1,i.refs<=0&&(i.manager.destroy(),this._managers.get(t)[e]=null)},s.prototype.on=function(t,e){var i=this._type,r=function(t){i===t.pointerType&&e(t)};this._eventHandlers.push({events:t,handler:r}),this._manager.on(t,r)},s.prototype.release=function(){for(var t=0;t<this._eventHandlers.length;t++){var e=this._eventHandlers[t];this._manager.off(e.events,e.handler)}this._hammerGestures._releaseHandle(this._element,this._type),this._manager=null,this._element=null,this._type=null,this._hammerGestures=null},s.prototype.manager=function(){return this._manager},e.exports=new r},{"../collections/Map":31,"../util/hash":103,bowser:1,hammerjs:12}],43:[function(t,e,i){"use strict";function r(t,e,i,r,n){if(!t)throw new Error("KeyControlMethod: keyCode must be defined");if(!e)throw new Error("KeyControlMethod: parameter must be defined");if(!i)throw new Error("KeyControlMethod: velocity must be defined");if(!r)throw new Error("KeyControlMethod: friction must be defined");n=n||document,this._keyCode=t,this._parameter=e,this._velocity=i,this._friction=r,this._element=n,this._keydownHandler=this._handlePress.bind(this),this._keyupHandler=this._handleRelease.bind(this),this._blurHandler=this._handleBlur.bind(this),this._element.addEventListener("keydown",this._keydownHandler),this._element.addEventListener("keyup",this._keyupHandler),window.addEventListener("blur",this._blurHandler),this._dynamics=new o,this._pressing=!1}var n=t("minimal-event-emitter"),o=t("./Dynamics"),s=t("../util/clearOwnProperties");n(r),r.prototype.destroy=function(){this._element.removeEventListener("keydown",this._keydownHandler),this._element.removeEventListener("keyup",this._keyupHandler),window.removeEventListener("blur",this._blurHandler),s(this)},r.prototype._handlePress=function(t){t.keyCode===this._keyCode&&(this._pressing=!0,this._dynamics.velocity=this._velocity,this._dynamics.friction=0,this.emit("parameterDynamics",this._parameter,this._dynamics),this.emit("active"))},r.prototype._handleRelease=function(t){t.keyCode===this._keyCode&&(this._pressing&&(this._dynamics.friction=this._friction,this.emit("parameterDynamics",this._parameter,this._dynamics),this.emit("inactive")),this._pressing=!1)},r.prototype._handleBlur=function(){this._dynamics.velocity=0,this.emit("parameterDynamics",this._parameter,this._dynamics),this.emit("inactive"),this._pressing=!1},e.exports=r},{"../util/clearOwnProperties":91,"./Dynamics":40,"minimal-event-emitter":13}],44:[function(t,e,i){"use strict";function r(t,e,i){this._hammer=s.get(t,e),this._lastEvent=null,this._active=!1,this._dynamics=new o,this._hammer.on("pinchstart",this._handleStart.bind(this)),this._hammer.on("pinch",this._handleEvent.bind(this)),this._hammer.on("pinchend",this._handleEnd.bind(this)),this._hammer.on("pinchcancel",this._handleEnd.bind(this))}var n=t("minimal-event-emitter"),o=t("./Dynamics"),s=t("./HammerGestures"),a=t("../util/clearOwnProperties");n(r),r.prototype.destroy=function(){this._hammer.release(),a(this)},r.prototype._handleStart=function(){this._active||(this._active=!0,this.emit("active"))},r.prototype._handleEnd=function(){this._lastEvent=null,this._active&&(this._active=!1,this.emit("inactive"))},r.prototype._handleEvent=function(t){var e=t.scale;this._lastEvent&&(e/=this._lastEvent.scale),this._dynamics.offset=-1*(e-1),this.emit("parameterDynamics","zoom",this._dynamics),this._lastEvent=t},e.exports=r},{"../util/clearOwnProperties":91,"./Dynamics":40,"./HammerGestures":42,"minimal-event-emitter":13}],45:[function(t,e,i){"use strict";function r(t,e,i){this._element=t,this._opts=a(i||{},u),this._active=!1,this._hammer=s.get(t,e),this._dynamics={x:new o,y:new o},this._hammer.on("panstart",this._handleStart.bind(this)),this._hammer.on("panmove",this._handleMove.bind(this)),this._hammer.on("panend",this._handleRelease.bind(this)),this._hammer.on("pancancel",this._handleRelease.bind(this))}var n=t("minimal-event-emitter"),o=t("./Dynamics"),s=t("./HammerGestures"),a=t("../util/defaults"),l=t("./util").maxFriction,h=t("../util/clearOwnProperties"),u={speed:8,friction:6,maxFrictionTime:.3};n(r),r.prototype.destroy=function(){this._hammer.release(),h(this)},r.prototype._handleStart=function(t){t.preventDefault(),this._active||(this._active=!0,this.emit("active"))},r.prototype._handleMove=function(t){t.preventDefault(),this._updateDynamics(t,!1)},r.prototype._handleRelease=function(t){t.preventDefault(),this._updateDynamics(t,!0),this._active&&(this._active=!1,this.emit("inactive"))};var c=[null,null];r.prototype._updateDynamics=function(t,e){var i=this._element.getBoundingClientRect(),r=i.right-i.left,n=i.bottom-i.top,o=Math.max(r,n),s=t.deltaX/o*this._opts.speed,a=t.deltaY/o*this._opts.speed;this._dynamics.x.reset(),this._dynamics.y.reset(),this._dynamics.x.velocity=s,this._dynamics.y.velocity=a,e&&(l(this._opts.friction,this._dynamics.x.velocity,this._dynamics.y.velocity,this._opts.maxFrictionTime,c),this._dynamics.x.friction=c[0],this._dynamics.y.friction=c[1]),this.emit("parameterDynamics","x",this._dynamics.x),this.emit("parameterDynamics","y",this._dynamics.y)},e.exports=r},{"../util/clearOwnProperties":91,"../util/defaults":97,"./Dynamics":40,"./HammerGestures":42,"./util":50,"minimal-event-emitter":13}],46:[function(t,e,i){"use strict";function r(t,e){this._opts=l(e||{},u),this._dynamics=new s,this._eventList=[];var i=this._opts.frictionTime?this.withSmoothing:this.withoutSmoothing;this._wheelListener=new a(t,i.bind(this))}function n(t){var e=1==t.deltaMode?20:1;return t.deltaY*e}var o=t("minimal-event-emitter"),s=t("./Dynamics"),a=t("./WheelListener"),l=t("../util/defaults"),h=t("../util/clearOwnProperties"),u={frictionTime:.2,zoomDelta:.001};o(r),r.prototype.destroy=function(){this._wheelListener.destroy(),h(this)},r.prototype.withoutSmoothing=function(t){this._dynamics.offset=n(t)*this._opts.zoomDelta,this.emit("parameterDynamics","zoom",this._dynamics),t.preventDefault(),this.emit("active"),this.emit("inactive")},r.prototype.withSmoothing=function(t){var e=t.timeStamp;for(this._eventList.push(t);this._eventList[0].timeStamp<e-1e3*this._opts.frictionTime;)this._eventList.shift(0);for(var i=0,r=0;r<this._eventList.length;r++){i+=n(this._eventList[r])*this._opts.zoomDelta/this._opts.frictionTime}this._dynamics.velocity=i,this._dynamics.friction=Math.abs(i)/this._opts.frictionTime,this.emit("parameterDynamics","zoom",this._dynamics),t.preventDefault(),this.emit("active"),this.emit("inactive")},e.exports=r},{"../util/clearOwnProperties":91,"../util/defaults":97,"./Dynamics":40,"./WheelListener":48,"minimal-event-emitter":13}],47:[function(t,e,i){"use strict";function r(t){if(!t)throw new Error("VelocityControlMethod: parameter must be defined");this._parameter=t,this._dynamics=new o}var n=t("minimal-event-emitter"),o=t("./Dynamics"),s=t("../util/clearOwnProperties");n(r),r.prototype.destroy=function(){s(this)},r.prototype.setVelocity=function(t){this._dynamics.velocity=t,this.emit("parameterDynamics",this._parameter,this._dynamics)},r.prototype.setFriction=function(t){this._dynamics.friction=t,this.emit("parameterDynamics",this._parameter,this._dynamics)},e.exports=r},{"../util/clearOwnProperties":91,"./Dynamics":40,"minimal-event-emitter":13}],48:[function(t,e,i){"use strict";function r(t,e,i){var r=o();if("wheel"===r)this._fun=e,this._elem=t,this._elem.addEventListener("wheel",this._fun,i);else{if("mousewheel"!==r)throw new Error("Browser does not support mouse wheel events");this._fun=n(e),this._elem=t,this._elem.addEventListener("mousewheel",this._fun,i)}}function n(t){return function(e){e||(e=window.event);var i={originalEvent:e,target:e.target||e.srcElement,type:"wheel",deltaMode:1,deltaX:0,deltaZ:0,timeStamp:e.timeStamp||Date.now(),preventDefault:e.preventDefault.bind(e)};return i.deltaY=-.025*e.wheelDelta,e.wheelDeltaX&&(i.deltaX=-.025*e.wheelDeltaX),t(i)}}function o(){return a!==undefined?a:a="onwheel"in document.createElement("div")?"wheel":document.onmousewheel!==undefined?"mousewheel":null}var s=t("../util/clearOwnProperties");r.prototype.destroy=function(){this._elem.removeEventListener(o(),this._fun),s(this)};var a;e.exports=r},{"../util/clearOwnProperties":91}],49:[function(t,e,i){"use strict";function r(t,e,i){i=n(i||{},u);var r={mouseViewDrag:new o(e,"mouse"),mouseViewQtvr:new s(e,"mouse"),touchView:new o(e,"touch"),pinch:new l(e,"touch"),leftArrowKey:new h(37,"x",-.7,3),rightArrowKey:new h(39,"x",.7,3),upArrowKey:new h(38,"y",-.7,3),downArrowKey:new h(40,"y",.7,3),plusKey:new h(107,"zoom",-.7,3),minusKey:new h(109,"zoom",.7,3),wKey:new h(87,"y",-.7,3),aKey:new h(65,"x",-.7,3),sKey:new h(83,"y",.7,3),dKey:new h(68,"x",.7,3),qKey:new h(81,"roll",.7,3),eKey:new h(69,"roll",-.7,3)};!1!==i.scrollZoom&&(r.scrollZoom=new a(e));var c={arrowKeys:["leftArrowKey","rightArrowKey","upArrowKey","downArrowKey"],plusMinusKeys:["plusKey","minusKey"],wasdKeys:["wKey","aKey","sKey","dKey"],qeKeys:["qKey","eKey"]},p=["scrollZoom","touchView","pinch"];switch(i.mouseViewMode){case"drag":p.push("mouseViewDrag");break;case"qtvr":p.push("mouseViewQtvr");break;default:throw new Error("Unknown mouse view mode: "+i.mouseViewMode)}for(var d in r){var f=r[d];t.registerMethod(d,f),p.indexOf(d)>=0&&t.enableMethod(d)}for(var m in c){var v=c[m];t.addMethodGroup(m,v)}return r}var n=t("../util/defaults"),o=t("./Drag"),s=t("./Qtvr"),a=t("./ScrollZoom"),l=t("./PinchZoom"),h=t("./Key"),u={mouseViewMode:"drag"};e.exports=r},{"../util/defaults":97,"./Drag":39,"./Key":43,"./PinchZoom":44,"./Qtvr":45,"./ScrollZoom":46}],50:[function(t,e,i){"use strict";function r(t,e,i,r,o){var s=Math.sqrt(Math.pow(e,2)+Math.pow(i,2));t=Math.max(t,s/r),n(e,i,t,o),o[0]=Math.abs(o[0]),o[1]=Math.abs(o[1])}function n(t,e,i,r){var n=Math.atan(e/t);r[0]=i*Math.cos(n),r[1]=i*Math.sin(n)}e.exports={maxFriction:r,changeVectorNorm:n}},{}],51:[function(t,e,i){"use strict";function r(t,e,i,r,n){this.face=t,this.x=e,this.y=i,this.z=r,this._geometry=n,this._level=n.levelList[r]}function n(t){if(this.constructor.super_.call(this,t),this._size=t.size,this._tileSize=t.tileSize,this._size%this._tileSize!=0)throw new Error("Level size is not multiple of tile size: "+this._size+" "+this._tileSize)}function o(t){if("array"!==v(t))throw new Error("Level list must be an array");this.levelList=c(t,n),this.selectableLevelList=p(this.levelList);for(var e=1;e<this.levelList.length;e++)this.levelList[e]._validateWithParentLevel(this.levelList[e-1]);this._graphFinder=new l(r.equals,r.hash),this._neighborsCache=new h(r.equals,r.hash,64),this._vec=_.create(),this._viewSize={},this._viewParams={},this._tileVertices=[_.create(),_.create(),_.create(),_.create()]}for(var s=t("../util/inherits"),a=t("../util/hash"),l=t("../GraphFinder"),h=t("../collections/LruMap"),u=t("./Level"),c=t("./common").makeLevelList,p=t("./common").makeSelectableLevelList,d=t("../util/rotateVector"),f=t("../util/clamp"),m=t("../util/cmp"),v=t("../util/type"),_=t("gl-matrix/src/gl-matrix/vec3"),y="fudlrb",g={f:{x:0,y:0},b:{x:0,y:Math.PI},l:{x:0,y:Math.PI/2},r:{x:0,y:-Math.PI/2},u:{x:Math.PI/2,y:0},d:{x:-Math.PI/2,y:0}},x={},w=0;w<y.length;w++){var M=y[w],b=g[M],S=_.fromValues(0,0,-1);d(S,S,b.y,b.x,0),x[M]=S}var E={f:["l","r","u","d"],b:["r","l","u","d"],l:["b","f","u","d"],r:["f","b","u","d"],u:["l","r","b","f"],d:["l","r","f","b"]},I=[[0,1],[1,0],[0,-1],[-1,0]];r.prototype.rotX=function(){return g[this.face].x},r.prototype.rotY=function(){return g[this.face].y},r.prototype.centerX=function(){return(this.x+.5)/this._level.numHorizontalTiles()-.5},r.prototype.centerY=function(){return.5-(this.y+.5)/this._level.numVerticalTiles()},r.prototype.scaleX=function(){return 1/this._level.numHorizontalTiles()},r.prototype.scaleY=function(){return 1/this._level.numVerticalTiles()},r.prototype.width=function(){return this._level.tileWidth()},r.prototype.height=function(){return this._level.tileHeight()},r.prototype.levelWidth=function(){return this._level.width()},r.prototype.levelHeight=function(){return this._level.height()},r.prototype.atTopLevel=function(){return 0===this.z},r.prototype.atBottomLevel=function(){return this.z===this._geometry.levelList.length-1},r.prototype.atTopEdge=function(){return 0===this.y},r.prototype.atBottomEdge=function(){return this.y===this._level.numVerticalTiles()-1},r.prototype.atLeftEdge=function(){return 0===this.x},r.prototype.atRightEdge=function(){return this.x===this._level.numHorizontalTiles()-1},r.prototype.padTop=function(){return this.atTopEdge()&&/[fu]/.test(this.face)},r.prototype.padBottom=function(){return!this.atBottomEdge()||/[fd]/.test(this.face)},r.prototype.padLeft=function(){return this.atLeftEdge()&&/[flud]/.test(this.face)},r.prototype.padRight=function(){return!this.atRightEdge()||/[frud]/.test(this.face)},r.prototype.vertices=function(t){function e(t,e,r){_.set(t,e,r,-.5),d(t,t,i.y,i.x,0)}var i=g[this.face],r=this.centerX()-this.scaleX()/2,n=this.centerX()+this.scaleX()/2,o=this.centerY()-this.scaleY()/2,s=this.centerY()+this.scaleY()/2;return e(t[0],r,s),e(t[1],n,s),e(t[2],n,o),e(t[3],r,o),t},r.prototype.parent=function(){if(this.atTopLevel())return null;var t=this.face,e=this.z,i=this.x,n=this.y,o=this._geometry,s=o.levelList[e],a=o.levelList[e-1];return new r(t,Math.floor(i/s.numHorizontalTiles()*a.numHorizontalTiles()),Math.floor(n/s.numVerticalTiles()*a.numVerticalTiles()),e-1,o)},r.prototype.children=function(t){if(this.atBottomLevel())return null;var e=this.face,i=this.z,n=this.x,o=this.y,s=this._geometry,a=s.levelList[i],l=s.levelList[i+1],h=l.numHorizontalTiles()/a.numHorizontalTiles(),u=l.numVerticalTiles()/a.numVerticalTiles();t=t||[];for(var c=0;c<h;c++)for(var p=0;p<u;p++){var d=h*n+c,f=u*o+p,m=i+1;t.push(new r(e,d,f,m,s))}return t},r.prototype.neighbors=function(){var t=this._geometry,e=t._neighborsCache,i=e.get(this);if(i)return i;for(var n=t._vec,o=this.face,s=this.x,a=this.y,l=this.z,h=this._level,u=h.numHorizontalTiles(),c=h.numVerticalTiles(),p=[],m=0;m<I.length;m++){var v=I[m][0],y=I[m][1],x=s+v,w=a+y,M=l,b=o;if(x<0||x>=u||w<0||w>=c){var S=this.centerX(),D=this.centerY();x<0?(_.set(n,-.5,D,-.5),b=E[o][0]):x>=u?(_.set(n,.5,D,-.5),b=E[o][1]):w<0?(_.set(n,S,.5,-.5),b=E[o][2]):w>=c&&(_.set(n,S,-.5,-.5),b=E[o][3]);var T;T=g[o],d(n,n,T.y,T.x,0),T=g[b],d(n,n,-T.y,-T.x,0),x=f(Math.floor((.5+n[0])*u),0,u-1),w=f(Math.floor((.5-n[1])*c),0,c-1)}p.push(new r(b,x,w,M,t))}return e.set(this,p),p},r.prototype.hash=function(){return r.hash(this)},r.prototype.equals=function(t){return r.equals(this,t)},r.prototype.cmp=function(t){return r.cmp(this,t)},r.prototype.str=function(){return r.str(this)},r.hash=function(t){return null!=t?a(t.face.charCodeAt(0),t.z,t.x,t.y):0},r.equals=function(t,e){return null!=t&&null!=e&&t.face===e.face&&t.z===e.z&&t.x===e.x&&t.y===e.y},r.cmp=function(t,e){var i=y.indexOf(t.face),r=y.indexOf(e.face);return m(t.z,e.z)||m(i,r)||m(t.y,e.y)||m(t.x,e.x)},r.str=function(t){return"CubeTile("+t.face+", "+t.x+", "+t.y+", "+t.z+")"},s(n,u),n.prototype.width=function(){return this._size},n.prototype.height=function(){return this._size},n.prototype.tileWidth=function(){return this._tileSize},n.prototype.tileHeight=function(){return this._tileSize},n.prototype._validateWithParentLevel=function(t){var e=this.width(),i=this.height(),r=this.tileWidth(),n=this.tileHeight(),o=this.numHorizontalTiles(),s=this.numVerticalTiles(),a=t.width(),l=t.height(),h=t.tileWidth(),u=t.tileHeight(),c=t.numHorizontalTiles(),p=t.numVerticalTiles();if(e%a!=0)throw new Error("Level width must be multiple of parent level: "+e+" vs. "+a);if(i%l!=0)throw new Error("Level height must be multiple of parent level: "+i+" vs. "+l);if(o%c!=0)throw new Error("Number of horizontal tiles must be multiple of parent level: "+o+" ("+e+"/"+r+") vs. "+c+" ("+a+"/"+h+")");if(s%p!=0)throw new Error("Number of vertical tiles must be multiple of parent level: "+s+" ("+i+"/"+n+") vs. "+p+" ("+l+"/"+u+")")},o.prototype.maxTileSize=function(){for(var t=0,e=0;e<this.levelList.length;e++){var i=this.levelList[e];t=Math.max(t,i.tileWidth,i.tileHeight)}return t},o.prototype.levelTiles=function(t,e){var i=this.levelList.indexOf(t),n=t.numHorizontalTiles()-1,o=t.numVerticalTiles()-1;e=e||[];for(var s=0;s<y.length;s++)for(var a=y[s],l=0;l<=n;l++)for(var h=0;h<=o;h++)e.push(new r(a,l,h,i,this));return e},o.prototype._closestTile=function(t,e){var i=this._vec,n=Infinity,o=null;_.set(i,0,0,-1),d(i,i,-t.yaw,-t.pitch,-t.roll);for(var s in x){var a=x[s],l=1-_.dot(a,i);l<n&&(n=l,o=s)}for(var h=Math.max(Math.abs(i[0]),Math.abs(i[1]),Math.abs(i[2]))/.5,u=0;u<3;u++)i[u]=i[u]/h;var c=g[o];d(i,i,-c.y,-c.x,-c.z);var p=this.levelList.indexOf(e),m=e.numHorizontalTiles(),v=e.numVerticalTiles(),y=i[0],w=i[1];return new r(o,f(Math.floor((.5+y)*m),0,m-1),f(Math.floor((.5-w)*v),0,v-1),p,this)},o.prototype.visibleTiles=function(t,e,i){function r(t){return t.neighbors()}function n(e){return e.vertices(a),t.intersects(a)}var o=this._viewSize,s=this._viewParams,a=this._tileVertices,l=this._graphFinder;if(i=i||[],t.size(o),0===o.width||0===o.height)return i;var h=this._closestTile(t.parameters(s),e);if(!n(h))throw new Error("Starting tile is not visible");var u;for(l.start(h,r,n);null!=(u=l.next());)i.push(u);return i},o.TileClass=o.prototype.TileClass=r,o.type=o.prototype.type="cube",r.type=r.prototype.type="cube",e.exports=o},{"../GraphFinder":14,"../collections/LruMap":29,"../util/clamp":90,"../util/cmp":93,"../util/hash":103,"../util/inherits":104,"../util/rotateVector":114,"../util/type":116,"./Level":54,"./common":55,"gl-matrix/src/gl-matrix/vec3":10}],52:[function(t,e,i){"use strict";function r(t,e){this.z=t,this._geometry=e,this._level=e.levelList[t]}function n(t){this.constructor.super_.call(this,t),this._width=t.width}function o(t){if("array"!==c(t))throw new Error("Level list must be an array");this.levelList=h.makeLevelList(t,n),this.selectableLevelList=h.makeSelectableLevelList(this.levelList)}var s=t("../util/inherits"),a=t("../util/hash"),l=t("../util/cmp"),h=t("./common"),u=t("./Level"),c=t("../util/type");r.prototype.rotX=function(){return 0},r.prototype.rotY=function(){return 0},r.prototype.centerX=function(){return.5},r.prototype.centerY=function(){return.5},r.prototype.scaleX=function(){return 1},r.prototype.scaleY=function(){return 1},r.prototype.width=function(){return this._level.tileWidth()},r.prototype.height=function(){return this._level.tileHeight()},r.prototype.levelWidth=function(){return this._level.width()},r.prototype.levelHeight=function(){return this._level.height()},r.prototype.atTopLevel=function(){return 0===this.z},r.prototype.atBottomLevel=function(){return this.z===this._geometry.levelList.length-1},r.prototype.atTopEdge=function(){return!0},r.prototype.atBottomEdge=function(){return!0},r.prototype.atLeftEdge=function(){return!0},r.prototype.atRightEdge=function(){return!0},r.prototype.padTop=function(){return!1},r.prototype.padBottom=function(){return!1},r.prototype.padLeft=function(){return!1},r.prototype.padRight=function(){return!1},r.prototype.parent=function(){return this.atTopLevel()?null:new r(this.z-1,this._geometry)},r.prototype.children=function(t){return this.atBottomLevel()?null:(t=t||[],t.push(new r(this.z+1,this._geometry)),t)},r.prototype.neighbors=function(){return[]},r.prototype.hash=function(){return r.hash(this)},r.prototype.equals=function(t){return r.equals(this,t)},r.prototype.cmp=function(t){return r.cmp(this,t)},r.prototype.str=function(){return r.str(this)},r.hash=function(t){return a(t.z)},r.equals=function(t,e){return t.z===e.z},r.cmp=function(t,e){return l(t.z,e.z)},r.str=function(t){return"EquirectTile("+t.z+")"},s(n,u),n.prototype.width=function(){return this._width},n.prototype.height=function(){return this._width/2},n.prototype.tileWidth=function(){return this._width},n.prototype.tileHeight=function(){return this._width/2},o.prototype.maxTileSize=function(){for(var t=0,e=0;e<this.levelList.length;e++){var i=this.levelList[e];t=Math.max(t,i.tileWidth,i.tileHeight)}return t},o.prototype.levelTiles=function(t,e){var i=this.levelList.indexOf(t);return e=e||[],e.push(new r(i,this)),e},o.prototype.visibleTiles=function(t,e,i){var n=new r(this.levelList.indexOf(e),this);i=i||[],i.length=0,i.push(n)},o.TileClass=o.prototype.TileClass=r,o.type=o.prototype.type="equirect",r.type=r.prototype.type="equirect",e.exports=o},{
-"../util/cmp":93,"../util/hash":103,"../util/inherits":104,"../util/type":116,"./Level":54,"./common":55}],53:[function(t,e,i){"use strict";function r(t,e,i,r){this.x=t,this.y=e,this.z=i,this._geometry=r,this._level=r.levelList[i]}function n(t){this.constructor.super_.call(this,t),this._width=t.width,this._height=t.height,this._tileWidth=t.tileWidth,this._tileHeight=t.tileHeight}function o(t){if("array"!==v(t))throw new Error("Level list must be an array");this.levelList=c(t,n),this.selectableLevelList=p(this.levelList);for(var e=1;e<this.levelList.length;e++)this.levelList[e]._validateWithParentLevel(this.levelList[e-1]);this._graphFinder=new l(r.equals,r.hash),this._neighborsCache=new h(r.equals,r.hash,64),this._viewSize={},this._viewParams={},this._tileVertices=[_.create(),_.create(),_.create(),_.create()]}var s=t("../util/inherits"),a=t("../util/hash"),l=t("../GraphFinder"),h=t("../collections/LruMap"),u=t("./Level"),c=t("./common").makeLevelList,p=t("./common").makeSelectableLevelList,d=t("../util/clamp"),f=t("../util/mod"),m=t("../util/cmp"),v=t("../util/type"),_=t("gl-matrix/src/gl-matrix/vec2"),y=[[0,1],[1,0],[0,-1],[-1,0]];r.prototype.rotX=function(){return 0},r.prototype.rotY=function(){return 0},r.prototype.centerX=function(){var t=this._level.width(),e=this._level.tileWidth();return(this.x*e+.5*this.width())/t-.5},r.prototype.centerY=function(){var t=this._level.height(),e=this._level.tileHeight();return.5-(this.y*e+.5*this.height())/t},r.prototype.scaleX=function(){var t=this._level.width();return this.width()/t},r.prototype.scaleY=function(){var t=this._level.height();return this.height()/t},r.prototype.width=function(){var t=this._level.width(),e=this._level.tileWidth();if(this.atRightEdge()){return f(t,e)||e}return e},r.prototype.height=function(){var t=this._level.height(),e=this._level.tileHeight();if(this.atBottomEdge()){return f(t,e)||e}return e},r.prototype.levelWidth=function(){return this._level.width()},r.prototype.levelHeight=function(){return this._level.height()},r.prototype.atTopLevel=function(){return 0===this.z},r.prototype.atBottomLevel=function(){return this.z===this._geometry.levelList.length-1},r.prototype.atTopEdge=function(){return 0===this.y},r.prototype.atBottomEdge=function(){return this.y===this._level.numVerticalTiles()-1},r.prototype.atLeftEdge=function(){return 0===this.x},r.prototype.atRightEdge=function(){return this.x===this._level.numHorizontalTiles()-1},r.prototype.padTop=function(){return!1},r.prototype.padBottom=function(){return!this.atBottomEdge()},r.prototype.padLeft=function(){return!1},r.prototype.padRight=function(){return!this.atRightEdge()},r.prototype.vertices=function(t){var e=this.centerX()-this.scaleX()/2,i=this.centerX()+this.scaleX()/2,r=this.centerY()-this.scaleY()/2,n=this.centerY()+this.scaleY()/2;return _.set(t[0],e,n),_.set(t[1],i,n),_.set(t[2],i,r),_.set(t[3],e,r),t},r.prototype.parent=function(){if(this.atTopLevel())return null;var t=this._geometry,e=this.z-1;return new r(Math.floor(this.x/2),Math.floor(this.y/2),e,t)},r.prototype.children=function(t){if(this.atBottomLevel())return null;var e=this._geometry,i=this.z+1;return t=t||[],t.push(new r(2*this.x,2*this.y,i,e)),t.push(new r(2*this.x,2*this.y+1,i,e)),t.push(new r(2*this.x+1,2*this.y,i,e)),t.push(new r(2*this.x+1,2*this.y+1,i,e)),t},r.prototype.neighbors=function(){var t=this._geometry,e=t._neighborsCache,i=e.get(this);if(i)return i;for(var n=this.x,o=this.y,s=this.z,a=this._level,l=a.numHorizontalTiles()-1,h=a.numVerticalTiles()-1,u=[],c=0;c<y.length;c++){var p=y[c][0],d=y[c][1],f=n+p,m=o+d,v=s;0<=f&&f<=l&&0<=m&&m<=h&&u.push(new r(f,m,v,t))}return e.set(this,u),u},r.prototype.hash=function(){return r.hash(this)},r.prototype.equals=function(t){return r.equals(this,t)},r.prototype.cmp=function(t){return r.cmp(this,t)},r.prototype.str=function(){return r.str(this)},r.hash=function(t){return null!=t?a(t.z,t.x,t.y):0},r.equals=function(t,e){return null!=t&&null!=e&&t.z===e.z&&t.x===e.x&&t.y===e.y},r.cmp=function(t,e){return m(t.z,e.z)||m(t.y,e.y)||m(t.x,e.x)},r.str=function(t){return"FlatTile("+t.x+", "+t.y+", "+t.z+")"},s(n,u),n.prototype.width=function(){return this._width},n.prototype.height=function(){return this._height},n.prototype.tileWidth=function(){return this._tileWidth},n.prototype.tileHeight=function(){return this._tileHeight},n.prototype._validateWithParentLevel=function(t){var e=this.width(),i=this.height(),r=this.tileWidth(),n=this.tileHeight(),o=t.width(),s=t.height(),a=t.tileWidth(),l=t.tileHeight();return e%o!=0?new Error("Level width must be multiple of parent level: "+e+" vs. "+o):i%s!=0?new Error("Level height must be multiple of parent level: "+i+" vs. "+s):r%a!=0?new Error("Level tile width must be multiple of parent level: "+r+" vs. "+a):n%l!=0?new Error("Level tile height must be multiple of parent level: "+n+" vs. "+l):void 0},o.prototype.maxTileSize=function(){for(var t=0,e=0;e<this.levelList.length;e++){var i=this.levelList[e];t=Math.max(t,i.tileWidth,i.tileHeight)}return t},o.prototype.levelTiles=function(t,e){var i=this.levelList.indexOf(t),n=t.numHorizontalTiles()-1,o=t.numVerticalTiles()-1;e||(e=[]);for(var s=0;s<=n;s++)for(var a=0;a<=o;a++)e.push(new r(s,a,i,this));return e},o.prototype._closestTile=function(t,e){var i=t.x,n=t.y,o=this.levelList.indexOf(e),s=e.width(),a=e.height(),l=e.tileWidth(),h=e.tileHeight(),u=e.numHorizontalTiles(),c=e.numVerticalTiles();return new r(d(Math.floor(i*s/l),0,u-1),d(Math.floor(n*a/h),0,c-1),o,this)},o.prototype.visibleTiles=function(t,e,i){function r(t){return t.neighbors()}function n(e){return e.vertices(a),t.intersects(a)}var o=this._viewSize,s=this._viewParams,a=this._tileVertices,l=this._graphFinder;if(i=i||[],t.size(o),0===o.width||0===o.height)return i;var h=this._closestTile(t.parameters(s),e);if(!n(h))throw new Error("Starting tile is not visible");var u;for(l.start(h,r,n);null!=(u=l.next());)i.push(u);return i},o.TileClass=o.prototype.TileClass=r,o.type=o.prototype.type="flat",r.type=r.prototype.type="flat",e.exports=o},{"../GraphFinder":14,"../collections/LruMap":29,"../util/clamp":90,"../util/cmp":93,"../util/hash":103,"../util/inherits":104,"../util/mod":106,"../util/type":116,"./Level":54,"./common":55,"gl-matrix/src/gl-matrix/vec2":9}],54:[function(t,e,i){"use strict";function r(t){this._fallbackOnly=!!t.fallbackOnly}r.prototype.numHorizontalTiles=function(){return Math.ceil(this.width()/this.tileWidth())},r.prototype.numVerticalTiles=function(){return Math.ceil(this.height()/this.tileHeight())},r.prototype.fallbackOnly=function(){return this._fallbackOnly},e.exports=r},{}],55:[function(t,e,i){"use strict";function r(t,e){for(var i=[],r=0;r<t.length;r++)i.push(new e(t[r]));return i.sort(function(t,e){return o(t.width(),e.width())}),i}function n(t){for(var e=[],i=0;i<t.length;i++)t[i]._fallbackOnly||e.push(t[i]);if(!e.length)throw new Error("No selectable levels in list");return e}var o=t("../util/cmp");e.exports={makeLevelList:r,makeSelectableLevelList:n}},{"../util/cmp":93}],56:[function(t,e,i){"use strict";e.exports={WebGlStage:t("./stages/WebGl"),CssStage:t("./stages/Css"),FlashStage:t("./stages/Flash"),WebGlCubeRenderer:t("./renderers/WebGlCube"),WebGlFlatRenderer:t("./renderers/WebGlFlat"),WebGlEquirectRenderer:t("./renderers/WebGlEquirect"),CssCubeRenderer:t("./renderers/CssCube"),CssFlatRenderer:t("./renderers/CssFlat"),FlashCubeRenderer:t("./renderers/FlashCube"),FlashFlatRenderer:t("./renderers/FlashFlat"),registerDefaultRenderers:t("./renderers/registerDefaultRenderers"),CubeGeometry:t("./geometries/Cube"),FlatGeometry:t("./geometries/Flat"),EquirectGeometry:t("./geometries/Equirect"),RectilinearView:t("./views/Rectilinear"),FlatView:t("./views/Flat"),ImageUrlSource:t("./sources/ImageUrl"),SingleAssetSource:t("./sources/SingleAsset"),DynamicCanvasAsset:t("./assets/DynamicCanvas"),StaticCanvasAsset:t("./assets/StaticCanvas"),TextureStore:t("./TextureStore"),Layer:t("./Layer"),RenderLoop:t("./RenderLoop"),KeyControlMethod:t("./controls/Key"),DragControlMethod:t("./controls/Drag"),QtvrControlMethod:t("./controls/Qtvr"),ScrollZoomControlMethod:t("./controls/ScrollZoom"),PinchZoomControlMethod:t("./controls/PinchZoom"),VelocityControlMethod:t("./controls/Velocity"),ElementPressControlMethod:t("./controls/ElementPress"),Controls:t("./controls/Controls"),Dynamics:t("./controls/Dynamics"),Viewer:t("./Viewer"),Scene:t("./Scene"),Hotspot:t("./Hotspot"),HotspotContainer:t("./HotspotContainer"),colorEffects:t("./colorEffects"),registerDefaultControls:t("./controls/registerDefaultControls"),autorotate:t("./autorotate"),util:{async:t("./util/async"),cancelize:t("./util/cancelize"),chain:t("./util/chain"),clamp:t("./util/clamp"),clock:t("./util/clock"),cmp:t("./util/cmp"),compose:t("./util/compose"),convertFov:t("./util/convertFov"),decimal:t("./util/decimal"),defaults:t("./util/defaults"),defer:t("./util/defer"),degToRad:t("./util/degToRad"),delay:t("./util/delay"),dom:t("./util/dom"),extend:t("./util/extend"),hash:t("./util/hash"),inherits:t("./util/inherits"),mod:t("./util/mod"),noop:t("./util/noop"),once:t("./util/once"),pixelRatio:t("./util/pixelRatio"),radToDeg:t("./util/radToDeg"),real:t("./util/real"),retry:t("./util/retry"),tween:t("./util/tween"),type:t("./util/type")},dependencies:{bowser:t("bowser"),glMatrix:t("gl-matrix"),eventEmitter:t("minimal-event-emitter"),hammerjs:t("hammerjs")}}},{"./Hotspot":15,"./HotspotContainer":16,"./Layer":17,"./RenderLoop":19,"./Scene":20,"./TextureStore":21,"./Viewer":23,"./assets/DynamicCanvas":24,"./assets/StaticCanvas":26,"./autorotate":28,"./colorEffects":35,"./controls/Controls":38,"./controls/Drag":39,"./controls/Dynamics":40,"./controls/ElementPress":41,"./controls/Key":43,"./controls/PinchZoom":44,"./controls/Qtvr":45,"./controls/ScrollZoom":46,"./controls/Velocity":47,"./controls/registerDefaultControls":49,"./geometries/Cube":51,"./geometries/Equirect":52,"./geometries/Flat":53,"./renderers/CssCube":60,"./renderers/CssFlat":61,"./renderers/FlashCube":63,"./renderers/FlashFlat":64,"./renderers/WebGlCube":67,"./renderers/WebGlEquirect":68,"./renderers/WebGlFlat":69,"./renderers/registerDefaultRenderers":70,"./sources/ImageUrl":75,"./sources/SingleAsset":76,"./stages/Css":77,"./stages/Flash":78,"./stages/WebGl":81,"./util/async":86,"./util/cancelize":88,"./util/chain":89,"./util/clamp":90,"./util/clock":92,"./util/cmp":93,"./util/compose":94,"./util/convertFov":95,"./util/decimal":96,"./util/defaults":97,"./util/defer":98,"./util/degToRad":99,"./util/delay":100,"./util/dom":101,"./util/extend":102,"./util/hash":103,"./util/inherits":104,"./util/mod":106,"./util/noop":107,"./util/once":108,"./util/pixelRatio":109,"./util/radToDeg":111,"./util/real":112,"./util/retry":113,"./util/tween":115,"./util/type":116,"./views/Flat":117,"./views/Rectilinear":118,bowser:1,"gl-matrix":2,hammerjs:12,"minimal-event-emitter":13}],57:[function(t,e,i){"use strict";function r(t){if("flash"!==t.type)throw new Error("Stage type incompatible with loader");this._stage=t}var n=t("../assets/FlashImage"),o=t("../NetworkError"),s=t("../util/once");r.prototype.loadImage=function(t,e,i){function r(e,s){s===f&&(l.removeFlashCallbackListener("imageLoaded",r),e?i(new o("Network error: "+t)):i(null,new n(h,f)))}function a(){h.cancelImage(f),l.removeFlashCallbackListener("imageLoaded",r),i.apply(null,arguments)}var l=this._stage,h=l.flashElement(),u=e&&e.x||0,c=e&&e.y||0,p=e&&e.width||1,d=e&&e.height||1,f=h.loadImage(t,p,d,u,c);return i=s(i),l.addFlashCallbackListener("imageLoaded",r),a},e.exports=r},{"../NetworkError":18,"../assets/FlashImage":25,"../util/once":108}],58:[function(t,e,i){"use strict";function r(t){if("webgl"!==t.type&&"css"!==t.type)throw new Error("Stage type incompatible with loader");this._stage=t}var n=t("../assets/StaticImage"),o=t("../assets/StaticCanvas"),s=t("../NetworkError"),a=t("../util/once");r.prototype.loadImage=function(t,e,i){function r(){l.onload=l.onerror=null,l.src="",i.apply(null,arguments)}var l=new Image;l.crossOrigin="anonymous";var h=e&&e.x||0,u=e&&e.y||0,c=e&&e.width||1,p=e&&e.height||1;return i=a(i),l.onload=function(){if(0===h&&0===u&&1===c&&1===p)i(null,new n(l));else{h*=l.naturalWidth,u*=l.naturalHeight,c*=l.naturalWidth,p*=l.naturalHeight;var t=document.createElement("canvas");t.width=c,t.height=p;t.getContext("2d").drawImage(l,h,u,c,p,0,0,c,p),i(null,new o(t))}},l.onerror=function(){i(new s("Network error: "+t))},l.src=t,r},e.exports=r},{"../NetworkError":18,"../assets/StaticCanvas":26,"../assets/StaticImage":27,"../util/once":108}],59:[function(t,e,i){"use strict";function r(t,e){return t.cmp(e)}function n(t,e,i){this._root=t,this._browserQuirks=e;var r=document.createElement("div");t.appendChild(r),r.style.position="absolute",a(r),l(r),this._browserQuirks.useNullTransform&&h(r),this.domElement=r,this._oldTileList=[],this._newTileList=[],this._textureMap=new o(i.equals,i.hash)}var o=t("../collections/Map"),s=t("../util/decimal"),a=t("../util/dom").setOverflowHidden,l=t("../util/dom").setNoPointerEvents,h=t("../util/dom").setNullTransform,u=t("../util/dom").setTransform,c=t("../util/clearOwnProperties"),p="undefined"!=typeof MARZIPANODEBUG&&MARZIPANODEBUG.css;n.prototype.destroy=function(){this._root.removeChild(this.domElement),c(this)},n.prototype.startLayer=function(t,e){var i=this.domElement,r=this._root.clientWidth,n=this._root.clientHeight;i.style.left=s(r*e.left)+"px",i.style.top=s(n*e.top)+"px",i.style.width=s(r*e.width)+"px",i.style.height=s(n*e.height)+"px";var o=1,a=t.effects();a&&null!=a.opacity&&(o=a.opacity),i.style.opacity=o,this._newTileList.length=0,this._textureMap.clear()},n.prototype.renderTile=function(t,e){this._newTileList.push(t),this._textureMap.set(t,e)},n.prototype.endLayer=function(t,e){var i,n,o,s,a,l,h,c,d=this.domElement,f=this._oldTileList,m=this._newTileList,v=this._textureMap,_=t.view();if(d.children.length!==f.length)throw new Error("DOM not in sync with tile list");for(m.sort(r),i=0,o=f[i],h=d.firstChild,n=0;n<m.length;n++){for(s=m[n];i<f.length&&!(o.cmp(s)>=0);)c=h.nextSibling,d.removeChild(h),h=c,o=f[++i];if(a=v.get(s),!(l=a?a._canvas:null))throw new Error("Rendering tile with missing texture");if(o&&0===o.cmp(s)){if(l!=h)throw new Error("DOM not in sync with tile list");h=h.nextSibling,o=f[++i]}else d.insertBefore(l,h);u(l,this.calculateTransform(s,a,_)),p&&l.setAttribute("data-tile",s.str())}for(;h;)c=h.nextSibling,d.removeChild(h),h=c;if(d.children.length!==m.length)throw new Error("DOM not in sync with tile list");var y=this._oldTileList;this._oldTileList=this._newTileList,this._newTileList=y},e.exports=n},{"../collections/Map":31,"../util/clearOwnProperties":91,"../util/decimal":96,"../util/dom":101}],60:[function(t,e,i){"use strict";function r(t,e){this.constructor.super_.call(this,t,e,n)}var n=t("../geometries/Cube").TileClass,o=t("./CssBase"),s=t("../util/decimal");t("../util/inherits")(r,o),r.prototype.calculateTransform=function(t,e,i){var r=this._browserQuirks.padSize,n=this._browserQuirks.reverseLevelDepth,o=this._browserQuirks.perspectiveNudge,a="",l=n?256-t.z:t.levelWidth(),h=i.size(),u=h.width,c=h.height;a+="translate3d("+s(u/2)+"px, "+s(c/2)+"px, 0px) ";var p=.5*c/Math.tan(i.fov()/2),d=p+o;a+="perspective("+s(p)+"px) translateZ("+s(d)+"px) ";var f=-i.roll(),m=-i.pitch(),v=i.yaw();a+="rotateZ("+s(f)+"rad) rotateX("+s(m)+"rad) rotateY("+s(v)+"rad) ";var _=-t.rotX(),y=t.rotY();a+="rotateX("+s(_)+"rad) rotateY("+s(y)+"rad) ";var g=t.centerX()-t.scaleX()/2,x=-(t.centerY()+t.scaleY()/2),w=g*l,M=x*l,b=-l/2;if(a+="translate3d("+s(w)+"px, "+s(M)+"px, "+s(b)+"px) ",n){var S=l*t.scaleX()/t.width(),E=l*t.scaleY()/t.height();a+="scale("+s(S)+", "+s(E)+") "}var I=t.padLeft()?r:0,D=t.padTop()?r:0;return 0===I&&0===D||(a+="translate3d("+s(-I)+"px, "+s(-D)+"px, 0) "),a},e.exports=r},{"../geometries/Cube":51,"../util/decimal":96,"../util/inherits":104,"./CssBase":59}],61:[function(t,e,i){"use strict";function r(t,e){this.constructor.super_.call(this,t,e,n)}var n=t("../geometries/Flat").TileClass,o=t("./CssBase"),s=t("../util/decimal");t("../util/inherits")(r,o),r.prototype.calculateTransform=function(t,e,i){var r=this._browserQuirks.padSize,n="",o=i.width(),a=i.height();n+="translateX("+s(o/2)+"px) translateY("+s(a/2)+"px) ";var l=o/i._zoomX(),h=a/i._zoomY(),u=t.centerX()-t.scaleX()/2+.5,c=.5-t.centerY()-t.scaleY()/2,p=u*l,d=c*h;n+="translateX("+s(p)+"px) translateY("+s(d)+"px) ";var f=-i.x()*l,m=-i.y()*h;n+="translateX("+s(f)+"px) translateY("+s(m)+"px) ";var v=t.padLeft()?r:0,_=t.padTop()?r:0;0===v&&0===_||(n+="translateX("+s(-v)+"px) translateY("+s(-_)+"px) ");var y=l/t.levelWidth(),g=h/t.levelHeight();return n+="scale("+s(y)+", "+s(g)+") "},e.exports=r},{"../geometries/Flat":53,"../util/decimal":96,"../util/inherits":104,"./CssBase":59}],62:[function(t,e,i){"use strict";function r(t,e){return t.cmp(e)}function n(t,e,i,r){this._flashElement=t,this._layerId=e,this._quirks=i,this._tileList=[],this._textureMap=new o(r.equals,r.hash),this._layerCreated=!1}var o=t("../collections/Map"),s=t("../util/clearOwnProperties");n.prototype.destroy=function(){this._layerCreated&&this._flashElement.destroyLayer(this._layerId),s(this)},n.prototype.startLayer=function(t,e){this._flashElement.isReady&&this._flashElement.isReady()&&(this._layerCreated||(this._flashElement.createLayer(this._layerId),this._layerCreated=!0),this._tileList.length=0,this._textureMap.clear())},n.prototype.renderTile=function(t,e){this._tileList.push(t),this._textureMap.set(t,e)},n.prototype.endLayer=function(t,e){if(this._flashElement.isReady&&this._flashElement.isReady()){this._tileList.sort(r),this._renderOnFlash(t,e)}},e.exports=n},{"../collections/Map":31,"../util/clearOwnProperties":91}],63:[function(t,e,i){"use strict";function r(t,e,i){this.constructor.super_.call(this,t,e,i,o),this._flashTileList=[]}var n=t("./FlashBase"),o=t("../geometries/Cube").TileClass,s=t("../util/inherits"),a=t("../util/radToDeg");s(r,n),r.prototype._renderOnFlash=function(t,e){var i=this._flashElement,r=this._layerId,n=this._quirks.padSize,o=this._tileList,s=this._textureMap,l=this._flashTileList;l.length=0;for(var h=0;h<o.length;h++){var u=o[h],c=s.get(u);if(!c)throw new Error("Rendering tile with missing texture");var p=u.padTop()?n:0,d=u.padBottom()?n:0,f=u.padLeft()?n:0,m=u.padRight()?n:0;l.push({textureId:c._textureId,face:u.face,width:u.width(),height:u.height(),centerX:u.centerX(),centerY:u.centerY(),rotX:a(u.rotX()),rotY:a(u.rotY()),levelSize:u.levelWidth(),padTop:p,padBottom:d,padLeft:f,padRight:m})}var v=this._flashElement.clientWidth,_=this._flashElement.clientHeight,y=v*e.x,g=_*e.y,x=v*e.width,w=_*e.height,M=1,b=t.effects();b&&null!=b.opacity&&(M=b.opacity);var S=t.view(),E=S.yaw(),I=S.pitch(),D=S.roll(),T=S.fov();i.drawCubeTiles(r,x,w,y,g,M,E,I,D,T,l)},e.exports=r},{"../geometries/Cube":51,"../util/inherits":104,"../util/radToDeg":111,"./FlashBase":62}],64:[function(t,e,i){"use strict";function r(t,e,i){this.constructor.super_.call(this,t,e,i,o),this._flashTileList=[]}var n=t("./FlashBase"),o=t("../geometries/Flat").TileClass;t("../util/inherits")(r,n),r.prototype._renderOnFlash=function(t,e){var i=this._flashElement,r=this._layerId,n=this._quirks.padSize,o=this._tileList,s=this._textureMap,a=this._flashTileList;a.length=0;for(var l=0;l<o.length;l++){var h=o[l],u=s.get(h);if(!u)throw new Error("Rendering tile with missing texture");var c=h.padTop()?n:0,p=h.padBottom()?n:0,d=h.padLeft()?n:0,f=h.padRight()?n:0;a.push({textureId:u._textureId,width:h.width(),height:h.height(),centerX:h.centerX(),centerY:h.centerY(),scaleX:h.scaleX(),scaleY:h.scaleY(),levelWidth:h.levelWidth(),levelHeight:h.levelHeight(),padTop:c,padBottom:p,padLeft:d,padRight:f})}var m=this._flashElement.clientWidth,v=this._flashElement.clientHeight,_=m*e.x,y=v*e.y,g=m*e.width,x=v*e.height,w=1,M=t.effects();M&&null!=M.opacity&&(w=M.opacity);var b=t.view(),S=b.x(),E=b.y(),I=b._zoomX(),D=b._zoomY();i.drawFlatTiles(r,g,x,_,y,w,S,E,I,D,a)},e.exports=r},{"../geometries/Flat":53,"../util/inherits":104,"./FlashBase":62}],65:[function(t,e,i){"use strict";function r(t){this.gl=t,this.projMatrix=n.create(),this.viewportMatrix=n.create(),this.translateVector=o.create(),this.scaleVector=o.create(),this.constantBuffers=l(t,x,w,M),this.shaderProgram=u(t,y,g,b,S)}var n=t("gl-matrix/src/gl-matrix/mat4"),o=t("gl-matrix/src/gl-matrix/vec3"),s=t("../util/clearOwnProperties"),a=t("./WebGlCommon"),l=a.createConstantBuffers,h=a.destroyConstantBuffers,u=a.createShaderProgram,c=a.destroyShaderProgram,p=a.enableAttributes,d=a.disableAttributes,f=a.setViewport,m=a.setupPixelEffectUniforms,v=a.setDepth,_=a.setTexture,y=t("../shaders/vertexNormal"),g=t("../shaders/fragmentNormal"),x=[0,1,2,0,2,3],w=[-.5,-.5,0,.5,-.5,0,.5,.5,0,-.5,.5,0],M=[0,0,1,0,1,1,0,1],b=["aVertexPosition","aTextureCoord"],S=["uDepth","uOpacity","uSampler","uProjMatrix","uViewportMatrix","uColorOffset","uColorMatrix"];r.prototype.destroy=function(){h(this.gl,this.constantBuffers),c(this.gl,this.shaderProgram),s(this)},r.prototype.startLayer=function(t,e){var i=this.gl,r=this.shaderProgram,n=this.constantBuffers,o=this.viewportMatrix;i.useProgram(r),p(i,r);for(var s=i.getProgramParameter(r,i.ACTIVE_ATTRIBUTES),a=0;a<s;a++)i.enableVertexAttribArray(a);f(i,t,e,o),i.uniformMatrix4fv(r.uViewportMatrix,!1,o),i.bindBuffer(i.ARRAY_BUFFER,n.vertexPositions),i.vertexAttribPointer(r.aVertexPosition,3,i.FLOAT,i.FALSE,0,0),i.bindBuffer(i.ARRAY_BUFFER,n.textureCoords),i.vertexAttribPointer(r.aTextureCoord,2,i.FLOAT,i.FALSE,0,0),m(i,t.effects(),{opacity:r.uOpacity,colorOffset:r.uColorOffset,colorMatrix:r.uColorMatrix})},r.prototype.endLayer=function(t,e){var i=this.gl,r=this.shaderProgram;d(i,r)},r.prototype.renderTile=function(t,e,i,r){var o=this.gl,s=this.shaderProgram,a=this.constantBuffers,l=this.projMatrix,h=this.translateVector,u=this.scaleVector;h[0]=t.centerX(),h[1]=t.centerY(),h[2]=-.5,u[0]=t.scaleX(),u[1]=t.scaleY(),u[2]=1,n.copy(l,i.view().projection()),n.rotateX(l,l,t.rotX()),n.rotateY(l,l,t.rotY()),n.translate(l,l,h),n.scale(l,l,u),o.uniformMatrix4fv(s.uProjMatrix,!1,l),v(o,s,r,t.z),_(o,s,e),o.bindBuffer(o.ELEMENT_ARRAY_BUFFER,a.vertexIndices),o.drawElements(o.TRIANGLES,x.length,o.UNSIGNED_SHORT,0)},e.exports=r},{"../shaders/fragmentNormal":72,"../shaders/vertexNormal":74,"../util/clearOwnProperties":91,"./WebGlCommon":66,"gl-matrix/src/gl-matrix/mat4":7,"gl-matrix/src/gl-matrix/vec3":10}],66:[function(t,e,i){"use strict";function r(t,e,i){var r=t.createShader(e);if(t.shaderSource(r,i),t.compileShader(r),!t.getShaderParameter(r,t.COMPILE_STATUS))throw t.getShaderInfoLog(r);return r}function n(t,e,i,n,o){var s=r(t,t.VERTEX_SHADER,e),a=r(t,t.FRAGMENT_SHADER,i),l=t.createProgram();if(t.attachShader(l,s),t.attachShader(l,a),t.linkProgram(l),!t.getProgramParameter(l,t.LINK_STATUS))throw t.getProgramInfoLog(l);for(var h=0;h<n.length;h++){var u=n[h];if(l[u]=t.getAttribLocation(l,u),-1===l[u])throw new Error("Shader program has no "+u+" attribute")}for(var c=0;c<o.length;c++){var p=o[c];if(l[p]=t.getUniformLocation(l,p),-1===l[p])throw new Error("Shader program has no "+p+" uniform")}return l}function o(t,e){for(var i=t.getAttachedShaders(e),r=0;r<i.length;r++){var n=i[r];t.detachShader(e,n),t.deleteShader(n)}t.deleteProgram(e)}function s(t,e,i,r){var n=t.createBuffer();return t.bindBuffer(e,n),t.bufferData(e,r,i),n}function a(t,e,i,r){return{vertexIndices:s(t,t.ELEMENT_ARRAY_BUFFER,t.STATIC_DRAW,new Uint16Array(e)),vertexPositions:s(t,t.ARRAY_BUFFER,t.STATIC_DRAW,new Float32Array(i)),textureCoords:s(t,t.ARRAY_BUFFER,t.STATIC_DRAW,new Float32Array(r))}}function l(t,e){t.deleteBuffer(e.vertexIndices),t.deleteBuffer(e.vertexPositions),t.deleteBuffer(e.textureCoords)}function h(t,e){for(var i=t.getProgramParameter(e,t.ACTIVE_ATTRIBUTES),r=0;r<i;r++)t.enableVertexAttribArray(r)}function u(t,e){for(var i=t.getProgramParameter(e,t.ACTIVE_ATTRIBUTES),r=0;r<i;r++)t.disableVertexAttribArray(r)}function c(t,e,i){t.activeTexture(t.TEXTURE0),t.bindTexture(t.TEXTURE_2D,i._texture),t.uniform1i(e.uSampler,0)}function p(t,e,i,r){var n=((i+1)*v-r)/(v*m);t.uniform1f(e.uDepth,n)}function d(t,e,i){var r=w;e&&null!=e.opacity&&(r=e.opacity),t.uniform1f(i.opacity,r);var n=M;e&&e.colorOffset&&(n=e.colorOffset),t.uniform4fv(i.colorOffset,n);var o=b;e&&e.colorMatrix&&(o=e.colorMatrix),t.uniformMatrix4fv(i.colorMatrix,!1,o)}function f(t,e,i,r){if(0===i.x&&1===i.width&&0===i.y&&1===i.height)return t.viewport(0,0,t.drawingBufferWidth,t.drawingBufferHeight),void x.identity(r);var n=i.x,o=_(n,0,1),s=o-n,a=1-o,l=_(i.width-s,0,a),h=i.width-l,u=1-i.height-i.y,c=_(u,0,1),p=c-u,d=1-c,f=_(i.height-p,0,d),m=i.height-f;g.set(E,i.width/l,i.height/f,1),g.set(S,(h-s)/l,(m-p)/f,0),x.identity(r),x.translate(r,r,S),x.scale(r,r,E),t.viewport(t.drawingBufferWidth*o,t.drawingBufferHeight*c,t.drawingBufferWidth*l,t.drawingBufferHeight*f)}var m=256,v=256,_=t("../util/clamp"),y=t("gl-matrix/src/gl-matrix/vec4"),g=t("gl-matrix/src/gl-matrix/vec3"),x=t("gl-matrix/src/gl-matrix/mat4"),w=1,M=y.create(),b=x.create();x.identity(b);var S=g.create(),E=g.create();e.exports={createShaderProgram:n,destroyShaderProgram:o,createConstantBuffers:a,destroyConstantBuffers:l,enableAttributes:h,disableAttributes:u,setTexture:c,setDepth:p,setViewport:f,setupPixelEffectUniforms:d}},{"../util/clamp":90,"gl-matrix/src/gl-matrix/mat4":7,"gl-matrix/src/gl-matrix/vec3":10,"gl-matrix/src/gl-matrix/vec4":11}],67:[function(t,e,i){"use strict";function r(){this.constructor.super_.apply(this,arguments)}var n=t("./WebGlBase");t("../util/inherits")(r,n),e.exports=r},{"../util/inherits":104,"./WebGlBase":65}],68:[function(t,e,i){"use strict";function r(t){this.gl=t,this.invProjMatrix=n.create(),this.viewportMatrix=n.create(),this.constantBuffers=a(t,g,x,w),this.shaderProgram=h(t,_,y,M,b)}var n=t("gl-matrix/src/gl-matrix/mat4"),o=t("../util/clearOwnProperties"),s=t("./WebGlCommon"),a=s.createConstantBuffers,l=s.destroyConstantBuffers,h=s.createShaderProgram,u=s.destroyShaderProgram,c=s.enableAttributes,p=s.disableAttributes,d=s.setViewport,f=s.setupPixelEffectUniforms,m=s.setDepth,v=s.setTexture,_=t("../shaders/vertexEquirect"),y=t("../shaders/fragmentEquirect"),g=[0,1,2,0,2,3],x=[-1,-1,0,1,-1,0,1,1,0,-1,1,0],w=[0,0,1,0,1,1,0,1],M=["aVertexPosition"],b=["uDepth","uOpacity","uSampler","uInvProjMatrix","uViewportMatrix","uColorOffset","uColorMatrix","uTextureX","uTextureY","uTextureWidth","uTextureHeight"];r.prototype.destroy=function(){l(this.gl,this.constantBuffers),u(this.gl,this.shaderProgram),o(this)},r.prototype.startLayer=function(t,e){var i=this.gl,r=this.shaderProgram,o=this.constantBuffers,s=this.invProjMatrix,a=this.viewportMatrix;i.useProgram(r),c(i,r),d(i,t,e,a),i.uniformMatrix4fv(r.uViewportMatrix,!1,a),i.bindBuffer(i.ARRAY_BUFFER,o.vertexPositions),i.vertexAttribPointer(r.aVertexPosition,3,i.FLOAT,i.FALSE,0,0),i.bindBuffer(i.ARRAY_BUFFER,o.textureCoords),n.copy(s,t.view().projection()),n.invert(s,s),i.uniformMatrix4fv(r.uInvProjMatrix,!1,s);var l=t.effects().textureCrop||{},h=null!=l.x?l.x:0,u=null!=l.y?l.y:0,p=null!=l.width?l.width:1,m=null!=l.height?l.height:1;i.uniform1f(r.uTextureX,h),i.uniform1f(r.uTextureY,u),i.uniform1f(r.uTextureWidth,p),i.uniform1f(r.uTextureHeight,m),f(i,t.effects(),{opacity:r.uOpacity,colorOffset:r.uColorOffset,colorMatrix:r.uColorMatrix})},r.prototype.endLayer=function(t,e){var i=this.gl,r=this.shaderProgram;p(i,r)},r.prototype.renderTile=function(t,e,i,r){var n=this.gl,o=this.shaderProgram,s=this.constantBuffers;m(n,o,r,t.z),v(n,o,e),n.bindBuffer(n.ELEMENT_ARRAY_BUFFER,s.vertexIndices),n.drawElements(n.TRIANGLES,g.length,n.UNSIGNED_SHORT,0)},e.exports=r},{"../shaders/fragmentEquirect":71,"../shaders/vertexEquirect":73,"../util/clearOwnProperties":91,"./WebGlCommon":66,"gl-matrix/src/gl-matrix/mat4":7}],69:[function(t,e,i){"use strict";function r(){this.constructor.super_.apply(this,arguments)}var n=t("./WebGlBase");t("../util/inherits")(r,n),e.exports=r},{"../util/inherits":104,"./WebGlBase":65}],70:[function(t,e,i){"use strict";function r(t){switch(t.type){case"webgl":t.registerRenderer("flat","flat",o),t.registerRenderer("cube","rectilinear",n),t.registerRenderer("equirect","rectilinear",s);break;case"css":t.registerRenderer("flat","flat",l),t.registerRenderer("cube","rectilinear",a);break;case"flash":t.registerRenderer("flat","flat",u),t.registerRenderer("cube","rectilinear",h);break;default:throw new Error("Unknown stage type: "+t.type)}}var n=t("./WebGlCube"),o=t("./WebGlFlat"),s=t("./WebGlEquirect"),a=t("./CssCube"),l=t("./CssFlat"),h=t("./FlashCube"),u=t("./FlashFlat");e.exports=r},{"./CssCube":60,"./CssFlat":61,"./FlashCube":63,"./FlashFlat":64,"./WebGlCube":67,"./WebGlEquirect":68,"./WebGlFlat":69}],71:[function(t,e,i){"use strict";e.exports=["#ifdef GL_FRAGMENT_PRECISION_HIGH","precision highp float;","#else","precision mediump float","#endif","uniform sampler2D uSampler;","uniform float uOpacity;","uniform float uTextureX;","uniform float uTextureY;","uniform float uTextureWidth;","uniform float uTextureHeight;","uniform vec4 uColorOffset;","uniform mat4 uColorMatrix;","varying vec4 vRay;","const float PI = 3.14159265358979323846264;","void main(void) {","  float r = inversesqrt(vRay.x * vRay.x + vRay.y * vRay.y + vRay.z * vRay.z);","  float phi  = acos(vRay.y * r);","  float theta = atan(vRay.x, -1.0*vRay.z);","  float s = 0.5 + 0.5 * theta / PI;","  float t = 1.0 - phi / PI;","  s = s * uTextureWidth + uTextureX;","  t = t * uTextureHeight + uTextureY;","  vec4 color = texture2D(uSampler, vec2(s, t)) * uColorMatrix + uColorOffset;","  gl_FragColor = vec4(color.rgba * uOpacity);","}"].join("\n")},{}],72:[function(t,e,i){"use strict";e.exports=["#ifdef GL_FRAGMENT_PRECISION_HIGH","precision highp float;","#else","precision mediump float;","#endif","uniform sampler2D uSampler;","uniform float uOpacity;","uniform vec4 uColorOffset;","uniform mat4 uColorMatrix;","varying vec2 vTextureCoord;","void main(void) {","  vec4 color = texture2D(uSampler, vTextureCoord) * uColorMatrix + uColorOffset;","  gl_FragColor = vec4(color.rgba * uOpacity);","}"].join("\n")},{}],73:[function(t,e,i){"use strict";e.exports=["attribute vec3 aVertexPosition;","uniform float uDepth;","uniform mat4 uViewportMatrix;","uniform mat4 uInvProjMatrix;","varying vec4 vRay;","void main(void) {","  vRay = uInvProjMatrix * vec4(aVertexPosition.xy, 1.0, 1.0);","  gl_Position = uViewportMatrix * vec4(aVertexPosition.xy, uDepth, 1.0);","}"].join("\n")},{}],74:[function(t,e,i){"use strict";e.exports=["attribute vec3 aVertexPosition;","attribute vec2 aTextureCoord;","uniform float uDepth;","uniform mat4 uViewportMatrix;","uniform mat4 uProjMatrix;","varying vec2 vTextureCoord;","void main(void) {","  gl_Position = uViewportMatrix * uProjMatrix * vec4(aVertexPosition.xy, 0.0, 1.0);","  gl_Position.z = uDepth * gl_Position.w;","  vTextureCoord = aTextureCoord;","}"].join("\n")},{}],75:[function(t,e,i){"use strict";function r(t,e){e=e||{},this._loadPool=new a({concurrency:e.concurrency||p}),this._retryDelay=e.retryDelay||d,this._retryMap={},this._sourceFromTile=t}function n(t){var e="\\{("+t+")\\}";return new RegExp(e,"g")}var o=t("minimal-event-emitter"),s=t("../NetworkError"),a=t("../collections/WorkPool"),l=t("../util/chain"),h=t("../util/delay"),u=t("../util/clock"),c={x:"x",y:"y",z:"z",f:"face"},p=4,d=1e4;o(r),r.prototype.loadAsset=function(t,e,i){var r,n=this,o=this._retryDelay,a=this._retryMap,c=this._sourceFromTile(e),p=c.url,d=c.rect,f=t.loadImage.bind(t,p,d),m=function(t){return n._loadPool.push(f,function(i,r){i?(i instanceof s&&(a[p]=u(),n.emit("networkError",r,i)),t(i,e)):(delete a[p],t(null,e,r))})},v=a[p];if(null!=v){var _=u(),y=_-v;y<o?r=o-y:(r=0,delete a[p])}var g=h.bind(null,r);return l(g,m)(i)},r.fromString=function(t,e){function i(e){var i=t;for(var r in c){var o=c[r],s=n(r),a=e.hasOwnProperty(o)?e[o]:"";i=i.replace(s,a)}return{url:i}}function o(t){return 0===t.z?s(t):i(t)}function s(t){var i=a.indexOf(t.face)/6;return{url:e.cubeMapPreviewUrl,rect:{x:0,y:i,width:1,height:1/6}}}e=e||{}
-;var a=e&&e.cubeMapPreviewFaceOrder||"bdflru";return new r(e.cubeMapPreviewUrl?o:i,e)},e.exports=r},{"../NetworkError":18,"../collections/WorkPool":33,"../util/chain":89,"../util/clock":92,"../util/delay":100,"minimal-event-emitter":13}],76:[function(t,e,i){"use strict";function r(t){this._asset=t}r.prototype.asset=function(){return this._asset},r.prototype.loadAsset=function(t,e,i){function r(){clearTimeout(o),i.apply(null,arguments)}var n=this,o=setTimeout(function(){i(null,e,n._asset)},0);return r},e.exports=r},{}],77:[function(t,e,i){"use strict";function r(t){this.constructor.super_.call(this,t),this._loader=new s(this),this._domElement=document.createElement("div"),u(this._domElement),c(this._domElement)}function n(t,e,i){var r=document.createElement("canvas");u(r),p(r),this._canvas=r,this._timestamp=null,this.refresh(e,i)}var o=t("./Stage"),s=t("../loaders/HtmlImage"),a=t("../support/Css"),l=t("bowser"),h=t("../util/inherits"),u=t("../util/dom").setAbsolute,c=t("../util/dom").setFullSize,p=t("../util/dom").setNullTransformOrigin,d=t("../util/clearOwnProperties"),f={padSize:l.ios?0:3,reverseLevelDepth:l.ios,useNullTransform:l.ios,perspectiveNudge:l.webkit||l.gecko?.001:0};h(r,o),r.prototype.destroy=function(){this.constructor.super_.prototype.destroy.call(this)},r.supported=function(){return a()},r.prototype.domElement=function(){return this._domElement},r.prototype.setSizeForType=function(){},r.prototype.loadImage=function(t,e,i){return this._loader.loadImage(t,e,i)},r.prototype.validateLayer=function(t){},r.prototype.createRenderer=function(t){return new t(this._domElement,f)},r.prototype.destroyRenderer=function(t){t.destroy()},r.prototype.startFrame=function(){},r.prototype.endFrame=function(){},r.prototype.takeSnapshot=function(){throw new Error("CssStage: takeSnapshot not implemented")},r.type=r.prototype.type="css",n.prototype.refresh=function(t,e){var i=e.timestamp();if(i!==this._timestamp){this._timestamp=i;var r=this._canvas,n=r.getContext("2d"),o=e.element(),s=t.width(),a=t.height(),l=f.padSize,h=t.padTop()?l:0,u=t.padBottom()?l:0,c=t.padLeft()?l:0,p=t.padRight()?l:0;r.width=c+s+p,r.height=h+a+u,n.drawImage(o,c,h,s,a);var d;for(d=0;d<h;d++)n.drawImage(r,c,h,s,1,c,d,s,1);for(d=0;d<c;d++)n.drawImage(r,c,h,1,a,d,h,1,a);for(d=0;d<u;d++)n.drawImage(r,c,h+a-1,s,1,c,h+a+d,s,1);for(d=0;d<p;d++)n.drawImage(r,c+s-1,h,1,a,c+s+d,h,1,a)}},n.prototype.destroy=function(){d(this)},r.TextureClass=r.prototype.TextureClass=n,e.exports=r},{"../loaders/HtmlImage":58,"../support/Css":82,"../util/clearOwnProperties":91,"../util/dom":101,"../util/inherits":104,"./Stage":80,bowser:1}],78:[function(t,e,i){"use strict";function r(){return window[g].__next++}function n(t){if(this.constructor.super_.call(this,t),this._wmode=t&&t.wmode||_,this._swfPath=t&&t.swfPath||y,!y)throw new Error("Missing SWF path");this._flashStageId=r(),this._callbacksObj=window[g][this._flashStageId]={},this._stageCallbacksObjVarName=g+"["+this._flashStageId+"]",this._callbackListeners={};for(var e=0;e<x.length;e++)this._callbacksObj[x[e]]=this._callListeners(x[e]);this._loader=new l(this),this._loadImageQueue=new u,this._loadImageQueue.pause(),this._flashReady=!1,this._nextLayerId=0;var i=o(this._swfPath,this._flashStageId,this._stageCallbacksObjVarName);this._domElement=i.root,this._blockingElement=i.blocking,this._flashElement=i.flash,this._checkReadyTimer=setInterval(this._checkReady.bind(this),50)}function o(t,e,i){var r=document.createElement("div");d(r),f(r);var n="marzipano-flash-stage-"+e,o='<object id="'+n+'" name="'+n+'" type="application/x-shockwave-flash" data="'+t+'">',s="";s+='<param name="movie" value="'+t+'" />',s+='<param name="allowscriptaccess" value="always" />',s+='<param name="flashvars" value="callbacksObjName='+i+'" />',s+='<param name="wmode" value="transparent" />',o+=s,o+="</object>";var a=document.createElement("div");a.innerHTML=o;var l=a.firstChild;d(l),f(l),r.appendChild(l);var h=document.createElement("div");return d(h),f(h),m(h),r.appendChild(h),{root:r,flash:l,blocking:h}}function s(t,e,i){var r=i.element(),n=e.width(),o=e.height(),s=w.padSize,a=e.padTop()?s:0,l=e.padBottom()?s:0,h=e.padLeft()?s:0,u=e.padRight()?s:0,c=t._flashElement.createTexture(r,n,o,a,l,h,u);this._stage=t,this._textureId=c}var a=t("./Stage"),l=t("../loaders/FlashImage"),h=t("../support/Flash"),u=t("../collections/WorkQueue"),c=t("../util/inherits"),p=t("../util/defer"),d=t("../util/dom").setAbsolute,f=t("../util/dom").setFullSize,m=t("../util/dom").setBlocking,v=t("../util/clearOwnProperties"),_="transparent",y=function(){var t=document.currentScript;if(!t){var e=document.getElementsByTagName("script");t=e.length?e[e.length-1]:null}if(!t)return null;var i=t.src,r=i.lastIndexOf("/");return(i=r>=0?i.slice(0,r+1):"")+"marzipano.swf"}(),g="MarzipanoFlashCallbackMap";g in window||(window[g]={__next:0});var x=["imageLoaded"],w={padSize:3};c(n,a),n.prototype.destroy=function(){window[g][this._flashStageId]=null,null!=this._checkReadyTimer&&clearInterval(this._checkReadyTimer),this.constructor.super_.prototype.destroy.call(this)},n.supported=function(){return h()},n.prototype.domElement=function(){return this._domElement},n.prototype.flashElement=function(){return this._flashElement},n.prototype.setSizeForType=function(){},n.prototype.loadImage=function(t,e,i){var r=this._loader.loadImage.bind(this._loader,t,e);return this._loadImageQueue.push(r,i)},n.prototype.validateLayer=function(t){},n.prototype.addFlashCallbackListener=function(t,e){this._callbackListeners[t]=this._callbackListeners[t]||[],this._callbackListeners[t].push(e)},n.prototype.removeFlashCallbackListener=function(t,e){var i=this._callbackListeners[t]||[],r=i.indexOf(e);r>=0&&i.splice(r,1)},n.prototype._callListeners=function(t){var e=this;return function(){for(var i=e._callbackListeners[t]||[],r=0;r<i.length;r++){p(i[r],arguments)}}},n.prototype._checkReady=function(){return!!(this._flashElement&&this._flashElement.isReady&&this._flashElement.isReady())&&(this._flashReady=!0,clearTimeout(this._checkReadyTimer),this._checkReadyTimer=null,this._loadImageQueue.resume(),this.emit("renderInvalid"),!0)},n.prototype.createRenderer=function(t){return new t(this._flashElement,++this._nextLayerId,w)},n.prototype.destroyRenderer=function(t){t.destroy()},n.prototype.startFrame=function(){},n.prototype.endFrame=function(){},n.prototype.takeSnapshot=function(t){"object"==typeof t&&null!=t||(t={});var e=t.quality;if(void 0===e&&(e=75),"number"!=typeof e||e<0||e>100)throw new Error("FlashStage: Snapshot quality needs to be a number between 0 and 100");return this._flashElement.takeSnapshot(e)},n.type=n.prototype.type="flash",s.prototype.refresh=function(t,e){},s.prototype.destroy=function(){this._stage._flashElement.destroyTexture(this._textureId),v(this)},n.TextureClass=n.prototype.TextureClass=s,e.exports=n},{"../collections/WorkQueue":34,"../loaders/FlashImage":57,"../support/Flash":83,"../util/clearOwnProperties":91,"../util/defer":98,"../util/dom":101,"../util/inherits":104,"./Stage":80}],79:[function(t,e,i){"use strict";function r(){this._renderers={}}r.prototype.set=function(t,e,i){this._renderers[t]||(this._renderers[t]={}),this._renderers[t][e]=i},r.prototype.get=function(t,e){return this._renderers[t]&&this._renderers[t][e]||null},e.exports=r},{}],80:[function(t,e,i){"use strict";function r(t,e){return-t.cmp(e)}function n(t){this._layers=[],this._renderers=[],this._visibleTiles=[],this._parentTiles=[],this._childrenTiles=[],this._tmpTiles=[],this._width=0,this._height=0,this._tmpRect={},this._tmpSize={},this._createTextureWorkQueue=new s({delay:p}),this._emitRenderInvalid=this._emitRenderInvalid.bind(this),this._rendererRegistry=new c}var o=t("minimal-event-emitter"),s=t("../collections/WorkQueue"),a=t("../util/calcRect"),l=t("../util/async"),h=t("../util/cancelize"),u=t("../util/clearOwnProperties"),c=t("./RendererRegistry"),p=20;o(n),n.prototype.destroy=function(){this.removeAllLayers(),u(this)},n.prototype.registerRenderer=function(t,e,i){return this._rendererRegistry.set(t,e,i)},n.prototype.domElement=function(){throw new Error("Stage implementation must override domElement")},n.prototype.width=function(){return this._width},n.prototype.height=function(){return this._height},n.prototype.size=function(t){return t=t||{},t.width=this._width,t.height=this._height,t},n.prototype.setSize=function(t){this._width=t.width,this._height=t.height,this.setSizeForType(),this.emit("resize"),this._emitRenderInvalid()},n.prototype.setSizeForType=function(t){throw new Error("Stage implementation must override setSizeForType")},n.prototype.loadImage=function(){throw new Error("Stage implementation must override loadImage")},n.prototype._emitRenderInvalid=function(){this.emit("renderInvalid")},n.prototype.validateLayer=function(t){throw new Error("Stage implementation must override validateLayer")},n.prototype.listLayers=function(){return[].concat(this._layers)},n.prototype.hasLayer=function(t){return this._layers.indexOf(t)>=0},n.prototype.addLayer=function(t,e){if(this._layers.indexOf(t)>=0)throw new Error("Layer already in stage");if(null==e&&(e=this._layers.length),e<0||e>this._layers.length)throw new Error("Invalid layer position");this.validateLayer(t),this._layers.splice(e,0,t),this._renderers.splice(e,0,null),t.addEventListener("viewChange",this._emitRenderInvalid),t.addEventListener("effectsChange",this._emitRenderInvalid),t.addEventListener("fixedLevelChange",this._emitRenderInvalid),t.addEventListener("textureStoreChange",this._emitRenderInvalid),this._emitRenderInvalid()},n.prototype.moveLayer=function(t,e){var i=this._layers.indexOf(t);if(i<0)throw new Error("No such layer in stage");if(e<0||e>=this._layers.length)throw new Error("Invalid layer position");t=this._layers.splice(i,1)[0];var r=this._renderers.splice(i,1)[0];this._layers.splice(e,0,t),this._renderers.splice(e,0,r),this._emitRenderInvalid()},n.prototype.removeLayer=function(t){var e=this._layers.indexOf(t);if(e<0)throw new Error("No such layer in stage");var i=this._layers.splice(e,1)[0],r=this._renderers.splice(e,1)[0];r&&this.destroyRenderer(r),i.removeEventListener("viewChange",this._emitRenderInvalid),i.removeEventListener("effectsChange",this._emitRenderInvalid),i.removeEventListener("fixedLevelChange",this._emitRenderInvalid),i.removeEventListener("textureStoreChange",this._emitRenderInvalid),this._emitRenderInvalid()},n.prototype.removeAllLayers=function(){for(;this._layers.length>0;)this.removeLayer(this._layers[0])},n.prototype.startFrame=function(){throw new Error("Stage implementation must override startFrame")},n.prototype.endFrame=function(){throw new Error("Stage implementation must override endFrame")},n.prototype.render=function(){var t,e,i=this._visibleTiles,n=this._parentTiles,o=this._childrenTiles,s=!0,l=this._width,h=this._height,u=this._tmpRect,c=this._tmpSize;if(!(l<=0||h<=0)){for(this.startFrame(),t=0;t<this._layers.length;t++)this._layers[t].textureStore().startFrame();for(t=0;t<this._layers.length;t++){var p=this._layers[t],d=p.effects(),f=p.view(),m=this._updateRenderer(t),v=this._layers.length-t,_=p.textureStore();a(l,h,d&&d.rect,u),u.width<=0||u.height<=0||(c.width=u.width*this._width,c.height=u.height*this._height,f.setSize(c),i.length=0,o.length=0,n.length=0,p.visibleTiles(i),m.startLayer(p,u),e=this._renderTiles(i,_,m,p,v,o,n),e||(s=!1),this._renderTiles(o,_,m,p,v,null,null),n.sort(r),this._renderTiles(n,_,m,p,v,null,null),m.endLayer(p,u))}for(t=0;t<this._layers.length;t++)this._layers[t].textureStore().endFrame();this.endFrame(),this.emit("renderComplete",s)}},n.prototype._updateRenderer=function(t){var e=this._layers[t],i=this.type,r=e.geometry().type,n=e.view().type,o=this._rendererRegistry.get(r,n);if(!o)throw new Error("No "+i+" renderer avaiable for "+r+" geometry and "+n+" view");var s=this._renderers[t];return s?s instanceof o||(this._renderers[t]=this.createRenderer(o),this.destroyRenderer(s)):this._renderers[t]=this.createRenderer(o),this._renderers[t]},n.prototype._renderTiles=function(t,e,i,r,n,o,s){if(null==o!=(null==s))throw new Error("Inconsistent fallback arguments");for(var a=!0,l=0;l<t.length;l++){var h=t[l];e.markTile(h);var u=e.texture(h);u?i.renderTile(h,u,r,n,l):(a=!1,null==o&&null==s||this._collectFallbacks(h,e,o,s))}return a},n.prototype._collectFallbacks=function(t,e,i,r){return this._collectChildrenFallbacks(t,e,i)||this._collectParentFallbacks(t,e,r)},n.prototype._collectParentFallbacks=function(t,e,i){for(;null!=(t=t.parent());)if(t&&e.texture(t)){for(var r=0;r<i.length;r++)if(t.equals(i[r]))return!0;return i.push(t),!0}return!1},n.prototype._collectChildrenFallbacks=function(t,e,i){var r=this._tmpTiles;if(r.length=0,!t.children(r))return!1;if(1===r.length&&!e.texture(r[0]))return this._collectChildrenFallbacks(r[0],e,i);for(var n=!1,o=0;o<r.length;o++)e.texture(r[o])?i.push(r[o]):n=!0;return!n},n.prototype.createTexture=function(t,e,i){function r(){return new n.TextureClass(n,t,e)}var n=this,o=h(l(r));return this._createTextureWorkQueue.push(o,function(r,n){i(r,t,e,n)})},e.exports=n},{"../collections/WorkQueue":34,"../util/async":86,"../util/calcRect":87,"../util/cancelize":88,"../util/clearOwnProperties":91,"./RendererRegistry":79,"minimal-event-emitter":13}],81:[function(t,e,i){"use strict";function r(t,e){var i={alpha:!0,premultipliedAlpha:!0,antialias:!(!e||!e.antialias),preserveDrawingBuffer:!(!e||!e.preserveDrawingBuffer)};y&&"undefined"!=typeof WebGLDebugUtils&&(console.log("Using WebGL lost context simulator"),t=WebGLDebugUtils.makeLostContextSimulatingCanvas(t));var r=t.getContext&&(t.getContext("webgl",i)||t.getContext("experimental-webgl",i));if(!r)throw new Error("Could not get WebGL context");return y&&"undefined"!=typeof WebGLDebugUtils&&(r=WebGLDebugUtils.makeDebugContext(r),console.log("Using WebGL debug context")),r}function n(t){function e(t,e){return t===e}function i(t){return d(t.toString())}t=t||{};var n=this;this.constructor.super_.call(this,t),this._generateMipmaps=null!=t.generateMipmaps&&t.generateMipmaps,this._loader=new a(this),this._domElement=document.createElement("canvas"),m(this._domElement),v(this._domElement),this._gl=r(this._domElement,t),this._handleContextLoss=function(){n.emit("webglcontextlost"),n._gl=null},this._domElement.addEventListener("webglcontextlost",this._handleContextLoss),this._rendererInstances=new u(e,i)}function o(t,e,i){this._stage=t,this._gl=t._gl,this._texture=null,this._timestamp=null,this._width=this._height=null,this.refresh(e,i)}var s=t("./Stage"),a=t("../loaders/HtmlImage"),l=t("../support/WebGl"),h=t("bowser"),u=t("../collections/Map"),c=t("../util/inherits"),p=t("../util/pixelRatio"),d=t("../util/hash"),f=t("../util/ispot"),m=t("../util/dom").setAbsolute,v=t("../util/dom").setFullSize,_=t("../util/clearOwnProperties"),y="undefined"!=typeof MARZIPANODEBUG&&MARZIPANODEBUG.webGl,g={videoUseTexImage2D:h.chrome};c(n,s),n.prototype.destroy=function(){this._domElement.removeEventListener("webglcontextlost",this._handleContextLoss),this.constructor.super_.prototype.destroy.call(this)},n.supported=function(){return l()},n.prototype.domElement=function(){return this._domElement},n.prototype.webGlContext=function(){return this._gl},n.prototype.setSizeForType=function(){var t=p();this._domElement.width=t*this._width,this._domElement.height=t*this._height},n.prototype.loadImage=function(t,e,i){return this._loader.loadImage(t,e,i)},n.prototype.maxTextureSize=function(){return this._gl.getParameter(this._gl.MAX_TEXTURE_SIZE)},n.prototype.validateLayer=function(t){var e=t.geometry().maxTileSize(),i=this.maxTextureSize();if(e>i)throw new Error("Layer has level with tile size larger than maximum texture size ("+e+" vs. "+i+")")},n.prototype.createRenderer=function(t){if(this._rendererInstances.has(t))return this._rendererInstances.get(t);var e=new t(this._gl);return this._rendererInstances.set(t,e),e},n.prototype.destroyRenderer=function(t){this._renderers.indexOf(t)<0&&(t.destroy(),this._rendererInstances.del(t.constructor))},n.prototype.startFrame=function(){var t=this._gl;if(!t)throw new Error("Bad WebGL context - maybe context was lost?");t.viewport(0,0,t.drawingBufferWidth,t.drawingBufferHeight),t.clearColor(0,0,0,0),t.clear(t.COLOR_BUFFER_BIT|t.DEPTH_BUFFER_BIT),t.enable(t.DEPTH_TEST),t.enable(t.BLEND),t.blendFunc(t.ONE,t.ONE_MINUS_SRC_ALPHA)},n.prototype.endFrame=function(){},n.prototype.takeSnapshot=function(t){"object"==typeof t&&null!=t||(t={});var e=t.quality;if(void 0===e&&(e=75),"number"!=typeof e||e<0||e>100)throw new Error("WebGLStage: Snapshot quality needs to be a number between 0 and 100");return this.render(),this._domElement.toDataURL("image/jpeg",e/100)},n.type=n.prototype.type="webgl",o.prototype.refresh=function(t,e){var i,r=this._gl,n=this._stage,o=e.timestamp();if(o!==this._timestamp){var s=e.element(),a=e.width(),l=e.height();if(a!==this._width||l!==this._height){var h=n.maxTextureSize();if(a>h)throw new Error("Texture width larger than max size ("+a+" vs. "+h+")");if(l>h)throw new Error("Texture height larger than max size ("+l+" vs. "+h+")");this._texture&&r.deleteTexture(i),i=this._texture=r.createTexture(),r.bindTexture(r.TEXTURE_2D,i),r.pixelStorei(r.UNPACK_FLIP_Y_WEBGL,!0),r.pixelStorei(r.UNPACK_PREMULTIPLY_ALPHA_WEBGL,!0),r.texImage2D(r.TEXTURE_2D,0,r.RGBA,r.RGBA,r.UNSIGNED_BYTE,s)}else i=this._texture,r.bindTexture(r.TEXTURE_2D,i),r.pixelStorei(r.UNPACK_FLIP_Y_WEBGL,!0),r.pixelStorei(r.UNPACK_PREMULTIPLY_ALPHA_WEBGL,!0),s instanceof HTMLVideoElement&&g.videoUseTexImage2D?r.texImage2D(r.TEXTURE_2D,0,r.RGBA,r.RGBA,r.UNSIGNED_BYTE,s):r.texSubImage2D(r.TEXTURE_2D,0,0,0,r.RGBA,r.UNSIGNED_BYTE,s);n._generateMipmaps&&f(a)&&f(l)?(r.texParameteri(r.TEXTURE_2D,r.TEXTURE_MAG_FILTER,r.LINEAR),r.texParameteri(r.TEXTURE_2D,r.TEXTURE_MIN_FILTER,r.LINEAR_MIPMAP_LINEAR),r.generateMipmap(r.TEXTURE_2D)):(r.texParameteri(r.TEXTURE_2D,r.TEXTURE_MAG_FILTER,r.LINEAR),r.texParameteri(r.TEXTURE_2D,r.TEXTURE_MIN_FILTER,r.LINEAR)),r.texParameteri(r.TEXTURE_2D,r.TEXTURE_WRAP_S,r.CLAMP_TO_EDGE),r.texParameteri(r.TEXTURE_2D,r.TEXTURE_WRAP_T,r.CLAMP_TO_EDGE),r.bindTexture(r.TEXTURE_2D,null),this._timestamp=o,this._width=a,this._height=l}},o.prototype.destroy=function(){this._texture&&this._gl.deleteTexture(this._texture),_(this)},n.TextureClass=n.prototype.TextureClass=o,e.exports=n},{"../collections/Map":31,"../loaders/HtmlImage":58,"../support/WebGl":84,"../util/clearOwnProperties":91,"../util/dom":101,"../util/hash":103,"../util/inherits":104,"../util/ispot":105,"../util/pixelRatio":109,"./Stage":80,bowser:1}],82:[function(t,e,i){"use strict";function r(){var t=s("perspective"),e=document.createElement("div"),i="undefined"!=typeof e.style[t];if(i&&"WebkitPerspective"===t){var r="__marzipano_test_css3d_support__",n=document.createElement("style");n.textContent="@media(-webkit-transform-3d){#"+r+"{height: 3px;})",document.getElementsByTagName("head")[0].appendChild(n),e.id=r,document.body.appendChild(e),i=e.offsetHeight>0,n.parentNode.removeChild(n),e.parentNode.removeChild(e)}return i}function n(){return o!==undefined?o:o=r()}var o,s=t("../util/dom").prefixProperty;e.exports=n},{"../util/dom":101}],83:[function(t,e,i){"use strict";function r(){var t=null,e=navigator.plugins,i=navigator.mimeTypes,r=null;if(e&&e["Shockwave Flash"]&&i&&i["application/x-shockwave-flash"]&&i["application/x-shockwave-flash"].enabledPlugin)r=e["Shockwave Flash"].description,r=r.replace(/^.*\s+(\S+\s+\S+$)/,"$1"),t=[0,0,0],t[0]=parseInt(r.replace(/^(.*)\..*$/,"$1"),10),t[1]=parseInt(r.replace(/^.*\.(.*)\s.*$/,"$1"),10),t[2]=/[a-zA-Z]/.test(r)?parseInt(r.replace(/^.*[a-zA-Z]+(.*)$/,"$1"),10):0;else if(window.ActiveXObject)try{var n=new ActiveXObject("ShockwaveFlash.ShockwaveFlash");n&&(r=n.GetVariable("$version"))&&(r=r.split(" ")[1].split(","),t=[parseInt(r[0],10),parseInt(r[1],10),parseInt(r[2],10)])}catch(o){}return t}function n(){var t=r();return t&&(t[0]>=11||10===t[0]&&t[1]>=1)}function o(){return s!==undefined?s:s=n()}var s;e.exports=o},{}],84:[function(t,e,i){"use strict";function r(){var t=document.createElement("canvas");return!(!t.getContext||!t.getContext("webgl")&&!t.getContext("experimental-webgl"))}function n(){return o!==undefined?o:o=r()}var o;e.exports=n},{}],85:[function(t,e,i){"use strict";function r(){var t=document.createElement("a").style;t.cssText="pointer-events:auto";var e="auto"===t.pointerEvents,i=s.msie&&parseFloat(s.version)<11;return e&&!i}function n(){return o!==undefined?o:o=r()}var o,s=t("bowser");e.exports=n},{bowser:1}],86:[function(t,e,i){"use strict";function r(t){return function(e){var i,r;try{r=t()}catch(n){i=n}finally{e(i||null,i?null:r)}}}e.exports=r},{}],87:[function(t,e,i){"use strict";function r(t,e,i,r){r=r||{};var n;n=null!=i&&null!=i.absoluteWidth?i.absoluteWidth/t:null!=i&&null!=i.relativeWidth?i.relativeWidth:1;var o;o=i&&null!=i.absoluteHeight?i.absoluteHeight/e:null!=i&&null!=i.relativeHeight?i.relativeHeight:1;var s;s=null!=i&&null!=i.absoluteX?i.absoluteX/t:null!=i&&null!=i.relativeX?i.relativeX:0;var a;return a=null!=i&&null!=i.absoluteY?i.absoluteY/e:null!=i&&null!=i.relativeY?i.relativeY:0,r.x=s,r.y=a,r.width=n,r.height=o,r}e.exports=r},{}],88:[function(t,e,i){"use strict";function r(t){return function(){function e(){r.apply(null,arguments)}if(!arguments.length)throw new Error("cancelized: expected at least one argument");var i=Array.prototype.slice.call(arguments,0),r=i[i.length-1]=n(i[i.length-1]);return t.apply(null,i),e}}var n=t("./once");e.exports=r},{"./once":108}],89:[function(t,e,i){"use strict";function r(){var t=Array.prototype.slice.call(arguments,0);return function(){function e(){if(arguments[0])return o=s=null,void l.apply(null,arguments);if(!r.length)return o=s=null,void l.apply(null,arguments);o=r.shift();var t=o,i=Array.prototype.slice.call(arguments,1);i.push(e);var n=o.apply(null,i);if(t===o){if("function"!=typeof n)throw new Error("chain: chaining on non-cancellable function");s=n}}function i(){s&&s.apply(null,arguments)}var r=t.slice(0),o=null,s=null,a=arguments.length?Array.prototype.slice.call(arguments,0,arguments.length-1):[],l=arguments.length?arguments[arguments.length-1]:n;return a.unshift(null),e.apply(null,a),i}}var n=t("./noop");e.exports=r},{"./noop":107}],90:[function(t,e,i){"use strict";function r(t,e,i){return Math.min(Math.max(t,e),i)}e.exports=r},{}],91:[function(t,e,i){"use strict";function r(t){for(var e in t)t.hasOwnProperty(e)&&(t[e]=undefined)}e.exports=r},{}],92:[function(t,e,i){"use strict";var r=function(){return window.performance&&window.performance.now?function(){return window.performance.now()}:null}()||function(){return function(){return Date.now()}}();e.exports=r},{}],93:[function(t,e,i){"use strict";function r(t,e){return t<e?-1:t>e?1:0}e.exports=r},{}],94:[function(t,e,i){"use strict";function r(){var t=arguments;return function(e){for(var i=e,r=0;r<t.length;r++){i=t[r].call(null,i)}return i}}e.exports=r},{}],95:[function(t,e,i){"use strict";function r(t,e,i){return 2*Math.atan(i*Math.tan(t/2)/e)}function n(t,e,i){return r(t,e,i)}function o(t,e,i){return r(t,e,Math.sqrt(e*e+i*i))}function s(t,e,i){return r(t,i,e)}function a(t,e,i){return r(t,i,Math.sqrt(e*e+i*i))}function l(t,e,i){return r(t,Math.sqrt(e*e+i*i),e)}function h(t,e,i){return r(t,Math.sqrt(e*e+i*i),i)}e.exports={convert:r,htov:n,htod:o,vtoh:s,vtod:a,dtoh:l,dtov:h}},{}],96:[function(t,e,i){"use strict";function r(t){return t.toPrecision(15)}e.exports=r},{}],97:[function(t,e,i){"use strict";function r(t,e){for(var i in e)i in t||(t[i]=e[i]);return t}e.exports=r},{}],98:[function(t,e,i){"use strict";function r(t,e){function i(){e&&e.length>0?t.apply(null,e):t()}setTimeout(i,0)}e.exports=r},{}],99:[function(t,e,i){"use strict";function r(t){return t*Math.PI/180}e.exports=r},{}],100:[function(t,e,i){"use strict";function r(t,e){function i(){null!=n&&(n=null,e(null))}function r(){null!=n&&(clearTimeout(n),n=null,e.apply(null,arguments))}var n=null;return n=setTimeout(i,t),r}e.exports=r},{}],101:[function(t,e,i){"use strict";function r(t){for(var e=document.documentElement.style,i=["Moz","Webkit","Khtml","O","ms"],r=0;r<i.length;r++){var n=i[r],o=t[0].toUpperCase()+t.slice(1),s=n+o;if(s in e)return s}return t}function n(t){var e=r(t);return function(t){return t.style[e]}}function o(t){var e=r(t);return function(t,i){return t.style[e]=i}}function s(t){_(t,"translateZ(0)")}function a(t){y(t,"0 0 0")}function l(t){t.style.position="absolute"}function h(t,e,i){t.style.left=e+"px",t.style.top=i+"px"}function u(t,e,i){t.style.width=e+"px",t.style.height=i+"px"}function c(t){t.style.width=t.style.height=0}function p(t){t.style.width=t.style.height="100%"}function d(t){t.style.overflow="hidden"}function f(t){t.style.overflow="visible"}function m(t){t.style.pointerEvents="none"}function v(t){t.style.backgroundColor="#000",t.style.opacity="0",t.style.filter="alpha(opacity=0)"}var _=o("transform"),y=o("transformOrigin");e.exports={prefixProperty:r,getWithVendorPrefix:n,setWithVendorPrefix:o,setTransform:_,setTransformOrigin:y,setNullTransform:s,setNullTransformOrigin:a,setAbsolute:l,setPixelPosition:h,setPixelSize:u,setNullSize:c,setFullSize:p,setOverflowHidden:d,setOverflowVisible:f,setNoPointerEvents:m,setBlocking:v}},{}],102:[function(t,e,i){"use strict";function r(t,e){for(var i in e)t[i]=e[i];return t}e.exports=r},{}],103:[function(t,e,i){"use strict";function r(){for(var t=0,e=0;e<arguments.length;e++){var i=arguments[e];t+=i,t+=i<<10,t^=i>>6}return t+=t<<3,t^=t>>11,t+=t<<15,t>=0?t:-t}e.exports=r},{}],104:[function(t,e,i){"use strict";function r(t,e){t.super_=e;var i=function(){};i.prototype=e.prototype,t.prototype=new i,t.prototype.constructor=t}e.exports=r},{}],105:[function(t,e,i){"use strict";function r(t){return 0==(t&t-1)}e.exports=r},{}],106:[function(t,e,i){"use strict";function r(t,e){return(+t%(e=+e)+e)%e}e.exports=r},{}],107:[function(t,e,i){"use strict";function r(){}e.exports=r},{}],108:[function(t,e,i){"use strict";function r(t){var e,i=!1;return function(){return i||(i=!0,e=t.apply(null,arguments)),e}}e.exports=r},{}],109:[function(t,e,i){"use strict";function r(){if("undefined"!=typeof window){if(window.devicePixelRatio)return window.devicePixelRatio;var t=window.screen;if(t&&t.deviceXDPI&&t.logicalXDPI)return t.deviceXDPI/t.logicalXDPI;if(t&&t.systemXDPI&&t.logicalXDPI)return t.systemXDPI/t.logicalXDPI}return n}var n=1;e.exports=r},{}],110:[function(t,e,i){"use strict";function r(t,e,i){if(n()){var r="translateX("+a(e)+"px) translateY("+a(i)+"px) translateZ(0)";o(t,r)}else s(t,e,i)}var n=t("../support/Css"),o=t("./dom").setTransform,s=t("./dom").setPixelPosition,a=t("./decimal");e.exports=r},{"../support/Css":82,"./decimal":96,"./dom":101}],111:[function(t,e,i){"use strict";function r(t){return 180*t/Math.PI}e.exports=r},{}],112:[function(t,e,i){"use strict";function r(t){return"number"==typeof t&&isFinite(t)}e.exports=r},{}],113:[function(t,e,i){"use strict";function r(t){return function(){function e(){!arguments[0]||s?r.apply(null,arguments):o=t.apply(null,i)}var i=arguments.length?Array.prototype.slice.call(arguments,0,arguments.length-1):[],r=arguments.length?arguments[arguments.length-1]:n,o=null,s=!1;return i.push(e),e(!0),function(){s=!0,o.apply(null,arguments)}}}var n=t("./noop");e.exports=r},{"./noop":107}],114:[function(t,e,i){"use strict";function r(t,e,i,r,l){return o.copy(a,s),i&&o.rotateY(a,a,i),r&&o.rotateX(a,a,r),l&&o.rotateZ(a,a,l),n.transformMat4(t,e,a),t}var n=t("gl-matrix/src/gl-matrix/vec3"),o=t("gl-matrix/src/gl-matrix/mat4"),s=o.identity(o.create()),a=o.create();e.exports=r},{"gl-matrix/src/gl-matrix/mat4":7,"gl-matrix/src/gl-matrix/vec3":10}],115:[function(t,e,i){"use strict";function r(t,e,i){function r(){if(!o){var a=(n()-s)/t;a<1?(e(a),requestAnimationFrame(r)):(e(1),i())}}var o=!1,s=n();return e(0),requestAnimationFrame(r),function(){o=!0,i.apply(null,arguments)}}var n=t("./clock");e.exports=r},{"./clock":92}],116:[function(t,e,i){"use strict";function r(t){var e=typeof t;if("object"===e){if(null===t)return"null";if("[object Array]"===Object.prototype.toString.call(t))return"array";if("[object RegExp]"===Object.prototype.toString.call(t))return"regexp"}return e}e.exports=r},{}],117:[function(t,e,i){"use strict";function r(t,e){if(!t||null==t.mediaAspectRatio)throw new Error("mediaAspectRatio must be defined");this._x=t&&null!=t.x?t.x:d,this._y=t&&null!=t.y?t.y:f,this._zoom=t&&null!=t.zoom?t.zoom:m,this._mediaAspectRatio=t.mediaAspectRatio,this._width=t&&null!=t.width?t.width:c,this._height=t&&null!=t.height?t.height:p,this._limiter=e||null,this._viewFrustum=[0,0,0,0],this._projectionMatrix=o.create(),this._projectionChanged=!0,this._params={},this._vertex=s.create(),this._invProj=o.create(),this._update()}var n=t("minimal-event-emitter"),o=t("gl-matrix/src/gl-matrix/mat4"),s=t("gl-matrix/src/gl-matrix/vec4"),a=t("../util/pixelRatio"),l=t("../util/real"),h=t("../util/clamp"),u=t("../util/clearOwnProperties"),c=0,p=0,d=.5,f=.5,m=1,v=[1,0,1,0],_=[-1,-1,1,1];n(r),r.prototype.destroy=function(){u(this)},r.prototype.x=function(){return this._x},r.prototype.y=function(){return this._y},r.prototype.zoom=function(){return this._zoom},r.prototype.mediaAspectRatio=function(){return this._mediaAspectRatio},r.prototype.width=function(){return this._width},r.prototype.height=function(){return this._height},r.prototype.size=function(t){return t=t||{},t.width=this._width,t.height=this._height,t},r.prototype.parameters=function(t){return t=t||{},t.x=this._x,t.y=this._y,t.zoom=this._zoom,t.mediaAspectRatio=this._mediaAspectRatio,t},r.prototype.limiter=function(){return this._limiter},r.prototype.setX=function(t){this._resetParams(),this._params.x=t,this._update(this._params)},r.prototype.setY=function(t){this._resetParams(),this._params.y=t,this._update(this._params)},r.prototype.setZoom=function(t){this._resetParams(),this._params.zoom=t,this._update(this._params)},r.prototype.offsetX=function(t){this.setX(this._x+t)},r.prototype.offsetY=function(t){this.setY(this._y+t)},r.prototype.offsetZoom=function(t){this.setZoom(this._zoom+t)},r.prototype.setMediaAspectRatio=function(t){this._resetParams(),this._params.mediaAspectRatio=t,this._update(this._params)},r.prototype.setSize=function(t){this._resetParams(),this._params.width=t.width,this._params.height=t.height,this._update(this._params)},r.prototype.setParameters=function(t){this._resetParams();var e=this._params;e.x=t.x,e.y=t.y,e.zoom=t.zoom,e.mediaAspectRatio=t.mediaAspectRatio,this._update(e)},r.prototype.setLimiter=function(t){this._limiter=t||null,this._update()},r.prototype._resetParams=function(){var t=this._params;t.x=null,t.y=null,t.zoom=null,t.mediaAspectRatio=null,t.width=null,t.height=null},r.prototype._update=function(t){null==t&&(this._resetParams(),t=this._params);var e=this._x,i=this._y,r=this._zoom,n=this._mediaAspectRatio,o=this._width,s=this._height;if(t.x=null!=t.x?t.x:e,t.y=null!=t.y?t.y:i,t.zoom=null!=t.zoom?t.zoom:r,t.mediaAspectRatio=null!=t.mediaAspectRatio?t.mediaAspectRatio:n,t.width=null!=t.width?t.width:o,t.height=null!=t.height?t.height:s,this._limiter&&!(t=this._limiter(t)))throw new Error("Bad view limiter");var a=t.x,u=t.y,c=t.zoom,p=t.mediaAspectRatio,d=t.width,f=t.height;if(!(l(a)&&l(u)&&l(c)&&l(p)&&l(d)&&l(f)))throw new Error("Bad view - suspect a broken limiter");c=h(c,1e-9,Infinity),this._x=a,this._y=u,this._zoom=c,this._mediaAspectRatio=p,this._width=d,this._height=f,a===e&&u===i&&c===r&&p===n&&d===o&&f===s||(this._projectionChanged=!0,this.emit("change")),d===o&&f===s||this.emit("resize")},r.prototype._zoomX=function(){return this._zoom},r.prototype._zoomY=function(){var t=this._mediaAspectRatio,e=this._width/this._height,i=this._zoom,r=i*t/e;return isNaN(r)&&(r=i),r},r.prototype.updateWithControlParameters=function(t){var e=this.zoom(),i=this._zoomX(),r=this._zoomY();this.offsetX(t.axisScaledX*i+t.x*e),this.offsetY(t.axisScaledY*r+t.y*e),this.offsetZoom(t.zoom*e)},r.prototype.projection=function(){var t=this._projectionMatrix
-;if(this._projectionChanged){var e=this._x,i=this._y,r=this._zoomX(),n=this._zoomY(),s=this._viewFrustum,a=s[0]=.5-i+.5*n,l=s[1]=e-.5+.5*r,h=s[2]=.5-i-.5*n,u=s[3]=e-.5-.5*r;o.ortho(t,u,l,h,a,-1,1),this._projectionChanged=!1}return t},r.prototype.intersects=function(t){var e=this._viewFrustum;this.projection();for(var i=0;i<e.length;i++){for(var r=e[i],n=v[i],o=_[i],s=!1,a=0;a<t.length;a++){var l=t[a];if(o<0&&l[n]<r||o>0&&l[n]>r){s=!0;break}}if(!s)return!1}return!0},r.prototype.selectLevel=function(t){for(var e=a()*this.width(),i=this._zoom,r=0;r<t.length;r++){var n=t[r];if(i*n.width()>=e)return n}return t[t.length-1]},r.prototype.coordinatesToScreen=function(t,e){var i=this._vertex;e||(e={});var r=this._width,n=this._height;if(r<=0||n<=0)return e.x=null,e.y=null,null;var o=t&&null!=t.x?t.x:d,a=t&&null!=t.y?t.y:f;s.set(i,o-.5,.5-a,-1,1),s.transformMat4(i,i,this.projection());for(var l=0;l<3;l++)i[l]/=i[3];return e.x=r*(i[0]+1)/2,e.y=n*(1-i[1])/2,e},r.prototype.screenToCoordinates=function(t,e){var i=this._vertex,r=this._invProj;e||(e={});var n=this._width,a=this._height;o.invert(r,this.projection());var l=2*t.x/n-1,h=1-2*t.y/a;return s.set(i,l,h,1,1),s.transformMat4(i,i,r),e.x=.5+i[0],e.y=.5-i[1],e},r.limit={x:function(t,e){return function(i){return i.x=h(i.x,t,e),i}},y:function(t,e){return function(i){return i.y=h(i.y,t,e),i}},zoom:function(t,e){return function(i){return i.zoom=h(i.zoom,t,e),i}},resolution:function(t){return function(e){if(e.width<=0||e.height<=0)return e;var i=e.width,r=a()*i/t;return e.zoom=h(e.zoom,r,Infinity),e}},visibleX:function(t,e){return function(i){var r=e-t;i.zoom>r&&(i.zoom=r);var n=t+.5*i.zoom,o=e-.5*i.zoom;return i.x=h(i.x,n,o),i}},visibleY:function(t,e){return function(i){if(i.width<=0||i.height<=0)return i;var r=i.width/i.height,n=r/i.mediaAspectRatio,o=(e-t)*n;i.zoom>o&&(i.zoom=o);var s=t+.5*i.zoom/n,a=e-.5*i.zoom/n;return i.y=h(i.y,s,a),i}},letterbox:function(){return function(t){if(t.width<=0||t.height<=0)return t;var e=t.width/t.height,i=e/t.mediaAspectRatio;t.mediaAspectRatio>=e&&(t.zoom=Math.min(t.zoom,1)),t.mediaAspectRatio<=e&&(t.zoom=Math.min(t.zoom,i));var r,n;t.zoom>1?r=n=.5:(r=0+.5*t.zoom/1,n=1-.5*t.zoom/1);var o,s;return t.zoom>i?o=s=.5:(o=0+.5*t.zoom/i,s=1-.5*t.zoom/i),t.x=h(t.x,r,n),t.y=h(t.y,o,s),t}}},r.type=r.prototype.type="flat",e.exports=r},{"../util/clamp":90,"../util/clearOwnProperties":91,"../util/pixelRatio":109,"../util/real":112,"gl-matrix/src/gl-matrix/mat4":7,"gl-matrix/src/gl-matrix/vec4":11,"minimal-event-emitter":13}],118:[function(t,e,i){"use strict";function r(t,e){this._yaw=t&&null!=t.yaw?t.yaw:y,this._pitch=t&&null!=t.pitch?t.pitch:g,this._roll=t&&null!=t.roll?t.roll:x,this._fov=t&&null!=t.fov?t.fov:w,this._width=t&&null!=t.width?t.width:v,this._height=t&&null!=t.height?t.height:_,this._projectionCenterX=t&&null!=t.projectionCenterX?t.projectionCenterX:M,this._projectionCenterY=t&&null!=t.projectionCenterY?t.projectionCenterY:b,this._limiter=e||null,this._projectionMatrix=o.create(),this._projectionChanged=!0,this._viewFrustum=[s.create(),s.create(),s.create(),s.create(),s.create()],this._params={},this._fovs={},this._vertex=s.create(),this._invProj=o.create(),this._update()}var n=t("minimal-event-emitter"),o=t("gl-matrix/src/gl-matrix/mat4"),s=t("gl-matrix/src/gl-matrix/vec4"),a=t("../util/pixelRatio"),l=t("../util/convertFov"),h=t("../util/rotateVector"),u=t("../util/mod"),c=t("../util/real"),p=t("../util/clamp"),d=t("../util/decimal"),f=t("../util/compose"),m=t("../util/clearOwnProperties"),v=0,_=0,y=0,g=0,x=0,w=Math.PI/4,M=0,b=0;n(r),r.prototype.destroy=function(){m(this)},r.prototype.yaw=function(){return this._yaw},r.prototype.pitch=function(){return this._pitch},r.prototype.roll=function(){return this._roll},r.prototype.projectionCenterX=function(){return this._projectionCenterX},r.prototype.projectionCenterY=function(){return this._projectionCenterY},r.prototype.fov=function(){return this._fov},r.prototype.width=function(){return this._width},r.prototype.height=function(){return this._height},r.prototype.size=function(t){return t||(t={}),t.width=this._width,t.height=this._height,t},r.prototype.parameters=function(t){return t||(t={}),t.yaw=this._yaw,t.pitch=this._pitch,t.roll=this._roll,t.fov=this._fov,t},r.prototype.limiter=function(){return this._limiter},r.prototype.setYaw=function(t){this._resetParams(),this._params.yaw=t,this._update(this._params)},r.prototype.setPitch=function(t){this._resetParams(),this._params.pitch=t,this._update(this._params)},r.prototype.setRoll=function(t){this._resetParams(),this._params.roll=t,this._update(this._params)},r.prototype.setFov=function(t){this._resetParams(),this._params.fov=t,this._update(this._params)},r.prototype.setProjectionCenterX=function(t){this._resetParams(),this._params.projectionCenterX=t,this._update(this._params)},r.prototype.setProjectionCenterY=function(t){this._resetParams(),this._params.projectionCenterY=t,this._update(this._params)},r.prototype.offsetYaw=function(t){this.setYaw(this._yaw+t)},r.prototype.offsetPitch=function(t){this.setPitch(this._pitch+t)},r.prototype.offsetRoll=function(t){this.setRoll(this._roll+t)},r.prototype.offsetFov=function(t){this.setFov(this._fov+t)},r.prototype.setSize=function(t){this._resetParams(),this._params.width=t.width,this._params.height=t.height,this._update(this._params)},r.prototype.setParameters=function(t){this._resetParams();var e=this._params;e.yaw=t.yaw,e.pitch=t.pitch,e.roll=t.roll,e.fov=t.fov,e.projectionCenterX=t.projectionCenterX,e.projectionCenterY=t.projectionCenterY,this._update(e)},r.prototype.setLimiter=function(t){this._limiter=t||null,this._update()},r.prototype._resetParams=function(){var t=this._params;t.yaw=null,t.pitch=null,t.roll=null,t.fov=null,t.width=null,t.height=null},r.prototype._update=function(t){null==t&&(this._resetParams(),t=this._params);var e=this._yaw,i=this._pitch,r=this._roll,n=this._fov,o=this._projectionCenterX,s=this._projectionCenterY,a=this._width,l=this._height;if(t.yaw=null!=t.yaw?t.yaw:e,t.pitch=null!=t.pitch?t.pitch:i,t.roll=null!=t.roll?t.roll:r,t.fov=null!=t.fov?t.fov:n,t.width=null!=t.width?t.width:a,t.height=null!=t.height?t.height:l,t.projectionCenterX=null!=t.projectionCenterX?t.projectionCenterX:o,t.projectionCenterY=null!=t.projectionCenterY?t.projectionCenterY:s,this._limiter&&!(t=this._limiter(t)))throw new Error("Bad view limiter");t=this._normalize(t);var h=t.yaw,u=t.pitch,p=t.roll,d=t.fov,f=t.width,m=t.height,v=t.projectionCenterX,_=t.projectionCenterY;if(!(c(h)&&c(u)&&c(p)&&c(d)&&c(f)&&c(m)&&c(v)&&c(_)))throw new Error("Bad view - suspect a broken limiter");this._yaw=h,this._pitch=u,this._roll=p,this._fov=d,this._width=f,this._height=m,this._projectionCenterX=v,this._projectionCenterY=_,h===e&&u===i&&p===r&&d===n&&f===a&&m===l&&v===o&&_===s||(this._projectionChanged=!0,this.emit("change")),f===a&&m===l||this.emit("resize")},r.prototype._normalize=function(t){this._normalizeCoordinates(t);var e=l.htov(Math.PI,t.width,t.height),i=isNaN(e)?Math.PI:Math.min(Math.PI,e);return t.fov=p(t.fov,1e-6,i-1e-6),t},r.prototype._normalizeCoordinates=function(t){return"yaw"in t&&(t.yaw=u(t.yaw-Math.PI,-2*Math.PI)+Math.PI),"pitch"in t&&(t.pitch=u(t.pitch-Math.PI,-2*Math.PI)+Math.PI),"roll"in t&&(t.roll=u(t.roll-Math.PI,-2*Math.PI)+Math.PI),t},r.prototype.normalizeToClosest=function(t,e){var i=this._yaw,r=this._pitch,n=t.yaw,o=t.pitch,s=n-2*Math.PI,a=n+2*Math.PI;Math.abs(s-i)<Math.abs(n-i)?n=s:Math.abs(a-i)<Math.abs(n-i)&&(n=a);var l=o-2*Math.PI,h=o+2*Math.PI;return Math.abs(l-r)<Math.abs(o-r)?o=l:Math.abs(l-r)<Math.abs(o-r)&&(o=h),e=e||{},e.yaw=n,e.pitch=o,e},r.prototype.updateWithControlParameters=function(t){var e=this._fov,i=l.vtoh(e,this._width,this._height);isNaN(i)&&(i=e),this.offsetYaw(t.axisScaledX*i+2*t.x*i+t.yaw),this.offsetPitch(t.axisScaledY*e+2*t.y*i+t.pitch),this.offsetRoll(-t.roll),this.offsetFov(t.zoom*e)},r.prototype.projection=function(){var t=this._projectionMatrix,e=this._viewFrustum;if(this._projectionChanged){var i=this._width,r=this._height,n=this._fov,a=l.vtoh(n,i,r),h=i/r,u=this._projectionCenterX,c=this._projectionCenterY;if(0!==u||0!==c){var p=Math.atan(2*u*Math.tan(a/2)),d=Math.atan(2*c*Math.tan(n/2)),f=this._fovs;f.leftDegrees=180*(a/2+p)/Math.PI,f.rightDegrees=180*(a/2-p)/Math.PI,f.upDegrees=180*(n/2+d)/Math.PI,f.downDegrees=180*(n/2-d)/Math.PI,o.perspectiveFromFieldOfView(t,f,-1,1)}else o.perspective(t,n,h,-1,1);o.rotateZ(t,t,this._roll),o.rotateX(t,t,this._pitch),o.rotateY(t,t,this._yaw),s.set(e[0],t[3]+t[0],t[7]+t[4],t[11]+t[8],0),s.set(e[1],t[3]-t[0],t[7]-t[4],t[11]-t[8],0),s.set(e[2],t[3]+t[1],t[7]+t[5],t[11]+t[9],0),s.set(e[3],t[3]-t[1],t[7]-t[5],t[11]-t[9],0),s.set(e[4],t[3]+t[2],t[7]+t[6],t[11]+t[10],0),this._projectionChanged=!1}return t},r.prototype.intersects=function(t){var e=this._viewFrustum,i=this._vertex;this.projection();for(var r=0;r<e.length;r++){for(var n=e[r],o=!1,a=0;a<t.length;a++){var l=t[a];s.set(i,l[0],l[1],l[2],0),s.dot(n,i)>=0&&(o=!0)}if(!o)return!1}return!0},r.prototype.selectLevel=function(t){for(var e=a()*this._height,i=Math.tan(.5*this._fov),r=0;r<t.length;r++){var n=t[r];if(i*n.height()>=e)return n}return t[t.length-1]},r.prototype.coordinatesToScreen=function(t,e){var i=this._vertex;e||(e={});var r=this._width,n=this._height;if(r<=0||n<=0)return e.x=null,e.y=null,null;var o=t&&null!=t.yaw?t.yaw:y,a=t&&null!=t.pitch?t.pitch:g,l=t&&null!=t.roll?t.roll:x;return s.set(i,0,0,-1,1),h(i,i,-o,-a,-l),s.transformMat4(i,i,this.projection()),i[3]>=0?(e.x=r*(i[0]/i[3]+1)/2,e.y=n*(1-i[1]/i[3])/2,e):(e.x=null,e.y=null,null)},r.prototype.screenToCoordinates=function(t,e){var i=this._vertex,r=this._invProj;e||(e={});var n=this._width,a=this._height;o.invert(r,this.projection());var l=2*t.x/n-1,h=1-2*t.y/a;s.set(i,l,h,1,1),s.transformMat4(i,i,r);var u=Math.sqrt(i[0]*i[0]+i[1]*i[1]+i[2]*i[2]);return e.yaw=Math.atan2(i[0],-i[2]),e.pitch=Math.acos(i[1]/u)-Math.PI/2,this._normalizeCoordinates(e),e},r.prototype.coordinatesToPerspectiveTransform=function(t,e,i){i=i||"";var r=this._height,n=this._width,o=this._fov,s=.5*r/Math.tan(o/2),a="";return a+="translateX("+d(n/2)+"px) translateY("+d(r/2)+"px) ",a+="translateX(-50%) translateY(-50%) ",a+="perspective("+d(s)+"px) ",a+="translateZ("+d(s)+"px) ",a+="rotateZ("+d(-this._roll)+"rad) ",a+="rotateX("+d(-this._pitch)+"rad) ",a+="rotateY("+d(this._yaw)+"rad) ",a+="rotateY("+d(-t.yaw)+"rad) ",a+="rotateX("+d(t.pitch)+"rad) ",a+="translateZ("+d(-e)+"px) ",a+=i+" "},r.limit={yaw:function(t,e){return function(i){return i.yaw=p(i.yaw,t,e),i}},pitch:function(t,e){return function(i){return i.pitch=p(i.pitch,t,e),i}},roll:function(t,e){return function(i){return i.roll=p(i.roll,t,e),i}},hfov:function(t,e){return function(i){var r=i.width,n=i.height;if(r>0&&n>0){var o=l.htov(t,r,n),s=l.htov(e,r,n);i.fov=p(i.fov,o,s)}return i}},vfov:function(t,e){return function(i){return i.fov=p(i.fov,t,e),i}},resolution:function(t){return function(e){var i=e.height;if(i){var r=a()*i,n=2*Math.atan(r/t);e.fov=p(e.fov,n,Infinity)}return e}},traditional:function(t,e,i){return i=null!=i?i:e,f(r.limit.resolution(t),r.limit.vfov(0,e),r.limit.hfov(0,i),r.limit.pitch(-Math.PI/2,Math.PI/2))}},r.type=r.prototype.type="rectilinear",e.exports=r},{"../util/clamp":90,"../util/clearOwnProperties":91,"../util/compose":94,"../util/convertFov":95,"../util/decimal":96,"../util/mod":106,"../util/pixelRatio":109,"../util/real":112,"../util/rotateVector":114,"gl-matrix/src/gl-matrix/mat4":7,"gl-matrix/src/gl-matrix/vec4":11,"minimal-event-emitter":13}]},{},[56])(56)});
+// In order to prevent the padding from being visible, the tiles must be
+// padded and stacked such that the padding on one of the sides, when present,
+// stacks below the neighboring tile on that side.
+//
+// The padding rules are as follows:
+// * Define a tile to be X-marginal if it contacts the X-edge of its cube face.
+// * Pad top if the tile is top-marginal and the face is F or U.
+// * Pad bottom unless the tile is bottom-marginal or the face is F or D.
+// * Pad left if the tile is left-marginal and the face is F, L, U or D.
+// * Pad right unless the tile is right-marginal or the face is F, R, U or D.
+//
+// The stacking rules are as follows:
+// * Within an image, stack smaller zoom levels below larger zoom levels.
+// * Within a level, stack tiles bottom to top in FUDLRB face order.
+// * Within a face, stack tiles bottom to top in ascending Y coordinate order.
+// * Within a row, stack tiles bottom to top in ascending X coordinate order.
+//
+// Crucially, these rules affect the implementation of the tile cmp() method,
+// which determines the stacking order, and of the pad*() tile methods, which
+// determine the amount of padding on each of the four sides of a tile.
+
+// Initials for cube faces in stacking order.
+var faceList = 'fudlrb';
+
+// Rotation of each face, relative to the front face.
+var faceRotation = {
+  f: { x: 0, y: 0 },
+  b: { x: 0, y: Math.PI },
+  l: { x: 0, y: Math.PI/2 },
+  r: { x: 0, y: -Math.PI/2 },
+  u: { x: Math.PI/2, y: 0 },
+  d: { x: -Math.PI/2, y: 0 }
+};
+
+// Zero vector.
+var origin = vec3.create();
+
+// Rotate a vector in ZXY order.
+function rotateVector(vec, z, x, y) {
+  if (z) {
+    vec3.rotateZ(vec, vec, origin, z);
+  }
+  if (x) {
+    vec3.rotateX(vec, vec, origin, x);
+  }
+  if (y) {
+    vec3.rotateY(vec, vec, origin, y);
+  }
+}
+
+// Normalized vectors pointing to the center of each face.
+var faceVectors = {};
+for (var i = 0; i < faceList.length; i++) {
+  var face = faceList[i];
+  var rotation = faceRotation[face];
+  var v = vec3.fromValues(0,  0, -1);
+  rotateVector(v, 0, rotation.x, rotation.y);
+  faceVectors[face] = v;
+}
+
+// Map each face to its adjacent faces.
+// The order is as suggested by the front face.
+var adjacentFace = {
+  f: [ 'l', 'r', 'u', 'd' ],
+  b: [ 'r', 'l', 'u', 'd' ],
+  l: [ 'b', 'f', 'u', 'd' ],
+  r: [ 'f', 'b', 'u', 'd' ],
+  u: [ 'l', 'r', 'b', 'f' ],
+  d: [ 'l', 'r', 'f', 'b' ]
+};
+
+// Offsets to apply to the (x,y) coordinates of a tile to get its neighbors.
+var neighborOffsets = [
+  [  0,  1 ], // top
+  [  1,  0 ], // right
+  [  0, -1 ], // bottom
+  [ -1,  0 ]  // left
+];
+
+
+/**
+ * @class CubeTile
+ * @implements Tile
+ * @classdesc
+ *
+ * A tile in a @{CubeGeometry}.
+ */
+function CubeTile(face, x, y, z, geometry) {
+  this.face = face;
+  this.x = x;
+  this.y = y;
+  this.z = z;
+  this._geometry = geometry;
+  this._level = geometry.levelList[z];
+}
+
+
+CubeTile.prototype.rotX = function() {
+  return faceRotation[this.face].x;
+};
+
+
+CubeTile.prototype.rotY = function() {
+  return faceRotation[this.face].y;
+};
+
+
+CubeTile.prototype.centerX = function() {
+  return (this.x + 0.5) / this._level.numHorizontalTiles() - 0.5;
+};
+
+
+CubeTile.prototype.centerY = function() {
+  return 0.5 - (this.y + 0.5) / this._level.numVerticalTiles();
+};
+
+
+CubeTile.prototype.scaleX = function() {
+  return 1 / this._level.numHorizontalTiles();
+};
+
+
+CubeTile.prototype.scaleY = function() {
+  return 1 / this._level.numVerticalTiles();
+};
+
+
+CubeTile.prototype.width = function() {
+  return this._level.tileWidth();
+};
+
+
+CubeTile.prototype.height = function() {
+  return this._level.tileHeight();
+};
+
+
+CubeTile.prototype.levelWidth = function() {
+  return this._level.width();
+};
+
+
+CubeTile.prototype.levelHeight = function() {
+  return this._level.height();
+};
+
+
+CubeTile.prototype.atTopLevel = function() {
+  return this.z === 0;
+};
+
+
+CubeTile.prototype.atBottomLevel = function() {
+  return this.z === this._geometry.levelList.length - 1;
+};
+
+
+CubeTile.prototype.atTopEdge = function() {
+  return this.y === 0;
+};
+
+
+CubeTile.prototype.atBottomEdge = function() {
+  return this.y === this._level.numVerticalTiles() - 1;
+};
+
+
+CubeTile.prototype.atLeftEdge = function() {
+  return this.x === 0;
+};
+
+
+CubeTile.prototype.atRightEdge = function() {
+  return this.x === this._level.numHorizontalTiles() - 1;
+};
+
+
+CubeTile.prototype.padTop = function() {
+  return this.atTopEdge() && /[fu]/.test(this.face);
+};
+
+
+CubeTile.prototype.padBottom = function() {
+  return !this.atBottomEdge() || /[fd]/.test(this.face);
+};
+
+
+CubeTile.prototype.padLeft = function() {
+  return this.atLeftEdge() && /[flud]/.test(this.face);
+};
+
+
+CubeTile.prototype.padRight = function() {
+  return !this.atRightEdge() || /[frud]/.test(this.face);
+};
+
+
+CubeTile.prototype.vertices = function(result) {
+  if (!result) {
+    result = [vec3.create(), vec3.create(), vec3.create(), vec3.create()];
+  }
+
+  var rot = faceRotation[this.face];
+
+  function makeVertex(vec, x, y) {
+    vec3.set(vec, x, y, -0.5);
+    rotateVector(vec, 0, rot.x, rot.y);
+  }
+
+  var left = this.centerX() - this.scaleX() / 2;
+  var right = this.centerX() + this.scaleX() / 2;
+  var bottom = this.centerY() - this.scaleY() / 2;
+  var top = this.centerY() + this.scaleY() / 2;
+
+  makeVertex(result[0], left, top);
+  makeVertex(result[1], right, top);
+  makeVertex(result[2], right, bottom);
+  makeVertex(result[3], left, bottom);
+
+  return result;
+};
+
+
+CubeTile.prototype.parent = function() {
+
+  if (this.atTopLevel()) {
+    return null;
+  }
+
+  var face = this.face;
+  var z = this.z;
+  var x = this.x;
+  var y = this.y;
+
+  var geometry = this._geometry;
+  var level = geometry.levelList[z];
+  var parentLevel = geometry.levelList[z-1];
+
+  var tileX = Math.floor(x / level.numHorizontalTiles() * parentLevel.numHorizontalTiles());
+  var tileY = Math.floor(y / level.numVerticalTiles() * parentLevel.numVerticalTiles());
+  var tileZ = z-1;
+
+  return new CubeTile(face, tileX, tileY, tileZ, geometry);
+
+};
+
+
+CubeTile.prototype.children = function(result) {
+
+  if (this.atBottomLevel()) {
+    return null;
+  }
+
+  var face = this.face;
+  var z = this.z;
+  var x = this.x;
+  var y = this.y;
+
+  var geometry = this._geometry;
+  var level = geometry.levelList[z];
+  var childLevel = geometry.levelList[z+1];
+
+  var nHoriz = childLevel.numHorizontalTiles() / level.numHorizontalTiles();
+  var nVert = childLevel.numVerticalTiles() / level.numVerticalTiles();
+
+  result = result || [];
+
+  for (var h = 0; h < nHoriz; h++) {
+    for (var v = 0; v < nVert; v++) {
+      var tileX = nHoriz * x + h;
+      var tileY = nVert * y + v;
+      var tileZ = z+1;
+      result.push(new CubeTile(face, tileX, tileY, tileZ, geometry));
+    }
+  }
+
+  return result;
+
+};
+
+
+CubeTile.prototype.neighbors = function() {
+
+  var geometry = this._geometry;
+  var cache = geometry._neighborsCache;
+
+  // Satisfy from cache when available.
+  var cachedResult = cache.get(this);
+  if (cachedResult) {
+    return cachedResult;
+  }
+
+  var vec = geometry._vec;
+
+  var face = this.face;
+  var x = this.x;
+  var y = this.y;
+  var z = this.z;
+  var level = this._level;
+
+  var numX = level.numHorizontalTiles();
+  var numY = level.numVerticalTiles();
+
+  var result = [];
+
+  for (var i = 0; i < neighborOffsets.length; i++) {
+    var xOffset = neighborOffsets[i][0];
+    var yOffset = neighborOffsets[i][1];
+
+    var newX = x + xOffset;
+    var newY = y + yOffset;
+    var newZ = z;
+    var newFace = face;
+
+    if (newX < 0 || newX >= numX || newY < 0 || newY >= numY) {
+
+      // If the neighboring tile belongs to a different face, calculate a
+      // vector pointing to the edge between the two faces at the point the
+      // tile and its neighbor meet, and convert it into tile coordinates for
+      // the neighboring face.
+
+      var xCoord = this.centerX();
+      var yCoord = this.centerY();
+
+      // First, calculate the vector as if the initial tile belongs to the
+      // front face, so that the tile x,y coordinates map directly into the
+      // x,y axes.
+
+      if (newX < 0) {
+        vec3.set(vec, -0.5, yCoord, -0.5);
+        newFace = adjacentFace[face][0];
+      } else if (newX >= numX) {
+        vec3.set(vec, 0.5, yCoord, -0.5);
+        newFace = adjacentFace[face][1];
+      } else if (newY < 0) {
+        vec3.set(vec, xCoord, 0.5, -0.5);
+        newFace = adjacentFace[face][2];
+      } else if (newY >= numY) {
+        vec3.set(vec, xCoord, -0.5, -0.5);
+        newFace = adjacentFace[face][3];
+      }
+
+      var rot;
+
+      // Then, rotate the vector into the actual face the initial tile
+      // belongs to.
+
+      rot = faceRotation[face];
+      rotateVector(vec, 0, rot.x, rot.y);
+
+      // Finally, rotate the vector from the neighboring face into the front
+      // face. Again, this is so that the neighboring tile x,y coordinates
+      // map directly into the x,y axes.
+
+      rot = faceRotation[newFace];
+      rotateVector(vec, 0, -rot.x, -rot.y);
+
+      // Calculate the neighboring tile coordinates.
+
+      newX = clamp(Math.floor((0.5 + vec[0]) * numX), 0, numX - 1);
+      newY = clamp(Math.floor((0.5 - vec[1]) * numY), 0, numY - 1);
+    }
+
+    result.push(new CubeTile(newFace, newX, newY, newZ, geometry));
+  }
+
+  // Store into cache to satisfy future requests.
+  cache.set(this, result);
+
+  return result;
+
+};
+
+
+CubeTile.prototype.hash = function() {
+  return CubeTile.hash(this);
+};
+
+
+CubeTile.prototype.equals = function(other) {
+  return CubeTile.equals(this, other);
+};
+
+
+CubeTile.prototype.cmp = function(other) {
+  return CubeTile.cmp(this, other);
+};
+
+
+CubeTile.prototype.str = function() {
+  return CubeTile.str(this);
+};
+
+
+CubeTile.hash = function(tile) {
+  return tile != null ? hash(tile.face.charCodeAt(0), tile.z, tile.x, tile.y) : 0;
+};
+
+
+CubeTile.equals = function(tile1, tile2) {
+  return (tile1 != null && tile2 != null &&
+          tile1.face === tile2.face &&
+          tile1.z === tile2.z &&
+          tile1.x === tile2.x &&
+          tile1.y === tile2.y);
+};
+
+
+CubeTile.cmp = function(tile1, tile2) {
+  var face1 = faceList.indexOf(tile1.face);
+  var face2 = faceList.indexOf(tile2.face);
+  return (cmp(tile1.z, tile2.z) ||
+          cmp(face1, face2) ||
+          cmp(tile1.y, tile2.y) ||
+          cmp(tile1.x, tile2.x));
+};
+
+
+CubeTile.str = function(tile) {
+  return 'CubeTile(' + tile.face + ', ' + tile.x + ', ' + tile.y + ', ' + tile.z + ')';
+};
+
+
+function CubeLevel(levelProperties) {
+  this.constructor.super_.call(this, levelProperties);
+
+  this._size = levelProperties.size;
+  this._tileSize = levelProperties.tileSize;
+
+  if (this._size % this._tileSize !== 0) {
+    throw new Error('Level size is not multiple of tile size: ' +
+                    this._size + ' ' + this._tileSize);
+  }
+}
+
+inherits(CubeLevel, Level);
+
+
+CubeLevel.prototype.width = function() {
+  return this._size;
+};
+
+
+CubeLevel.prototype.height = function() {
+  return this._size;
+};
+
+
+CubeLevel.prototype.tileWidth = function() {
+  return this._tileSize;
+};
+
+
+CubeLevel.prototype.tileHeight = function() {
+  return this._tileSize;
+};
+
+
+CubeLevel.prototype._validateWithParentLevel = function(parentLevel) {
+
+  var width = this.width();
+  var height = this.height();
+  var tileWidth = this.tileWidth();
+  var tileHeight = this.tileHeight();
+  var numHorizontal = this.numHorizontalTiles();
+  var numVertical = this.numVerticalTiles();
+
+  var parentWidth = parentLevel.width();
+  var parentHeight = parentLevel.height();
+  var parentTileWidth = parentLevel.tileWidth();
+  var parentTileHeight = parentLevel.tileHeight();
+  var parentNumHorizontal = parentLevel.numHorizontalTiles();
+  var parentNumVertical = parentLevel.numVerticalTiles();
+
+  if (width % parentWidth !== 0) {
+    throw new Error('Level width must be multiple of parent level: ' +
+                    width + ' vs. ' + parentWidth);
+  }
+
+  if (height % parentHeight !== 0) {
+    throw new Error('Level height must be multiple of parent level: ' +
+                    height + ' vs. ' + parentHeight);
+  }
+
+  if (numHorizontal % parentNumHorizontal !== 0) {
+    throw new Error('Number of horizontal tiles must be multiple of parent level: ' +
+      numHorizontal + " (" + width + '/' + tileWidth + ')' + " vs. " +
+      parentNumHorizontal + " (" + parentWidth + '/' + parentTileWidth + ')');
+  }
+
+  if (numVertical % parentNumVertical !== 0) {
+    throw new Error('Number of vertical tiles must be multiple of parent level: ' +
+      numVertical + " (" + height + '/' + tileHeight + ')' + " vs. " +
+      parentNumVertical + " (" + parentHeight + '/' + parentTileHeight + ')');
+  }
+
+};
+
+
+/**
+ * @class CubeGeometry
+ * @implements Geometry
+ * @classdesc
+ *
+ * A {@link Geometry} implementation suitable for tiled cube images with
+ * multiple resolution levels.
+ *
+ * The following restrictions apply:
+ *   - All tiles in a level must be square and form a rectangular grid;
+ *   - The size of a level must be a multiple of the tile size;
+ *   - The size of a level must be a multiple of the parent level size;
+ *   - The number of tiles in a level must be a multiple of the number of tiles
+ *     in the parent level.
+ *
+ * @param {Object[]} levelPropertiesList Level description
+ * @param {number} levelPropertiesList[].size Cube face size in pixels
+ * @param {number} levelPropertiesList[].tileSize Tile size in pixels
+ */
+function CubeGeometry(levelPropertiesList) {
+  if (type(levelPropertiesList) !== 'array') {
+    throw new Error('Level list must be an array');
+  }
+
+  this.levelList = makeLevelList(levelPropertiesList, CubeLevel);
+  this.selectableLevelList = makeSelectableLevelList(this.levelList);
+
+  for (var i = 1; i < this.levelList.length; i++) {
+    this.levelList[i]._validateWithParentLevel(this.levelList[i-1]);
+  }
+
+  this._tileSearcher = new TileSearcher(this);
+
+  this._neighborsCache = new LruMap(CubeTile.equals, CubeTile.hash, 64);
+
+  this._vec = vec4.create();
+
+  this._viewSize = {};
+}
+
+
+CubeGeometry.prototype.maxTileSize = function() {
+  var maxTileSize = 0;
+  for (var i = 0; i < this.levelList.length; i++) {
+    var level = this.levelList[i];
+    maxTileSize = Math.max(maxTileSize, level.tileWidth, level.tileHeight);
+  }
+  return maxTileSize;
+};
+
+
+CubeGeometry.prototype.levelTiles = function(level, result) {
+
+  var levelIndex = this.levelList.indexOf(level);
+  var maxX = level.numHorizontalTiles() - 1;
+  var maxY = level.numVerticalTiles() - 1;
+
+  result = result || [];
+
+  for (var f = 0; f < faceList.length; f++) {
+    var face = faceList[f];
+    for (var x = 0; x <= maxX; x++) {
+      for (var y = 0; y <= maxY; y++) {
+        result.push(new CubeTile(face, x, y, levelIndex, this));
+      }
+    }
+  }
+
+  return result;
+
+};
+
+
+CubeGeometry.prototype._closestTile = function(view, level) {
+  var ray = this._vec;
+
+  // Compute a view ray into the central screen point.
+  vec4.set(ray, 0, 0, 1, 1);
+  vec4.transformMat4(ray, ray, view.inverseProjection());
+
+  var minAngle = Infinity;
+  var closestFace = null;
+
+  // Find the face whose vector makes a minimal angle with the view ray.
+  // This is the face into which the view ray points.
+  for (var face in faceVectors) {
+    var vector = faceVectors[face];
+    // For a small angle between two normalized vectors, angle ~ 1-cos(angle).
+    var angle = 1 - vec3.dot(vector, ray);
+    if (angle < minAngle) {
+      minAngle = angle;
+      closestFace = face;
+    }
+  }
+
+  // Project view ray onto cube, i.e., normalize the coordinate with
+  // largest absolute value to ±0.5.
+  var max = Math.max(Math.abs(ray[0]), Math.abs(ray[1]), Math.abs(ray[2])) / 0.5;
+  for (var i = 0; i < 3; i++) {
+    ray[i] = ray[i] / max;
+  }
+
+  // Rotate view ray into front face.
+  var rot = faceRotation[closestFace];
+  rotateVector(ray, 0, -rot.x, -rot.y);
+
+  // Get the desired zoom level.
+  var tileZ = this.levelList.indexOf(level);
+  var numX = level.numHorizontalTiles();
+  var numY = level.numVerticalTiles();
+
+  // Find the coordinates of the tile that the view ray points into.
+  var tileX = clamp(Math.floor((0.5 + ray[0]) * numX), 0, numX - 1);
+  var tileY = clamp(Math.floor((0.5 - ray[1]) * numY), 0, numY - 1);
+
+  return new CubeTile(closestFace, tileX, tileY, tileZ, this);
+};
+
+
+CubeGeometry.prototype.visibleTiles = function(view, level, result) {
+  var viewSize = this._viewSize;
+  var tileSearcher = this._tileSearcher;
+
+  result = result || [];
+
+  view.size(viewSize);
+  if (viewSize.width === 0 || viewSize.height === 0) {
+    // No tiles are visible if the viewport is empty.
+    return result;
+  }
+
+  var startingTile = this._closestTile(view, level);
+  var count = tileSearcher.search(view, startingTile, result);
+  if (!count) {
+    throw new Error('Starting tile is not visible');
+  }
+
+  return result;
+};
+
+
+CubeGeometry.TileClass = CubeGeometry.prototype.TileClass = CubeTile;
+CubeGeometry.type = CubeGeometry.prototype.type = 'cube';
+CubeTile.type = CubeTile.prototype.type = 'cube';
+
+
+module.exports = CubeGeometry;
+
+},{"../TileSearcher":22,"../collections/LruMap":30,"../util/clamp":91,"../util/cmp":94,"../util/hash":104,"../util/inherits":105,"../util/type":116,"./Level":55,"./common":56,"gl-matrix":3}],53:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var inherits = require('../util/inherits');
+var hash = require('../util/hash');
+var cmp = require('../util/cmp');
+var common = require('./common');
+var Level = require('./Level');
+var type = require('../util/type');
+
+
+/**
+ * @class EquirectTile
+ * @implements Tile
+ * @classdesc
+ *
+ * A tile in an @{EquirectGeometry}.
+ */
+function EquirectTile(z, geometry) {
+  this.z = z;
+  this._geometry = geometry;
+  this._level = geometry.levelList[z];
+}
+
+
+EquirectTile.prototype.rotX = function() {
+  return 0;
+};
+
+
+EquirectTile.prototype.rotY = function() {
+  return 0;
+};
+
+
+EquirectTile.prototype.centerX = function() {
+  return 0.5;
+};
+
+
+EquirectTile.prototype.centerY = function() {
+  return 0.5;
+};
+
+
+EquirectTile.prototype.scaleX = function() {
+  return 1;
+};
+
+
+EquirectTile.prototype.scaleY = function() {
+  return 1;
+};
+
+
+EquirectTile.prototype.width = function() {
+  return this._level.tileWidth();
+};
+
+
+EquirectTile.prototype.height = function() {
+  return this._level.tileHeight();
+};
+
+
+EquirectTile.prototype.levelWidth = function() {
+  return this._level.width();
+};
+
+
+EquirectTile.prototype.levelHeight = function() {
+  return this._level.height();
+};
+
+
+EquirectTile.prototype.atTopLevel = function() {
+  return this.z === 0;
+};
+
+
+EquirectTile.prototype.atBottomLevel = function() {
+  return this.z === this._geometry.levelList.length - 1;
+};
+
+
+EquirectTile.prototype.atTopEdge = function() {
+  return true;
+};
+
+
+EquirectTile.prototype.atBottomEdge = function() {
+  return true;
+};
+
+
+EquirectTile.prototype.atLeftEdge = function() {
+  return true;
+};
+
+
+EquirectTile.prototype.atRightEdge = function() {
+  return true;
+};
+
+
+EquirectTile.prototype.padTop = function() {
+  return false;
+};
+
+
+EquirectTile.prototype.padBottom = function() {
+  return false;
+};
+
+
+EquirectTile.prototype.padLeft = function() {
+  return false;
+};
+
+
+EquirectTile.prototype.padRight = function() {
+  return false;
+};
+
+
+EquirectTile.prototype.parent = function() {
+  if (this.atTopLevel()) {
+    return null;
+  }
+  return new EquirectTile(this.z - 1, this._geometry);
+};
+
+
+EquirectTile.prototype.children = function(result) {
+  if (this.atBottomLevel()) {
+    return null;
+  }
+  result = result || [];
+  result.push(new EquirectTile(this.z + 1, this._geometry));
+  return result;
+};
+
+
+EquirectTile.prototype.neighbors = function() {
+  return [];
+};
+
+
+EquirectTile.prototype.hash = function() {
+  return EquirectTile.hash(this);
+};
+
+
+EquirectTile.prototype.equals = function(other) {
+  return EquirectTile.equals(this, other);
+};
+
+
+EquirectTile.prototype.cmp = function(other) {
+  return EquirectTile.cmp(this, other);
+};
+
+
+EquirectTile.prototype.str = function() {
+  return EquirectTile.str(this);
+};
+
+
+EquirectTile.hash = function(tile) {
+  return hash(tile.z);
+};
+
+
+EquirectTile.equals = function(tile1, tile2) {
+  return tile1.z === tile2.z;
+};
+
+
+EquirectTile.cmp = function(tile1, tile2) {
+  return cmp(tile1.z, tile2.z);
+};
+
+
+EquirectTile.str = function(tile) {
+  return 'EquirectTile(' + tile.z + ')';
+};
+
+
+function EquirectLevel(levelProperties) {
+  this.constructor.super_.call(this, levelProperties);
+  this._width = levelProperties.width;
+}
+
+inherits(EquirectLevel, Level);
+
+
+EquirectLevel.prototype.width = function() {
+  return this._width;
+};
+
+
+EquirectLevel.prototype.height = function() {
+  return this._width/2;
+};
+
+
+EquirectLevel.prototype.tileWidth = function() {
+  return this._width;
+};
+
+
+EquirectLevel.prototype.tileHeight = function() {
+  return this._width/2;
+};
+
+
+/**
+ * @class EquirectGeometry
+ * @implements Geometry
+ * @classdesc
+ *
+ * A {@link Geometry} implementation suitable for equirectangular images with a
+ * 2:1 aspect ratio.
+ *
+ * @param {Object[]} levelPropertiesList Level description
+ * @param {number} levelPropertiesList[].width Level width in pixels
+*/
+function EquirectGeometry(levelPropertiesList) {
+  if (type(levelPropertiesList) !== 'array') {
+    throw new Error('Level list must be an array');
+  }
+
+  this.levelList = common.makeLevelList(levelPropertiesList, EquirectLevel);
+  this.selectableLevelList = common.makeSelectableLevelList(this.levelList);
+}
+
+
+EquirectGeometry.prototype.maxTileSize = function() {
+  var maxTileSize = 0;
+  for (var i = 0; i < this.levelList.length; i++) {
+    var level = this.levelList[i];
+    maxTileSize = Math.max(maxTileSize, level.tileWidth, level.tileHeight);
+  }
+  return maxTileSize;
+};
+
+
+EquirectGeometry.prototype.levelTiles = function(level, result) {
+  var levelIndex = this.levelList.indexOf(level);
+  result = result || [];
+  result.push(new EquirectTile(levelIndex, this));
+  return result;
+};
+
+
+EquirectGeometry.prototype.visibleTiles = function(view, level, result) {
+  var tile = new EquirectTile(this.levelList.indexOf(level), this);
+  result = result || [];
+  result.length = 0;
+  result.push(tile);
+};
+
+
+EquirectGeometry.TileClass = EquirectGeometry.prototype.TileClass = EquirectTile;
+EquirectGeometry.type = EquirectGeometry.prototype.type = 'equirect';
+EquirectTile.type = EquirectTile.prototype.type = 'equirect';
+
+
+module.exports = EquirectGeometry;
+
+},{"../util/cmp":94,"../util/hash":104,"../util/inherits":105,"../util/type":116,"./Level":55,"./common":56}],54:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var inherits = require('../util/inherits');
+var hash = require('../util/hash');
+var TileSearcher = require('../TileSearcher');
+var LruMap = require('../collections/LruMap');
+var Level = require('./Level');
+var makeLevelList = require('./common').makeLevelList;
+var makeSelectableLevelList = require('./common').makeSelectableLevelList;
+var clamp = require('../util/clamp');
+var mod = require('../util/mod');
+var cmp = require('../util/cmp');
+var type = require('../util/type');
+var vec2 = require('gl-matrix').vec2;
+var vec4 = require('gl-matrix').vec4;
+
+// Some renderer implementations require tiles to be padded around with
+// repeated pixels to prevent the appearance of visible seams between tiles.
+//
+// In order to prevent the padding from being visible, the tiles must be
+// padded and stacked such that the padding on one of the sides, when present,
+// stacks below the neighboring tile on that side.
+//
+// Padding rules:
+// * Pad tiles on the right and on the bottom.
+//
+// Stacking rules:
+// * Within an image, stack smaller zoom levels below larger zoom levels.
+// * Within a level, stack tiles bottom to top in ascending Y coordinate order.
+// * Within a row, stack tiles bottom to top in ascending X coordinate order.
+
+// Offsets to apply to the (x,y) coordinates of a tile to get its neighbors.
+var neighborOffsets = [
+  [  0,  1 ], // top
+  [  1,  0 ], // right
+  [  0, -1 ], // bottom
+  [ -1,  0 ]  // left
+];
+
+
+/**
+ * @class FlatTile
+ * @implements Tile
+ * @classdesc
+ *
+ * A tile in a {@link FlatGeometry}.
+ */
+function FlatTile(x, y, z, geometry) {
+  this.x = x;
+  this.y = y;
+  this.z = z;
+  this._geometry = geometry;
+  this._level = geometry.levelList[z];
+}
+
+
+FlatTile.prototype.rotX = function() {
+  return 0;
+};
+
+
+FlatTile.prototype.rotY = function() {
+  return 0;
+};
+
+
+FlatTile.prototype.centerX = function() {
+  var levelWidth = this._level.width();
+  var tileWidth = this._level.tileWidth();
+  return (this.x * tileWidth + 0.5 * this.width()) / levelWidth - 0.5;
+};
+
+
+FlatTile.prototype.centerY = function() {
+  var levelHeight = this._level.height();
+  var tileHeight = this._level.tileHeight();
+  return 0.5 - (this.y * tileHeight + 0.5 * this.height()) / levelHeight;
+};
+
+
+FlatTile.prototype.scaleX = function() {
+  var levelWidth = this._level.width();
+  return this.width() / levelWidth;
+};
+
+
+FlatTile.prototype.scaleY = function() {
+  var levelHeight = this._level.height();
+  return this.height() / levelHeight;
+};
+
+
+FlatTile.prototype.width = function() {
+  var levelWidth = this._level.width();
+  var tileWidth = this._level.tileWidth();
+  if (this.atRightEdge()) {
+    var widthRemainder = mod(levelWidth, tileWidth);
+    return widthRemainder || tileWidth;
+  } else {
+    return tileWidth;
+  }
+};
+
+
+FlatTile.prototype.height = function() {
+  var levelHeight = this._level.height();
+  var tileHeight = this._level.tileHeight();
+  if (this.atBottomEdge()) {
+    var heightRemainder = mod(levelHeight, tileHeight);
+    return heightRemainder || tileHeight;
+  } else {
+    return tileHeight;
+  }
+};
+
+
+FlatTile.prototype.levelWidth = function() {
+  return this._level.width();
+};
+
+
+FlatTile.prototype.levelHeight = function() {
+  return this._level.height();
+};
+
+
+FlatTile.prototype.atTopLevel = function() {
+  return this.z === 0;
+};
+
+
+FlatTile.prototype.atBottomLevel = function() {
+  return this.z === this._geometry.levelList.length - 1;
+};
+
+
+FlatTile.prototype.atTopEdge = function() {
+  return this.y === 0;
+};
+
+
+FlatTile.prototype.atBottomEdge = function() {
+  return this.y === this._level.numVerticalTiles() - 1;
+};
+
+
+FlatTile.prototype.atLeftEdge = function() {
+  return this.x === 0;
+};
+
+
+FlatTile.prototype.atRightEdge = function() {
+  return this.x === this._level.numHorizontalTiles() - 1;
+};
+
+
+FlatTile.prototype.padTop = function() {
+  return false;
+};
+
+
+FlatTile.prototype.padBottom = function() {
+  return !this.atBottomEdge();
+};
+
+
+FlatTile.prototype.padLeft = function() {
+  return false;
+};
+
+
+FlatTile.prototype.padRight = function() {
+  return !this.atRightEdge();
+};
+
+
+FlatTile.prototype.vertices = function(result) {
+  if (!result) {
+    result = [vec2.create(), vec2.create(), vec2.create(), vec2.create()];
+  }
+
+  var left = this.centerX() - this.scaleX() / 2;
+  var right = this.centerX() + this.scaleX() / 2;
+  var bottom = this.centerY() - this.scaleY() / 2;
+  var top = this.centerY() + this.scaleY() / 2;
+
+  vec2.set(result[0], left, top);
+  vec2.set(result[1], right, top);
+  vec2.set(result[2], right, bottom);
+  vec2.set(result[3], left, bottom);
+
+  return result;
+};
+
+
+FlatTile.prototype.parent = function() {
+
+
+  if (this.atTopLevel()) {
+    return null;
+  }
+
+  var geometry = this._geometry;
+
+  var z = this.z - 1;
+  // TODO: Currently assuming each level is double the size of previous one.
+  // Fix to support other multiples.
+  var x = Math.floor(this.x / 2);
+  var y = Math.floor(this.y / 2);
+
+  return new FlatTile(x, y, z, geometry);
+
+};
+
+
+FlatTile.prototype.children = function(result) {
+  if (this.atBottomLevel()) {
+    return null;
+  }
+
+  var geometry = this._geometry;
+  var z = this.z + 1;
+
+  result = result || [];
+
+  // TODO: Currently assuming each level is double the size of previous one.
+  // Fix to support other multiples.
+  result.push(new FlatTile(2*this.x  , 2*this.y  , z, geometry));
+  result.push(new FlatTile(2*this.x  , 2*this.y+1, z, geometry));
+  result.push(new FlatTile(2*this.x+1, 2*this.y  , z, geometry));
+  result.push(new FlatTile(2*this.x+1, 2*this.y+1, z, geometry));
+
+  return result;
+
+};
+
+
+FlatTile.prototype.neighbors = function() {
+
+  var geometry = this._geometry;
+  var cache = geometry._neighborsCache;
+
+  // Satisfy from cache when available.
+  var cachedResult = cache.get(this);
+  if (cachedResult) {
+    return cachedResult;
+  }
+
+  var x = this.x;
+  var y = this.y;
+  var z = this.z;
+  var level = this._level;
+
+  var numX = level.numHorizontalTiles() - 1;
+  var numY = level.numVerticalTiles() - 1;
+
+  var result = [];
+
+  for (var i = 0; i < neighborOffsets.length; i++) {
+    var xOffset = neighborOffsets[i][0];
+    var yOffset = neighborOffsets[i][1];
+
+    var newX = x + xOffset;
+    var newY = y + yOffset;
+    var newZ = z;
+
+    if (0 <= newX && newX <= numX && 0 <= newY && newY <= numY) {
+      result.push(new FlatTile(newX, newY, newZ, geometry));
+    }
+  }
+
+  // Store into cache to satisfy future requests.
+  cache.set(this, result);
+
+  return result;
+
+};
+
+
+FlatTile.prototype.hash = function() {
+  return FlatTile.hash(this);
+};
+
+
+FlatTile.prototype.equals = function(other) {
+  return FlatTile.equals(this, other);
+};
+
+
+FlatTile.prototype.cmp = function(other) {
+  return FlatTile.cmp(this, other);
+};
+
+
+FlatTile.prototype.str = function() {
+  return FlatTile.str(this);
+};
+
+
+FlatTile.hash = function(tile) {
+  return tile != null ? hash(tile.z, tile.x, tile.y) : 0;
+};
+
+
+FlatTile.equals = function(tile1, tile2) {
+  return (tile1 != null && tile2 != null &&
+          tile1.z === tile2.z &&
+          tile1.x === tile2.x &&
+          tile1.y === tile2.y);
+};
+
+
+FlatTile.cmp = function(tile1, tile2) {
+  return (cmp(tile1.z, tile2.z) ||
+          cmp(tile1.y, tile2.y) ||
+          cmp(tile1.x, tile2.x));
+};
+
+
+FlatTile.str = function(tile) {
+  return 'FlatTile(' + tile.x + ', ' + tile.y + ', ' + tile.z + ')';
+};
+
+
+function FlatLevel(levelProperties) {
+  this.constructor.super_.call(this, levelProperties);
+
+  this._width = levelProperties.width;
+  this._height = levelProperties.height;
+  this._tileWidth = levelProperties.tileWidth;
+  this._tileHeight = levelProperties.tileHeight;
+}
+
+inherits(FlatLevel, Level);
+
+
+FlatLevel.prototype.width = function() {
+  return this._width;
+};
+
+
+FlatLevel.prototype.height = function() {
+  return this._height;
+};
+
+
+FlatLevel.prototype.tileWidth = function() {
+  return this._tileWidth;
+};
+
+
+FlatLevel.prototype.tileHeight = function() {
+  return this._tileHeight;
+};
+
+
+FlatLevel.prototype._validateWithParentLevel = function(parentLevel) {
+
+  var width = this.width();
+  var height = this.height();
+  var tileWidth = this.tileWidth();
+  var tileHeight = this.tileHeight();
+
+  var parentWidth = parentLevel.width();
+  var parentHeight = parentLevel.height();
+  var parentTileWidth = parentLevel.tileWidth();
+  var parentTileHeight = parentLevel.tileHeight();
+
+  if (width % parentWidth !== 0) {
+    return new Error('Level width must be multiple of parent level: ' +
+                     width + ' vs. ' + parentWidth);
+  }
+
+  if (height % parentHeight !== 0) {
+    return new Error('Level height must be multiple of parent level: ' +
+                     height + ' vs. ' + parentHeight);
+  }
+
+  if (tileWidth % parentTileWidth !== 0) {
+    return new Error('Level tile width must be multiple of parent level: ' +
+                     tileWidth + ' vs. ' + parentTileWidth);
+  }
+
+  if (tileHeight % parentTileHeight !== 0) {
+    return new Error('Level tile height must be multiple of parent level: ' +
+                     tileHeight + ' vs. ' + parentTileHeight);
+  }
+
+};
+
+
+/**
+ * @class FlatGeometry
+ * @implements Geometry
+ * @classdesc
+ *
+ * A {@link Geometry} implementation suitable for tiled flat images with
+ * multiple resolution levels.
+ *
+ * The following restrictions apply:
+ *   - All tiles must be square, except when in the last row or column position,
+ *     and must form a rectangular grid;
+ *   - The width and height of a level must be multiples of the parent level
+ *     width and height.
+ *
+ * @param {Object[]} levelPropertiesList Level description
+ * @param {number} levelPropertiesList[].width Level width in pixels
+ * @param {number} levelPropertiesList[].tileWidth Tile width in pixels for
+ *                 square tiles
+ * @param {number} levelPropertiesList[].height Level height in pixels
+ * @param {number} levelPropertiesList[].tileHeight Tile height in pixels for
+ *                 square tiles
+ */
+function FlatGeometry(levelPropertiesList) {
+  if (type(levelPropertiesList) !== 'array') {
+    throw new Error('Level list must be an array');
+  }
+
+  this.levelList = makeLevelList(levelPropertiesList, FlatLevel);
+  this.selectableLevelList = makeSelectableLevelList(this.levelList);
+
+  for (var i = 1; i < this.levelList.length; i++) {
+    this.levelList[i]._validateWithParentLevel(this.levelList[i-1]);
+  }
+
+  this._tileSearcher = new TileSearcher(this);
+
+  this._neighborsCache = new LruMap(FlatTile.equals, FlatTile.hash, 64);
+
+  this._vec = vec4.create();
+
+  this._viewSize = {};
+}
+
+
+FlatGeometry.prototype.maxTileSize = function() {
+  var maxTileSize = 0;
+  for (var i = 0; i < this.levelList.length; i++) {
+    var level = this.levelList[i];
+    maxTileSize = Math.max(maxTileSize, level.tileWidth, level.tileHeight);
+  }
+  return maxTileSize;
+};
+
+
+FlatGeometry.prototype.levelTiles = function(level, result) {
+
+  var levelIndex = this.levelList.indexOf(level);
+  var maxX = level.numHorizontalTiles() - 1;
+  var maxY = level.numVerticalTiles() - 1;
+
+  if (!result) {
+    result = [];
+  }
+
+  for (var x = 0; x <= maxX; x++) {
+    for (var y = 0; y <= maxY; y++) {
+      result.push(new FlatTile(x, y, levelIndex, this));
+    }
+  }
+
+  return result;
+
+};
+
+
+FlatGeometry.prototype._closestTile = function(view, level) {
+  var ray = this._vec;
+
+  // Compute a view ray into the central screen point.
+  vec4.set(ray, 0, 0, 1, 1);
+  vec4.transformMat4(ray, ray, view.inverseProjection());
+
+  // Compute the image coordinates that the view ray points into.
+  var x = 0.5 + ray[0];
+  var y = 0.5 - ray[1];
+
+  // Get the desired zoom level.
+  var tileZ = this.levelList.indexOf(level);
+  var levelWidth = level.width();
+  var levelHeight = level.height();
+  var tileWidth = level.tileWidth();
+  var tileHeight = level.tileHeight();
+  var numX = level.numHorizontalTiles();
+  var numY = level.numVerticalTiles();
+
+  // Find the coordinates of the tile that the view ray points into.
+  var tileX = clamp(Math.floor(x * levelWidth / tileWidth), 0, numX - 1);
+  var tileY = clamp(Math.floor(y * levelHeight / tileHeight), 0, numY - 1);
+
+  return new FlatTile(tileX, tileY, tileZ, this);
+};
+
+
+FlatGeometry.prototype.visibleTiles = function(view, level, result) {
+  var viewSize = this._viewSize;
+  var tileSearcher = this._tileSearcher;
+
+  result = result || [];
+
+  view.size(viewSize);
+  if (viewSize.width === 0 || viewSize.height === 0) {
+    // No tiles are visible if the viewport is empty.
+    return result;
+  }
+
+  var startingTile = this._closestTile(view, level);
+  var count = tileSearcher.search(view, startingTile, result);
+  if (!count) {
+    throw new Error('Starting tile is not visible');
+  }
+
+  return result;
+};
+
+
+FlatGeometry.TileClass = FlatGeometry.prototype.TileClass = FlatTile;
+FlatGeometry.type = FlatGeometry.prototype.type = 'flat';
+FlatTile.type = FlatTile.prototype.type = 'flat';
+
+
+module.exports = FlatGeometry;
+
+},{"../TileSearcher":22,"../collections/LruMap":30,"../util/clamp":91,"../util/cmp":94,"../util/hash":104,"../util/inherits":105,"../util/mod":107,"../util/type":116,"./Level":55,"./common":56,"gl-matrix":3}],55:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+function Level(levelProperties) {
+  this._fallbackOnly = !!levelProperties.fallbackOnly;
+}
+
+Level.prototype.numHorizontalTiles = function() {
+  return Math.ceil(this.width() / this.tileWidth());
+};
+
+Level.prototype.numVerticalTiles = function() {
+  return Math.ceil(this.height() / this.tileHeight());
+};
+
+Level.prototype.fallbackOnly = function() {
+  return this._fallbackOnly;
+};
+
+module.exports = Level;
+},{}],56:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var cmp = require('../util/cmp');
+
+function makeLevelList(levelPropertiesList, LevelClass) {
+  var list = [];
+
+  for (var i = 0; i < levelPropertiesList.length; i++) {
+    list.push(new LevelClass(levelPropertiesList[i]));
+  }
+
+  list.sort(function(level1, level2) {
+    return cmp(level1.width(), level2.width());
+  });
+
+  return list;
+}
+
+function makeSelectableLevelList(levelList) {
+  var list = [];
+
+  for (var i = 0; i < levelList.length; i++) {
+    if (!levelList[i]._fallbackOnly) {
+      list.push(levelList[i]);
+    }
+  }
+
+  if (!list.length) {
+    throw new Error('No selectable levels in list');
+  }
+
+  return list;
+}
+
+module.exports = {
+  makeLevelList: makeLevelList,
+  makeSelectableLevelList: makeSelectableLevelList
+};
+
+},{"../util/cmp":94}],57:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+module.exports = {
+
+  // Stages.
+  WebGlStage: require('./stages/WebGl'),
+  CssStage: require('./stages/Css'),
+  FlashStage: require('./stages/Flash'),
+
+  // Renderers.
+  WebGlCubeRenderer: require('./renderers/WebGlCube'),
+  WebGlFlatRenderer: require('./renderers/WebGlFlat'),
+  WebGlEquirectRenderer: require('./renderers/WebGlEquirect'),
+  CssCubeRenderer: require('./renderers/CssCube'),
+  CssFlatRenderer: require('./renderers/CssFlat'),
+  FlashCubeRenderer: require('./renderers/FlashCube'),
+  FlashFlatRenderer: require('./renderers/FlashFlat'),
+  registerDefaultRenderers: require('./renderers/registerDefaultRenderers'),
+
+  // Geometries.
+  CubeGeometry: require('./geometries/Cube'),
+  FlatGeometry: require('./geometries/Flat'),
+  EquirectGeometry: require('./geometries/Equirect'),
+
+  // Views.
+  RectilinearView: require('./views/Rectilinear'),
+  FlatView: require('./views/Flat'),
+
+  // Sources.
+  ImageUrlSource: require('./sources/ImageUrl'),
+  SingleAssetSource: require('./sources/SingleAsset'),
+
+  // Assets.
+  DynamicCanvasAsset: require('./assets/DynamicCanvas'),
+  StaticCanvasAsset: require('./assets/StaticCanvas'),
+
+  // Texture store.
+  TextureStore: require('./TextureStore'),
+
+  // Layer.
+  Layer: require('./Layer'),
+
+  // Render loop.
+  RenderLoop: require('./RenderLoop'),
+
+  // Controls.
+  KeyControlMethod: require('./controls/Key'),
+  DragControlMethod: require('./controls/Drag'),
+  QtvrControlMethod: require('./controls/Qtvr'),
+  ScrollZoomControlMethod: require('./controls/ScrollZoom'),
+  PinchZoomControlMethod: require('./controls/PinchZoom'),
+  VelocityControlMethod: require('./controls/Velocity'),
+  ElementPressControlMethod: require('./controls/ElementPress'),
+  Controls: require('./controls/Controls'),
+  Dynamics: require('./controls/Dynamics'),
+
+  // High-level API.
+  Viewer: require('./Viewer'),
+  Scene: require('./Scene'),
+
+  // Hotspots.
+  Hotspot: require('./Hotspot'),
+  HotspotContainer: require('./HotspotContainer'),
+
+  // Effects.
+  colorEffects: require('./colorEffects'),
+
+  // Miscellaneous functions.
+  registerDefaultControls: require('./controls/registerDefaultControls'),
+  autorotate: require('./autorotate'),
+
+  // Utility functions.
+  util: {
+    async: require('./util/async'),
+    cancelize: require('./util/cancelize'),
+    chain: require('./util/chain'),
+    clamp: require('./util/clamp'),
+    clearOwnProperties: require('./util/clearOwnProperties'),
+    clock: require('./util/clock'),
+    cmp: require('./util/cmp'),
+    compose: require('./util/compose'),
+    convertFov: require('./util/convertFov'),
+    decimal: require('./util/decimal'),
+    defaults: require('./util/defaults'),
+    defer: require('./util/defer'),
+    degToRad: require('./util/degToRad'),
+    delay: require('./util/delay'),
+    dom: require('./util/dom'),
+    extend: require('./util/extend'),
+    hash: require('./util/hash'),
+    inherits: require('./util/inherits'),
+    mod: require('./util/mod'),
+    noop: require('./util/noop'),
+    once: require('./util/once'),
+    pixelRatio: require('./util/pixelRatio'),
+    radToDeg: require('./util/radToDeg'),
+    real: require('./util/real'),
+    retry: require('./util/retry'),
+    tween: require('./util/tween'),
+    type: require('./util/type')
+  },
+
+  // Expose dependencies for clients to use.
+  dependencies: {
+    bowser: require('bowser'),
+    glMatrix: require('gl-matrix'),
+    eventEmitter: require('minimal-event-emitter'),
+    hammerjs: require('hammerjs')
+  }
+};
+
+},{"./Hotspot":15,"./HotspotContainer":16,"./Layer":17,"./RenderLoop":19,"./Scene":20,"./TextureStore":21,"./Viewer":24,"./assets/DynamicCanvas":25,"./assets/StaticCanvas":27,"./autorotate":29,"./colorEffects":36,"./controls/Controls":39,"./controls/Drag":40,"./controls/Dynamics":41,"./controls/ElementPress":42,"./controls/Key":44,"./controls/PinchZoom":45,"./controls/Qtvr":46,"./controls/ScrollZoom":47,"./controls/Velocity":48,"./controls/registerDefaultControls":50,"./geometries/Cube":52,"./geometries/Equirect":53,"./geometries/Flat":54,"./renderers/CssCube":61,"./renderers/CssFlat":62,"./renderers/FlashCube":64,"./renderers/FlashFlat":65,"./renderers/WebGlCube":68,"./renderers/WebGlEquirect":69,"./renderers/WebGlFlat":70,"./renderers/registerDefaultRenderers":71,"./sources/ImageUrl":76,"./sources/SingleAsset":77,"./stages/Css":78,"./stages/Flash":79,"./stages/WebGl":82,"./util/async":87,"./util/cancelize":89,"./util/chain":90,"./util/clamp":91,"./util/clearOwnProperties":92,"./util/clock":93,"./util/cmp":94,"./util/compose":95,"./util/convertFov":96,"./util/decimal":97,"./util/defaults":98,"./util/defer":99,"./util/degToRad":100,"./util/delay":101,"./util/dom":102,"./util/extend":103,"./util/hash":104,"./util/inherits":105,"./util/mod":107,"./util/noop":108,"./util/once":109,"./util/pixelRatio":110,"./util/radToDeg":112,"./util/real":113,"./util/retry":114,"./util/tween":115,"./util/type":116,"./views/Flat":117,"./views/Rectilinear":118,"bowser":1,"gl-matrix":3,"hammerjs":13,"minimal-event-emitter":14}],58:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var FlashImageAsset = require('../assets/FlashImage');
+var NetworkError = require('../NetworkError');
+var once = require('../util/once');
+
+// TODO: Move the load queue into the loader.
+
+/**
+ * @class FlashImageLoader
+ * @implements ImageLoader
+ * @classdesc
+ *
+ * A {@link Loader} for Flash images.
+ *
+ * @param {Stage} stage The stage which is going to request images to be loaded.
+ */
+function FlashImageLoader(stage) {
+  if (stage.type !== 'flash') {
+    throw new Error('Stage type incompatible with loader');
+  }
+  this._stage = stage;
+}
+
+/**
+ * Loads an {@link Asset} from an image.
+ * @param {string} url The image URL.
+ * @param {?Rect} rect A {@link Rect} describing a portion of the image, or null
+ *     to use the full image.
+ * @param {function(?Error, Asset)} done The callback.
+ * @return {function()} A function to cancel loading.
+ */
+FlashImageLoader.prototype.loadImage = function(url, rect, done) {
+  var stage = this._stage;
+  var flashElement = stage.flashElement();
+
+  var x = rect && rect.x || 0;
+  var y = rect && rect.y || 0;
+  var width = rect && rect.width || 1;
+  var height = rect && rect.height || 1;
+
+  var imageId = flashElement.loadImage(url, width, height, x, y);
+
+  done = once(done);
+
+  // TODO: use a single callback for all imageLoaded events.
+
+  function callback(err, callbackId) {
+    // There is a single callback for all load events, so make sure this
+    // is the right one.
+    if (callbackId !== imageId) {
+      return;
+    }
+
+    stage.removeFlashCallbackListener('imageLoaded', callback);
+
+    // TODO: is there any way to distinguish a network error from other
+    // kinds of errors? For now we always return NetworkError since this
+    // prevents images to be retried continuously while we are offline.
+    if (err) {
+      done(new NetworkError('Network error: ' + url));
+    } else {
+      done(null, new FlashImageAsset(flashElement, imageId));
+    }
+  }
+
+  stage.addFlashCallbackListener('imageLoaded', callback);
+
+  function cancel() {
+    flashElement.cancelImage(imageId);
+    stage.removeFlashCallbackListener('imageLoaded', callback);
+    done.apply(null, arguments);
+  }
+
+  return cancel;
+};
+
+module.exports = FlashImageLoader;
+
+},{"../NetworkError":18,"../assets/FlashImage":26,"../util/once":109}],59:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var StaticImageAsset = require('../assets/StaticImage');
+var StaticCanvasAsset = require('../assets/StaticCanvas');
+var NetworkError = require('../NetworkError');
+var once = require('../util/once');
+
+// N.B. HtmlImageLoader is broken on IE8 for images that require resizing, due
+// to the unavailable HTML5 canvas element and the naturalWidth/naturalHeight
+// properties of image elements. This is currently not a problem because the
+// HTML-based renderers (WebGL and CSS) do not work on IE8 anyway. It could
+// become a problem in the future if we decide to support CSS rendering of flat
+// panoramas on IE8.
+
+// TODO: Move the load queue into the loader.
+
+/**
+ * @class HtmlImageLoader
+ * @implements ImageLoader
+ * @classdesc
+ *
+ * A {@link Loader} for HTML images.
+ *
+ * @param {Stage} stage The stage which is going to request images to be loaded.
+ */
+function HtmlImageLoader(stage) {
+  if (stage.type !== 'webgl' && stage.type !== 'css') {
+    throw new Error('Stage type incompatible with loader');
+  }
+  this._stage = stage;
+}
+
+/**
+ * Loads an {@link Asset} from an image.
+ * @param {string} url The image URL.
+ * @param {?Rect} rect A {@link Rect} describing a portion of the image, or null
+ *     to use the full image.
+ * @param {function(?Error, Asset)} done The callback.
+ * @return {function()} A function to cancel loading.
+ */
+HtmlImageLoader.prototype.loadImage = function(url, rect, done) {
+  var img = new Image();
+
+  // Allow cross-domain image loading.
+  // This is required to be able to create WebGL textures from images fetched
+  // from a different domain. Note that setting the crossorigin attribute to
+  // 'anonymous' will trigger a CORS preflight for cross-domain requests, but no
+  // credentials (cookies or HTTP auth) will be sent; to do so, the attribute
+  // would have to be set to 'use-credentials' instead. Unfortunately, this is
+  // not a safe choice, as it causes requests to fail when the response contains
+  // an Access-Control-Allow-Origin header with a wildcard. See the section
+  // "Credentialed requests and wildcards" on:
+  // https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
+  img.crossOrigin = 'anonymous';
+
+  var x = rect && rect.x || 0;
+  var y = rect && rect.y || 0;
+  var width = rect && rect.width || 1;
+  var height = rect && rect.height || 1;
+
+  done = once(done);
+
+  img.onload = function() {
+    if (x === 0 && y === 0 && width === 1 && height === 1) {
+      done(null, new StaticImageAsset(img));
+    }
+    else {
+      x *= img.naturalWidth;
+      y *= img.naturalHeight;
+      width *= img.naturalWidth;
+      height *= img.naturalHeight;
+
+      var canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      var context = canvas.getContext('2d');
+
+      context.drawImage(img, x, y, width, height, 0, 0, width, height);
+
+      done(null, new StaticCanvasAsset(canvas));
+    }
+  };
+
+  img.onerror = function() {
+    // TODO: is there any way to distinguish a network error from other
+    // kinds of errors? For now we always return NetworkError since this
+    // prevents images to be retried continuously while we are offline.
+    done(new NetworkError('Network error: ' + url));
+  };
+
+  img.src = url;
+
+  function cancel() {
+    img.onload = img.onerror = null;
+    img.src = '';
+    done.apply(null, arguments);
+  }
+
+  return cancel;
+};
+
+module.exports = HtmlImageLoader;
+
+},{"../NetworkError":18,"../assets/StaticCanvas":27,"../assets/StaticImage":28,"../util/once":109}],60:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var Map = require('../collections/Map');
+var decimal = require('../util/decimal');
+var setOverflowHidden = require('../util/dom').setOverflowHidden;
+var setNoPointerEvents = require('../util/dom').setNoPointerEvents;
+var setNullTransform = require('../util/dom').setNullTransform;
+var setTransform = require('../util/dom').setTransform;
+var clearOwnProperties = require('../util/clearOwnProperties');
+
+var debug = typeof MARZIPANODEBUG !== 'undefined' && MARZIPANODEBUG.css;
+
+
+function tileCmp(a, b) {
+  return a.cmp(b);
+}
+
+
+function CssBaseRenderer(root, quirks, tileClass) {
+
+  this._root = root;
+
+  this._browserQuirks = quirks;
+
+  // Create a container for this renderer's tiles, so we can style them
+  // as a whole separately from other renderers in the same stage.
+  var domElement = document.createElement('div');
+  root.appendChild(domElement);
+
+  domElement.style.position = 'absolute';
+
+  // For some weird reason, this prevents flickering on Safari Desktop.
+  setOverflowHidden(domElement);
+
+  // Prevent touch events on tiles from messing up pinching gestures on iOS.
+  setNoPointerEvents(domElement);
+
+  if (this._browserQuirks.useNullTransform) {
+    setNullTransform(domElement);
+  }
+
+  this.domElement = domElement;
+
+  this._oldTileList = [];
+  this._newTileList = [];
+
+  this._textureMap = new Map(tileClass.equals, tileClass.hash);
+}
+
+
+CssBaseRenderer.prototype.destroy = function() {
+  this._root.removeChild(this.domElement);
+  clearOwnProperties(this);
+};
+
+
+CssBaseRenderer.prototype.startLayer = function(layer, rect) {
+  var domElement = this.domElement;
+
+  // Set viewport effect.
+  var stageWidth = this._root.clientWidth;
+  var stageHeight = this._root.clientHeight;
+  domElement.style.left = decimal(stageWidth * rect.left) + 'px';
+  domElement.style.top = decimal(stageHeight * rect.top) + 'px';
+  domElement.style.width = decimal(stageWidth * rect.width) + 'px';
+  domElement.style.height = decimal(stageHeight * rect.height) + 'px';
+
+  // Set opacity effect.
+  var opacity = 1.0;
+  var effects = layer.effects();
+  if (effects && effects.opacity != null) {
+    opacity = effects.opacity;
+  }
+  domElement.style.opacity = opacity;
+
+  // Clear temporary variables.
+  this._newTileList.length = 0;
+  this._textureMap.clear();
+};
+
+
+CssBaseRenderer.prototype.renderTile = function(tile, texture) {
+  this._newTileList.push(tile);
+  this._textureMap.set(tile, texture);
+};
+
+
+CssBaseRenderer.prototype.endLayer = function(layer, rect) {
+
+  var domElement = this.domElement;
+  var oldTileList = this._oldTileList;
+  var newTileList = this._newTileList;
+  var textureMap = this._textureMap;
+  var oldIndex, newIndex, oldTile, newTile;
+  var texture, canvas;
+  var currentNode, nextNode;
+
+  var view = layer.view();
+
+  // Iterate the old and new tile lists in a consistent order and perform
+  // insertions and removals as we go. This minimizes the number of DOM
+  // operations performed.
+
+  // Neither the tile list nor the texture list may contain duplicates,
+  // otherwise this logic will fail.
+
+  // Consistency check.
+  if (domElement.children.length !== oldTileList.length) {
+    throw new Error('DOM not in sync with tile list');
+  }
+
+  newTileList.sort(tileCmp);
+
+  oldIndex = 0;
+  oldTile = oldTileList[oldIndex];
+  currentNode = domElement.firstChild;
+
+  for (newIndex = 0; newIndex < newTileList.length; newIndex++) {
+
+    newTile = newTileList[newIndex];
+
+    // Iterate old list until it catches up with the new list.
+    while (oldIndex < oldTileList.length) {
+
+      if (oldTile.cmp(newTile) >= 0) {
+        // Caught up.
+        break;
+      }
+
+      // Tile is no longer visible.
+      // Remove it from the DOM.
+      nextNode = currentNode.nextSibling;
+      domElement.removeChild(currentNode);
+      currentNode = nextNode;
+      oldTile = oldTileList[++oldIndex];
+    }
+
+    // Get the texture for the current tile.
+    texture = textureMap.get(newTile);
+    canvas = texture ? texture._canvas : null;
+
+    // Consistency check.
+    if (!canvas) {
+      throw new Error('Rendering tile with missing texture');
+    }
+
+    if (oldTile && oldTile.cmp(newTile) === 0) {
+      // The old and new tile are the same.
+
+      // Consistency check.
+      if (canvas != currentNode) {
+        throw new Error('DOM not in sync with tile list');
+      }
+
+      currentNode = currentNode.nextSibling;
+      oldTile = oldTileList[++oldIndex];
+
+    } else {
+      // The new tile comes before the old tile.
+      // Insert it into the DOM.
+      domElement.insertBefore(canvas, currentNode);
+    }
+
+    // Set the CSS transform on the current tile.
+    setTransform(canvas, this.calculateTransform(newTile, texture, view));
+
+    if (debug) {
+      canvas.setAttribute('data-tile', newTile.str());
+    }
+  }
+
+  // Remove trailing tiles that are no longer visible from the DOM.
+  while (currentNode) {
+    nextNode = currentNode.nextSibling;
+    domElement.removeChild(currentNode);
+    currentNode = nextNode;
+  }
+
+  // Consistenty check.
+  if (domElement.children.length !== newTileList.length) {
+    throw new Error('DOM not in sync with tile list');
+  }
+
+  // The old and new tile lists swap roles between iterations.
+  var tmp = this._oldTileList;
+  this._oldTileList = this._newTileList;
+  this._newTileList = tmp;
+};
+
+
+module.exports = CssBaseRenderer;
+
+},{"../collections/Map":32,"../util/clearOwnProperties":92,"../util/decimal":97,"../util/dom":102}],61:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var CubeTile = require('../geometries/Cube').TileClass;
+var CssBaseRenderer = require('./CssBase');
+var decimal = require('../util/decimal');
+var inherits = require('../util/inherits');
+
+
+/**
+ * @class CssCubeRenderer
+ * @implements Renderer
+ * @classdesc
+ *
+ * A renderer for {@link CubeGeometry} and {@link RectilinearView}, appropriate
+ * for a {@link CssStage}.
+ *
+ * Most users do not need to instantiate this class. Renderers are created and
+ * destroyed by {@link Stage} as necessary.
+ */
+function CssCubeRenderer(root, quirks) {
+  this.constructor.super_.call(this, root, quirks, CubeTile);
+}
+
+inherits(CssCubeRenderer, CssBaseRenderer);
+
+
+CssCubeRenderer.prototype.calculateTransform = function(tile, texture, view) {
+
+  var padSize = this._browserQuirks.padSize;
+  var reverseLevelDepth = this._browserQuirks.reverseLevelDepth;
+  var perspectiveNudge = this._browserQuirks.perspectiveNudge;
+
+  var transform = '';
+
+  // Calculate the cube size for this level.
+  var cubeSize = reverseLevelDepth ? 256 - tile.z : tile.levelWidth();
+
+  // Place top left corner of tile at viewport center to serve as the center
+  // of rotation.
+  // We do not rotate about the center of the tile because, for some mysterious
+  // reason, this seems to occasionally crash Chrome.
+  var size = view.size();
+  var viewportWidth = size.width;
+  var viewportHeight = size.height;
+  transform += 'translate3d(' + decimal(viewportWidth/2) + 'px, ' + decimal(viewportHeight/2) + 'px, 0px) ';
+
+  // Set the perspective depth.
+  var perspective = 0.5 * viewportHeight / Math.tan(view.fov() / 2);
+  var distance = perspective + perspectiveNudge;
+  transform += 'perspective(' + decimal(perspective) + 'px) translateZ(' + decimal(distance) + 'px) ';
+
+  // Set the camera rotation.
+  var viewRotZ = -view.roll();
+  var viewRotX = -view.pitch();
+  var viewRotY = view.yaw();
+  transform += 'rotateZ(' + decimal(viewRotZ) + 'rad) rotateX(' + decimal(viewRotX) + 'rad) rotateY(' + decimal(viewRotY) + 'rad) ';
+
+  // Set the cube face orientation.
+  var tileRotX = -tile.rotX();
+  var tileRotY = tile.rotY();
+  transform += 'rotateX(' + decimal(tileRotX) + 'rad) rotateY(' + decimal(tileRotY) + 'rad) ';
+
+  // Move tile into its position within the cube face.
+  var cornerX = tile.centerX() - tile.scaleX() / 2;
+  var cornerY = -(tile.centerY() + tile.scaleY() / 2);
+  var translX = cornerX * cubeSize;
+  var translY = cornerY * cubeSize;
+  var translZ = -cubeSize / 2;
+  transform += 'translate3d(' + decimal(translX) + 'px, ' + decimal(translY) + 'px, ' + decimal(translZ) + 'px) ';
+
+  // Scale tile into correct size.
+  if (reverseLevelDepth) {
+    var scaleX = cubeSize * tile.scaleX() / tile.width();
+    var scaleY = cubeSize * tile.scaleY() / tile.height();
+    transform += 'scale(' + decimal(scaleX) + ', ' + decimal(scaleY) + ') ';
+  }
+
+  // Compensate for padding around the tile.
+  var padLeft = tile.padLeft() ? padSize : 0;
+  var padTop = tile.padTop() ? padSize : 0;
+  if (padLeft !== 0 || padTop !== 0) {
+    transform += 'translate3d(' + decimal(-padLeft) + 'px, ' + decimal(-padTop) + 'px, 0) ';
+  }
+
+  return transform;
+
+};
+
+
+module.exports = CssCubeRenderer;
+
+},{"../geometries/Cube":52,"../util/decimal":97,"../util/inherits":105,"./CssBase":60}],62:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var FlatTile = require('../geometries/Flat').TileClass;
+var CssBaseRenderer = require('./CssBase');
+var decimal = require('../util/decimal');
+var inherits = require('../util/inherits');
+
+
+/**
+ * @class CssFlatRenderer
+ * @implements Renderer
+ * @classdesc
+ *
+ * A renderer for {@link FlatGeometry} and {@link FlatView}, appropriate for a
+ * {@link CssStage}.
+ *
+ * Most users do not need to instantiate this class. Renderers are created and
+ * destroyed by {@link Stage} as necessary.
+ */
+function CssFlatRenderer(root, quirks) {
+  this.constructor.super_.call(this, root, quirks, FlatTile);
+}
+
+inherits(CssFlatRenderer, CssBaseRenderer);
+
+
+CssFlatRenderer.prototype.calculateTransform = function(tile, texture, view) {
+
+  var padSize = this._browserQuirks.padSize;
+
+  var transform = '';
+
+  // Place top left corner of tile at the center of the viewport.
+  var viewportWidth = view.width();
+  var viewportHeight = view.height();
+  transform += 'translateX(' + decimal(viewportWidth/2) + 'px) translateY(' + decimal(viewportHeight/2) + 'px) ';
+
+  // Determine the zoom factor.
+  var zoomX = viewportWidth / view._zoomX();
+  var zoomY = viewportHeight / view._zoomY();
+
+  // Move tile into its position within the image.
+  var cornerX = tile.centerX() - tile.scaleX() / 2 + 0.5;
+  var cornerY = 0.5 - tile.centerY() - tile.scaleY() / 2;
+  var translX = cornerX * zoomX;
+  var translY = cornerY * zoomY;
+  transform += 'translateX(' + decimal(translX) + 'px) translateY(' + decimal(translY) + 'px) ';
+
+  // Apply view offsets.
+  var offX = -view.x() * zoomX;
+  var offY = -view.y() * zoomY;
+  transform += 'translateX(' + decimal(offX) + 'px) translateY(' + decimal(offY) + 'px) ';
+
+  // Compensate for padding around the tile.
+  var padLeft = tile.padLeft() ? padSize : 0;
+  var padTop = tile.padTop() ? padSize : 0;
+  if (padLeft !== 0 || padTop !== 0) {
+    transform += 'translateX(' + decimal(-padLeft) + 'px) translateY(' + decimal(-padTop) + 'px) ';
+  }
+
+  // Scale tile into correct size.
+  var scaleX = zoomX / tile.levelWidth();
+  var scaleY = zoomY / tile.levelHeight();
+  transform += 'scale(' + decimal(scaleX) + ', ' + decimal(scaleY) + ') ';
+
+  return transform;
+
+};
+
+
+module.exports = CssFlatRenderer;
+
+},{"../geometries/Flat":54,"../util/decimal":97,"../util/inherits":105,"./CssBase":60}],63:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var Map = require('../collections/Map');
+var clearOwnProperties = require('../util/clearOwnProperties');
+
+
+function tileCmp(a, b) {
+  return a.cmp(b);
+}
+
+
+function FlashBaseRenderer(flashElement, layerId, quirks, tileClass) {
+
+  this._flashElement = flashElement;
+  this._layerId = layerId;
+  this._quirks = quirks;
+
+  this._tileList = [];
+
+  this._textureMap = new Map(tileClass.equals, tileClass.hash);
+
+  // Whether the Flash layer for this renderer has already been created
+  // by calling flashElement.createLayer(). Note that we cannot do this
+  // right here because Flash may not be initialized yet.
+  this._layerCreated = false;
+}
+
+
+FlashBaseRenderer.prototype.destroy = function() {
+  if (this._layerCreated) {
+    this._flashElement.destroyLayer(this._layerId);
+  }
+  clearOwnProperties(this);
+};
+
+
+FlashBaseRenderer.prototype.startLayer = function(layer, rect) {
+  if (!this._flashElement.isReady || !this._flashElement.isReady()) {
+    return;
+  }
+  if (!this._layerCreated) {
+    this._flashElement.createLayer(this._layerId);
+    this._layerCreated = true;
+  }
+  this._tileList.length = 0;
+  this._textureMap.clear();
+};
+
+
+FlashBaseRenderer.prototype.renderTile = function(tile, texture) {
+  this._tileList.push(tile);
+  this._textureMap.set(tile, texture);
+};
+
+
+FlashBaseRenderer.prototype.endLayer = function(layer, rect) {
+  if (!this._flashElement.isReady || !this._flashElement.isReady()) {
+    return;
+  }
+
+  // Sort tiles so they are rendered in an order coherent with their padding.
+  var tileList = this._tileList;
+  tileList.sort(tileCmp);
+
+  this._renderOnFlash(layer, rect);
+};
+
+
+module.exports = FlashBaseRenderer;
+
+},{"../collections/Map":32,"../util/clearOwnProperties":92}],64:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var FlashBaseRenderer = require('./FlashBase');
+var CubeTile = require('../geometries/Cube').TileClass;
+var inherits = require('../util/inherits');
+
+var radToDeg = require('../util/radToDeg');
+
+
+/**
+ * @class FlashCubeRenderer
+ * @implements Renderer
+ * @classdesc
+ *
+ * A renderer for {@link CubeGeometry} and {@link RectilinearView}, appropriate
+ * for a {@link FlashStage}.
+ *
+ * Most users do not need to instantiate this class. Renderers are created and
+ * destroyed by {@link Stage} as necessary.
+ */
+function FlashCubeRenderer(flashElement, layerId, quirks) {
+  this.constructor.super_.call(this, flashElement, layerId, quirks, CubeTile);
+  this._flashTileList = [];
+}
+
+inherits(FlashCubeRenderer, FlashBaseRenderer);
+
+
+FlashCubeRenderer.prototype._renderOnFlash = function(layer, rect) {
+
+  var flashElement = this._flashElement;
+  var layerId = this._layerId;
+  var padSize = this._quirks.padSize;
+
+  var tileList = this._tileList;
+  var textureMap = this._textureMap;
+
+  var flashTileList = this._flashTileList;
+  flashTileList.length = 0;
+
+  for (var i = 0; i < tileList.length; i++) {
+    var tile = tileList[i];
+    var texture = textureMap.get(tile);
+    if (!texture) {
+      throw new Error('Rendering tile with missing texture');
+    }
+
+    // Get padding sizes.
+    var padTop = tile.padTop() ? padSize : 0;
+    var padBottom = tile.padBottom() ? padSize : 0;
+    var padLeft = tile.padLeft() ? padSize : 0;
+    var padRight = tile.padRight() ? padSize : 0;
+
+    flashTileList.push({
+      textureId: texture._textureId,
+      face: tile.face,
+      width: tile.width(),
+      height: tile.height(),
+      centerX: tile.centerX(),
+      centerY: tile.centerY(),
+      rotX: radToDeg(tile.rotX()),
+      rotY: radToDeg(tile.rotY()),
+      levelSize: tile.levelWidth(),
+      padTop: padTop,
+      padBottom: padBottom,
+      padLeft: padLeft,
+      padRight: padRight
+    });
+  }
+
+  // Get viewport position and size.
+  var stageWidth = this._flashElement.clientWidth;
+  var stageHeight = this._flashElement.clientHeight;
+  var viewportX = stageWidth * rect.x;
+  var viewportY = stageHeight * rect.y;
+  var viewportWidth = stageWidth * rect.width;
+  var viewportHeight = stageHeight * rect.height;
+
+  // Get opacity value.
+  var opacity = 1.0;
+  var effects = layer.effects();
+  if (effects && effects.opacity != null) {
+    opacity = effects.opacity;
+  }
+
+  // Get view parameters.
+  var view = layer.view();
+  var yaw = view.yaw();
+  var pitch = view.pitch();
+  var roll = view.roll();
+  var fov = view.fov();
+
+  flashElement.drawCubeTiles(
+      layerId, viewportWidth, viewportHeight, viewportX, viewportY, opacity,
+      yaw, pitch, roll, fov, flashTileList);
+};
+
+
+module.exports = FlashCubeRenderer;
+
+},{"../geometries/Cube":52,"../util/inherits":105,"../util/radToDeg":112,"./FlashBase":63}],65:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var FlashBaseRenderer = require('./FlashBase');
+var FlatTile = require('../geometries/Flat').TileClass;
+var inherits = require('../util/inherits');
+
+
+/**
+ * @class FlashFlatRenderer
+ * @implements Renderer
+ * @classdesc
+ *
+ * A renderer for {@link FlatGeometry} and {@link FlatView}, appropriate for a
+ * {@link FlashStage}.
+ *
+ * Most users do not need to instantiate this class. Renderers are created and
+ * destroyed by {@link Stage} as necessary.
+ */
+function FlashFlatRenderer(flashElement, layerId, quirks) {
+  this.constructor.super_.call(this, flashElement, layerId, quirks, FlatTile);
+  this._flashTileList = [];
+}
+
+inherits(FlashFlatRenderer, FlashBaseRenderer);
+
+
+FlashFlatRenderer.prototype._renderOnFlash = function(layer, rect) {
+
+  var flashElement = this._flashElement;
+  var layerId = this._layerId;
+  var padSize = this._quirks.padSize;
+
+  var tileList = this._tileList;
+  var textureMap = this._textureMap;
+
+  var flashTileList = this._flashTileList;
+  flashTileList.length = 0;
+
+  for (var i = 0; i < tileList.length; i++) {
+    var tile = tileList[i];
+    var texture = textureMap.get(tile);
+    if (!texture) {
+      throw new Error('Rendering tile with missing texture');
+    }
+
+    // Get padding sizes.
+    var padTop = tile.padTop() ? padSize : 0;
+    var padBottom = tile.padBottom() ? padSize : 0;
+    var padLeft = tile.padLeft() ? padSize : 0;
+    var padRight = tile.padRight() ? padSize : 0;
+
+    flashTileList.push({
+      textureId: texture._textureId,
+      width: tile.width(),
+      height: tile.height(),
+      centerX: tile.centerX(),
+      centerY: tile.centerY(),
+      scaleX: tile.scaleX(),
+      scaleY: tile.scaleY(),
+      levelWidth: tile.levelWidth(),
+      levelHeight: tile.levelHeight(),
+      padTop: padTop,
+      padBottom: padBottom,
+      padLeft: padLeft,
+      padRight: padRight
+    });
+  }
+
+  // Get viewport position and size.
+  var stageWidth = this._flashElement.clientWidth;
+  var stageHeight = this._flashElement.clientHeight;
+  var viewportX = stageWidth * rect.x;
+  var viewportY = stageHeight * rect.y;
+  var viewportWidth = stageWidth * rect.width;
+  var viewportHeight = stageHeight * rect.height;
+
+  // Get opacity value.
+  var opacity = 1.0;
+  var effects = layer.effects();
+  if (effects && effects.opacity != null) {
+    opacity = effects.opacity;
+  }
+
+  // Get view parameters.
+  var view = layer.view();
+  var x = view.x();
+  var y = view.y();
+  var zoomX = view._zoomX();
+  var zoomY = view._zoomY();
+
+  flashElement.drawFlatTiles(
+      layerId, viewportWidth, viewportHeight, viewportX, viewportY, opacity,
+      x, y, zoomX, zoomY, flashTileList);
+};
+
+
+module.exports = FlashFlatRenderer;
+
+},{"../geometries/Flat":54,"../util/inherits":105,"./FlashBase":63}],66:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var mat4 = require('gl-matrix').mat4;
+var vec3 = require('gl-matrix').vec3;
+var clearOwnProperties = require('../util/clearOwnProperties');
+
+var WebGlCommon = require('./WebGlCommon');
+var createConstantBuffers = WebGlCommon.createConstantBuffers;
+var destroyConstantBuffers = WebGlCommon.destroyConstantBuffers;
+var createShaderProgram = WebGlCommon.createShaderProgram;
+var destroyShaderProgram = WebGlCommon.destroyShaderProgram;
+var enableAttributes = WebGlCommon.enableAttributes;
+var disableAttributes = WebGlCommon.disableAttributes;
+var setViewport = WebGlCommon.setViewport;
+var setupPixelEffectUniforms = WebGlCommon.setupPixelEffectUniforms;
+
+var setDepth = WebGlCommon.setDepth;
+var setTexture = WebGlCommon.setTexture;
+
+var vertexSrc = require('../shaders/vertexNormal');
+var fragmentSrc = require('../shaders/fragmentNormal');
+
+var vertexIndices = [0, 1, 2, 0, 2, 3];
+var vertexPositions = [-0.5, -0.5, 0.0, 0.5, -0.5, 0.0, 0.5, 0.5, 0.0, -0.5, 0.5, 0.0];
+var textureCoords = [0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0];
+
+var attribList = ['aVertexPosition', 'aTextureCoord'];
+var uniformList = [
+  'uDepth', 'uOpacity', 'uSampler', 'uProjMatrix', 'uViewportMatrix',
+  'uColorOffset', 'uColorMatrix'
+];
+
+
+function WebGlBaseRenderer(gl) {
+  this.gl = gl;
+
+  // The projection matrix positions the tiles in world space.
+  // We compute it in Javascript because lack of precision in the vertex shader
+  // causes seams to appear between adjacent tiles at large zoom levels.
+  this.projMatrix = mat4.create();
+
+  // The viewport matrix responsible for viewport clamping.
+  // See setViewport() for an explanation of how it works.
+  this.viewportMatrix = mat4.create();
+
+  // Translation and scale vectors for tiles.
+  this.translateVector = vec3.create();
+  this.scaleVector = vec3.create();
+
+  this.constantBuffers = createConstantBuffers(gl, vertexIndices, vertexPositions, textureCoords);
+
+  this.shaderProgram = createShaderProgram(gl, vertexSrc, fragmentSrc, attribList, uniformList);
+}
+
+WebGlBaseRenderer.prototype.destroy = function() {
+  destroyConstantBuffers(this.gl, this.constantBuffers);
+  destroyShaderProgram(this.gl, this.shaderProgram);
+  clearOwnProperties(this);
+};
+
+WebGlBaseRenderer.prototype.startLayer = function(layer, rect) {
+  var gl = this.gl;
+  var shaderProgram = this.shaderProgram;
+  var constantBuffers = this.constantBuffers;
+  var viewportMatrix = this.viewportMatrix;
+
+  gl.useProgram(shaderProgram);
+
+  enableAttributes(gl, shaderProgram);
+
+  var numAttributes = gl.getProgramParameter(shaderProgram, gl.ACTIVE_ATTRIBUTES);
+  for (var i = 0; i < numAttributes; i++) {
+    gl.enableVertexAttribArray(i);
+  }
+
+  setViewport(gl, layer, rect, viewportMatrix);
+  gl.uniformMatrix4fv(shaderProgram.uViewportMatrix, false, viewportMatrix);
+
+  gl.bindBuffer(gl.ARRAY_BUFFER, constantBuffers.vertexPositions);
+  gl.vertexAttribPointer(shaderProgram.aVertexPosition, 3, gl.FLOAT, gl.FALSE, 0, 0);
+  gl.bindBuffer(gl.ARRAY_BUFFER, constantBuffers.textureCoords);
+  gl.vertexAttribPointer(shaderProgram.aTextureCoord, 2, gl.FLOAT, gl.FALSE, 0, 0);
+
+  setupPixelEffectUniforms(gl, layer.effects(), {
+    opacity: shaderProgram.uOpacity,
+    colorOffset: shaderProgram.uColorOffset,
+    colorMatrix: shaderProgram.uColorMatrix
+  });
+};
+
+
+WebGlBaseRenderer.prototype.endLayer = function(layer, rect) {
+  var gl = this.gl;
+  var shaderProgram = this.shaderProgram;
+  disableAttributes(gl, shaderProgram);
+};
+
+
+WebGlBaseRenderer.prototype.renderTile = function(tile, texture, layer, layerZ) {
+  var gl = this.gl;
+  var shaderProgram = this.shaderProgram;
+  var constantBuffers = this.constantBuffers;
+  var projMatrix = this.projMatrix;
+  var translateVector = this.translateVector;
+  var scaleVector = this.scaleVector;
+
+  translateVector[0] = tile.centerX();
+  translateVector[1] = tile.centerY();
+  translateVector[2] = -0.5;
+
+  scaleVector[0] = tile.scaleX();
+  scaleVector[1] = tile.scaleY();
+  scaleVector[2] = 1.0;
+
+  mat4.copy(projMatrix, layer.view().projection());
+  mat4.rotateX(projMatrix, projMatrix, tile.rotX());
+  mat4.rotateY(projMatrix, projMatrix, tile.rotY());
+  mat4.translate(projMatrix, projMatrix, translateVector);
+  mat4.scale(projMatrix, projMatrix, scaleVector);
+
+  gl.uniformMatrix4fv(shaderProgram.uProjMatrix, false, projMatrix);
+
+  setDepth(gl, shaderProgram, layerZ, tile.z);
+
+  setTexture(gl, shaderProgram, texture);
+
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, constantBuffers.vertexIndices);
+  gl.drawElements(gl.TRIANGLES, vertexIndices.length, gl.UNSIGNED_SHORT, 0);
+};
+
+
+module.exports = WebGlBaseRenderer;
+
+},{"../shaders/fragmentNormal":73,"../shaders/vertexNormal":75,"../util/clearOwnProperties":92,"./WebGlCommon":67,"gl-matrix":3}],67:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+// These are used to set the WebGl depth for a tile.
+var MAX_LAYERS = 256; // Max number of layers per stage.
+var MAX_LEVELS = 256; // Max number of levels per layer.
+
+var clamp = require('../util/clamp');
+var vec4 = require('gl-matrix').vec4;
+var vec3 = require('gl-matrix').vec3;
+var mat4 = require('gl-matrix').mat4;
+
+
+function createShader(gl, type, src) {
+  var shader = gl.createShader(type);
+  gl.shaderSource(shader, src);
+  gl.compileShader(shader);
+  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+    throw gl.getShaderInfoLog(shader);
+  }
+  return shader;
+}
+
+
+function createShaderProgram(gl, vertexSrc, fragmentSrc, attribList, uniformList) {
+
+  var vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexSrc);
+  var fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentSrc);
+
+  var shaderProgram = gl.createProgram();
+
+  gl.attachShader(shaderProgram, vertexShader);
+  gl.attachShader(shaderProgram, fragmentShader);
+  gl.linkProgram(shaderProgram);
+
+  if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
+    throw gl.getProgramInfoLog(shaderProgram);
+  }
+
+  for (var i = 0; i < attribList.length; i++) {
+    var attrib = attribList[i];
+    shaderProgram[attrib] = gl.getAttribLocation(shaderProgram, attrib);
+    if (shaderProgram[attrib] === -1) {
+      throw new Error('Shader program has no ' + attrib + ' attribute');
+    }
+  }
+
+  for (var j = 0; j < uniformList.length; j++) {
+    var uniform = uniformList[j];
+    shaderProgram[uniform] = gl.getUniformLocation(shaderProgram, uniform);
+    if (shaderProgram[uniform] === -1) {
+      throw new Error('Shader program has no ' + uniform + ' uniform');
+    }
+  }
+
+  return shaderProgram;
+}
+
+
+function destroyShaderProgram(gl, shaderProgram) {
+  var shaderList = gl.getAttachedShaders(shaderProgram);
+  for (var i = 0; i < shaderList.length; i++) {
+    var shader = shaderList[i];
+    gl.detachShader(shaderProgram, shader);
+    gl.deleteShader(shader);
+  }
+  gl.deleteProgram(shaderProgram);
+}
+
+
+function createConstantBuffer(gl, target, usage, value) {
+  var buffer = gl.createBuffer();
+  gl.bindBuffer(target, buffer);
+  gl.bufferData(target, value, usage);
+  return buffer;
+}
+
+
+function createConstantBuffers(gl, vertexIndices, vertexPositions, textureCoords) {
+  return {
+    vertexIndices: createConstantBuffer(gl, gl.ELEMENT_ARRAY_BUFFER, gl.STATIC_DRAW, new Uint16Array(vertexIndices)),
+    vertexPositions: createConstantBuffer(gl, gl.ARRAY_BUFFER, gl.STATIC_DRAW, new Float32Array(vertexPositions)),
+    textureCoords: createConstantBuffer(gl, gl.ARRAY_BUFFER, gl.STATIC_DRAW, new Float32Array(textureCoords))
+  };
+}
+
+
+function destroyConstantBuffers(gl, constantBuffers) {
+  gl.deleteBuffer(constantBuffers.vertexIndices);
+  gl.deleteBuffer(constantBuffers.vertexPositions);
+  gl.deleteBuffer(constantBuffers.textureCoords);
+}
+
+
+function enableAttributes(gl, shaderProgram) {
+  var numAttrs = gl.getProgramParameter(shaderProgram, gl.ACTIVE_ATTRIBUTES);
+  for (var i = 0; i < numAttrs; i++) {
+    gl.enableVertexAttribArray(i);
+  }
+}
+
+
+function disableAttributes(gl, shaderProgram) {
+  var numAttrs = gl.getProgramParameter(shaderProgram, gl.ACTIVE_ATTRIBUTES);
+  for (var i = 0; i < numAttrs; i++) {
+    gl.disableVertexAttribArray(i);
+  }
+}
+
+
+function setTexture(gl, shaderProgram, texture) {
+  gl.activeTexture(gl.TEXTURE0);
+  gl.bindTexture(gl.TEXTURE_2D, texture._texture);
+  gl.uniform1i(shaderProgram.uSampler, 0);
+}
+
+
+function setDepth(gl, shaderProgram, layerZ, tileZ) {
+  var depth = (((layerZ + 1) * MAX_LEVELS) - tileZ) / (MAX_LEVELS * MAX_LAYERS);
+  gl.uniform1f(shaderProgram.uDepth, depth);
+}
+
+
+var defaultOpacity = 1.0;
+var defaultColorOffset = vec4.create();
+var defaultColorMatrix = mat4.create();
+mat4.identity(defaultColorMatrix);
+
+function setupPixelEffectUniforms(gl, effects, uniforms) {
+  var opacity = defaultOpacity;
+  if (effects && effects.opacity != null) {
+    opacity = effects.opacity;
+  }
+  gl.uniform1f(uniforms.opacity, opacity);
+
+  var colorOffset = defaultColorOffset;
+  if (effects && effects.colorOffset) {
+    colorOffset = effects.colorOffset;
+  }
+  gl.uniform4fv(uniforms.colorOffset, colorOffset);
+
+  var colorMatrix = defaultColorMatrix;
+  if (effects && effects.colorMatrix) {
+    colorMatrix = effects.colorMatrix;
+  }
+  gl.uniformMatrix4fv(uniforms.colorMatrix, false, colorMatrix);
+}
+
+
+// Temporary vectors for setViewport.
+var translateVector = vec3.create();
+var scaleVector = vec3.create();
+
+
+// Sets the WebGL viewport and returns a viewport clamping compensation matrix.
+//
+// Negative viewport origin coordinates cause rendering issues. Letting the
+// viewport dimensions extend beyond the visible area do not seem to cause
+// rendering issues, but they may still have an impact on performance.
+// Therefore, when the scene's rect is not fully contained in the rendering
+// area, we clamp the viewport to the rendering area, and return a compensation
+// matrix to scale and translate vertices accordingly.
+function setViewport(gl, layer, rect, viewportMatrix) {
+  if (rect.x === 0 && rect.width === 1 && rect.y === 0 && rect.height === 1) {
+    // Fast path for full rect.
+    gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
+    mat4.identity(viewportMatrix);
+    return;
+  }
+
+  var offsetX = rect.x;
+  var clampedOffsetX = clamp(offsetX, 0, 1);
+  var leftExcess = clampedOffsetX - offsetX;
+  var maxClampedWidth = 1 - clampedOffsetX;
+  var clampedWidth = clamp(rect.width - leftExcess, 0, maxClampedWidth);
+  var rightExcess = rect.width - clampedWidth;
+
+  var offsetY = 1 - rect.height - rect.y;
+  var clampedOffsetY = clamp(offsetY, 0, 1);
+  var bottomExcess = clampedOffsetY - offsetY;
+  var maxClampedHeight = 1 - clampedOffsetY;
+  var clampedHeight = clamp(rect.height - bottomExcess, 0, maxClampedHeight);
+  var topExcess = rect.height - clampedHeight;
+
+  vec3.set(
+    scaleVector,
+    rect.width / clampedWidth,
+    rect.height / clampedHeight,
+    1);
+
+  vec3.set(
+    translateVector,
+    (rightExcess - leftExcess) / clampedWidth,
+    (topExcess - bottomExcess) / clampedHeight,
+    0);
+
+  mat4.identity(viewportMatrix);
+  mat4.translate(viewportMatrix, viewportMatrix, translateVector);
+  mat4.scale(viewportMatrix, viewportMatrix, scaleVector);
+
+  gl.viewport(gl.drawingBufferWidth * clampedOffsetX,
+              gl.drawingBufferHeight * clampedOffsetY,
+              gl.drawingBufferWidth * clampedWidth,
+              gl.drawingBufferHeight * clampedHeight);
+}
+
+module.exports = {
+  createShaderProgram: createShaderProgram,
+  destroyShaderProgram: destroyShaderProgram,
+  createConstantBuffers: createConstantBuffers,
+  destroyConstantBuffers: destroyConstantBuffers,
+  enableAttributes: enableAttributes,
+  disableAttributes: disableAttributes,
+  setTexture: setTexture,
+  setDepth: setDepth,
+  setViewport: setViewport,
+  setupPixelEffectUniforms: setupPixelEffectUniforms
+};
+
+},{"../util/clamp":91,"gl-matrix":3}],68:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var WebGlBaseRenderer = require('./WebGlBase');
+var inherits = require('../util/inherits');
+
+/**
+ * @class WebGlCubeRenderer
+ * @implements Renderer
+ * @classdesc
+ *
+ * A renderer for {@link CubeGeometry} and {@link RectilinearView}, appropriate
+ * for a {@link WebGlStage}.
+ *
+ * Most users do not need to instantiate this class. Renderers are created and
+ * destroyed by {@link Stage} as necessary.
+ */
+function WebGlCubeRenderer() {
+  this.constructor.super_.apply(this, arguments);
+}
+
+inherits(WebGlCubeRenderer, WebGlBaseRenderer);
+
+module.exports = WebGlCubeRenderer;
+
+},{"../util/inherits":105,"./WebGlBase":66}],69:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var mat4 = require('gl-matrix').mat4;
+var clearOwnProperties = require('../util/clearOwnProperties');
+
+var WebGlCommon = require('./WebGlCommon');
+var createConstantBuffers = WebGlCommon.createConstantBuffers;
+var destroyConstantBuffers = WebGlCommon.destroyConstantBuffers;
+var createShaderProgram = WebGlCommon.createShaderProgram;
+var destroyShaderProgram = WebGlCommon.destroyShaderProgram;
+var enableAttributes = WebGlCommon.enableAttributes;
+var disableAttributes = WebGlCommon.disableAttributes;
+var setViewport = WebGlCommon.setViewport;
+var setupPixelEffectUniforms = WebGlCommon.setupPixelEffectUniforms;
+
+var setDepth = WebGlCommon.setDepth;
+var setTexture = WebGlCommon.setTexture;
+
+var vertexSrc = require('../shaders/vertexEquirect');
+var fragmentSrc = require('../shaders/fragmentEquirect');
+
+var vertexIndices = [0, 1, 2, 0, 2, 3];
+var vertexPositions = [-1.0, -1.0, 0.0, 1.0, -1.0, 0.0, 1.0, 1.0, 0.0, -1.0, 1.0, 0.0];
+var textureCoords = [0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0];
+
+var attribList = ['aVertexPosition'];
+var uniformList = [
+  'uDepth', 'uOpacity', 'uSampler', 'uInvProjMatrix', 'uViewportMatrix',
+  'uColorOffset', 'uColorMatrix', 'uTextureX', 'uTextureY', 'uTextureWidth',
+  'uTextureHeight'
+];
+
+
+/**
+ * @class WebGlEquirectRenderer
+ * @implements Renderer
+ * @classdesc
+ *
+ * A renderer for {@link EquirectGeometry} and {@link RectilinearView},
+ * appropriate for {@link WebGlStage}.
+ *
+ * Most users do not need to instantiate this class. Renderers are created and
+ * destroyed by {@link Stage} as necessary.
+ */
+function WebGlEquirectRenderer(gl) {
+  this.gl = gl;
+
+  // The inverse projection matrix.
+  this.invProjMatrix = mat4.create();
+
+  // The viewport matrix responsible for viewport clamping.
+  // See setViewport() for an explanation of how it works.
+  this.viewportMatrix = mat4.create();
+
+  this.constantBuffers = createConstantBuffers(gl, vertexIndices, vertexPositions, textureCoords);
+
+  this.shaderProgram = createShaderProgram(gl, vertexSrc, fragmentSrc, attribList, uniformList);
+}
+
+WebGlEquirectRenderer.prototype.destroy = function() {
+  destroyConstantBuffers(this.gl, this.constantBuffers);
+  destroyShaderProgram(this.gl, this.shaderProgram);
+  clearOwnProperties(this);
+};
+
+
+WebGlEquirectRenderer.prototype.startLayer = function(layer, rect) {
+  var gl = this.gl;
+  var shaderProgram = this.shaderProgram;
+  var constantBuffers = this.constantBuffers;
+  var invProjMatrix = this.invProjMatrix;
+  var viewportMatrix = this.viewportMatrix;
+
+  gl.useProgram(shaderProgram);
+
+  enableAttributes(gl, shaderProgram);
+
+  setViewport(gl, layer, rect, viewportMatrix);
+  gl.uniformMatrix4fv(shaderProgram.uViewportMatrix, false, viewportMatrix);
+
+  gl.bindBuffer(gl.ARRAY_BUFFER, constantBuffers.vertexPositions);
+  gl.vertexAttribPointer(shaderProgram.aVertexPosition, 3, gl.FLOAT, gl.FALSE, 0, 0);
+  gl.bindBuffer(gl.ARRAY_BUFFER, constantBuffers.textureCoords);
+
+  // Compute and set the inverse projection matrix.
+  mat4.copy(invProjMatrix, layer.view().projection());
+  mat4.invert(invProjMatrix, invProjMatrix);
+
+  gl.uniformMatrix4fv(shaderProgram.uInvProjMatrix, false, invProjMatrix);
+
+  // Compute and set the texture scale and crop offsets.
+  var textureCrop = layer.effects().textureCrop || {};
+  var textureX = textureCrop.x != null ? textureCrop.x : 0;
+  var textureY = textureCrop.y != null ? textureCrop.y : 0;
+  var textureWidth = textureCrop.width != null ? textureCrop.width : 1;
+  var textureHeight = textureCrop.height != null ? textureCrop.height : 1;
+
+  gl.uniform1f(shaderProgram.uTextureX, textureX);
+  gl.uniform1f(shaderProgram.uTextureY, textureY);
+  gl.uniform1f(shaderProgram.uTextureWidth, textureWidth);
+  gl.uniform1f(shaderProgram.uTextureHeight, textureHeight);
+
+  setupPixelEffectUniforms(gl, layer.effects(), {
+    opacity: shaderProgram.uOpacity,
+    colorOffset: shaderProgram.uColorOffset,
+    colorMatrix: shaderProgram.uColorMatrix
+  });
+};
+
+
+WebGlEquirectRenderer.prototype.endLayer = function(layer, rect) {
+  var gl = this.gl;
+  var shaderProgram = this.shaderProgram;
+  disableAttributes(gl, shaderProgram);
+};
+
+
+WebGlEquirectRenderer.prototype.renderTile = function(tile, texture, layer, layerZ) {
+  var gl = this.gl;
+  var shaderProgram = this.shaderProgram;
+  var constantBuffers = this.constantBuffers;
+
+  setDepth(gl, shaderProgram, layerZ, tile.z);
+
+  setTexture(gl, shaderProgram, texture);
+
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, constantBuffers.vertexIndices);
+  gl.drawElements(gl.TRIANGLES, vertexIndices.length, gl.UNSIGNED_SHORT, 0);
+};
+
+
+module.exports = WebGlEquirectRenderer;
+
+},{"../shaders/fragmentEquirect":72,"../shaders/vertexEquirect":74,"../util/clearOwnProperties":92,"./WebGlCommon":67,"gl-matrix":3}],70:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var WebGlBaseRenderer = require('./WebGlBase');
+var inherits = require('../util/inherits');
+
+/**
+ * @class WebGlFlatRenderer
+ * @implements Renderer
+ * @classdesc
+ *
+ * A renderer for {@link FlatGeometry} and {@link FlatView}, appropriate for a
+ * {@link WebGlStage}.
+ *
+ * Most users do not need to instantiate this class. Renderers are created and
+ * destroyed by {@link Stage} as necessary.
+ */
+function WebGlFlatRenderer() {
+  this.constructor.super_.apply(this, arguments);
+}
+
+inherits(WebGlFlatRenderer, WebGlBaseRenderer);
+
+module.exports = WebGlFlatRenderer;
+
+},{"../util/inherits":105,"./WebGlBase":66}],71:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var WebGlCube = require('./WebGlCube');
+var WebGlFlat = require('./WebGlFlat');
+var WebGlEquirect = require('./WebGlEquirect');
+
+var CssCube = require('./CssCube');
+var CssFlat = require('./CssFlat');
+
+var FlashCube = require('./FlashCube');
+var FlashFlat = require('./FlashFlat');
+
+/**
+ * Registers all known renderers for the given stage type into that stage.
+ * Most users will not need to register renderers, as {@link Viewer} does it for
+ * them.
+ *
+ * @param {Stage} stage The stage where the renderers are to be registered.
+ * @throws An error if the stage type is unknown.
+ */
+function registerDefaultRenderers(stage) {
+  switch (stage.type) {
+    case 'webgl':
+      stage.registerRenderer('flat', 'flat', WebGlFlat);
+      stage.registerRenderer('cube', 'rectilinear', WebGlCube);
+      stage.registerRenderer('equirect', 'rectilinear', WebGlEquirect);
+      break;
+    case 'css':
+      stage.registerRenderer('flat', 'flat', CssFlat);
+      stage.registerRenderer('cube', 'rectilinear', CssCube);
+      break;
+    case 'flash':
+      stage.registerRenderer('flat', 'flat', FlashFlat);
+      stage.registerRenderer('cube', 'rectilinear', FlashCube);
+      break;
+    default:
+      throw new Error('Unknown stage type: ' + stage.type);
+  }
+}
+
+module.exports = registerDefaultRenderers;
+
+},{"./CssCube":61,"./CssFlat":62,"./FlashCube":64,"./FlashFlat":65,"./WebGlCube":68,"./WebGlEquirect":69,"./WebGlFlat":70}],72:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+module.exports = [
+'#ifdef GL_FRAGMENT_PRECISION_HIGH',
+'precision highp float;',
+'#else',
+'precision mediump float',
+'#endif',
+
+'uniform sampler2D uSampler;',
+'uniform float uOpacity;',
+'uniform float uTextureX;',
+'uniform float uTextureY;',
+'uniform float uTextureWidth;',
+'uniform float uTextureHeight;',
+'uniform vec4 uColorOffset;',
+'uniform mat4 uColorMatrix;',
+
+'varying vec4 vRay;',
+
+'const float PI = 3.14159265358979323846264;',
+
+'void main(void) {',
+'  float r = inversesqrt(vRay.x * vRay.x + vRay.y * vRay.y + vRay.z * vRay.z);',
+'  float phi  = acos(vRay.y * r);',
+'  float theta = atan(vRay.x, -1.0*vRay.z);',
+'  float s = 0.5 + 0.5 * theta / PI;',
+'  float t = 1.0 - phi / PI;',
+
+'  s = s * uTextureWidth + uTextureX;',
+'  t = t * uTextureHeight + uTextureY;',
+
+'  vec4 color = texture2D(uSampler, vec2(s, t)) * uColorMatrix + uColorOffset;',
+'  gl_FragColor = vec4(color.rgba * uOpacity);',
+'}'
+].join('\n');
+
+},{}],73:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+module.exports = [
+'#ifdef GL_FRAGMENT_PRECISION_HIGH',
+'precision highp float;',
+'#else',
+'precision mediump float;',
+'#endif',
+
+'uniform sampler2D uSampler;',
+'uniform float uOpacity;',
+'uniform vec4 uColorOffset;',
+'uniform mat4 uColorMatrix;',
+
+'varying vec2 vTextureCoord;',
+
+'void main(void) {',
+'  vec4 color = texture2D(uSampler, vTextureCoord) * uColorMatrix + uColorOffset;',
+'  gl_FragColor = vec4(color.rgba * uOpacity);',
+'}'
+].join('\n');
+
+},{}],74:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+module.exports = [
+'attribute vec3 aVertexPosition;',
+
+'uniform float uDepth;',
+'uniform mat4 uViewportMatrix;',
+'uniform mat4 uInvProjMatrix;',
+
+'varying vec4 vRay;',
+
+'void main(void) {',
+'  vRay = uInvProjMatrix * vec4(aVertexPosition.xy, 1.0, 1.0);',
+'  gl_Position = uViewportMatrix * vec4(aVertexPosition.xy, uDepth, 1.0);',
+'}'
+].join('\n');
+
+},{}],75:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+module.exports = [
+'attribute vec3 aVertexPosition;',
+'attribute vec2 aTextureCoord;',
+
+'uniform float uDepth;',
+'uniform mat4 uViewportMatrix;',
+'uniform mat4 uProjMatrix;',
+
+'varying vec2 vTextureCoord;',
+
+'void main(void) {',
+'  gl_Position = uViewportMatrix * uProjMatrix * vec4(aVertexPosition.xy, 0.0, 1.0);',
+'  gl_Position.z = uDepth * gl_Position.w;',
+'  vTextureCoord = aTextureCoord;',
+'}'
+].join('\n');
+
+},{}],76:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var eventEmitter = require('minimal-event-emitter');
+var NetworkError = require('../NetworkError');
+var WorkPool = require('../collections/WorkPool');
+var chain = require('../util/chain');
+var delay = require('../util/delay');
+var clock = require('../util/clock');
+
+
+// Map template properties to their corresponding tile properties.
+var templateProperties = {
+  x: 'x',
+  y: 'y',
+  z: 'z',
+  f: 'face'
+};
+
+// Default face order for cube maps.
+var defaultCubeMapFaceOrder = 'bdflru';
+
+// Default maximum number of concurrent requests.
+var defaultConcurrency = 4;
+
+// Default milliseconds to wait before retrying failed requests.
+var defaultRetryDelay = 10000;
+
+
+/**
+ * @class ImageUrlSource
+ * @implements Source
+ * @classdesc
+ *
+ * A {@link Source} that loads {@link Asset assets} from images given a URL and
+ * a crop rectangle.
+ *
+ * @param {Function} sourceFromTile Function that receives a tile and returns
+ * a `{ url, rect }` object, where `url` is an image URL and `rect`, when
+ * present, is an `{ x, y, width, height }` object in normalized coordinates
+ * denoting the portion of the image to use.
+ * @param {Object} opts
+ * @param {number} [opts.concurrency=4] Maximum number of tiles to request at
+ *     the same time. The limit is per {@link ImageSourceUrl} instance.
+ * @param {number} [opts.retryDelay=10000] Time in milliseconds to wait before
+ *     retrying a failed request.
+ */
+function ImageUrlSource(sourceFromTile, opts) {
+
+  opts = opts ? opts : {};
+
+  this._loadPool = new WorkPool({
+    concurrency: opts.concurrency || defaultConcurrency
+  });
+
+  this._retryDelay = opts.retryDelay || defaultRetryDelay;
+  this._retryMap = {};
+
+  this._sourceFromTile = sourceFromTile;
+}
+
+eventEmitter(ImageUrlSource);
+
+
+ImageUrlSource.prototype.loadAsset = function(stage, tile, done) {
+
+  var self = this;
+
+  var retryDelay = this._retryDelay;
+  var retryMap = this._retryMap;
+
+  var tileSource = this._sourceFromTile(tile);
+  var url = tileSource.url;
+  var rect = tileSource.rect;
+
+  var loadImage = stage.loadImage.bind(stage, url, rect);
+
+  var loadFn = function(done) {
+    // TODO: Deduplicate load requests for the same URL. Although the browser
+    // might be smart enough to avoid duplicate requests, they are still unduly
+    // impacted by the concurrency parameter.
+    return self._loadPool.push(loadImage, function(err, asset) {
+      if (err) {
+        if (err instanceof NetworkError) {
+          // If a network error occurred, wait before retrying.
+          retryMap[url] = clock();
+          self.emit('networkError', asset, err);
+        }
+        done(err, tile);
+      } else {
+        // On a successful fetch, forget the previous timeout.
+        delete retryMap[url];
+        done(null, tile, asset);
+      }
+    });
+  };
+
+  // Check whether we are retrying a failed request.
+  var delayAmount;
+  var lastTime = retryMap[url];
+  if (lastTime != null) {
+    var now = clock();
+    var elapsed = now - lastTime;
+    if (elapsed < retryDelay) {
+      // Wait before retrying.
+      delayAmount = retryDelay - elapsed;
+    } else {
+      // Retry timeout expired; perform the request at once.
+      delayAmount = 0;
+      delete retryMap[url];
+    }
+  }
+
+  var delayFn = delay.bind(null, delayAmount);
+
+  return chain(delayFn, loadFn)(done);
+};
+
+
+/**
+ * Creates an ImageUrlSource from a string template.
+ *
+ * @param {String} url Tile URL template, which may contain the following
+ *    placeholders:
+ *    - `{f}` : tile face (one of `b`, `d`, `f`, `l`, `r`, `u`)
+ *    - `{z}` : tile level index (0 is the smallest level)
+ *    - `{x}` : tile horizontal index
+ *    - `{y}` : tile vertical index
+ * @param {Object} opts In addition to the options already supported by the
+ *     {@link ImageUrlSource} constructor.
+ * @param {String} opts.cubeMapPreviewUrl URL to use as the preview level.
+ *     This must be a single image containing six cube faces laid out
+ *     vertically according to the face order parameter.
+ * @param {String} [opts.cubeMapPreviewFaceOrder='bdflru'] Face order within
+ *     the preview image.
+ */
+ImageUrlSource.fromString = function(url, opts) {
+  opts = opts || {};
+
+  var faceOrder = opts && opts.cubeMapPreviewFaceOrder || defaultCubeMapFaceOrder;
+
+  var urlFn = opts.cubeMapPreviewUrl ? withPreview : withoutPreview;
+
+  return new ImageUrlSource(urlFn, opts);
+
+  function withoutPreview(tile) {
+    var tileUrl = url;
+
+    for (var property in templateProperties) {
+      var templateProperty = templateProperties[property];
+      var regExp = propertyRegExp(property);
+      var valueFromTile = tile.hasOwnProperty(templateProperty) ? tile[templateProperty] : '';
+      tileUrl = tileUrl.replace(regExp, valueFromTile);
+    }
+
+    return { url: tileUrl };
+  }
+
+  function withPreview(tile) {
+    if (tile.z === 0) {
+      return cubeMapUrl(tile);
+    }
+    else {
+      return withoutPreview(tile);
+    }
+  }
+
+  function cubeMapUrl(tile) {
+    var y = faceOrder.indexOf(tile.face) / 6;
+    return {
+      url: opts.cubeMapPreviewUrl,
+      rect: { x: 0, y: y, width: 1, height: 1/6 }
+    };
+  }
+};
+
+function propertyRegExp(property) {
+  var regExpStr = '\\{(' + property + ')\\}';
+  return new RegExp(regExpStr, 'g');
+}
+
+module.exports = ImageUrlSource;
+
+},{"../NetworkError":18,"../collections/WorkPool":34,"../util/chain":90,"../util/clock":93,"../util/delay":101,"minimal-event-emitter":14}],77:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+/**
+ * @class SingleAssetSource
+ * @implements Source
+ * @classdesc
+ *
+ * A {@link Source} wrapping a DOM element to be provided as an {@link Asset}.
+ *
+ * @param {Asset} asset The DOM element.
+*/
+function SingleAssetSource(asset) {
+  this._asset = asset;
+}
+
+SingleAssetSource.prototype.asset = function() {
+  return this._asset;
+};
+
+SingleAssetSource.prototype.loadAsset = function(stage, tile, done) {
+  var self = this;
+
+  var timeout = setTimeout(function() {
+    done(null, tile, self._asset);
+  }, 0);
+
+  function cancel() {
+    clearTimeout(timeout);
+    done.apply(null, arguments);
+  }
+
+  return cancel;
+};
+
+module.exports = SingleAssetSource;
+
+},{}],78:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var Stage = require('./Stage');
+var HtmlImageLoader = require('../loaders/HtmlImage');
+var cssSupported = require('../support/Css');
+var browser = require('bowser');
+var inherits = require('../util/inherits');
+var setAbsolute = require('../util/dom').setAbsolute;
+var setFullSize = require('../util/dom').setFullSize;
+var setNullTransformOrigin = require('../util/dom').setNullTransformOrigin;
+var clearOwnProperties = require('../util/clearOwnProperties');
+
+
+// Browser-specific workarounds.
+var browserQuirks = {
+
+  // On most browsers we need to pad the tile edges with repeated pixels so
+  // that the borders between neighboring tiles aren't apparent.
+  // On iOS this isn't required, but we must disable it because the padding is
+  // incorrectly rendered on top of the neighboring tile.
+  padSize: browser.ios ? 0 : 3,
+
+  // In order to prevent fallback tiles from overlapping their children, iOS
+  // requires smaller zoom levels to be placed below larger zoom levels in
+  // the CSS 3D coordinate space.
+  reverseLevelDepth: browser.ios,
+
+  // A null transform on the layer element is required so that transitions
+  // between layers work on iOS.
+  useNullTransform: browser.ios,
+
+  // On Webkit and Gecko browsers, some tiles become invisible at certain
+  // angles, usually non-floor tiles when looking straight down. Setting the
+  // translateZ following the perspective transform to a slightly larger value
+  // than the latter seems to work around this glitch.
+  perspectiveNudge: browser.webkit || browser.gecko ? 0.001 : 0
+
+};
+
+
+/**
+ * @class CssStage
+ * @extends Stage
+ * @classdesc
+ *
+ * A {@link Stage} implementation using CSS 3D Transforms.
+ */
+function CssStage(opts) {
+  this.constructor.super_.call(this, opts);
+
+  this._loader = new HtmlImageLoader(this);
+
+  this._domElement = document.createElement('div');
+
+  setAbsolute(this._domElement);
+  setFullSize(this._domElement);
+
+  // N.B. the CSS stage requires device adaptation to be configured through
+  // the <meta name="viewport"> tag on the containing document.
+  // Failure to do so will cause clipping and padding bugs to occur,
+  // at least on iOS <= 7.
+}
+
+inherits(CssStage, Stage);
+
+
+/**
+ * Destructor.
+ */
+CssStage.prototype.destroy = function() {
+  // Delegate clearing own properties to the Stage destructor.
+  this.constructor.super_.prototype.destroy.call(this);
+};
+
+
+CssStage.supported = function() {
+  return cssSupported();
+};
+
+
+/**
+ * Returns the underlying DOM element.
+ *
+ * @return {Element}
+ */
+CssStage.prototype.domElement = function() {
+  return this._domElement;
+};
+
+
+CssStage.prototype.setSizeForType = function() {};
+
+
+CssStage.prototype.loadImage = function(url, rect, done) {
+  return this._loader.loadImage(url, rect, done);
+};
+
+
+CssStage.prototype.validateLayer = function(layer) {
+  return; // always valid
+};
+
+
+CssStage.prototype.createRenderer = function(Renderer) {
+  return new Renderer(this._domElement, browserQuirks);
+};
+
+CssStage.prototype.destroyRenderer = function(renderer) {
+  renderer.destroy();
+};
+
+
+CssStage.prototype.startFrame = function() {};
+
+
+CssStage.prototype.endFrame = function() {};
+
+
+CssStage.prototype.takeSnapshot = function() {
+  throw new Error('CssStage: takeSnapshot not implemented');
+};
+
+
+CssStage.type = CssStage.prototype.type = 'css';
+
+
+function CssTexture(stage, tile, asset) {
+
+  var canvas = document.createElement('canvas');
+  setAbsolute(canvas);
+  setNullTransformOrigin(canvas);
+
+  this._canvas = canvas;
+  this._timestamp = null;
+  this.refresh(tile, asset);
+
+}
+
+
+CssTexture.prototype.refresh = function(tile, asset) {
+
+  // Check whether the texture needs to be updated.
+  var timestamp = asset.timestamp();
+  if (timestamp === this._timestamp) {
+    return;
+  }
+  this._timestamp = timestamp;
+
+  var canvas = this._canvas;
+  var ctx = canvas.getContext('2d');
+
+  // Get asset element.
+  var element = asset.element();
+
+  // Get tile dimensions.
+  var tileWidth = tile.width();
+  var tileHeight = tile.height();
+
+  // Get padding sizes.
+  var padSize = browserQuirks.padSize;
+  var padTop = tile.padTop() ? padSize : 0;
+  var padBottom = tile.padBottom() ? padSize : 0;
+  var padLeft = tile.padLeft() ? padSize : 0;
+  var padRight = tile.padRight() ? padSize : 0;
+
+  // Set canvas size.
+  canvas.width = padLeft + tileWidth + padRight;
+  canvas.height = padTop + tileHeight + padBottom;
+
+  // Draw image.
+  ctx.drawImage(element, padLeft, padTop, tileWidth, tileHeight);
+
+  var i;
+
+  // Draw top padding.
+  for (i = 0; i < padTop; i++) {
+    ctx.drawImage(canvas, padLeft, padTop, tileWidth, 1,
+                          padLeft, i, tileWidth, 1);
+  }
+
+  // Draw left padding.
+  for (i = 0; i < padLeft; i++) {
+    ctx.drawImage(canvas, padLeft, padTop, 1, tileHeight,
+                          i, padTop, 1, tileHeight);
+  }
+
+  // Draw bottom padding.
+  for (i = 0; i < padBottom; i++) {
+    ctx.drawImage(canvas, padLeft, padTop + tileHeight - 1, tileWidth, 1,
+                          padLeft, padTop + tileHeight + i, tileWidth, 1);
+  }
+
+  // Draw right padding.
+  for (i = 0; i < padRight; i++) {
+    ctx.drawImage(canvas, padLeft + tileWidth - 1, padTop, 1, tileHeight,
+                          padLeft + tileWidth + i, padTop, 1, tileHeight);
+  }
+
+};
+
+
+CssTexture.prototype.destroy = function() {
+  // TODO: investigate whether keeping a pool of canvases instead of
+  // creating new ones on demand improves performance.
+  clearOwnProperties(this);
+};
+
+
+CssStage.TextureClass = CssStage.prototype.TextureClass = CssTexture;
+
+
+module.exports = CssStage;
+
+},{"../loaders/HtmlImage":59,"../support/Css":83,"../util/clearOwnProperties":92,"../util/dom":102,"../util/inherits":105,"./Stage":81,"bowser":1}],79:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var Stage = require('./Stage');
+var FlashImageLoader = require('../loaders/FlashImage');
+var flashSupported = require('../support/Flash');
+var WorkQueue = require('../collections/WorkQueue');
+var inherits = require('../util/inherits');
+var defer = require('../util/defer');
+var setAbsolute = require('../util/dom').setAbsolute;
+var setFullSize = require('../util/dom').setFullSize;
+var setBlocking = require('../util/dom').setBlocking;
+var clearOwnProperties = require('../util/clearOwnProperties');
+
+// Default Flash wmode.
+var defaultWMode = 'transparent';
+
+// Default Flash SWF path. By default, expect the SWF to be named marzipano.swf
+// and located in the same directory as the current script. The default path
+// may be overridden by passing the `swfPath` option into the Viewer or Stage
+// constructor.
+var defaultSwfPath = function() {
+  var script = document.currentScript;
+  if (!script) {
+    // This will produce the wrong result if the current script is loaded with
+    // the `async` or `defer` options, or exec'ed from a string. The user is
+    // expected to supply a custom `swfPath` in these cases.
+    var scripts = document.getElementsByTagName('script');
+    script = scripts.length ? scripts[scripts.length-1] : null;
+  }
+  if (!script) {
+    return null;
+  }
+  var path = script.src;
+  var slash = path.lastIndexOf('/');
+  if (slash >= 0) {
+    path = path.slice(0, slash + 1);
+  } else {
+    path = '';
+  }
+  return path + 'marzipano.swf';
+}();
+
+// Callbacks must be exposed in a global object to be called from Flash.
+// The global object maps each stage ID into the respective callbacks.
+// To prevent multiple Marzipano instances from clobbering the callbacks
+// for each other's stages, the next available stage ID must be shared among
+// the instances. We cache this value in a special property of the global
+// callback object.
+var callbackObjectName = 'MarzipanoFlashCallbackMap';
+if (!(callbackObjectName in window)) {
+  window[callbackObjectName] = { __next: 0 };
+}
+
+// Get the next available Flash stage ID.
+function nextFlashStageId() {
+  return window[callbackObjectName].__next++;
+}
+
+// Names of the callbacks called from Flash. Presently there is only one.
+var callbackNames = [ 'imageLoaded' ];
+
+// Browser-specific workarounds.
+var flashQuirks = {
+  // How many repeated pixels to add around tile edges to suppress visible seams.
+  padSize: 3
+};
+
+/**
+ * @class FlashStage
+ * @extends Stage
+ * @classdesc
+ *
+ * A {@link Stage} implementation using Flash.
+ *
+ * @param {Object} opts
+ * @param {String} [wmode='transparent'] Flash `wmode` property. Read
+ *   [this](http://helpx.adobe.com/flash/kb/flash-object-embed-tag-attributes.html)
+ *   for more information.
+ * @param {String} swfPath Path to the SWF file. By default, the SWF is
+ *   assumed to be named `marzipano.swf` and located in the same directory
+ *   as `marzipano.js`.
+ */
+function FlashStage(opts) {
+  this.constructor.super_.call(this, opts);
+
+  this._wmode = opts && opts.wmode || defaultWMode;
+  this._swfPath = opts && opts.swfPath || defaultSwfPath;
+
+  if (!defaultSwfPath) {
+    throw new Error('Missing SWF path');
+  }
+
+  // Setup JavaScript callbacks to be called from Flash land when
+  // asynchronous operations terminate.
+  this._flashStageId = nextFlashStageId();
+  this._callbacksObj = window[callbackObjectName][this._flashStageId] = {};
+  this._stageCallbacksObjVarName = callbackObjectName + '[' + this._flashStageId + ']';
+  this._callbackListeners = {};
+  for (var i = 0; i < callbackNames.length; i++) {
+    this._callbacksObj[callbackNames[i]] = this._callListeners(callbackNames[i]);
+  }
+
+  this._loader = new FlashImageLoader(this);
+
+  // Queue for loadImage calls.
+  // The queue starts paused so that loadImage calls occurring before Flash
+  // is ready do not start right away (as they would fail).
+  // TODO: This is awkward. The stage must signal that it's ready to load
+  // images, but queuing should otherwise be implemented by the loader.
+  this._loadImageQueue = new WorkQueue();
+  this._loadImageQueue.pause();
+
+  // Whether flash is ready to be called from JavaScript.
+  this._flashReady = false;
+
+  // Add an ID to each renderer/layer, so that it can be identified within
+  // the ActionScript program.
+  this._nextLayerId = 0;
+
+  // Create the DOM elements.
+  var elements = createDomElements(this._swfPath, this._flashStageId, this._stageCallbacksObjVarName);
+  this._domElement = elements.root;
+  this._blockingElement = elements.blocking;
+  this._flashElement = elements.flash;
+
+  // Wake up the render loop when we are ready (only after element is added to the DOM)
+  this._checkReadyTimer = setInterval(this._checkReady.bind(this), 50);
+}
+
+inherits(FlashStage, Stage);
+
+
+/**
+ * Destructor.
+ */
+FlashStage.prototype.destroy = function() {
+  window[callbackObjectName][this._flashStageId] = null;
+  if (this._checkReadyTimer != null) {
+    clearInterval(this._checkReadyTimer);
+  }
+  // Delegate clearing own properties to the Stage destructor.
+  this.constructor.super_.prototype.destroy.call(this);
+};
+
+
+FlashStage.supported = function() {
+  return flashSupported();
+};
+
+
+/**
+ * Returns the underlying DOM element.
+ * @return {Element}
+ */
+FlashStage.prototype.domElement = function() {
+  return this._domElement;
+};
+
+
+/**
+ * Returns the underlying Flash element.
+ * @return {Element}
+ */
+FlashStage.prototype.flashElement = function() {
+  return this._flashElement;
+};
+
+
+FlashStage.prototype.setSizeForType = function() {};
+
+
+FlashStage.prototype.loadImage = function(url, rect, done) {
+  // TODO: Move the queuing into the loader, which avoids this nonsense.
+  var loadFn = this._loader.loadImage.bind(this._loader, url, rect);
+  return this._loadImageQueue.push(loadFn, done);
+};
+
+
+FlashStage.prototype.validateLayer = function(layer) {
+  return; // always valid
+};
+
+
+FlashStage.prototype.addFlashCallbackListener = function(callbackName, f) {
+  this._callbackListeners[callbackName] = this._callbackListeners[callbackName] || [];
+  this._callbackListeners[callbackName].push(f);
+};
+
+
+FlashStage.prototype.removeFlashCallbackListener = function(callbackName, f) {
+  var listeners = this._callbackListeners[callbackName] || [];
+  var index = listeners.indexOf(f);
+  if (index >= 0) {
+    listeners.splice(index, 1);
+  }
+};
+
+
+FlashStage.prototype._callListeners = function(callbackName) {
+
+  var self = this;
+
+  return function callListeners() {
+    var listeners = self._callbackListeners[callbackName] || [];
+    for (var i = 0; i < listeners.length; i++) {
+      // JavaScript executed on calls from Flash does not throw exceptions.
+      // Executing the callback in a new stack frame fixes this.
+      var listener = listeners[i];
+      defer(listener, arguments);
+    }
+  };
+};
+
+
+FlashStage.prototype._checkReady = function() {
+  if (!this._flashElement ||
+      !this._flashElement.isReady ||
+      !this._flashElement.isReady()) {
+    // Not ready yet.
+    return false;
+  }
+
+  // Mark as ready.
+  this._flashReady = true;
+
+  // Disable interval timer.
+  clearTimeout(this._checkReadyTimer);
+  this._checkReadyTimer = null;
+
+  // Resume image loading queue.
+  this._loadImageQueue.resume();
+
+  // Force next render.
+  this.emit('renderInvalid');
+
+  return true;
+};
+
+
+function createDomElements(swfPath, id, stageCallbacksObjVarName) {
+  var rootElement = document.createElement('div');
+  setAbsolute(rootElement);
+  setFullSize(rootElement);
+
+  // The Flash object must have `id` and `name` attributes, otherwise
+  // ExternalInterface calls will not work.
+  var elementId = "marzipano-flash-stage-" + id;
+
+  var objectStr = '<object id="' + elementId + '" name="' + elementId + '" type="application/x-shockwave-flash" data="' + swfPath + '">';
+
+  var paramsStr = '';
+  paramsStr += '<param name="movie" value="' + swfPath + '" />';
+  paramsStr += '<param name="allowscriptaccess" value="always" />';
+  paramsStr += '<param name="flashvars" value="callbacksObjName=' + stageCallbacksObjVarName + '" />';
+  paramsStr += '<param name="wmode" value="transparent" />';
+
+  objectStr += paramsStr;
+  objectStr += '</object>';
+
+  // Embed Flash into the DOM.
+  // Adding children into an <object> element doesn't work, so we create a
+  // temporary element and set its innerHTML.
+  var tmpElement = document.createElement('div');
+  tmpElement.innerHTML = objectStr;
+  var flashElement = tmpElement.firstChild;
+  setAbsolute(flashElement);
+  setFullSize(flashElement);
+  rootElement.appendChild(flashElement);
+
+  // Create blocking element to prevent events from being caught by Flash.
+  var blockingElement = document.createElement('div');
+  setAbsolute(blockingElement);
+  setFullSize(blockingElement);
+  setBlocking(blockingElement);
+  rootElement.appendChild(blockingElement);
+
+  return { root: rootElement, flash: flashElement, blocking: blockingElement };
+}
+
+
+FlashStage.prototype.createRenderer = function(Renderer) {
+  return new Renderer(this._flashElement, ++this._nextLayerId, flashQuirks);
+};
+
+
+FlashStage.prototype.destroyRenderer = function(renderer) {
+  renderer.destroy();
+};
+
+
+FlashStage.prototype.startFrame = function() {};
+
+
+FlashStage.prototype.endFrame = function() {};
+
+
+FlashStage.prototype.takeSnapshot = function (options) {
+  // Validate argument.
+  if (typeof options !== 'object' || options == null) {
+    options = {};
+  }
+
+  var quality = options.quality;
+
+  // Set default quality if it is not passed in.
+  if (typeof quality == 'undefined') {
+    quality = 75;
+  }
+
+  // Throw if quality is of invlid type or out of bounds.
+  if (typeof quality !== 'number' || quality < 0 || quality > 100) {
+    throw new Error('FlashStage: Snapshot quality needs to be a number between 0 and 100');
+  }
+
+  // Return the snapshot by executing a flash-exported method.
+  return this._flashElement.takeSnapshot(quality);
+};
+
+
+FlashStage.type = FlashStage.prototype.type = 'flash';
+
+
+function FlashTexture(stage, tile, asset) {
+
+  // Get image id.
+  var imageId = asset.element();
+
+  // Get tile dimensions.
+  var tileWidth = tile.width();
+  var tileHeight = tile.height();
+
+  // Get padding sizes.
+  var padSize = flashQuirks.padSize;
+  var padTop = tile.padTop() ? padSize : 0;
+  var padBottom = tile.padBottom() ? padSize : 0;
+  var padLeft = tile.padLeft() ? padSize : 0;
+  var padRight = tile.padRight() ? padSize : 0;
+
+  var textureId = stage._flashElement.createTexture(imageId, tileWidth, tileHeight, padTop, padBottom, padLeft, padRight);
+
+  this._stage = stage;
+  this._textureId = textureId;
+}
+
+
+FlashTexture.prototype.refresh = function(tile, asset) {
+  // TODO: This is required for the Flash stage to support dynamic textures.
+  // However, there are currently no dynamic textures that work with the
+  // Flash stage.
+};
+
+
+FlashTexture.prototype.destroy = function() {
+  this._stage._flashElement.destroyTexture(this._textureId);
+  clearOwnProperties(this);
+};
+
+
+FlashStage.TextureClass = FlashStage.prototype.TextureClass = FlashTexture;
+
+
+module.exports = FlashStage;
+
+},{"../collections/WorkQueue":35,"../loaders/FlashImage":58,"../support/Flash":84,"../util/clearOwnProperties":92,"../util/defer":99,"../util/dom":102,"../util/inherits":105,"./Stage":81}],80:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+/**
+ * @class RendererRegistry
+ * @classdesc
+ *
+ * A RendererRegistry maps pairs of {@link Geometry} and {@link View} type into
+ * the appropriate {@link Renderer} class. It is used by a {@link Stage} to
+ * determine the appropriate renderer for a {@link Layer}.
+ *
+ * See also {@link Stage#registerRenderer}.
+ */
+function RendererRegistry() {
+  this._renderers = {};
+}
+
+/**
+ * Registers a renderer for the given geometry and view type.
+ * @param {string} geometryType The geometry type, as given by
+ *     {@link Geometry#type}.
+ * @param {string} viewType The view type, as given by {@link View#type}.
+ * @param {*} Renderer The renderer class.
+ */
+RendererRegistry.prototype.set = function(geometryType, viewType, Renderer) {
+  if (!this._renderers[geometryType]) {
+    this._renderers[geometryType] = {};
+  }
+  this._renderers[geometryType][viewType] = Renderer;
+};
+
+/**
+ * Retrieves the renderer for the given geometry and view type.
+ * @param {string} geometryType The geometry type, as given by
+ *     {@link Geometry#type}.
+ * @param {string} viewType The view type, as given by {@link View#type}.
+ * @param {*} Renderer The renderer class, or null if no such renderer has been
+ * registered.
+ */
+RendererRegistry.prototype.get = function(geometryType, viewType) {
+  var Renderer = this._renderers[geometryType] &&
+      this._renderers[geometryType][viewType];
+  return Renderer || null;
+};
+
+module.exports = RendererRegistry;
+
+},{}],81:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var eventEmitter = require('minimal-event-emitter');
+var WorkQueue = require('../collections/WorkQueue');
+var calcRect = require('../util/calcRect');
+var async = require('../util/async');
+var cancelize = require('../util/cancelize');
+var clearOwnProperties = require('../util/clearOwnProperties');
+
+var RendererRegistry = require('./RendererRegistry');
+
+function forwardTileCmp(t1, t2) {
+  return t1.cmp(t2);
+}
+
+function reverseTileCmp(t1, t2) {
+  return -t1.cmp(t2);
+}
+
+/**
+ * Signals that the stage has been rendered.
+ *
+ * @param {boolean} stable Whether all tiles were successfully rendered without
+ *     missing textures or resorting to fallbacks.
+ * @event Stage#renderComplete
+ */
+
+/**
+ * Signals that the contents of the stage have been invalidated and must be
+ * rendered again.
+ *
+ * This is used by the {@link RenderLoop} implementation.
+ *
+ * @event Stage#renderInvalid
+ */
+
+/**
+ * @interface Stage
+ * @classdesc
+ *
+ * A Stage is a container with the ability to render a stack of
+ * {@link Layer layers}.
+ *
+ * This is a superclass containing logic that is common to all implementations;
+ * it should never be instantiated directly. Instead, use one of the
+ * subclasses: {@link WebGlStage}, {@link CssStage} or {@link FlashStage}.
+ */
+function Stage(opts) {
+  // The list of layers in display order (background to foreground).
+  this._layers = [];
+
+  // The list of renderers; the i-th renderer is for the i-th layer.
+  this._renderers = [];
+
+  // The lists of tiles to load and render, populated during render().
+  this._tilesToLoad = [];
+  this._tilesToRender = [];
+
+  // Temporary tile lists.
+  this._tmpVisible = [];
+  this._tmpChildren = [];
+
+  // Cached stage dimensions.
+  // Start with zero, which inhibits rendering until setSize() is called.
+  this._width = 0;
+  this._height = 0;
+
+  // Temporary variable for rect.
+  this._tmpRect = {};
+
+  // Temporary variable for size.
+  this._tmpSize = {};
+
+  // Work queue for createTexture.
+  this._createTextureWorkQueue = new WorkQueue();
+
+  // Function to emit event when render parameters have changed.
+  this._emitRenderInvalid = this._emitRenderInvalid.bind(this);
+
+  // The renderer registry maps each geometry/view pair into the respective
+  // Renderer class.
+  this._rendererRegistry = new RendererRegistry();
+}
+
+eventEmitter(Stage);
+
+
+/**
+ * Destructor.
+ */
+Stage.prototype.destroy = function() {
+  this.removeAllLayers();
+  clearOwnProperties(this);
+};
+
+
+/**
+ * Registers a {@link Renderer} for the given {@link Geometry} and {@link View}
+ * type.
+ *
+ * The {@link registerDefaultRenderers} utility function may be used to
+ * register all known renderers for a stage type into that stage. Most users
+ * will not need to register renderers, as {@link Viewer} does it for them.
+ *
+ * @param {string} geometryType The geometry type, as given by
+ *     {@link Geometry#type}.
+ * @param {string} viewType The view type, as given by {@link View#type}.
+ * @param {*} Renderer The renderer class.
+ */
+Stage.prototype.registerRenderer = function(geometryType, viewType, Renderer) {
+  return this._rendererRegistry.set(geometryType, viewType, Renderer);
+};
+
+
+/**
+ * Returns the underlying DOM element.
+ *
+ * Must be overridden by subclasses.
+ *
+ * @return {Element}
+ */
+Stage.prototype.domElement = function() {
+  throw new Error('Stage implementation must override domElement');
+};
+
+
+/**
+ * Get the stage width.
+ * @return {number}
+ */
+Stage.prototype.width = function() {
+  return this._width;
+};
+
+
+/**
+ * Get the stage height.
+ * @return {number}
+ */
+Stage.prototype.height = function() {
+  return this._height;
+};
+
+
+/**
+ * Get the stage dimensions. If an argument is supplied, it is filled in with
+ * the result and returned. Otherwise, a fresh object is filled in and returned.
+ *
+ * @param {Size=} size
+ */
+Stage.prototype.size = function(size) {
+  size = size || {};
+  size.width = this._width;
+  size.height = this._height;
+  return size;
+};
+
+
+/**
+ * Set the stage dimensions.
+ *
+ * This contains the size update logic common to all stage types. Subclasses
+ * must define the {@link Stage#setSizeForType} method to perform their own
+ * logic.
+ *
+ * @param {Size} size
+ */
+Stage.prototype.setSize = function(size) {
+  this._width = size.width;
+  this._height = size.height;
+
+  this.setSizeForType(); // must be defined by subclasses.
+
+  this.emit('resize');
+  this._emitRenderInvalid();
+};
+
+
+/**
+ * Call {@link Stage#setSize} instead.
+ *
+ * This contains the size update logic specific to a stage type. It is called by
+ * {@link Stage#setSize} after the base class has been updated to reflect the
+ * new size, but before any events are emitted.
+ *
+ * @param {Size} size
+ */
+Stage.prototype.setSizeForType = function(size) {
+  throw new Error('Stage implementation must override setSizeForType');
+};
+
+
+/**
+ * Loads an {@link Asset} from an image.
+ * @param {string} url The image URL.
+ * @param {?Rect} rect A {@link Rect} describing a portion of the image, or null
+ *     to use the full image.
+ * @param {function(?Error, Asset)} done The callback.
+ * @return {function()} A function to cancel loading.
+ */
+Stage.prototype.loadImage = function() {
+  throw new Error('Stage implementation must override loadImage');
+};
+
+
+Stage.prototype._emitRenderInvalid = function() {
+  this.emit('renderInvalid');
+};
+
+
+/**
+ * Verifies that the layer is valid for this stage, throwing an exception
+ * otherwise.
+ *
+ * @param {Layer} layer
+ * @throws {Error} If the layer is not valid for this stage.
+ */
+Stage.prototype.validateLayer = function(layer) {
+  throw new Error('Stage implementation must override validateLayer');
+};
+
+
+/**
+ * Returns a list of all {@link Layer layers} belonging to the stage. The
+ * returned list is in display order, background to foreground.
+ * @return {Layer[]}
+ */
+Stage.prototype.listLayers = function() {
+  // Return a copy to prevent unintended mutation by the caller.
+  return [].concat(this._layers);
+};
+
+
+/**
+ * Return whether a {@link Layer layer} belongs to the stage.
+ * @param {Layer} layer
+ * @return {boolean}
+ */
+Stage.prototype.hasLayer = function(layer) {
+  return this._layers.indexOf(layer) >= 0;
+};
+
+
+/**
+ * Adds a {@link Layer layer} into the stage.
+ * @param {Layer} layer The layer to add.
+ * @param {number|undefined} i The optional position, where 0 ≤ i ≤ n and n is
+ *     the current number of layers. The default is n, which inserts at the
+ *     top of the display stack.
+ * @throws An error if the layer already belongs to the stage or if the position
+ *     is invalid.
+ */
+Stage.prototype.addLayer = function(layer, i) {
+  if (this._layers.indexOf(layer) >= 0) {
+    throw new Error('Layer already in stage');
+  }
+
+  if (i == null) {
+    i = this._layers.length;
+  }
+  if (i < 0 || i > this._layers.length) {
+    throw new Error('Invalid layer position');
+  }
+
+  this.validateLayer(layer); // must be defined by subclasses.
+
+  var geometryType = layer.geometry().type;
+  var viewType = layer.view().type;
+  var rendererClass = this._rendererRegistry.get(geometryType, viewType);
+  if (!rendererClass) {
+    throw new Error('No ' + this.type + ' renderer avaiable for ' +
+        geometryType + ' geometry and ' + viewType + ' view');
+  }
+  var renderer = this.createRenderer(rendererClass);
+
+  this._layers.splice(i, 0, layer);
+  this._renderers.splice(i, 0, renderer);
+
+  // Listeners for render invalid.
+  layer.addEventListener('viewChange', this._emitRenderInvalid);
+  layer.addEventListener('effectsChange', this._emitRenderInvalid);
+  layer.addEventListener('fixedLevelChange', this._emitRenderInvalid);
+  layer.addEventListener('textureStoreChange', this._emitRenderInvalid);
+
+  this._emitRenderInvalid();
+};
+
+
+/**
+ * Moves a {@link Layer layer} into a different position in the display stack.
+ * @param {Layer} layer The layer to move.
+ * @param {number} i The position, where 0 ≤ i ≤ n-1 and n is the current number
+ *     of layers.
+ * @throws An error if the layer does not belong to the stage or if the position
+ *     is invalid.
+ */
+Stage.prototype.moveLayer = function(layer, i) {
+  var index = this._layers.indexOf(layer);
+  if (index < 0) {
+    throw new Error('No such layer in stage');
+  }
+
+  if (i < 0 || i >= this._layers.length) {
+    throw new Error('Invalid layer position');
+  }
+
+  layer = this._layers.splice(index, 1)[0];
+  var renderer = this._renderers.splice(index, 1)[0];
+
+  this._layers.splice(i, 0, layer);
+  this._renderers.splice(i, 0, renderer);
+
+  this._emitRenderInvalid();
+};
+
+
+/**
+ * Removes a {@link Layer} from the stage.
+ * @param {Layer} layer The layer to remove.
+ * @throws An error if the layer does not belong to the stage.
+ */
+Stage.prototype.removeLayer = function(layer) {
+  var index = this._layers.indexOf(layer);
+  if (index < 0) {
+    throw new Error('No such layer in stage');
+  }
+
+  var removedLayer = this._layers.splice(index, 1)[0];
+  var renderer = this._renderers.splice(index, 1)[0];
+
+  this.destroyRenderer(renderer);
+
+  removedLayer.removeEventListener('viewChange', this._emitRenderInvalid);
+  removedLayer.removeEventListener('effectsChange', this._emitRenderInvalid);
+  removedLayer.removeEventListener('fixedLevelChange', this._emitRenderInvalid);
+  removedLayer.removeEventListener('textureStoreChange', this._emitRenderInvalid);
+
+  this._emitRenderInvalid();
+};
+
+
+/**
+ * Removes all {@link Layer layers} from the stage.
+ */
+Stage.prototype.removeAllLayers = function() {
+  while (this._layers.length > 0) {
+    this.removeLayer(this._layers[0]);
+  }
+};
+
+
+/**
+ * Called before a frame is rendered.
+ *
+ * Must be overridden by subclasses.
+ */
+Stage.prototype.startFrame = function() {
+  throw new Error('Stage implementation must override startFrame');
+};
+
+
+/**
+ * Called after a frame is rendered.
+ *
+ * Must be overridden by subclasses.
+ */
+Stage.prototype.endFrame = function() {
+  throw new Error('Stage implementation must override endFrame');
+};
+
+
+/**
+ * Render the current frame. Usually called from a {@link RenderLoop}.
+ *
+ * This contains the rendering logic common to all stage types. Subclasses
+ * define the startFrame() and endFrame() methods to perform their own logic.
+ */
+Stage.prototype.render = function() {
+  var i, j;
+
+  var tilesToLoad = this._tilesToLoad;
+  var tilesToRender = this._tilesToRender;
+
+  var stableStage = true;
+  var stableLayer;
+
+  // Get the stage dimensions.
+  var width = this._width;
+  var height = this._height;
+
+  var rect = this._tmpRect;
+  var size = this._tmpSize;
+
+  if (width <= 0 || height <= 0) {
+    return;
+  }
+
+  this.startFrame(); // defined by subclasses
+
+  // Signal start of frame to the texture stores.
+  for (i = 0; i < this._layers.length; i++) {
+    this._layers[i].textureStore().startFrame();
+  }
+
+  // Render layers.
+  for (i = 0; i < this._layers.length; i++) {
+    var layer = this._layers[i];
+    var effects = layer.effects();
+    var view = layer.view();
+    var textureStore = layer.textureStore();
+    var renderer = this._renderers[i];
+    var depth = this._layers.length - i;
+    var tile, texture;
+
+    // Convert the rect effect into a normalized rect.
+    // TODO: avoid doing this on every frame.
+    calcRect(width, height, effects && effects.rect, rect);
+
+    if (rect.width <= 0 || rect.height <= 0) {
+      // Skip rendering on a null viewport.
+      continue;
+    }
+
+    // Update the view size.
+    size.width = rect.width * this._width;
+    size.height = rect.height * this._height;
+    view.setSize(size);
+
+    // Signal start of layer to the renderer.
+    renderer.startLayer(layer, rect);
+
+    // We render with both alpha blending and depth testing enabled. Thus, when
+    // rendering a subsequent pixel at the same location than an existing one,
+    // the subsequent pixel gets discarded unless it has smaller depth, and is
+    // otherwise composited with the existing pixel.
+    //
+    // When using fallback tiles to fill a gap in the preferred resolution
+    // level, we prefer higher resolution fallbacks to lower resolution ones.
+    // However, where fallbacks overlap, we want higher resolution ones to
+    // prevail, and we don't want multiple fallbacks to be composited with each
+    // other, as that would produce a bad result when semitransparent textures
+    // are involved.
+    //
+    // In order to achieve this within the constraints of alpha blending and
+    // depth testing, the depth of a tile must be inversely proportional to its
+    // resolution, and higher-resolution tiles must be rendered before lower-
+    // resolution ones.
+
+    // Collect the lists of tiles to load and render.
+    stableLayer = this._collectTiles(layer, textureStore);
+
+    // Mark all the tiles whose textures must be loaded.
+    // This will either trigger loading (for textures not yet loaded) or
+    // prevent unloading (for textures already loaded).
+    for (j = 0; j < tilesToLoad.length; j++) {
+      tile = tilesToLoad[j];
+      textureStore.markTile(tile);
+    }
+
+    // Render tiles.
+    for (j = 0; j < tilesToRender.length; j++) {
+      tile = tilesToRender[j];
+      texture = textureStore.texture(tile);
+      renderer.renderTile(tile, texture, layer, depth);
+    }
+
+    layer.emit('renderComplete', stableLayer);
+    if (!stableLayer) {
+      stableStage = false;
+    }
+
+    // Signal end of layer to the renderer.
+    renderer.endLayer(layer, rect);
+  }
+
+  // Signal end of frame to the texture stores.
+  for (i = 0; i < this._layers.length; i++) {
+    this._layers[i].textureStore().endFrame();
+  }
+
+  this.endFrame(); // defined by subclasses
+
+  this.emit('renderComplete', stableStage);
+};
+
+Stage.prototype._collectTiles = function(layer, textureStore) {
+  var tilesToLoad = this._tilesToLoad;
+  var tilesToRender = this._tilesToRender;
+  var tmpVisible = this._tmpVisible;
+
+  tilesToLoad.length = 0;
+  tilesToRender.length = 0;
+  tmpVisible.length = 0;
+
+  layer.visibleTiles(tmpVisible);
+
+  var isStable = true;
+
+  for (var i = 0; i < tmpVisible.length; i++) {
+    var tile = tmpVisible[i];
+    var needsFallback;
+    this._collectTileToLoad(tile);
+    if (textureStore.texture(tile)) {
+      // The preferred texture is available.
+      // No fallback is required.
+      needsFallback = false;
+      this._collectTileToRender(tile);
+    } else {
+      // The preferred texture is unavailable.
+      // Collect children for rendering as a fallback.
+      needsFallback = this._collectChildren(tile, textureStore);
+      isStable = false;
+    }
+    // Collect all parents for loading, and the closest parent for rendering if
+    // a fallback is required.
+    this._collectParents(tile, textureStore, needsFallback);
+  }
+
+  // Sort tiles to load in ascending resolution order.
+  tilesToLoad.sort(forwardTileCmp);
+
+  // Sort tiles to render in descending resolution order.
+  tilesToRender.sort(reverseTileCmp);
+
+  return isStable;
+};
+
+Stage.prototype._collectChildren = function(tile, textureStore) {
+  var tmpChildren = this._tmpChildren;
+
+  var needsFallback = true;
+
+  // Fall back as many levels as necessary on single-child geometries, but do
+  // not go beyond immediate children on multiple-child geometries, to avoid
+  // exploring an exponential number of tiles.
+  do {
+    tmpChildren.length = 0;
+    if (!tile.children(tmpChildren)) {
+      break;
+    }
+    needsFallback = false;
+    for (var i = 0; i < tmpChildren.length; i++) {
+      tile = tmpChildren[i];
+      if (textureStore.texture(tile)) {
+        this._collectTileToLoad(tile);
+        this._collectTileToRender(tile);
+      } else {
+        needsFallback = true;
+      }
+    }
+  } while (needsFallback && tmpChildren.length === 1)
+
+  return needsFallback;
+};
+
+Stage.prototype._collectParents = function(tile, textureStore, needsFallback) {
+  // Recursively visit parent tiles until all parents have been marked for
+  // loading, and at least one parent has been marked for rendering if a
+  // fallback is required.
+  var needsLoading = true;
+  while ((needsLoading || needsFallback) && (tile = tile.parent()) != null) {
+    if (needsFallback && textureStore.texture(tile)) {
+      this._collectTileToRender(tile);
+      needsFallback = false;
+    }
+    if (!this._collectTileToLoad(tile)) {
+      needsLoading = false;
+    }
+  }
+  return needsFallback;
+};
+
+Stage.prototype._collectTileToLoad = function(tile) {
+  return this._collectTileIntoList(tile, this._tilesToLoad);
+};
+
+Stage.prototype._collectTileToRender = function(tile) {
+  return this._collectTileIntoList(tile, this._tilesToRender);
+};
+
+Stage.prototype._collectTileIntoList = function(tile, tileList) {
+  // TODO: Investigate whether it's worth it to make this better than O(n²).
+  var found = false;
+  for (var i = 0; i < tileList.length; i++) {
+    if (tile.equals(tileList[i])) {
+      found = true;
+      break;
+    }
+  }
+  if (!found) {
+    tileList.push(tile);
+  }
+  return !found;
+};
+
+/**
+ * Create a texture for the given tile and asset. Called by {@link TextureStore}.
+ * @param {Tile} tile
+ * @param {Asset} asset
+ * @param {Function} done
+ */
+Stage.prototype.createTexture = function(tile, asset, done) {
+
+  var self = this;
+
+  function makeTexture() {
+    return new self.TextureClass(self, tile, asset);
+  }
+
+  var fn = cancelize(async(makeTexture));
+
+  return this._createTextureWorkQueue.push(fn, function(err, texture) {
+    done(err, tile, asset, texture);
+  });
+
+};
+
+/**
+ * The stage type, used to determine the appropriate renderer for a given
+ * geometry and view.
+ *
+ * Known values are `"webgl"`, `"css"` and `"flash"`.
+ *
+ * See also {@link Stage#registerRenderer}.
+ *
+ * @property {string}
+ * @name Stage#type
+ */
+
+module.exports = Stage;
+
+},{"../collections/WorkQueue":35,"../util/async":87,"../util/calcRect":88,"../util/cancelize":89,"../util/clearOwnProperties":92,"./RendererRegistry":80,"minimal-event-emitter":14}],82:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var Stage = require('./Stage');
+var HtmlImageLoader = require('../loaders/HtmlImage');
+var webGlSupported = require('../support/WebGl');
+var browser = require('bowser');
+var inherits = require('../util/inherits');
+var pixelRatio = require('../util/pixelRatio');
+var ispot = require('../util/ispot');
+var setAbsolute = require('../util/dom').setAbsolute;
+var setFullSize = require('../util/dom').setFullSize;
+var clearOwnProperties = require('../util/clearOwnProperties');
+
+var debug = typeof MARZIPANODEBUG !== 'undefined' && MARZIPANODEBUG.webGl;
+
+
+// Browser-specific workarounds.
+var browserQuirks = {
+  // Whether to use texImage2D instead of texSubImage2D when repainting an
+  // existing texture from a video element. On most browsers texSubImage2D is
+  // faster, but on Chrome the performance degrades significantly. See:
+  // https://bugs.chromium.org/p/chromium/issues/detail?id=612542
+  videoUseTexImage2D: browser.chrome
+};
+
+
+function initWebGlContext(canvas, opts) {
+  var options = {
+    alpha: true,
+    premultipliedAlpha: true,
+    antialias: !!(opts && opts.antialias),
+    preserveDrawingBuffer: !!(opts && opts.preserveDrawingBuffer)
+  };
+
+  if (debug && typeof WebGLDebugUtils !== 'undefined') {
+    console.log('Using WebGL lost context simulator');
+    canvas = WebGLDebugUtils.makeLostContextSimulatingCanvas(canvas);
+  }
+
+  // Keep support/WebGl.js in sync with this.
+  var gl = (canvas.getContext) && (canvas.getContext('webgl', options) || canvas.getContext('experimental-webgl', options));
+
+  if (!gl) {
+    throw new Error('Could not get WebGL context');
+  }
+
+  if (debug && typeof WebGLDebugUtils !== "undefined") {
+    gl = WebGLDebugUtils.makeDebugContext(gl);
+    console.log('Using WebGL debug context');
+  }
+
+  return gl;
+}
+
+/**
+ * @class WebGlStage
+ * @extends Stage
+ * @classdesc
+ *
+ * A {@link Stage} implementation using WebGl.
+ *
+ * @param {Object} opts
+ * @param {boolean} [opts.antialias=false]
+ * @param {boolean} [opts.preserveDrawingBuffer=false]
+ * @param {boolean} [opts.generateMipmaps=false]
+ *
+ * The `antialias` and `preserveDrawingBuffer` options control the WebGL
+ * context attributes of the same name. The `alpha` and `premultipliedAlpha`
+ * WebGL context attributes are set to their default true value and cannot
+ * be overriden; this allows semitransparent textures to be composited with
+ * the page. See:
+ * https://www.khronos.org/registry/webgl/specs/1.0/#WEBGLCONTEXTATTRIBUTES
+ *
+ * The `generateMipmaps` option controls texture mipmap generation. Mipmaps
+ * may improve rendering quality, at the cost of increased memory usage.
+ * Due to technical limitations, they are only generated for textures whose
+ * dimensions are a power of two. See:
+ * https://www.khronos.org/webgl/wiki/WebGL_and_OpenGL_Differences#Non-Power_of_Two_Texture_Support
+ */
+function WebGlStage(opts) {
+  opts = opts || {};
+
+  var self = this;
+
+  this.constructor.super_.call(this, opts);
+
+  this._generateMipmaps = opts.generateMipmaps != null ?
+    opts.generateMipmaps : false;
+
+  this._loader = new HtmlImageLoader(this);
+
+  this._domElement = document.createElement('canvas');
+
+  setAbsolute(this._domElement);
+  setFullSize(this._domElement);
+
+  this._gl = initWebGlContext(this._domElement, opts);
+
+  this._handleContextLoss = function() {
+    self.emit('webglcontextlost');
+    self._gl = null;
+  };
+
+  // Handle WebGl context loss.
+  this._domElement.addEventListener('webglcontextlost', this._handleContextLoss);
+
+  // WebGl renderers are singletons for a given stage. This list stores the
+  // existing renderers so they can be reused across layers with the same
+  // geometry and view type.
+  this._rendererInstances = [];
+}
+
+inherits(WebGlStage, Stage);
+
+
+/**
+ * Destructor.
+ */
+WebGlStage.prototype.destroy = function() {
+  this._domElement.removeEventListener('webglcontextlost', this._handleContextLoss);
+  // Delegate clearing own properties to the Stage destructor.
+  this.constructor.super_.prototype.destroy.call(this);
+};
+
+
+WebGlStage.supported = function() {
+  return webGlSupported();
+};
+
+
+/**
+ * Returns the underlying DOM element.
+ *
+ * @return {Element}
+ */
+WebGlStage.prototype.domElement = function() {
+  return this._domElement;
+};
+
+
+/**
+ * Returns the underlying WebGL rendering context.
+ *
+ * @return {WebGLRenderingContext }
+ */
+WebGlStage.prototype.webGlContext = function() {
+  return this._gl;
+};
+
+
+WebGlStage.prototype.setSizeForType = function() {
+  // Update the size of the canvas coordinate space.
+  //
+  // The size is obtained by taking the stage dimensions, which are set in CSS
+  // pixels, and multiplying them by the device pixel ratio. Crucially, this
+  // must be the only place where the WebGL rendering pipeline accesses the
+  // pixel ratio; subsequent uses should reference the `drawingBufferWidth` and
+  // `drawingBufferHeight` properties on the WebGLRenderingContext. Failing to
+  // do so will break the rendering if the pixel ratio changes but the stage
+  // size does not, e.g. when moving the window across screens.
+  var ratio = pixelRatio();
+  this._domElement.width = ratio * this._width;
+  this._domElement.height = ratio * this._height;
+};
+
+
+WebGlStage.prototype.loadImage = function(url, rect, done) {
+  return this._loader.loadImage(url, rect, done);
+};
+
+
+WebGlStage.prototype.maxTextureSize = function() {
+  return this._gl.getParameter(this._gl.MAX_TEXTURE_SIZE);
+};
+
+
+WebGlStage.prototype.validateLayer = function(layer) {
+  var tileSize = layer.geometry().maxTileSize();
+  var maxTextureSize = this.maxTextureSize();
+  if (tileSize > maxTextureSize) {
+    throw new Error('Layer has level with tile size larger than maximum texture size (' + tileSize + ' vs. ' + maxTextureSize + ')');
+  }
+};
+
+
+WebGlStage.prototype.createRenderer = function(Renderer) {
+  var rendererInstances = this._rendererInstances;
+  for (var i = 0; i < rendererInstances.length; i++) {
+    if (rendererInstances[i] instanceof Renderer) {
+      return rendererInstances[i];
+    }
+  }
+  var renderer = new Renderer(this._gl);
+  rendererInstances.push(renderer);
+  return renderer;
+};
+
+
+WebGlStage.prototype.destroyRenderer = function(renderer) {
+  var rendererInstances = this._rendererInstances;
+  if (this._renderers.indexOf(renderer) < 0) {
+    renderer.destroy();
+    var index = rendererInstances.indexOf(renderer);
+    if (index >= 0) {
+      rendererInstances.splice(index, 1);
+    }
+  }
+};
+
+
+WebGlStage.prototype.startFrame = function() {
+
+  var gl = this._gl;
+
+  if (!gl) {
+    throw new Error('Bad WebGL context - maybe context was lost?');
+  }
+
+  // Set the WebGL viewport.
+  gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
+
+  // Clear framebuffer.
+  gl.clearColor(0.0, 0.0, 0.0, 0.0);
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+  // Enable depth testing.
+  gl.enable(gl.DEPTH_TEST);
+
+  // Enable blending. ONE and ONE_MINUS_SRC_ALPHA are the right choices for
+  // premultiplied textures.
+  gl.enable(gl.BLEND);
+  gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+
+};
+
+
+WebGlStage.prototype.endFrame = function() {};
+
+
+WebGlStage.prototype.takeSnapshot = function (options) {
+
+  // Validate passed argument
+  if (typeof options !== 'object' || options == null) {
+    options = {};
+  }
+
+  var quality = options.quality;
+
+  // Set default quality if it is not passed
+  if (typeof quality == 'undefined') {
+    quality = 75;
+  }
+
+  // Throw if quality is of invlid type or out of bounds
+  if (typeof quality !== 'number' || quality < 0 || quality > 100) {
+    throw new Error('WebGLStage: Snapshot quality needs to be a number between 0 and 100');
+  }
+
+  // Canvas method "toDataURL" needs to be called in the same
+  // context as where the actual rendering is done. Hence this.
+  this.render();
+
+  // Return the snapshot
+  return this._domElement.toDataURL('image/jpeg',quality/100);
+}
+
+
+WebGlStage.type = WebGlStage.prototype.type = 'webgl';
+
+
+function WebGlTexture(stage, tile, asset) {
+  this._stage = stage;
+  this._gl = stage._gl;
+  this._texture = null;
+  this._timestamp = null;
+  this._width = this._height = null;
+  this.refresh(tile, asset);
+}
+
+
+WebGlTexture.prototype.refresh = function(tile, asset) {
+
+  var gl = this._gl;
+  var stage = this._stage;
+  var texture;
+
+  // Check whether the texture needs to be updated.
+  var timestamp = asset.timestamp();
+  if (timestamp === this._timestamp) {
+    return;
+  }
+
+  // Get asset element.
+  var element = asset.element();
+
+  // Get asset dimensions.
+  var width = asset.width();
+  var height = asset.height();
+
+  if (width !== this._width || height !== this._height) {
+
+    // If the texture dimensions have changed since the last refresh, create
+    // a new texture with the correct size.
+
+    // Check if texture dimensions would exceed the maximum texture size.
+    var maxSize = stage.maxTextureSize();
+    if (width > maxSize) {
+      throw new Error('Texture width larger than max size (' + width + ' vs. ' + maxSize + ')');
+    }
+    if (height > maxSize) {
+      throw new Error('Texture height larger than max size (' + height + ' vs. ' + maxSize + ')');
+    }
+
+    // Delete the current texture if it exists.
+    // This is necessary for Chrome on Android. If it isn't done the textures
+    // do not render when the size changes.
+    if (this._texture) {
+      gl.deleteTexture(texture);
+    }
+
+    // The texture must be premultiplied by alpha to ensure correct blending of
+    // semitransparent textures. For details, see:
+    // http://www.realtimerendering.com/blog/gpus-prefer-premultiplication/
+    texture = this._texture = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, element);
+
+  } else {
+
+    // If the texture dimensions remain the same, repaint the existing texture.
+    // Repainting with texSubImage2D is usually faster than with texImage2D,
+    // except in the case noted in browserQuirks.
+
+    texture = this._texture;
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+
+    if (element instanceof HTMLVideoElement && browserQuirks.videoUseTexImage2D) {
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, element);
+    } else {
+      gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, gl.RGBA, gl.UNSIGNED_BYTE, element);
+    }
+
+  }
+
+  // Generate mipmap if the corresponding stage option is set and the texture
+  // dimensions are powers of two.
+  if (stage._generateMipmaps && ispot(width) && ispot(height)) {
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+    gl.generateMipmap(gl.TEXTURE_2D);
+  } else {
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+  }
+
+  // Clamp texture to edges.
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+
+  // Unbind texture.
+  gl.bindTexture(gl.TEXTURE_2D, null);
+
+  // Update texture dimensions and timestamp.
+  this._timestamp = timestamp;
+  this._width = width;
+  this._height = height;
+
+};
+
+
+WebGlTexture.prototype.destroy = function() {
+  if (this._texture) {
+    this._gl.deleteTexture(this._texture);
+  }
+  clearOwnProperties(this);
+};
+
+
+WebGlStage.TextureClass = WebGlStage.prototype.TextureClass = WebGlTexture;
+
+
+module.exports = WebGlStage;
+
+},{"../loaders/HtmlImage":59,"../support/WebGl":85,"../util/clearOwnProperties":92,"../util/dom":102,"../util/inherits":105,"../util/ispot":106,"../util/pixelRatio":110,"./Stage":81,"bowser":1}],83:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var prefixProperty = require('../util/dom').prefixProperty;
+
+// Detect CSS 3D transforms support. Adapted from Modernizr.
+function checkCssSupported() {
+  // First, check if the 'perspective' CSS property or a vendor-prefixed
+  // variant is available.
+  var perspectiveProperty = prefixProperty('perspective');
+  var el = document.createElement('div');
+  var supported = typeof el.style[perspectiveProperty] !== 'undefined';
+
+  // Certain versions of Chrome disable 3D transforms even though the CSS
+  // property exists. In those cases, we use the following media query,
+  // which only succeeds if the feature is indeed enabled.
+  if (supported && perspectiveProperty === 'WebkitPerspective') {
+    var id = '__marzipano_test_css3d_support__';
+    var st = document.createElement('style');
+    st.textContent = '@media(-webkit-transform-3d){#' + id + '{height: 3px;})';
+    document.getElementsByTagName('head')[0].appendChild(st);
+    el.id = id;
+    document.body.appendChild(el);
+    // The offsetHeight seems to be different than 3 at some zoom levels on
+    // Chrome (and maybe other browsers). Test for > 0 instead.
+    supported = el.offsetHeight > 0;
+    st.parentNode.removeChild(st);
+    el.parentNode.removeChild(el);
+  }
+
+  return supported;
+}
+
+// Cache result.
+var supported;
+function cssSupported() {
+  if (supported !== undefined) {
+    return supported;
+  }
+  return (supported = checkCssSupported());
+}
+
+module.exports = cssSupported;
+
+},{"../util/dom":102}],84:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+// Detect supported Flash version. Returns [major, minor, rev] or null.
+// Adapted from https://code.google.com/p/swfobject
+function detectFlashVersion() {
+  var playerVersion = null;
+
+  var plugins = navigator.plugins;
+  var mimeTypes = navigator.mimeTypes;
+
+  var d = null;
+
+  if (plugins && plugins['Shockwave Flash'] && mimeTypes &&
+      mimeTypes['application/x-shockwave-flash'] &&
+      mimeTypes['application/x-shockwave-flash'].enabledPlugin) {
+    d = plugins['Shockwave Flash'].description;
+    d = d.replace(/^.*\s+(\S+\s+\S+$)/, '$1');
+    playerVersion = [0, 0, 0];
+    playerVersion[0] = parseInt(d.replace(/^(.*)\..*$/, '$1'), 10);
+    playerVersion[1] = parseInt(d.replace(/^.*\.(.*)\s.*$/, '$1'), 10);
+    playerVersion[2] = /[a-zA-Z]/.test(d) ? parseInt(d.replace(/^.*[a-zA-Z]+(.*)$/, '$1'), 10) : 0;
+  }
+  else if (window.ActiveXObject) {
+    try {
+      var a = new ActiveXObject('ShockwaveFlash.ShockwaveFlash');
+      if (a && (d = a.GetVariable('$version'))) {
+        d = d.split(' ')[1].split(',');
+        playerVersion = [parseInt(d[0], 10), parseInt(d[1], 10), parseInt(d[2], 10)];
+      }
+    }
+    catch (e) {}
+  }
+
+  return playerVersion;
+}
+
+// Flash support detection.
+function checkFlashSupported() {
+  var version = detectFlashVersion();
+  // Only support 10.1 and above. Flash 10.0 does not work for some reason.
+  return version && (version[0] >= 11 || (version[0] === 10 && version[1] >= 1));
+}
+
+// Cache result.
+var supported;
+function flashSupported() {
+  if (supported !== undefined) {
+    return supported;
+  }
+  return (supported = checkFlashSupported());
+}
+
+module.exports = flashSupported;
+
+},{}],85:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+// Detect WebGl support.
+// Keep stages/WebGl.js in sync with this.
+function checkWebGlSupported() {
+  var canvas = document.createElement('canvas');
+  var gl = canvas.getContext && (canvas.getContext('webgl') ||
+                                 canvas.getContext('experimental-webgl'));
+  return !!gl;
+}
+
+// Cache result.
+var supported;
+function webGlSupported() {
+  if (supported !== undefined) {
+    return supported;
+  }
+  return (supported = checkWebGlSupported());
+}
+
+module.exports = webGlSupported;
+
+},{}],86:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var browser = require('bowser');
+
+// Detect CSS pointer-events support.
+function checkCssPointerEventsSupported() {
+
+  // Check for existence of CSS property.
+  var style = document.createElement('a').style;
+  style.cssText = 'pointer-events:auto';
+  var hasCssProperty = style.pointerEvents === 'auto';
+
+  // The above result is spurious on emulation mode for IE 8-10.
+  var isOldIE = browser.msie && parseFloat(browser.version) < 11;
+
+  return hasCssProperty && !isOldIE;
+}
+
+// Cache result.
+var supported;
+function cssPointerEventsSupported() {
+  if (supported !== undefined) {
+    return supported;
+  }
+  return (supported = checkCssPointerEventsSupported());
+}
+
+module.exports = cssPointerEventsSupported;
+
+},{"bowser":1}],87:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+// Transform a synchronous function into an asynchronous one.
+function async(fn) {
+  return function asynced(done) {
+    var err, ret;
+    try {
+      ret = fn();
+    } catch (e) {
+      err = e;
+    } finally {
+      if (err) {
+        done(err);
+      } else {
+        done(null, ret);
+      }
+    }
+  };
+}
+
+module.exports = async;
+
+},{}],88:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+/**
+ * Converts a {@link RectSpec} into an equivalent {@link Rect}.
+ *
+ * A {@link RectSpec} is a convenient user API format, providing default values
+ * and the flexibility of specifying absolute, relative or mixed dimensions.
+ *
+ * A {@link Rect} is a more convenient format for the rendering pipeline. It is
+ * always expressed in normalized coordinates, and all its properties are
+ * guaranteed to be present.
+ *
+ * @param {number} totalWidth The total width of the rendering area in pixels.
+ * @param {number} totalHeight The total height of the rendering area in pixels.
+ * @param {RectSpec} spec The input spec, defaulting to the full rendering area
+ *     if null or undefined.
+ * @param {Rect} result The output spec. If the argument is present, it is
+ *     filled in and returned; otherwise, a fresh object is returned.
+ */
+function calcRect(totalWidth, totalHeight, spec, result) {
+
+  result = result || {};
+
+  var width;
+  if (spec != null && spec.absoluteWidth != null) {
+    width = spec.absoluteWidth / totalWidth;
+  } else if (spec != null && spec.relativeWidth != null) {
+    width = spec.relativeWidth;
+  } else {
+    width = 1;
+  }
+
+  var height;
+  if (spec && spec.absoluteHeight != null) {
+    height = spec.absoluteHeight / totalHeight;
+  } else if (spec != null && spec.relativeHeight != null) {
+    height = spec.relativeHeight;
+  } else {
+    height = 1;
+  }
+
+  var x;
+  if (spec != null && spec.absoluteX != null) {
+    x = spec.absoluteX / totalWidth;
+  } else if (spec != null && spec.relativeX != null) {
+    x = spec.relativeX;
+  } else {
+    x = 0;
+  }
+
+  var y;
+  if (spec != null && spec.absoluteY != null) {
+    y = spec.absoluteY / totalHeight;
+  } else if (spec != null && spec.relativeY != null) {
+    y = spec.relativeY;
+  } else {
+    y = 0;
+  }
+
+  result.x = x;
+  result.y = y;
+  result.width = width;
+  result.height = height;
+
+  return result;
+}
+
+module.exports = calcRect;
+
+},{}],89:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var once = require('./once');
+
+// A cancelable function is an asynchronous function (i.e., one whose last
+// argument is a callback receiving an error plus zero or more return values)
+// that (synchronously) returns a cancel() function. Calling cancel() should
+// abort the asynchronous operation and call the callback with the arguments
+// that were passed into cancel(). Calling cancel() twice, as with callbacks,
+// is not guaranteed to be safe.
+
+// Wrap a non-cancellable asynchronous function into a cancelable one.
+//
+// Calling cancel() on the returned function will not interrupt the execution
+// of the original function; it will merely ignore its return value.
+//
+// Usually, instead of wrapping your function, you want to implement cancel()
+// yourself in order to have some abort logic. This utility function provides a
+// straighforward solution for cases in which no custom abort logic is required.
+function cancelize(fn) {
+  return function cancelized() {
+    if (!arguments.length) {
+      throw new Error('cancelized: expected at least one argument');
+    }
+    var args = Array.prototype.slice.call(arguments, 0);
+    var done = args[args.length - 1] = once(args[args.length - 1]);
+
+    function cancel() {
+      done.apply(null, arguments);
+    }
+
+    fn.apply(null, args);
+
+    return cancel;
+  };
+}
+
+module.exports = cancelize;
+
+},{"./once":109}],90:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var noop = require('./noop');
+
+// Return a function that executes its arguments (which should be cancelables)
+// in sequence, so that each of them passes its return values to the next.
+// Execution is aborted if one of the functions returns an error; in that case
+// the last function in the sequence is called with the error.
+// See util/cancelize.js for an explanation of what cancelables are.
+function chain() {
+
+  // The list of functions to chain together.
+  var argList = Array.prototype.slice.call(arguments, 0);
+
+  return function chained() {
+
+    // List of remaining functions to be executed.
+    // Make a copy of the original list so we can mutate the former while
+    // preserving the latter intact for future invocations of the chain.
+    var fnList = argList.slice(0);
+
+    // Currently executing function.
+    var fn = null;
+
+    // Cancel method for the currently executing function.
+    var cfn = null;
+
+    // Arguments for the first function.
+    var args = arguments.length ? Array.prototype.slice.call(arguments, 0, arguments.length - 1) : [];
+
+    // Callback for the chain.
+    var done = arguments.length ? arguments[arguments.length - 1] : noop;
+
+    // Execute the next function in the chain.
+    // Receives the error and return values from the previous function.
+    function exec() {
+
+      // Extract error from arguments.
+      var err = arguments[0];
+
+      // Abort chain on error.
+      if (err) {
+        fn = cfn = null;
+        done.apply(null, arguments);
+        return;
+      }
+
+      // Terminate if there are no functions left in the chain.
+      if (!fnList.length) {
+        fn = cfn = null;
+        done.apply(null, arguments);
+        return;
+      }
+
+      // Advance to the next function in the chain.
+      fn = fnList.shift();
+      var _fn = fn;
+
+      // Extract arguments to pass into the next function.
+      var ret = Array.prototype.slice.call(arguments, 1);
+
+      // Call next function with previous return value and call back exec.
+      ret.push(exec);
+      var _cfn = fn.apply(null, ret); // fn(null, ret..., exec)
+
+      // Detect when fn has completed synchronously and do not clobber the
+      // internal state in that case. You're not expected to understand this.
+      if (_fn !== fn) {
+        return;
+      }
+
+      // Remember the cancel method for the currently executing function.
+      // Detect chaining on non-cancellable function.
+      if (typeof _cfn !== 'function') {
+        throw new Error('chain: chaining on non-cancellable function');
+      } else {
+        cfn = _cfn;
+      }
+
+    }
+
+    // Cancel chain execution.
+    function cancel() {
+      if (cfn) {
+        cfn.apply(null, arguments);
+      }
+    }
+
+    // Start chain execution.
+    // We call exec as if linking from a previous function in the chain,
+    // except that the error is always null. As a consequence, chaining on an
+    // empty list yields the identity function.
+    args.unshift(null);
+    exec.apply(null, args); // exec(null, args...)
+
+    return cancel;
+
+  };
+
+}
+
+module.exports = chain;
+
+},{"./noop":108}],91:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+function clamp(value, min, max) {
+  return Math.min(Math.max(value, min), max);
+}
+
+module.exports = clamp;
+},{}],92:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+// Sets an object's own properties to undefined. This may be called by
+// destructors to avoid retaining references and help detect incorrect use of
+// destroyed instances.
+function clearOwnProperties(obj) {
+  for (var prop in obj) {
+    if (obj.hasOwnProperty(prop)) {
+      obj[prop] = undefined;
+    }
+  }
+}
+
+module.exports = clearOwnProperties;
+
+},{}],93:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+function getPerformanceClock() {
+  if (window.performance && window.performance.now) {
+    return function performanceClock() {
+      return window.performance.now();
+    };
+  }
+  return null;
+}
+
+function getDateClock() {
+  return function dateNowClock() {
+    return Date.now();
+  };
+}
+
+var clock = getPerformanceClock() || getDateClock();
+
+module.exports = clock;
+},{}],94:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+function cmp(x, y) {
+  if (x < y) {
+    return -1;
+  }
+  if (x > y) {
+    return 1;
+  }
+  return 0;
+}
+
+module.exports = cmp;
+},{}],95:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+/**
+  * Compose multiple functions
+  *
+  * `compose(f, g)` returns `function(x) { return f(g(x)); }`
+  *
+  * @memberof util
+  * @param {Function[]} functions The functions to compose
+  * @return {Function}
+  */
+function compose() {
+  var fnList = arguments;
+  return function composed(initialArg) {
+    var ret = initialArg;
+    for (var i = 0; i < fnList.length; i++) {
+      var fn = fnList[i];
+      ret = fn.call(null, ret);
+    }
+    return ret;
+  };
+}
+
+module.exports = compose;
+},{}],96:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+/**
+ * Convert fov
+ *
+ * For example, to convert from hfov to vfov one would call
+ * `convert(hfov, width, height)`
+ *
+ * @param {number} fov
+ * @param {number} fromDimension
+ * @param {number} toDimension
+ * @return {number}
+ * @memberof util.convertFov
+ */
+function convert(fov, fromDimension, toDimension) {
+  return 2 * Math.atan(toDimension * Math.tan(fov / 2) / fromDimension);
+}
+
+/**
+ * @param {number} fov
+ * @param {number} fromDimension
+ * @param {number} toDimension
+ * @return {number}
+ * @memberof util.convertFov
+ */
+function htov(fov, width, height) {
+  return convert(fov, width, height);
+}
+
+/**
+ * @param {number} fov
+ * @param {number} fromDimension
+ * @param {number} toDimension
+ * @return {number}
+ * @memberof util.convertFov
+ */
+function htod(fov, width, height) {
+  return convert(fov, width, Math.sqrt(width * width + height * height));
+}
+
+/**
+ * @param {number} fov
+ * @param {number} fromDimension
+ * @param {number} toDimension
+ * @return {number}
+ * @memberof util.convertFov
+ */
+function vtoh(fov, width, height) {
+  return convert(fov, height, width);
+}
+
+/**
+ * @param {number} fov
+ * @param {number} fromDimension
+ * @param {number} toDimension
+ * @return {number}
+ * @memberof util.convertFov
+ */
+function vtod(fov, width, height) {
+  return convert(fov, height, Math.sqrt(width * width + height * height));
+}
+
+/**
+ * @param {number} fov
+ * @param {number} fromDimension
+ * @param {number} toDimension
+ * @return {number}
+ * @memberof util.convertFov
+ */
+function dtoh(fov, width, height) {
+  return convert(fov, Math.sqrt(width * width + height * height), width);
+}
+
+/**
+ * @param {number} fov
+ * @param {number} fromDimension
+ * @param {number} toDimension
+ * @return {number}
+ * @memberof util.convertFov
+ */
+function dtov(fov, width, height) {
+  return convert(fov, Math.sqrt(width * width + height * height), height);
+}
+
+/**
+ * @namespace util.convertFov
+ */
+module.exports = {
+  convert: convert,
+  htov: htov,
+  htod: htod,
+  vtoh: vtoh,
+  vtod: vtod,
+  dtoh: dtoh,
+  dtov: dtov
+};
+
+},{}],97:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+// Convert a number to a string in decimal notation.
+function decimal(x) {
+  // Double-precision floats have 15 significant decimal digits.
+  return x.toPrecision(15);
+}
+
+module.exports = decimal;
+},{}],98:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+function defaults(obj, defaultsObj) {
+  for (var key in defaultsObj) {
+    if (!(key in obj)) {
+      obj[key] = defaultsObj[key];
+    }
+  }
+  return obj;
+}
+
+module.exports = defaults;
+},{}],99:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+function defer(fn, args) {
+  function deferred() {
+    if (args && args.length > 0) {
+      fn.apply(null, args);
+    } else {
+      fn();
+    }
+  }
+  setTimeout(deferred, 0);
+}
+
+module.exports = defer;
+},{}],100:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+/**
+ * @memberof util
+ * @param {number} deg
+ * @return {number}
+ */
+function degToRad(deg) {
+  return deg * Math.PI / 180;
+}
+
+module.exports = degToRad;
+},{}],101:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+// Perform a cancelable delay.
+// See util/cancelize.js for an explanation of what cancelables are.
+function delay(ms, done) {
+
+  // Work around IE8 bug whereby a setTimeout callback may still be called
+  // after the corresponding clearTimeout is invoked.
+  var timer = null;
+
+  function finish() {
+    if (timer != null) {
+      timer = null;
+      done(null);
+    }
+  }
+
+  function cancel() {
+    if (timer != null) {
+      clearTimeout(timer);
+      timer = null;
+      done.apply(null, arguments);
+    }
+  }
+
+  timer = setTimeout(finish, ms);
+
+  return cancel;
+
+}
+
+module.exports = delay;
+
+},{}],102:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+
+function prefixProperty(property) {
+
+  var style = document.documentElement.style;
+  var prefixList = ['Moz', 'Webkit', 'Khtml', 'O', 'ms'];
+
+  for (var i = 0; i < prefixList.length; i++) {
+    var prefix = prefixList[i];
+    var capitalizedProperty = property[0].toUpperCase() + property.slice(1);
+    var prefixedProperty = prefix + capitalizedProperty;
+
+    if (prefixedProperty in style) {
+      return prefixedProperty;
+    }
+  }
+
+  return property;
+
+}
+
+
+function getWithVendorPrefix(property) {
+  var prefixedProperty = prefixProperty(property);
+  return function getPropertyWithVendorPrefix(element) {
+    return element.style[prefixedProperty];
+  };
+
+}
+
+
+function setWithVendorPrefix(property) {
+  var prefixedProperty = prefixProperty(property);
+  return function setPropertyWithVendorPrefix(element, val) {
+    return (element.style[prefixedProperty] = val);
+  };
+}
+
+
+var setTransform = setWithVendorPrefix('transform');
+var setTransformOrigin = setWithVendorPrefix('transformOrigin');
+
+
+function setNullTransform(element) {
+  setTransform(element, 'translateZ(0)');
+}
+
+
+function setNullTransformOrigin(element) {
+  setTransformOrigin(element, '0 0 0');
+}
+
+
+function setAbsolute(element) {
+  element.style.position = 'absolute';
+}
+
+
+function setPixelPosition(element, x, y) {
+  element.style.left = x + 'px';
+  element.style.top = y + 'px';
+}
+
+
+function setPixelSize(element, width, height) {
+  element.style.width = width + 'px';
+  element.style.height = height + 'px';
+}
+
+
+function setNullSize(element) {
+  element.style.width = element.style.height = 0;
+}
+
+
+function setFullSize(element) {
+  element.style.width = element.style.height = '100%';
+}
+
+
+function setOverflowHidden(element) {
+  element.style.overflow = 'hidden';
+}
+
+
+function setOverflowVisible(element) {
+  element.style.overflow = 'visible';
+}
+
+
+function setNoPointerEvents(element) {
+  element.style.pointerEvents = 'none';
+}
+
+
+function setBlocking(element) {
+  element.style.backgroundColor = '#000';
+  element.style.opacity = '0';
+  element.style.filter = 'alpha(opacity=0)';
+}
+
+
+module.exports = {
+  prefixProperty: prefixProperty,
+  getWithVendorPrefix: getWithVendorPrefix,
+  setWithVendorPrefix: setWithVendorPrefix,
+  setTransform: setTransform,
+  setTransformOrigin: setTransformOrigin,
+  setNullTransform: setNullTransform,
+  setNullTransformOrigin: setNullTransformOrigin,
+  setAbsolute: setAbsolute,
+  setPixelPosition: setPixelPosition,
+  setPixelSize: setPixelSize,
+  setNullSize: setNullSize,
+  setFullSize: setFullSize,
+  setOverflowHidden: setOverflowHidden,
+  setOverflowVisible: setOverflowVisible,
+  setNoPointerEvents: setNoPointerEvents,
+  setBlocking: setBlocking
+};
+
+},{}],103:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+function extend(obj, sourceObj) {
+  for (var key in sourceObj) {
+    obj[key] = sourceObj[key];
+  }
+  return obj;
+}
+
+module.exports = extend;
+},{}],104:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+// Jenkins one-at-a-time hash
+// http://www.burtleburtle.net/bob/hash/doobs.html
+// Input: an array of integers
+// Output: an integer
+
+function hash() {
+  var h = 0;
+  for (var i = 0; i < arguments.length; i++) {
+    var k = arguments[i];
+    h += k;
+    h += k << 10;
+    h ^= k >> 6;
+  }
+  h += h << 3;
+  h ^= h >> 11;
+  h += h << 15;
+  return h >= 0 ? h : -h;
+}
+
+module.exports = hash;
+},{}],105:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+// Make ctor a subclass of superCtor.
+// Do not depend on ES5 Object.create semantics because of older browsers.
+function inherits(ctor, superCtor) {
+  ctor.super_ = superCtor;
+  var TempCtor = function() {};
+  TempCtor.prototype = superCtor.prototype;
+  ctor.prototype = new TempCtor();
+  ctor.prototype.constructor = ctor;
+}
+
+module.exports = inherits;
+},{}],106:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+// Returns whether n is a power of two.
+function ispot(n) {
+  return (n & (n - 1)) == 0;
+}
+
+module.exports = ispot;
+},{}],107:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+/**
+ * Modulo operation
+ *
+ * @memberof util
+ * @param {Number} dividend
+ * @param {Number} divisor
+ * @returns {Number} Value in range `[0,divisor[`
+ */
+function mod(a, b) {
+  return (+a % (b = +b) + b) % b;
+}
+
+module.exports = mod;
+},{}],108:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+function noop() {}
+
+module.exports = noop;
+},{}],109:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+function once(fn) {
+  var called = false;
+  var value;
+  return function onced() {
+    if (!called) {
+      called = true;
+      value = fn.apply(null, arguments);
+    }
+    return value;
+  };
+}
+
+module.exports = once;
+},{}],110:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var defaultPixelRatio = 1;
+
+function pixelRatio() {
+  if (typeof window !== 'undefined') {
+    if (window.devicePixelRatio) {
+      return window.devicePixelRatio;
+    }
+    else {
+      var screen = window.screen;
+      if (screen && screen.deviceXDPI && screen.logicalXDPI) {
+        return screen.deviceXDPI / screen.logicalXDPI;
+      } else if (screen && screen.systemXDPI && screen.logicalXDPI) {
+        return screen.systemXDPI / screen.logicalXDPI;
+      }
+    }
+  }
+  return defaultPixelRatio;
+}
+
+module.exports = pixelRatio;
+
+},{}],111:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var cssSupported = require('../support/Css');
+var setTransform = require('./dom').setTransform;
+var setPixelPosition = require('./dom').setPixelPosition;
+var decimal = require('./decimal');
+
+// This cannot belong in util/dom.js because support/Css also depends on it
+// and it would cause a circular dependency.
+
+function positionAbsolutely(element, x, y, extraTransforms) {
+  extraTransforms = extraTransforms || '';
+  if (cssSupported()) {
+    // Use CSS 3D transforms when the browser supports them.
+    // A translateZ(0) transform improves performance on Chrome by creating a
+    // new layer for the element, which prevents unnecessary repaints.
+    var transform = 'translateX(' + decimal(x) + 'px) translateY(' + decimal(y) + 'px) translateZ(0) ' + extraTransforms;
+    setTransform(element, transform);
+  } else {
+    // Fall back to absolute positioning.
+    setPixelPosition(element, x, y);
+  }
+}
+
+module.exports = positionAbsolutely;
+
+},{"../support/Css":83,"./decimal":97,"./dom":102}],112:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+/**
+ * @memberof util
+ * @param {number} rad
+ * @return {number}
+ */
+function radToDeg(rad) {
+  return rad * 180 / Math.PI;
+}
+
+module.exports = radToDeg;
+},{}],113:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+function real(x) {
+  return typeof x === 'number' && isFinite(x);
+}
+
+module.exports = real;
+},{}],114:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var noop = require('./noop');
+
+// Return a cancelable function that executes fn in a loop until it returns
+// successfully.
+function retry(fn) {
+
+  return function retried() {
+
+    var args = arguments.length ? Array.prototype.slice.call(arguments, 0, arguments.length - 1) : [];
+    var done = arguments.length ? arguments[arguments.length - 1] : noop;
+
+    var cfn = null;
+    var canceled = false;
+
+    function exec() {
+      var err = arguments[0];
+      if (!err || canceled) {
+        done.apply(null, arguments);
+      } else {
+        cfn = fn.apply(null, args);
+      }
+    }
+
+    args.push(exec);
+    exec(true);
+
+    return function cancel() {
+      canceled = true;
+      cfn.apply(null, arguments);
+    };
+
+  };
+
+}
+
+module.exports = retry;
+
+},{"./noop":108}],115:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var clock = require('./clock');
+
+function tween(duration, update, done) {
+  var cancelled = false;
+
+  var startTime = clock();
+
+  function runUpdate() {
+    if(cancelled) { return; }
+    var tweenVal = (clock() - startTime)/duration;
+    if(tweenVal < 1) {
+      update(tweenVal);
+      requestAnimationFrame(runUpdate);
+    }
+    else {
+      update(1);
+      done();
+    }
+  }
+
+  update(0);
+  requestAnimationFrame(runUpdate);
+
+  return function cancel() {
+    cancelled = true;
+    done.apply(null, arguments);
+  }
+}
+
+module.exports = tween;
+},{"./clock":93}],116:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+function type(x) {
+  var typ = typeof x;
+  if (typ === 'object') {
+    if (x === null) {
+      return 'null';
+    }
+    if (Object.prototype.toString.call(x) === '[object Array]') {
+      return 'array';
+    }
+    if (Object.prototype.toString.call(x) === '[object RegExp]') {
+      return 'regexp';
+    }
+  }
+  return typ;
+}
+
+module.exports = type;
+
+},{}],117:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var eventEmitter = require('minimal-event-emitter');
+var mat4 = require('gl-matrix').mat4;
+var vec4 = require('gl-matrix').vec4;
+var pixelRatio = require('../util/pixelRatio');
+var real = require('../util/real');
+var clamp = require('../util/clamp');
+var clearOwnProperties = require('../util/clearOwnProperties');
+
+// Default viewport dimensions.
+// Start with zero to ensure that those values are handled correctly.
+var defaultWidth = 0;
+var defaultHeight = 0;
+
+// Default view parameters.
+var defaultX = 0.5;
+var defaultY = 0.5;
+var defaultZoom = 1;
+
+// Constant values used to simplify the frustum culling logic.
+// planeAxes[i] indicates the coordinate value that defines a frustum plane.
+// planeCmp[i] indicates how point and plane coordinates should be compared
+// to determine whether the point is on the outer side of the plane.
+var planeAxes = [
+  1, // top
+  0, // right
+  1, // bottom
+  0  // left
+];
+var planeCmp = [
+  -1, // top
+  -1, // right
+   1, // bottom
+   1  // left
+];
+
+// A zoom of exactly 0 breaks some computations, so we force a minimum positive
+// value. We use 6 decimal places for the epsilon value to avoid broken
+// rendering due to loss of precision in floating point computations.
+var zoomLimitEpsilon = 0.000001;
+
+
+/**
+ * @interface FlatViewParams
+ *
+ * A camera configuration for a {@link FlatView}.
+ *
+ * @property {number} x The horizontal coordinate of the image point displayed
+ *     at the viewport center, in the [0, 1] range.
+ *     When `x === 0.5`, the image is centered horizontally.
+ *     When `x === 0`, the left edge of the image is at the viewport center.
+ *     When `x === 1`, the right edge of the image is at the viewport center.
+ * @property {number} y The vertical coordinate of the image point displayed at
+ *     the viewport center, in the [0, 1] range.
+ *     When `y === 0.5`, the image is centered vertically.
+ *     When `y === 0`, the top edge of the image is at the viewport center.
+ *     When `y === 1`, the bottom edge of the image is at the viewport center.
+ * @property {number} zoom The horizontal zoom, in the [0, ∞) range.
+ *     When `zoom === 1`, the viewport is as wide as the image.
+ *     When `zoom < 1`, the image is zoomed in.
+ *     When `zoom > 1`, the image is zoomed out.
+ * @property {number} mediaAspectRatio The image aspect ratio.
+ *     When `mediaAspectRatio === 1`, the image width equals its height.
+ *     When `mediaAspectRatio < 1`, the image width is less than its height.
+ *     When `mediaAspectRatio > 1`, the image height is less than its width.
+ */
+
+
+/**
+ * @interface FlatViewCoords
+ *
+ * The position of a point in a flat image.
+ *
+ * @property {number} x The horizontal coordinate, in the [0, 1] range.
+ * @property {number} y The vertical coordinate, in the [0, 1] range.
+ */
+
+
+/**
+ * @typedef {function} FlatViewLimiter
+ *
+ * View limiter for a {@link FlatView}.
+ *
+ * A view limiter is a function that receives a {@link FlatViewParams} object,
+ * optionally modifies it in place, and returns it. It can be used to enforce
+ * constraints on the view parameters.
+ *
+ * See {@link FlatView.limit} for commonly used limiters. They may be composed
+ * together or with user-defined limiters with {@link util.compose}.
+ *
+ * @param {FlatViewParams} params
+ * @return {FlatViewParams}
+ */
+
+
+/**
+ * @class FlatView
+ * @implements View
+ * @classdesc
+ *
+ * A {@link View} implementing an orthogonal projection for flat images.
+ *
+ * @param {FlatViewParams} params The initial view parameters. The
+ *     `mediaAspectRatio` parameter must always be set. The other parameters
+ *     default to `{x: 0.5, y: 0.5, z: 1 }` if unspecified.
+ * @param {FlatViewLimiter=} limiter The view limiter. If unspecified, no view
+ *     limiting is applied. See {@link FlatView.limit} for commonly used
+ *     limiters.
+ */
+function FlatView(params, limiter) {
+  // Require an aspect ratio to be specified.
+  if (!(params && params.mediaAspectRatio != null)) {
+    throw new Error('mediaAspectRatio must be defined');
+  }
+
+  // The initial values for the view parameters.
+  this._x = params && params.x != null ? params.x : defaultX;
+  this._y = params && params.y != null ? params.y : defaultY;
+  this._zoom = params && params.zoom != null ? params.zoom : defaultZoom;
+  this._mediaAspectRatio = params.mediaAspectRatio;
+  this._width = params && params.width != null ?
+    params.width : defaultWidth;
+  this._height = params && params.height != null ?
+    params.height : defaultHeight;
+
+  // The initial value for the view limiter.
+  this._limiter = limiter || null;
+
+  // The last calculated projection matrix and its inverse.
+  this._projMatrix = mat4.create();
+  this._invProjMatrix = mat4.create();
+
+  // The last calculated view frustum.
+  this._frustum = [
+    0, // top
+    0, // right
+    0, // bottom
+    0  // left
+  ];
+
+  // Whether the projection matrices and view frustum need to be updated.
+  this._projectionChanged = true;
+
+  // Temporary variables used for calculations.
+  this._params = {};
+  this._vec = vec4.create();
+
+  // Force view limiting on initial parameters.
+  this._update();
+}
+
+eventEmitter(FlatView);
+
+
+/**
+ * Destructor.
+ */
+FlatView.prototype.destroy = function() {
+  clearOwnProperties(this);
+};
+
+
+/**
+ * Get the x parameter.
+ * @return {number}
+ */
+FlatView.prototype.x = function() {
+  return this._x;
+};
+
+
+/**
+ * Get the y parameter.
+ * @return {number}
+ */
+FlatView.prototype.y = function() {
+  return this._y;
+};
+
+
+/**
+ * Get the zoom value.
+ * @return {number}
+ */
+FlatView.prototype.zoom = function() {
+  return this._zoom;
+};
+
+
+/**
+ * Get the media aspect ratio.
+ * @return {number}
+ */
+FlatView.prototype.mediaAspectRatio = function() {
+  return this._mediaAspectRatio;
+};
+
+
+/**
+ * Get the viewport width.
+ * @return {number}
+ */
+FlatView.prototype.width = function() {
+  return this._width;
+};
+
+
+/**
+ * Get the viewport height.
+ * @return {number}
+ */
+FlatView.prototype.height = function() {
+  return this._height;
+};
+
+
+/**
+ * Get the viewport dimensions. If an argument is supplied, it is filled in with
+ * the result and returned. Otherwise, a fresh object is filled in and returned.
+ * @param {Size=} size
+ * @return {Size}
+ */
+FlatView.prototype.size = function(size) {
+  size = size || {};
+  size.width = this._width;
+  size.height = this._height;
+  return size;
+};
+
+
+/**
+ * Get the view parameters. If an argument is supplied, it is filled in with the
+ * result and returned. Otherwise, a fresh object is filled in and returned.
+ * @param {FlatViewParams=} params
+ * @return {FlatViewParams}
+ */
+FlatView.prototype.parameters = function(params) {
+  params = params || {};
+  params.x = this._x;
+  params.y = this._y;
+  params.zoom = this._zoom;
+  params.mediaAspectRatio = this._mediaAspectRatio;
+  return params;
+};
+
+
+/**
+ * Get the view limiter, or null if unset.
+ * @return {?FlatViewLimiter}
+ */
+FlatView.prototype.limiter = function() {
+  return this._limiter;
+};
+
+
+/**
+ * Set the x parameter.
+ * @param {number} x
+ */
+FlatView.prototype.setX = function(x) {
+  this._resetParams();
+  this._params.x = x;
+  this._update(this._params);
+};
+
+
+/**
+ * Set the y parameter.
+ * @param {number} y
+ */
+FlatView.prototype.setY = function(y) {
+  this._resetParams();
+  this._params.y = y;
+  this._update(this._params);
+};
+
+
+/**
+ * Set the zoom value.
+ * @param {number} zoom
+ */
+FlatView.prototype.setZoom = function(zoom) {
+  this._resetParams();
+  this._params.zoom = zoom;
+  this._update(this._params);
+};
+
+
+/**
+ * Add xOffset to the x parameter.
+ * @param {number} xOffset
+ */
+FlatView.prototype.offsetX = function(xOffset) {
+  this.setX(this._x + xOffset);
+};
+
+
+/**
+ * Add yOffset to the y parameter.
+ * @param {number} yOffset
+ */
+FlatView.prototype.offsetY = function(yOffset)
+{
+  this.setY(this._y + yOffset);
+};
+
+
+/**
+ * Add zoomOffset to the zoom value.
+ * @param {number} zoomOffset
+ */
+FlatView.prototype.offsetZoom = function(zoomOffset) {
+  this.setZoom(this._zoom + zoomOffset);
+};
+
+
+/**
+ * Set the media aspect ratio.
+ * @param {number} mediaAspectRatio
+ */
+FlatView.prototype.setMediaAspectRatio = function(mediaAspectRatio) {
+  this._resetParams();
+  this._params.mediaAspectRatio = mediaAspectRatio;
+  this._update(this._params);
+};
+
+
+/**
+ * Set the viewport dimensions.
+ * @param {Size} size
+ */
+FlatView.prototype.setSize = function(size) {
+  this._resetParams();
+  this._params.width = size.width;
+  this._params.height = size.height;
+  this._update(this._params);
+};
+
+
+/**
+ * Set the view parameters. Unspecified parameters are left unchanged.
+ * @param {FlatViewParameters} params
+ */
+FlatView.prototype.setParameters = function(params) {
+  this._resetParams();
+  this._params.x = params.x;
+  this._params.y = params.y;
+  this._params.zoom = params.zoom;
+  this._params.mediaAspectRatio = params.mediaAspectRatio;
+  this._update(this._params);
+};
+
+
+/**
+ * Set the view limiter.
+ * @param {?FlatViewLimiter} limiter The new limiter, or null to unset.
+ */
+FlatView.prototype.setLimiter = function(limiter) {
+  this._limiter = limiter || null;
+  this._update();
+};
+
+
+FlatView.prototype._resetParams = function() {
+  var params = this._params;
+  params.x = null;
+  params.y = null;
+  params.zoom = null;
+  params.mediaAspectRatio = null;
+  params.width = null;
+  params.height = null;
+};
+
+
+FlatView.prototype._update = function(params) {
+
+  // Avoid object allocation when no parameters are supplied.
+  if (params == null) {
+    this._resetParams();
+    params = this._params;
+  }
+
+  // Save old parameters for later comparison.
+  var oldX = this._x;
+  var oldY = this._y;
+  var oldZoom = this._zoom;
+  var oldMediaAspectRatio = this._mediaAspectRatio;
+  var oldWidth = this._width;
+  var oldHeight = this._height;
+
+  // Fill in object with the new set of parameters to pass into the limiter.
+  params.x = params.x != null ? params.x : oldX;
+  params.y = params.y != null ? params.y : oldY;
+  params.zoom = params.zoom != null ? params.zoom : oldZoom;
+  params.mediaAspectRatio = params.mediaAspectRatio != null ?
+    params.mediaAspectRatio : oldMediaAspectRatio;
+  params.width = params.width != null ? params.width : oldWidth;
+  params.height = params.height != null ? params.height : oldHeight;
+
+  // Apply view limiting when defined.
+  if (this._limiter) {
+    params = this._limiter(params);
+    if (!params) {
+      throw new Error('Bad view limiter');
+    }
+  }
+
+  // Grab the limited parameters.
+  var newX = params.x;
+  var newY = params.y;
+  var newZoom = params.zoom;
+  var newMediaAspectRatio = params.mediaAspectRatio;
+  var newWidth = params.width;
+  var newHeight = params.height;
+
+  // Consistency check.
+  if (!real(newX) || !real(newY) || !real(newZoom) ||
+      !real(newMediaAspectRatio) || !real(newWidth) || !real(newHeight)) {
+    throw new Error('Bad view - suspect a broken limiter');
+  }
+
+  // Constrain zoom.
+  newZoom = clamp(newZoom, zoomLimitEpsilon, Infinity);
+
+  // Update parameters.
+  this._x = newX;
+  this._y = newY;
+  this._zoom = newZoom;
+  this._mediaAspectRatio = newMediaAspectRatio;
+  this._width = newWidth;
+  this._height = newHeight;
+
+  // Check whether the parameters changed and emit the corresponding events.
+  if (newX !== oldX || newY !== oldY || newZoom !== oldZoom ||
+      newMediaAspectRatio !== oldMediaAspectRatio ||
+      newWidth !== oldWidth || newHeight !== oldHeight) {
+    this._projectionChanged = true;
+    this.emit('change');
+  }
+  if (newWidth !== oldWidth || newHeight !== oldHeight) {
+    this.emit('resize');
+  }
+
+};
+
+
+FlatView.prototype._zoomX = function() {
+  return this._zoom;
+};
+
+
+FlatView.prototype._zoomY = function() {
+  var mediaAspectRatio = this._mediaAspectRatio;
+  var aspect = this._width / this._height;
+  var zoomX = this._zoom;
+  var zoomY = zoomX * mediaAspectRatio / aspect;
+  if (isNaN(zoomY)) {
+    zoomY = zoomX;
+  }
+  return zoomY;
+};
+
+
+FlatView.prototype.updateWithControlParameters = function(parameters) {
+  var scale = this.zoom();
+  var zoomX = this._zoomX();
+  var zoomY = this._zoomY();
+
+  // TODO: should the scale be the same for both axes?
+  this.offsetX(parameters.axisScaledX * zoomX + parameters.x * scale);
+  this.offsetY(parameters.axisScaledY * zoomY + parameters.y * scale);
+  this.offsetZoom(parameters.zoom * scale);
+};
+
+
+FlatView.prototype._updateProjection = function() {
+  var projMatrix = this._projMatrix;
+  var invProjMatrix = this._invProjMatrix;
+  var frustum = this._frustum;
+
+  // Recalculate projection matrix when required.
+  if (this._projectionChanged) {
+    var x = this._x;
+    var y = this._y;
+    var zoomX = this._zoomX();
+    var zoomY = this._zoomY();
+
+    // Recalculate view frustum.
+    var top     = frustum[0] = (0.5 - y) + 0.5 * zoomY;
+    var right   = frustum[1] = (x - 0.5) + 0.5 * zoomX;
+    var bottom  = frustum[2] = (0.5 - y) - 0.5 * zoomY;
+    var left    = frustum[3] = (x - 0.5) - 0.5 * zoomX;
+
+    // Recalculate projection matrix and its inverse.
+    mat4.ortho(projMatrix, left, right, bottom, top, -1, 1);
+    mat4.invert(invProjMatrix, projMatrix);
+
+    this._projectionChanged = false;
+  }
+};
+
+
+/**
+ * Returns the projection matrix for the current view.
+ * @returns {mat4}
+ */
+FlatView.prototype.projection = function() {
+  this._updateProjection();
+  return this._projMatrix;
+};
+
+
+/**
+ * Returns the inverse projection matrix for the current view.
+ * @returns {mat4}
+ */
+FlatView.prototype.inverseProjection = function() {
+  this._updateProjection();
+  return this._invProjMatrix;
+};
+
+
+/**
+ * Return whether the view frustum intersects the given rectangle.
+ *
+ * This function may return false positives, but never false negatives.
+ * It is used for frustum culling, i.e., excluding invisible tiles from the
+ * rendering process.
+ *
+ * @param {vec3[]} rectangle The vertices of the rectangle.
+ */
+FlatView.prototype.intersects = function(rectangle) {
+  this._updateProjection();
+
+  var frustum = this._frustum;
+
+  // Check whether the rectangle is on the outer side of any of the frustum
+  // planes. This is a sufficient condition, though not necessary, for the
+  // rectangle to be completely outside the fruouter
+  for (var i = 0; i < frustum.length; i++) {
+    var limit = frustum[i];
+    var axis = planeAxes[i];
+    var cmp = planeCmp[i];
+    var inside = false;
+    for (var j = 0; j < rectangle.length; j++) {
+      var vertex = rectangle[j];
+      if (cmp < 0 && vertex[axis] < limit || cmp > 0 && vertex[axis] > limit) {
+        inside = true;
+        break;
+      }
+    }
+    if (!inside) {
+      return false;
+    }
+  }
+  return true;
+};
+
+
+/**
+ * Select the level that should be used to render the view.
+ * @param {Level[]} levelList the list of levels from which to select.
+ * @return {Level} the selected level.
+ */
+FlatView.prototype.selectLevel = function(levels) {
+
+  // Multiply the viewport width by the device pixel ratio to get the required
+  // horizontal resolution in pixels.
+  //
+  // Calculate the fraction of the image that would be visible at the current
+  // zoom value. Then, for each level, multiply by the level width to get the
+  // width in pixels of the portion that would be visible.
+  //
+  // Search for the smallest level that satifies the the required width,
+  // falling back on the largest level if none do.
+
+  var requiredPixels = pixelRatio() * this.width();
+  var zoomFactor = this._zoom;
+
+  for (var i = 0; i < levels.length; i++) {
+    var level = levels[i];
+    if (zoomFactor * level.width() >= requiredPixels) {
+      return level;
+    }
+  }
+
+  return levels[levels.length - 1];
+
+};
+
+
+/**
+ * Convert view coordinates into screen coordinates. If a result argument is
+ * provided, it is filled in and returned. Otherwise, a fresh object is filled
+ * in and returned.
+ *
+ * @param {FlatViewCoords} coords The view coordinates.
+ * @param {Coords=} result The result argument for the screen coordinates.
+ * @return {Coords}
+ */
+FlatView.prototype.coordinatesToScreen = function(coords, result) {
+  var ray = this._vec;
+
+  if (!result) {
+    result = {};
+  }
+
+  var width = this._width;
+  var height = this._height;
+
+  // Undefined on a null viewport.
+  if (width <= 0 || height <= 0) {
+    result.x = null;
+    result.y = null;
+    return null;
+  }
+
+  // Extract coordinates from argument, filling in default values.
+  var x = coords && coords.x != null ? coords.x : defaultX;
+  var y = coords && coords.y != null ? coords.y : defaultY;
+
+  // Project view ray onto clip space.
+  vec4.set(ray, x - 0.5, 0.5 - y, -1, 1);
+  vec4.transformMat4(ray, ray, this.projection());
+
+  // Calculate perspective divide.
+  for (var i = 0; i < 3; i++) {
+    ray[i] /= ray[3];
+  }
+
+  // Convert to viewport coordinates and return.
+  result.x = width * (ray[0] + 1) / 2;
+  result.y = height * (1 - ray[1]) / 2;
+
+  return result;
+};
+
+
+/**
+ * Convert screen coordinates into view coordinates. If a result argument is
+ * provided, it is filled in with the result and returned. Otherwise, a fresh
+ * object is filled in and returned.
+ *
+ * @param {Coords} coords The screen coordinates.
+ * @param {FlatViewCoords=} result The result argument for the view coordinates.
+ * @return {FlatViewCoords}
+ */
+FlatView.prototype.screenToCoordinates = function(coords, result) {
+  var ray = this._vec;
+
+  if (!result) {
+    result = {};
+  }
+
+  var width = this._width;
+  var height = this._height;
+
+  // Convert viewport coordinates to clip space.
+  var vecx = 2 * coords.x / width - 1;
+  var vecy = 1 - 2 * coords.y / height;
+  vec4.set(ray, vecx, vecy, 1, 1);
+
+  // Project back to world space.
+  vec4.transformMat4(ray, ray, this.inverseProjection());
+
+  // Convert to flat coordinates.
+  result.x = 0.5 + ray[0];
+  result.y = 0.5 - ray[1];
+
+  return result;
+};
+
+
+/**
+ * Factory functions for view limiters. See {@link FlatViewLimiter}.
+ * @namespace
+ */
+FlatView.limit = {
+
+  /**
+   * Returns a view limiter that constrains the x parameter.
+   * @param {number} min The minimum x value.
+   * @param {number} max The maximum y value.
+   * @return {FlatViewLimiter}
+   */
+  x: function(min, max) {
+    return function limitX(params) {
+      params.x = clamp(params.x, min, max);
+      return params;
+    };
+  },
+
+  /**
+   * Return a view limiter that constrains the y parameter.
+   * @param {number} min The minimum y value.
+   * @param {number} max The maximum y value.
+   * @return {FlatViewLimiter}
+   */
+  y: function(min, max) {
+    return function limitY(params) {
+      params.y = clamp(params.y, min, max);
+      return params;
+    };
+  },
+
+  /**
+   * Returns a view limiter than constrains the zoom parameter.
+   * @param {number} min The minimum zoom value.
+   * @param {number} max The maximum zoom value.
+   * @return {FlatViewLimiter}
+   */
+  zoom: function(min, max) {
+    return function limitZoom(params) {
+      params.zoom = clamp(params.zoom, min, max);
+      return params;
+    };
+  },
+
+  /**
+   * Returns a view limiter that prevents zooming in beyond the given
+   * resolution.
+   * @param {number} size The image width in pixels.
+   * @return {FlatViewLimiter}
+   */
+  resolution: function(size) {
+    return function limitResolution(params) {
+      if (params.width <= 0 || params.height <= 0) {
+        return params;
+      }
+      var width = params.width;
+      var minZoom = pixelRatio() * width / size;
+      params.zoom = clamp(params.zoom, minZoom, Infinity);
+      return params;
+    };
+  },
+
+  /**
+   * Returns a view limiter that constrains the values of the x parameter that
+   * are inside the viewport.
+   * @param {number} min The minimum x value.
+   * @param {number} max The maximum x value.
+   * @return {FlatViewLimiter}
+   */
+  visibleX: function(min, max) {
+    return function limitVisibleX(params) {
+      // Calculate the zoom value that makes the specified range fully visible.
+      var maxZoom = max - min;
+
+      // Clamp zoom to the maximum value.
+      if (params.zoom > maxZoom) {
+        params.zoom = maxZoom;
+      }
+
+      // Bound X such that the image is visible up to the range edges.
+      var minX = min + 0.5 * params.zoom;
+      var maxX = max - 0.5 * params.zoom;
+      params.x = clamp(params.x, minX, maxX);
+
+      return params;
+    };
+  },
+
+  /**
+   * Returns a view limiter that constrains the values of the y parameter that
+   * are inside the viewport.
+   * @param {number} min The minimum y value.
+   * @param {number} max The maximum y value.
+   * @return {FlatViewLimiter}
+   */
+  visibleY: function(min, max) {
+    return function limitVisibleY(params) {
+
+      // Do nothing for a null viewport.
+      if (params.width <= 0 || params.height <= 0) {
+        return params;
+      }
+
+      // Calculate the X to Y conversion factor.
+      var viewportAspectRatio = params.width / params.height;
+      var factor = viewportAspectRatio / params.mediaAspectRatio;
+
+      // Calculate the zoom value that makes the specified range fully visible.
+      var maxZoom = (max - min) * factor;
+
+      // Clamp zoom to the maximum value.
+      if (params.zoom > maxZoom) {
+        params.zoom = maxZoom;
+      }
+
+      // Bound Y such that the image is visible up to the range edges.
+      var minY = min + 0.5 * params.zoom / factor;
+      var maxY = max - 0.5 * params.zoom / factor;
+      params.y = clamp(params.y, minY, maxY);
+
+      return params;
+    };
+  },
+
+
+  /**
+   * Returns a view limiter that constrains the zoom parameter such that
+   * zooming out is prevented beyond the point at which the image is fully
+   * visible. Unless the image and the viewport have the same aspect ratio,
+   * this will cause bands to appear around the image.
+   * @return {FlatViewLimiter}
+   */
+  letterbox: function() {
+    return function limitLetterbox(params) {
+      if(params.width <= 0 || params.height <= 0) {
+        return params;
+      }
+      var viewportAspectRatio = params.width / params.height;
+
+      var fullWidthZoom = 1.0;
+      var fullHeightZoom = viewportAspectRatio / params.mediaAspectRatio;
+
+      // If the image is wider than the viewport, limit the horizontal zoom to
+      // the image width.
+      if (params.mediaAspectRatio >= viewportAspectRatio) {
+        params.zoom = Math.min(params.zoom, fullWidthZoom);
+      }
+
+      // If the image is narrower than the viewport, limit the vertical zoom to
+      // the image height.
+      if (params.mediaAspectRatio <= viewportAspectRatio) {
+        params.zoom = Math.min(params.zoom, fullHeightZoom);
+      }
+
+      // If the full image width is visible, limit x to the central point.
+      // Else, bound x such that image is visible up to the horizontal edges.
+      var minX, maxX;
+      if (params.zoom > fullWidthZoom) {
+        minX = maxX = 0.5;
+      } else {
+        minX = 0.0 + 0.5 * params.zoom / fullWidthZoom;
+        maxX = 1.0 - 0.5 * params.zoom / fullWidthZoom;
+      }
+
+      // If the full image height is visible, limit y to the central point.
+      // Else, bound y such that image is visible up to the vertical edges.
+      var minY, maxY;
+      if (params.zoom > fullHeightZoom) {
+        minY = maxY = 0.5;
+      } else {
+        minY = 0.0 + 0.5 * params.zoom / fullHeightZoom;
+        maxY = 1.0 - 0.5 * params.zoom / fullHeightZoom;
+      }
+
+      // Clamp x and y into the calculated bounds.
+      params.x = clamp(params.x, minX, maxX);
+      params.y = clamp(params.y, minY, maxY);
+
+      return params;
+    };
+  }
+
+};
+
+
+FlatView.type = FlatView.prototype.type = 'flat';
+
+
+module.exports = FlatView;
+
+},{"../util/clamp":91,"../util/clearOwnProperties":92,"../util/pixelRatio":110,"../util/real":113,"gl-matrix":3,"minimal-event-emitter":14}],118:[function(require,module,exports){
+/*
+ * Copyright 2016 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+'use strict';
+
+var eventEmitter = require('minimal-event-emitter');
+var mat4 = require('gl-matrix').mat4;
+var vec4 = require('gl-matrix').vec4;
+var pixelRatio = require('../util/pixelRatio');
+var convertFov = require('../util/convertFov');
+var mod = require('../util/mod');
+var real = require('../util/real');
+var clamp = require('../util/clamp');
+var decimal = require('../util/decimal');
+var compose = require('../util/compose');
+var clearOwnProperties = require('../util/clearOwnProperties');
+
+// Default viewport dimensions.
+// Start with zero to ensure that those values are handled correctly.
+var defaultWidth = 0;
+var defaultHeight = 0;
+
+// Default view parameters.
+var defaultYaw = 0;
+var defaultPitch = 0;
+var defaultRoll = 0;
+var defaultFov = Math.PI/4;
+var defaultProjectionCenterX = 0;
+var defaultProjectionCenterY = 0;
+
+// A fov of exactly 0 or π breaks some computations, so we constrain it to the
+// [fovLimitEpsilon, π - fovLimitEpsilon] interval. We use 6 decimal places for
+// the epsilon value to avoid broken rendering due to loss of precision in
+// floating point computations.
+var fovLimitEpsilon = 0.000001;
+
+
+/**
+ * @interface RectilinearViewParams
+ *
+ * A camera configuration for a {@link RectilinearView}.
+ *
+ * @property {number} yaw The yaw angle, in the [-π, π] range.
+ *     When `yaw < 0`, the view rotates to the left.
+ *     When `yaw > 0`, the view rotates to the right.
+ *
+ * @property {number} pitch The pitch angle, in the [-π, π] range.
+ *     When `pitch < 0`, the view rotates downwards.
+ *     When `pitch > 0`, the view rotates upwards.
+ *
+ * @property {number} roll The roll angle, in the [-π, π] range.
+ *     When `roll < 0`, the view rotates clockwise.
+ *     When `roll > 0`, the view rotates counter-clockwise.
+ *
+ * @property {fov} fov The vertical field of view, in the [0, π] range.
+ */
+
+
+/**
+ * @interface RectilinearViewCoords
+ *
+ * The position of a point in a 360° image.
+ *
+ * @property {number} yaw The yaw angle, in the [-π, π] range.
+ * @property {number} pitch The pitch angle, in the [-π, π] range.
+ */
+
+
+/**
+ * @typedef {function} RectilinearViewLimiter
+ *
+ * View limiter for a {@link RectilinearView}.
+ *
+ * A view limiter is a function that receives a {@link RectilinearViewParams}
+ * object, optionally modifies it in place, and returns it. It can be used to
+ * enforce constraints on the view parameters.
+ *
+ * See {@link RectilinearView.limit} for commonly used limiters. They may be
+ * composed together or with user-defined limiters with {@link util.compose}.
+ *
+ * @param {RectilinearViewParams} params
+ * @return {RectilinearViewParams}
+ */
+
+/**
+ * @class RectilinearView
+ * @implements View
+ * @classdesc
+ *
+ * A {@link View} implementing a rectilinear projection for 360° images.
+ *
+ * @param {RectilinearViewParams=} params The initial view parameters. If
+ *     unspecified, defaults to `{yaw: 0, pitch: 0, roll: 0, fov: Math.PI/4 }`.
+ * @param {RectilinearViewLimiter=} limiter The view limiter. If unspecified,
+ *     no view limiting is applied. See {@link RectilinearView.limit} for
+ *     commonly used limiters.
+ */
+function RectilinearView(params, limiter) {
+  // The initial values for the view parameters.
+  this._yaw = params && params.yaw != null ? params.yaw : defaultYaw;
+  this._pitch = params && params.pitch != null ? params.pitch : defaultPitch;
+  this._roll = params && params.roll != null ? params.roll : defaultRoll;
+  this._fov = params && params.fov != null ? params.fov : defaultFov;
+  this._width = params && params.width != null ?
+    params.width : defaultWidth;
+  this._height = params && params.height != null ?
+    params.height : defaultHeight;
+  this._projectionCenterX = params && params.projectionCenterX != null ?
+    params.projectionCenterX : defaultProjectionCenterX;
+  this._projectionCenterY = params && params.projectionCenterY != null ?
+    params.projectionCenterY : defaultProjectionCenterY;
+
+  // The initial value for the view limiter.
+  this._limiter = limiter || null;
+
+  // The last calculated projection matrix and its inverse.
+  this._projMatrix = mat4.create();
+  this._invProjMatrix = mat4.create();
+
+  // The last calculated view frustum.
+  this._frustum = [
+    vec4.create(), // left
+    vec4.create(), // right
+    vec4.create(), // bottom
+    vec4.create(), // top
+    vec4.create()  // camera
+  ];
+
+  // Whether the projection matrices and the view frustum need to be updated.
+  this._projectionChanged = true;
+
+  // Temporary variables used for calculations.
+  this._params = {};
+  this._fovs = {};
+  this._tmpVec = vec4.create();
+
+  // Force view limiting on initial parameters.
+  this._update();
+}
+
+eventEmitter(RectilinearView);
+
+
+/**
+ * Destructor.
+ */
+RectilinearView.prototype.destroy = function() {
+  clearOwnProperties(this);
+};
+
+
+/**
+ * Get the yaw angle.
+ * @return {number}
+ */
+RectilinearView.prototype.yaw = function() {
+  return this._yaw;
+};
+
+
+/**
+ * Get the pitch angle.
+ * @return {number}
+ */
+RectilinearView.prototype.pitch = function() {
+  return this._pitch;
+};
+
+
+/**
+ * Get the roll angle.
+ * @return {number}
+ */
+RectilinearView.prototype.roll = function() {
+  return this._roll;
+};
+
+
+RectilinearView.prototype.projectionCenterX = function() {
+  return this._projectionCenterX;
+};
+
+
+RectilinearView.prototype.projectionCenterY = function() {
+  return this._projectionCenterY;
+};
+
+
+/**
+ * Get the fov value.
+ * @return {number}
+ */
+RectilinearView.prototype.fov = function() {
+  return this._fov;
+};
+
+
+/**
+ * Get the viewport width.
+ * @return {number}
+ */
+RectilinearView.prototype.width = function() {
+  return this._width;
+};
+
+
+/**
+ * Get the viewport height.
+ * @return {number}
+ */
+RectilinearView.prototype.height = function() {
+  return this._height;
+};
+
+
+/**
+ * Get the viewport dimensions. If an argument is supplied, it is filled in with
+ * the result and returned. Otherwise, a fresh object is filled in and returned.
+ * @param {Size=} size
+ * @return {Size}
+ */
+RectilinearView.prototype.size = function(size) {
+  size = size || {};
+  size.width = this._width;
+  size.height = this._height;
+  return size;
+};
+
+
+/**
+ * Get the view parameters. If an argument is supplied, it is filled in with the
+ * result and returned. Otherwise, a fresh object is filled in and returned.
+ * @param {RectilinearViewParams=} obj
+ * @return {RectilinearViewParams}
+ */
+RectilinearView.prototype.parameters = function(params) {
+  params = params || {};
+  params.yaw = this._yaw;
+  params.pitch = this._pitch;
+  params.roll = this._roll;
+  params.fov = this._fov;
+  return params;
+};
+
+
+/**
+ * Get the view limiter, or null if unset.
+ * @return {?RectilinearViewLimiter}
+ */
+RectilinearView.prototype.limiter = function() {
+  return this._limiter;
+};
+
+
+/**
+ * Set the yaw angle.
+ * @param {number} yaw
+ */
+RectilinearView.prototype.setYaw = function(yaw) {
+  this._resetParams();
+  this._params.yaw = yaw;
+  this._update(this._params);
+};
+
+
+/**
+ * Set the pitch angle.
+ * @param {number} pitch
+ */
+RectilinearView.prototype.setPitch = function(pitch) {
+  this._resetParams();
+  this._params.pitch = pitch;
+  this._update(this._params);
+};
+
+
+/**
+ * Set the roll angle.
+ * @param {number} roll
+ */
+RectilinearView.prototype.setRoll = function(roll) {
+  this._resetParams();
+  this._params.roll = roll;
+  this._update(this._params);
+};
+
+
+/**
+ * Set the fov value.
+ * @param {number} fov
+ */
+RectilinearView.prototype.setFov = function(fov) {
+  this._resetParams();
+  this._params.fov = fov;
+  this._update(this._params);
+};
+
+
+RectilinearView.prototype.setProjectionCenterX = function(projectionCenterX) {
+  this._resetParams();
+  this._params.projectionCenterX = projectionCenterX;
+  this._update(this._params);
+};
+
+
+RectilinearView.prototype.setProjectionCenterY = function(projectionCenterY) {
+  this._resetParams();
+  this._params.projectionCenterY = projectionCenterY;
+  this._update(this._params);
+};
+
+
+/**
+ * Add yawOffset to the current yaw value.
+ * @param {number} yawOffset
+ */
+RectilinearView.prototype.offsetYaw = function(yawOffset) {
+  this.setYaw(this._yaw + yawOffset);
+};
+
+
+/**
+ * Add pitchOffset to the current pitch value.
+ * @param {number} pitchOffset
+ */
+RectilinearView.prototype.offsetPitch = function(pitchOffset) {
+  this.setPitch(this._pitch + pitchOffset);
+};
+
+
+/**
+ * Add rollOffset to the current roll value.
+ * @param {number} rollOffset
+ */
+RectilinearView.prototype.offsetRoll = function(rollOffset) {
+  this.setRoll(this._roll + rollOffset);
+};
+
+
+/**
+ * Add fovOffset to the current fov value.
+ * @param {number} fovOffset
+ */
+RectilinearView.prototype.offsetFov = function(fovOffset) {
+  this.setFov(this._fov + fovOffset);
+};
+
+
+/**
+ * Set the viewport dimensions.
+ * @param {Size} size
+ */
+RectilinearView.prototype.setSize = function(size) {
+  this._resetParams();
+  this._params.width = size.width;
+  this._params.height = size.height;
+  this._update(this._params);
+};
+
+
+/**
+ * Set the view parameters. Unspecified parameters are left unchanged.
+ * @param {RectilinearViewParameters} params
+ */
+RectilinearView.prototype.setParameters = function(params) {
+  this._resetParams();
+  this._params.yaw = params.yaw;
+  this._params.pitch = params.pitch;
+  this._params.roll = params.roll;
+  this._params.fov = params.fov;
+  this._params.projectionCenterX = params.projectionCenterX;
+  this._params.projectionCenterY = params.projectionCenterY;
+  this._update(this._params);
+};
+
+
+/**
+ * Set the view limiter.
+ * @param {?RectilinearViewLimiter} limiter The new limiter, or null to unset.
+ */
+RectilinearView.prototype.setLimiter = function(limiter) {
+  this._limiter = limiter || null;
+  this._update();
+};
+
+
+RectilinearView.prototype._resetParams = function() {
+  var params = this._params;
+  params.yaw = null;
+  params.pitch = null;
+  params.roll = null;
+  params.fov = null;
+  params.width = null;
+  params.height = null;
+};
+
+
+RectilinearView.prototype._update = function(params) {
+
+  // Avoid object allocation when no parameters are supplied.
+  if (params == null) {
+    this._resetParams();
+    params = this._params;
+  }
+
+  // Save old parameters for later comparison.
+  var oldYaw = this._yaw;
+  var oldPitch = this._pitch;
+  var oldRoll = this._roll;
+  var oldFov = this._fov;
+  var oldProjectionCenterX = this._projectionCenterX;
+  var oldProjectionCenterY = this._projectionCenterY;
+  var oldWidth = this._width;
+  var oldHeight = this._height;
+
+  // Fill in object with the new set of parameters to pass into the limiter.
+  params.yaw = params.yaw != null ? params.yaw : oldYaw;
+  params.pitch = params.pitch != null ? params.pitch : oldPitch;
+  params.roll = params.roll != null ? params.roll : oldRoll;
+  params.fov = params.fov != null ? params.fov : oldFov;
+  params.width = params.width != null ? params.width : oldWidth;
+  params.height = params.height != null ? params.height : oldHeight;
+  params.projectionCenterX = params.projectionCenterX != null ?
+    params.projectionCenterX : oldProjectionCenterX;
+  params.projectionCenterY = params.projectionCenterY != null ?
+    params.projectionCenterY : oldProjectionCenterY;
+
+  // Apply view limiting when defined.
+  if (this._limiter) {
+    params = this._limiter(params);
+    if (!params) {
+      throw new Error('Bad view limiter');
+    }
+  }
+
+  // Normalize parameters.
+  params = this._normalize(params);
+
+  // Grab the limited parameters.
+  var newYaw = params.yaw;
+  var newPitch = params.pitch;
+  var newRoll = params.roll;
+  var newFov = params.fov;
+  var newWidth = params.width;
+  var newHeight = params.height;
+  var newProjectionCenterX = params.projectionCenterX;
+  var newProjectionCenterY = params.projectionCenterY;
+
+  // Consistency check.
+  if (!real(newYaw) || !real(newPitch) || !real(newRoll) ||
+      !real(newFov) || !real(newWidth) || !real(newHeight) ||
+      !real(newProjectionCenterX) || !real(newProjectionCenterY)) {
+    throw new Error('Bad view - suspect a broken limiter');
+  }
+
+  // Update parameters.
+  this._yaw = newYaw;
+  this._pitch = newPitch;
+  this._roll = newRoll;
+  this._fov = newFov;
+  this._width = newWidth;
+  this._height = newHeight;
+  this._projectionCenterX = newProjectionCenterX;
+  this._projectionCenterY = newProjectionCenterY;
+
+  // Check whether the parameters changed and emit the corresponding events.
+  if (newYaw !== oldYaw || newPitch !== oldPitch || newRoll !== oldRoll ||
+      newFov !== oldFov || newWidth !== oldWidth || newHeight !== oldHeight ||
+      newProjectionCenterX !== oldProjectionCenterX ||
+      newProjectionCenterY !== oldProjectionCenterY) {
+    this._projectionChanged = true;
+    this.emit('change');
+  }
+  if (newWidth !== oldWidth || newHeight !== oldHeight) {
+    this.emit('resize');
+  }
+
+};
+
+
+RectilinearView.prototype._normalize = function(params) {
+
+  this._normalizeCoordinates(params);
+
+  // Make sure that neither the horizontal nor the vertical fields of view
+  // exceed π - fovLimitEpsilon.
+  var hfovPi = convertFov.htov(Math.PI, params.width, params.height);
+  var maxFov = isNaN(hfovPi) ? Math.PI : Math.min(Math.PI, hfovPi);
+  params.fov = clamp(params.fov, fovLimitEpsilon, maxFov - fovLimitEpsilon);
+
+  return params;
+};
+
+
+RectilinearView.prototype._normalizeCoordinates = function(params) {
+  // Constrain yaw, pitch and roll to the [-π, π] interval.
+  if ('yaw' in params) {
+    params.yaw = mod(params.yaw - Math.PI, -2*Math.PI) + Math.PI;
+  }
+  if ('pitch' in params) {
+    params.pitch = mod(params.pitch - Math.PI, -2*Math.PI) + Math.PI;
+  }
+  if ('roll' in params) {
+    params.roll = mod(params.roll - Math.PI, -2*Math.PI) + Math.PI;
+  }
+  return params;
+};
+
+
+/**
+ * Normalize view coordinates so that they are the closest to the current view.
+ * Useful for tweening the view through the shortest path. If a result argument
+ * is supplied, it is filled in with the result and returned. Otherwise, a fresh
+ * object is filled in and returned.
+ *
+ * @param {RectilinearViewCoords} coords The view coordinates.
+ * @param {RectilinearViewCoords} result The result argument for the normalized
+ *     view coordinates.
+ */
+RectilinearView.prototype.normalizeToClosest = function(coords, result) {
+
+  var viewYaw = this._yaw;
+  var viewPitch = this._pitch;
+
+  var coordYaw = coords.yaw;
+  var coordPitch = coords.pitch;
+
+  // Check if the yaw is closer after subtracting or adding a full circle.
+  var prevYaw = coordYaw - 2*Math.PI;
+  var nextYaw = coordYaw + 2*Math.PI;
+  if (Math.abs(prevYaw - viewYaw) < Math.abs(coordYaw - viewYaw)) {
+    coordYaw = prevYaw;
+  }
+  else if (Math.abs(nextYaw - viewYaw) < Math.abs(coordYaw - viewYaw)) {
+    coordYaw = nextYaw;
+  }
+
+  // Check if the pitch is closer after subtracting or adding a full circle.
+  var prevPitch = coordPitch - 2*Math.PI;
+  var nextPitch = coordPitch + 2*Math.PI;
+  if (Math.abs(prevPitch - viewPitch) < Math.abs(coordPitch - viewPitch)) {
+    coordPitch = prevPitch;
+  }
+  else if (Math.abs(prevPitch - viewPitch) < Math.abs(coordPitch - viewPitch)) {
+    coordPitch = nextPitch;
+  }
+
+  result = result || {};
+  result.yaw = coordYaw;
+  result.pitch = coordPitch;
+  return result;
+
+};
+
+
+RectilinearView.prototype.updateWithControlParameters = function(parameters) {
+  // axisScaledX and axisScaledY are scaled according to their own axis
+  // x and y are scaled by the same value
+
+  // If the viewport dimensions are zero, assume a square viewport
+  // when converting from hfov to vfov.
+  var vfov = this._fov;
+  var hfov = convertFov.vtoh(vfov, this._width, this._height);
+  if (isNaN(hfov)) {
+    hfov = vfov;
+  }
+
+  // TODO: revisit this after we rethink the control parameters.
+  this.offsetYaw(parameters.axisScaledX * hfov + parameters.x * 2 * hfov + parameters.yaw);
+  this.offsetPitch(parameters.axisScaledY * vfov + parameters.y * 2 * hfov + parameters.pitch);
+  this.offsetRoll(-parameters.roll);
+  this.offsetFov(parameters.zoom * vfov);
+};
+
+
+RectilinearView.prototype._updateProjection = function() {
+  var projMatrix = this._projMatrix;
+  var invProjMatrix = this._invProjMatrix;
+  var frustum = this._frustum;
+
+  if (this._projectionChanged) {
+    var width = this._width;
+    var height = this._height;
+
+    var vfov = this._fov;
+    var hfov = convertFov.vtoh(vfov, width, height);
+    var aspect = width / height;
+
+    var projectionCenterX = this._projectionCenterX;
+    var projectionCenterY = this._projectionCenterY;
+
+    if (projectionCenterX !== 0 || projectionCenterY !== 0) {
+      var offsetAngleX = Math.atan(projectionCenterX * 2 * Math.tan(hfov/2));
+      var offsetAngleY = Math.atan(projectionCenterY * 2 * Math.tan(vfov/2));
+      var fovs = this._fovs;
+      fovs.leftDegrees = (hfov/2 + offsetAngleX) * 180/Math.PI;
+      fovs.rightDegrees = (hfov/2 - offsetAngleX) * 180/Math.PI;
+      fovs.upDegrees = (vfov/2 + offsetAngleY) * 180/Math.PI;
+      fovs.downDegrees = (vfov/2 - offsetAngleY) * 180/Math.PI;
+      mat4.perspectiveFromFieldOfView(projMatrix, fovs, -1, 1);
+    } else {
+      mat4.perspective(projMatrix, vfov, aspect, -1, 1);
+    }
+
+    mat4.rotateZ(projMatrix, projMatrix, this._roll);
+    mat4.rotateX(projMatrix, projMatrix, this._pitch);
+    mat4.rotateY(projMatrix, projMatrix, this._yaw);
+
+    mat4.invert(invProjMatrix, projMatrix);
+
+    this._matrixToFrustum(projMatrix, frustum);
+
+    this._projectionChanged = false;
+  }
+};
+
+
+RectilinearView.prototype._matrixToFrustum = function(p, f) {
+  // Extract frustum planes from projection matrix.
+  // http://www8.cs.umu.se/kurser/5DV051/HT12/lab/plane_extraction.pdf
+  vec4.set(f[0], p[3] + p[0], p[7] + p[4], p[11] + p[8],  0); // left
+  vec4.set(f[1], p[3] - p[0], p[7] - p[4], p[11] - p[8],  0); // right
+  vec4.set(f[2], p[3] + p[1], p[7] + p[5], p[11] + p[9],  0); // top
+  vec4.set(f[3], p[3] - p[1], p[7] - p[5], p[11] - p[9],  0); // bottom
+  vec4.set(f[4], p[3] + p[2], p[7] + p[6], p[11] + p[10], 0); // camera
+};
+
+
+/**
+ * Returns the projection matrix for the current view.
+ * @returns {mat4}
+ */
+RectilinearView.prototype.projection = function() {
+  this._updateProjection();
+  return this._projMatrix;
+};
+
+
+/**
+ * Returns the inverse projection matrix for the current view.
+ * @returns {mat4}
+ */
+RectilinearView.prototype.inverseProjection = function() {
+  this._updateProjection();
+  return this._invProjMatrix;
+};
+
+
+/**
+ * Return whether the view frustum intersects the given rectangle.
+ *
+ * This function may return false positives, but never false negatives.
+ * It is used for frustum culling, i.e., excluding invisible tiles from the
+ * rendering process.
+ *
+ * @param {vec2[]} rectangle The vertices of the rectangle.
+ */
+RectilinearView.prototype.intersects = function(rectangle) {
+  this._updateProjection();
+
+  var frustum = this._frustum;
+  var vertex = this._tmpVec;
+
+  // Check whether the rectangle is on the outer side of any of the frustum
+  // planes. This is a sufficient condition, though not necessary, for the
+  // rectangle to be completely outside the frustum.
+  for (var i = 0; i < frustum.length; i++) {
+    var plane = frustum[i];
+    var inside = false;
+    for (var j = 0; j < rectangle.length; j++) {
+      var corner = rectangle[j];
+      vec4.set(vertex, corner[0], corner[1], corner[2], 0);
+      if (vec4.dot(plane, vertex) >= 0) {
+        inside = true;
+      }
+    }
+    if (!inside) {
+      return false;
+    }
+  }
+  return true;
+};
+
+
+/**
+ * Select the level that should be used to render the view.
+ * @param {Level[]} levelList the list of levels from which to select.
+ * @return {Level} the selected level.
+ */
+RectilinearView.prototype.selectLevel = function(levelList) {
+
+  // Multiply the viewport width by the device pixel ratio to get the required
+  // horizontal resolution in pixels.
+  //
+  // Calculate the fraction of a cube face that would be visible given the
+  // current vertical field of view. Then, for each level, multiply by the
+  // level height to get the height in pixels of the portion that would be
+  // visible.
+  //
+  // Search for the smallest level that satifies the the required height,
+  // falling back on the largest level if none do.
+
+  var requiredPixels = pixelRatio() * this._height;
+  var coverFactor = Math.tan(0.5 * this._fov);
+
+  for (var i = 0; i < levelList.length; i++) {
+    var level = levelList[i];
+    if (coverFactor * level.height() >= requiredPixels) {
+      return level;
+    }
+  }
+
+  return levelList[levelList.length - 1];
+
+};
+
+
+/**
+ * Convert view parameters into screen position. If a result argument is
+ * provided, it is filled in and returned. Otherwise, a fresh object is filled
+ * in and returned.
+ *
+ * @param {RectilinearViewCoords} coords The view coordinates.
+ * @param {Coords=} result The result argument for the screen coordinates.
+ * @return {Coords}
+ */
+RectilinearView.prototype.coordinatesToScreen = function(coords, result) {
+  var ray = this._tmpVec;
+
+  if (!result) {
+    result = {};
+  }
+
+  var width = this._width;
+  var height = this._height;
+
+  // Undefined on a null viewport.
+  if (width <= 0 || height <= 0) {
+    result.x = null;
+    result.y = null;
+    return null;
+  }
+
+  // Compute view ray pointing into the (yaw, pitch) direction.
+  var yaw = coords.yaw;
+  var pitch = coords.pitch;
+  var x = Math.sin(yaw) * Math.cos(pitch);
+  var y = -Math.sin(coords.pitch);
+  var z = -Math.cos(yaw) * Math.cos(pitch);
+  vec4.set(ray, x, y, z, 1);
+
+  // Project view ray onto clip space.
+  vec4.transformMat4(ray, ray, this.projection());
+
+  // w in clip space equals -z in camera space.
+  if (ray[3] >= 0) {
+    // Point is in front of camera.
+    // Convert to viewport coordinates.
+    result.x = width * (ray[0] / ray[3] + 1) / 2;
+    result.y = height * (1 - ray[1] / ray[3]) / 2;
+  } else {
+    // Point is behind camera.
+    result.x = null;
+    result.y = null;
+    return null;
+  }
+
+  return result;
+};
+
+
+/**
+ * Convert screen coordinates into view coordinates. If a result argument is
+ * provided, it is filled in with the result and returned. Otherwise, a fresh
+ * object is filled in and returned.
+ *
+ * @param {Coords} coords The screen coordinates.
+ * @param {RectilinearViewCoords=} result The view coordinates.
+ * @return {RectilinearViewCoords}
+ */
+RectilinearView.prototype.screenToCoordinates = function(coords, result) {
+  var ray = this._tmpVec;
+
+  if (!result) {
+    result = {};
+  }
+
+  var width = this._width;
+  var height = this._height;
+
+  // Convert viewport coordinates to clip space.
+  var vecx = 2 * coords.x / width - 1;
+  var vecy = 1 - 2 * coords.y / height;
+  vec4.set(ray, vecx, vecy, 1, 1);
+
+  // Project back to world space.
+  vec4.transformMat4(ray, ray, this.inverseProjection());
+
+  // Convert to spherical coordinates.
+  var r = Math.sqrt(ray[0] * ray[0] + ray[1] * ray[1] + ray[2] * ray[2]);
+  result.yaw = Math.atan2(ray[0], -ray[2]);
+  result.pitch = Math.acos(ray[1] / r) - Math.PI/2;
+
+  this._normalizeCoordinates(result);
+
+  return result;
+};
+
+
+/**
+ * Calculate the perspective transform required to position an element with
+ * perspective.
+ *
+ * @param {RectilinearViewCoords} coords The view coordinates.
+ * @param {number} radius Radius of the sphere embedding the element.
+ * @param {string} extraTransforms Extra transformations to be applied after
+ *     the element is positioned. This may be used to rotate the element.
+ * @return {string} The CSS 3D transform to be applied to the element.
+ */
+RectilinearView.prototype.coordinatesToPerspectiveTransform = function(
+    coords, radius, extraTransforms) {
+  extraTransforms = extraTransforms || "";
+
+  var height = this._height;
+  var width = this._width;
+  var fov = this._fov;
+  var perspective = 0.5 * height / Math.tan(fov / 2);
+
+  var transform = '';
+
+  // Center hotspot in screen.
+  transform += 'translateX(' + decimal(width/2) + 'px) ';
+  transform += 'translateY(' + decimal(height/2) + 'px) ';
+  transform += 'translateX(-50%) translateY(-50%) ';
+
+  // Set the perspective depth.
+  transform += 'perspective(' + decimal(perspective) + 'px) ';
+  transform += 'translateZ(' + decimal(perspective) + 'px) ';
+
+  // Set the camera rotation.
+  transform += 'rotateZ(' + decimal(-this._roll) + 'rad) ';
+  transform += 'rotateX(' + decimal(-this._pitch) + 'rad) ';
+  transform += 'rotateY(' + decimal(this._yaw) + 'rad) ';
+
+  // Set the hotspot rotation.
+  transform += 'rotateY(' + decimal(-coords.yaw) + 'rad) ';
+  transform += 'rotateX(' + decimal(coords.pitch) + 'rad) ';
+
+  // Move back to sphere.
+  transform += 'translateZ(' + decimal(-radius) + 'px) ';
+
+  // Apply the extra transformations
+  transform += extraTransforms + ' ';
+
+  return transform;
+};
+
+
+/**
+ * Factory functions for view limiters. See {@link RectilinearViewLimiter}.
+ * @namespace
+ */
+RectilinearView.limit = {
+
+  /**
+   * Returns a view limiter that constrains the yaw angle.
+   * @param {number} min The minimum yaw value.
+   * @param {number} max The maximum yaw value.
+   * @return {RectilinearViewLimiter}
+   */
+  yaw: function(min, max) {
+    return function limitYaw(params) {
+      params.yaw = clamp(params.yaw, min, max);
+      return params;
+    };
+  },
+
+  /**
+   * Returns a view limiter that constrains the pitch angle.
+   * @param {number} min The minimum pitch value.
+   * @param {number} max The maximum pitch value.
+   * @return {RectilinearViewLimiter}
+   */
+  pitch: function(min, max) {
+    return function limitPitch(params) {
+      params.pitch = clamp(params.pitch, min, max);
+      return params;
+    };
+  },
+
+  /**
+   * Returns a view limiter that constrains the roll angle.
+   * @param {number} min The minimum roll value.
+   * @param {number} max The maximum roll value.
+   * @return {RectilinearViewLimiter}
+   */
+  roll: function(min, max) {
+    return function limitRoll(params) {
+      params.roll = clamp(params.roll, min, max);
+      return params;
+    };
+  },
+
+  /**
+   * Returns a view limiter that constrains the horizontal field of view.
+   * @param {number} min The minimum horizontal field of view.
+   * @param {number} max The maximum horizontal field of view.
+   * @return {RectilinearViewLimiter}
+   */
+  hfov: function(min, max) {
+    return function limitHfov(params) {
+      var width = params.width;
+      var height = params.height;
+      if (width > 0 && height > 0) {
+        var vmin = convertFov.htov(min, width, height);
+        var vmax = convertFov.htov(max, width, height);
+        params.fov = clamp(params.fov, vmin, vmax);
+      }
+      return params;
+    };
+  },
+
+  /**
+   * Returns a view limiter that constrains the vertical field of view.
+   * @param {number} min The minimum vertical field of view.
+   * @param {number} max The maximum vertical field of view.
+   * @return {RectilinearViewLimiter}
+   */
+  vfov: function(min, max) {
+    return function limitVfov(params) {
+      params.fov = clamp(params.fov, min, max);
+      return params;
+    };
+  },
+
+  /**
+   * Returns a view limiter that prevents zooming in beyond the given
+   * resolution.
+   * @param {number} size The cube face width in pixels or, equivalently, one
+   *     fourth of the equirectangular width in pixels.
+   * @return {RectilinearViewLimiter}
+   */
+  resolution: function(size) {
+    return function limitResolution(params) {
+      var height = params.height;
+      if (height) {
+        var requiredPixels = pixelRatio() * height;
+        var minFov = 2 * Math.atan(requiredPixels / size);
+        params.fov = clamp(params.fov, minFov, Infinity);
+      }
+      return params;
+    };
+  },
+
+  /**
+   * Returns a view limiter that limits the horizontal and vertical field of
+   * view, prevents zooming in past the image resolution, and limits the pitch
+   * range to prevent the camera wrapping around at the poles. These are the
+   * most common view constraints for a 360° panorama.
+   * @param {number} maxResolution The cube face width in pixels or,
+   *     equivalently, one fourth of the equirectangular width in pixels.
+   * @param {number} maxVFov The maximum vertical field of view.
+   * @param {number} [maxHFov=maxVFov] The maximum horizontal field of view.
+   * @return {RectilinearViewLimiter}
+   */
+  traditional: function(maxResolution, maxVFov, maxHFov) {
+    maxHFov = maxHFov != null ? maxHFov : maxVFov;
+
+    return compose(
+      RectilinearView.limit.resolution(maxResolution),
+      RectilinearView.limit.vfov(0, maxVFov),
+      RectilinearView.limit.hfov(0, maxHFov),
+      RectilinearView.limit.pitch(-Math.PI/2, Math.PI/2));
+  }
+
+};
+
+
+RectilinearView.type = RectilinearView.prototype.type = 'rectilinear';
+
+
+module.exports = RectilinearView;
+
+},{"../util/clamp":91,"../util/clearOwnProperties":92,"../util/compose":95,"../util/convertFov":96,"../util/decimal":97,"../util/mod":107,"../util/pixelRatio":110,"../util/real":113,"gl-matrix":3,"minimal-event-emitter":14}]},{},[57])(57)
+});
