@@ -10200,7 +10200,6 @@ inherit(AttrRecognizer, Recognizer, {
  */
 function PanRecognizer() {
     AttrRecognizer.apply(this, arguments);
-
     this.pX = null;
     this.pY = null;
 }
@@ -10318,7 +10317,6 @@ inherit(PinchRecognizer, AttrRecognizer, {
  */
 function PressRecognizer() {
     Recognizer.apply(this, arguments);
-
     this._timer = null;
     this._input = null;
 }
@@ -10479,7 +10477,6 @@ inherit(SwipeRecognizer, AttrRecognizer, {
  */
 function TapRecognizer() {
     Recognizer.apply(this, arguments);
-
     // previous time and center,
     // used for tap counting
     this.pTime = false;
@@ -17664,10 +17661,10 @@ function registerDefaultControls(controls, element, opts) {
     touchView: new DragControlMethod(element, 'touch'),
     pinch: new PinchZoomControlMethod(element, 'touch'),
 
-    leftArrowKey: new KeyControlMethod(37, 'x', -2, 3),
-    rightArrowKey: new KeyControlMethod(39, 'x', 2, 3),
-    upArrowKey: new KeyControlMethod(38, 'pitch', -2, 3),
-    downArrowKey: new KeyControlMethod(40, 'pitch', 2, 3),
+    leftArrowKey: new KeyControlMethod(37, 'x', -0.5, 3),
+    rightArrowKey: new KeyControlMethod(39, 'x', 0.5, 3),
+    upArrowKey: new KeyControlMethod(38, 'pitch', -1, 3),
+    downArrowKey: new KeyControlMethod(40, 'pitch', 1, 3),
     plusKey: new KeyControlMethod(107, 'zoom', -0.7, 3),
     minusKey: new KeyControlMethod(109, 'zoom', 0.7, 3),
 

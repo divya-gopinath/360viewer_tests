@@ -127,3 +127,80 @@ var multiResVideo = {
   // events from proxy to videoElement
   addEventListenerVideo: videoEmitter.addEventListener.bind(videoEmitter)
 };
+
+// Prevent touch and scroll events from reaching the parent element.
+function stopTouchAndScrollEventPropagation(element, eventList) {
+  var eventList = [ 'touchstart', 'touchmove', 'touchend', 'touchcancel',
+                    'wheel', 'mousewheel' ];
+  for (var i = 0; i < eventList.length; i++) {
+    element.addEventListener(eventList[i], function(event) {
+      event.stopPropagation();
+    });
+  }
+}
+
+function createInfoHotspotElement(hotspot) {
+
+  // Create wrapper element to hold icon and tooltip.
+  var wrapper = document.createElement('div');
+  wrapper.classList.add('hotspot');
+  wrapper.classList.add('info-hotspot');
+
+  // Create hotspot/tooltip header.
+  var header = document.createElement('div');
+  header.classList.add('info-hotspot-header');
+
+  // Create image element.
+  var iconWrapper = document.createElement('div');
+  iconWrapper.classList.add('info-hotspot-icon-wrapper');
+  var icon = document.createElement('img');
+  icon.src = 'img/info.png';
+  icon.classList.add('info-hotspot-icon');
+  iconWrapper.appendChild(icon);
+
+  // Create title element.
+  var titleWrapper = document.createElement('div');
+  titleWrapper.classList.add('info-hotspot-title-wrapper');
+  var title = document.createElement('div');
+  title.classList.add('info-hotspot-title');
+  title.innerHTML = hotspot.title;
+  titleWrapper.appendChild(title);
+
+  // Construct header element.
+  header.appendChild(iconWrapper);
+  header.appendChild(titleWrapper);
+
+  // Create text element.
+  var text = document.createElement('div');
+  text.classList.add('info-hotspot-text');
+  text.innerHTML = hotspot.text;
+
+  // Place header and text into wrapper element.
+  wrapper.appendChild(header);
+  wrapper.appendChild(text);
+
+  var toggle = function() {
+    wrapper.classList.toggle('visible');
+  };
+
+  // Show content when hotspot is clicked.
+  wrapper.querySelector('.info-hotspot-header').addEventListener('hover', toggle);
+
+  // Prevent touch and scroll events from reaching the parent element.
+  // This prevents the view control logic from interfering with the hotspot.
+  stopTouchAndScrollEventPropagation(wrapper);
+
+  return wrapper;
+}
+
+document.addEventListener('click', function (e) {
+  var clickCoords = view.screenToCoordinates({x: e.clientX, y: e.clientY});
+  var hotspot = {
+          "yaw": clickCoords.yaw,
+          "pitch": clickCoords.pitch,
+          "title": "Sound source",
+          "text": "More info about label here"
+  }
+  var hotspotElement = createInfoHotspotElement(hotspot);
+  scene.hotspotContainer().createHotspot(hotspotElement, { yaw: hotspot.yaw, pitch: hotspot.pitch });
+}, false);
