@@ -15,8 +15,8 @@
  */
 'use strict';
 
+var currentTimeUnformatted = null;
 var video = multiResVideo.element;
-
 var progressFillElement = document.getElementById('progress-fill');
 var progressBackgroundElement = document.getElementById('progress-background');
 var currentTimeIndicatorElement = document.getElementById('current-time-indicator');
@@ -85,6 +85,7 @@ function updateProgressBar() {
 }
 
 function updateCurrentTimeIndicator() {
+  currentTimeUnformatted = video() ? video().currentTime : null;
   currentTimeIndicatorElement.innerHTML = video() ? formatTime(video().currentTime) : '-';
 }
 
@@ -245,3 +246,27 @@ effectElement.addEventListener('change', function() {
 
   layer.mergeEffects(effectsObj);
 });
+
+function initTagAlert() {
+  var position = 'topLeft';
+  var divElement = document.createElement('div');
+  divElement.setAttribute("id", "tagAlertBox");
+  divElement.target = '_blank';
+  divElement.style.pointerEvents
+  divElement.style.display = 'block';
+  divElement.style.position = 'absolute';
+  divElement.style.left = /left/.test(position) ? '10px' : 'auto';
+  divElement.style.right = /right/.test(position) ? '10px' : 'auto';
+  divElement.style.top = /top/.test(position) ? '10px' : 'auto';
+  divElement.style.bottom = /bottom/.test(position) ? '10px' : 'auto';
+  divElement.style.fontFamily = 'Helvetica, Arial, sans-serif';
+  divElement.style.textAlign = /right/.test(position) ? 'right' : 'left';
+  divElement.style.textDecoration = 'none';
+  divElement.style.color = '#000';
+  divElement.style.opacity = '1';
+  divElement.style.fontSize = '11px';
+  divElement.style.marginBottom = '4px';
+  document.body.appendChild(divElement);
+}
+
+initTagAlert();

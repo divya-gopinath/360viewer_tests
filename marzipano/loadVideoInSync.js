@@ -19,6 +19,8 @@
 function loadVideoInSync(url, syncElement, cb) {
   cb = once(cb);
   var element = document.createElement('video');
+  element.setAttribute("id", "videoId");
+  console.log(element);
   element.crossOrigin = 'anonymous';
 
   element.autoplay = true;

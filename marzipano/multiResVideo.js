@@ -20,6 +20,7 @@
 
 // Use canvas hack for IE10.
 var useCanvasHack = Marzipano.dependencies.bowser.msie;
+var localizedData = [];
 
 // Create viewer.
 var viewerOpts = { stageType: 'webgl' };
@@ -204,12 +205,20 @@ function createInfoHotspotElement(hotspot) {
 
 document.addEventListener('click', function (e) {
   var clickCoords = view.screenToCoordinates({x: e.clientX, y: e.clientY});
-  var hotspot = {
-          "yaw": clickCoords.yaw,
-          "pitch": clickCoords.pitch,
-          "title": "Sound source",
-          "text": "More info about label here"
-  }
-  var hotspotElement = createInfoHotspotElement(hotspot);
-  scene.hotspotContainer().createHotspot(hotspotElement, { yaw: hotspot.yaw, pitch: hotspot.pitch });
+  var datapoint = {};
+  datapoint.yaw = clickCoords.yaw;
+  datapoint.pitch = clickCoords.pitch;
+  datapoint.videoTime = currentTimeUnformatted;
+  var text = "Source localized at yaw=" + datapoint.yaw.toString() + " pitch=" + datapoint.pitch.toString() + " at time=" + datapoint.videoTime.toString() + " sec";
+  var tagAlertBoxElement = document.getElementById("tagAlertBox");
+  tagAlertBoxElement.innerHTML = text;
+  localizedData.push(datapoint);
+  // var hotspot = {
+  //         "yaw": clickCoords.yaw,
+  //         "pitch": clickCoords.pitch,
+  //         "title": "Sound source",
+  //         "text": "at " + currentTimeUnformatted.toString() + " sec"
+  // }
+  // var hotspotElement = createInfoHotspotElement(hotspot);
+  // scene.hotspotContainer().createHotspot(hotspotElement, { yaw: hotspot.yaw, pitch: hotspot.pitch });
 }, false);
