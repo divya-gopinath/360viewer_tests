@@ -195,12 +195,15 @@ function createInfoHotspotElement(hotspot) {
 
 document.addEventListener('click', function (e) {
   var clickCoords = view.screenToCoordinates({x: e.clientX, y: e.clientY});
-  var hotspot = {
-          "yaw": clickCoords.yaw,
-          "pitch": clickCoords.pitch,
-          "title": "Sound source",
-          "text": "at " + currentTimeUnformatted.toString() + " sec"
-  }
-  var hotspotElement = createInfoHotspotElement(hotspot);
-  scene.hotspotContainer().createHotspot(hotspotElement, { yaw: hotspot.yaw, pitch: hotspot.pitch });
+  var text = "Source localized at yaw=" + clickCoords.yaw.toString() + " pitch=" + clickCoords.pitch.toString() + " at time=" + currentTimeUnformatted.toString() + " sec";
+  var tagAlertBoxElement = document.getElementById("tagAlertBox");
+  tagAlertBoxElement.innerHTML = text;
+  // var hotspot = {
+  //         "yaw": clickCoords.yaw,
+  //         "pitch": clickCoords.pitch,
+  //         "title": "Sound source",
+  //         "text": "at " + currentTimeUnformatted.toString() + " sec"
+  // }
+  // var hotspotElement = createInfoHotspotElement(hotspot);
+  // scene.hotspotContainer().createHotspot(hotspotElement, { yaw: hotspot.yaw, pitch: hotspot.pitch });
 }, false);
