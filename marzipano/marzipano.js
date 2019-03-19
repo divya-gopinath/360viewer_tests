@@ -17661,17 +17661,17 @@ function registerDefaultControls(controls, element, opts) {
     touchView: new DragControlMethod(element, 'touch'),
     pinch: new PinchZoomControlMethod(element, 'touch'),
 
-    leftArrowKey: new KeyControlMethod(37, 'roll', -0.5, 3),
-    rightArrowKey: new KeyControlMethod(39, 'roll', 0.5, 3),
+    leftArrowKey: new KeyControlMethod(37, 'axisScaledX', -0.5, 3),
+    rightArrowKey: new KeyControlMethod(39, 'axisScaledX', 0.5, 3),
     upArrowKey: new KeyControlMethod(38, 'pitch', -1, 3),
     downArrowKey: new KeyControlMethod(40, 'pitch', 1, 3),
     plusKey: new KeyControlMethod(107, 'zoom', -0.7, 3),
     minusKey: new KeyControlMethod(109, 'zoom', 0.7, 3),
 
-    wKey: new KeyControlMethod(87, 'y', -0.7, 3),
-    aKey: new KeyControlMethod(65, 'x', -0.7, 3),
-    sKey: new KeyControlMethod(83, 'y', 0.7, 3),
-    dKey: new KeyControlMethod(68, 'x', 0.7, 3),
+    wKey: new KeyControlMethod(87, 'axisScaledY', -0.7, 3),
+    aKey: new KeyControlMethod(65, 'axisScaledX', -0.7, 3),
+    sKey: new KeyControlMethod(83, 'axisScaledY', 0.7, 3),
+    dKey: new KeyControlMethod(68, 'axisScaledX', 0.7, 3),
     qKey: new KeyControlMethod(81, 'roll', 0.7, 3),
     eKey: new KeyControlMethod(69, 'roll', -0.7, 3)
   };
