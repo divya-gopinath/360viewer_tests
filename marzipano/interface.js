@@ -15,8 +15,8 @@
  */
 'use strict';
 
+var currentTimeUnformatted = null;
 var video = multiResVideo.element;
-
 var progressFillElement = document.getElementById('progress-fill');
 var progressBackgroundElement = document.getElementById('progress-background');
 var currentTimeIndicatorElement = document.getElementById('current-time-indicator');
@@ -85,6 +85,7 @@ function updateProgressBar() {
 }
 
 function updateCurrentTimeIndicator() {
+  currentTimeUnformatted = video() ? video().currentTime : null;
   currentTimeIndicatorElement.innerHTML = video() ? formatTime(video().currentTime) : '-';
 }
 

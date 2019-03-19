@@ -199,7 +199,7 @@ document.addEventListener('click', function (e) {
           "yaw": clickCoords.yaw,
           "pitch": clickCoords.pitch,
           "title": "Sound source",
-          "text": "More info about label here"
+          "text": "at " + currentTimeUnformatted.toString() + " sec"
   }
   var hotspotElement = createInfoHotspotElement(hotspot);
   scene.hotspotContainer().createHotspot(hotspotElement, { yaw: hotspot.yaw, pitch: hotspot.pitch });
