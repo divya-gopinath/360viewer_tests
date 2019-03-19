@@ -77,12 +77,7 @@ function setResolutionIndex(index, cb) {
   emitter.emit('resolutionSet');
 
   var level = resolutions[index];
-<<<<<<< HEAD
   var videoSrc = 'https://www.dl.dropboxusercontent.com/s/ggh6248p768ty69/Record_0000020_000.mp4';
-=======
-  // var videoSrc = 'https://www.dl.dropboxusercontent.com/s/9cy7mad2jit7nnz/3_8_18_synced_capture.mp4';
-  var videoSrc = 'https://www.dl.dropboxusercontent.com/s/ye09qcj9lkkb184/3_8_18_synced_capture.mp4';
->>>>>>> 0011826d0e091a4e82338e612e2a4f467cfeac0f
 
   var previousVideo = asset.video() && asset.video().videoElement();
 
