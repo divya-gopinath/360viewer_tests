@@ -25,6 +25,8 @@ var useCanvasHack = Marzipano.dependencies.bowser.msie;
 var viewerOpts = { stageType: 'webgl' };
 var viewer = new Marzipano.Viewer(document.querySelector('#pano'), viewerOpts);
 viewer.controls().enableMethodGroup('arrowKeys');
+viewer.controls().enableMethodGroup('wasdKeys');
+viewer.controls().enableMethodGroup('qeKeys');
 
 // Create layer.
 var asset = new VideoAsset();
@@ -36,6 +38,12 @@ var view = new Marzipano.RectilinearView(null, limiter);
 var scene = viewer.createScene({ source: source, geometry: geometry, view: view, pinFirstLevel: false });
 
 var view = scene.view();
+
+
+view.setYaw(0 * Math.PI/180);
+view.setPitch(0 * Math.PI/180);
+view.setFov(0 * Math.PI/180);
+
 // // view.offsetYaw(-80 * Math.PI/180);
 // view.offsetPitch(80 * Math.PI/180);
 // view.offsetFov(90 * Math.PI/180);
@@ -68,7 +76,8 @@ function setResolutionIndex(index, cb) {
   emitter.emit('resolutionSet');
 
   var level = resolutions[index];
-  var videoSrc = 'https://www.dl.dropboxusercontent.com/s/9cy7mad2jit7nnz/3_8_18_synced_capture.mp4';
+  // var videoSrc = 'https://www.dl.dropboxusercontent.com/s/9cy7mad2jit7nnz/3_8_18_synced_capture.mp4';
+  var videoSrc = 'https://www.dl.dropboxusercontent.com/s/ye09qcj9lkkb184/3_8_18_synced_capture.mp4';
 
   var previousVideo = asset.video() && asset.video().videoElement();
 
