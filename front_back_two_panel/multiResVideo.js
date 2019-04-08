@@ -57,14 +57,14 @@ view2.setYaw(-180 * Math.PI/180);
 view2.setPitch(0 * Math.PI/180);
 view2.setFov(0 * Math.PI/180);
 
-// // view.offsetYaw(-80 * Math.PI/180);
-// view.offsetPitch(80 * Math.PI/180);
-// view.offsetFov(90 * Math.PI/180);
-
 scene.switchTo({ transitionDuration: 0 });
+scene2.switchTo({ transitionDuration: 0 });
 
 var emitter = new EventEmitter();
 var videoEmitter = new EventEmitterProxy();
+
+var emitter2 = new EventEmitter();
+var videoEmitter2 = new EventEmitterProxy();
 
 var resolutions = [
   { width: 720 },
@@ -84,14 +84,18 @@ function setResolutionIndex(index, cb) {
   currentState.resolutionChanging = true;
 
   videoEmitter.setObject(null);
+  videoEmitter2.setObject(null);
 
   emitter.emit('change');
   emitter.emit('resolutionSet');
+  emitter2.emit('change');
+  emitter2.emit('resolutionSet');
 
   var level = resolutions[index];
   var videoSrc = 'https://www.dl.dropboxusercontent.com/s/eirjhecnnnx3tqr/3_19_19_synced_Large.mp4';
 
   var previousVideo = asset.video() && asset.video().videoElement();
+  var previousVideo2 = asset2.video() && asset2.video().videoElement();
 
   loadVideoInSync(videoSrc, previousVideo, function(err, element) {
     if (err) {
@@ -108,6 +112,7 @@ function setResolutionIndex(index, cb) {
     var VideoElementWrapper = useCanvasHack ? CanvasHackVideoElementWrapper : NullVideoElementWrapper;
     var wrappedVideo = new VideoElementWrapper(element);
     asset.setVideo(wrappedVideo);
+    asset2.setVideo(wrappedVideo);
 
     currentState.resolutionIndex = index;
     currentState.resolutionChanging = false;
@@ -116,6 +121,8 @@ function setResolutionIndex(index, cb) {
 
     emitter.emit('change');
     emitter.emit('resolutionChange');
+    emitter2.emit('change');
+    emitter2.emit('resolutionChange');
 
     cb();
   });
@@ -144,6 +151,34 @@ var multiResVideo = {
     return currentState.resolutionChanging;
   },
   addEventListener: emitter.addEventListener.bind(emitter),
+
+  // events from proxy to videoElement
+  addEventListenerVideo: videoEmitter.addEventListener.bind(videoEmitter)
+};
+
+var multiResVideo2 = {
+  layer: function() {
+    return scene2.layer();
+  },
+  element: function() {
+    return asset2.video() && asset2.video().videoElement();
+  },
+  resolutions: function() {
+    return resolutions;
+  },
+  resolutionIndex: function() {
+    return currentState.resolutionIndex;
+  },
+  resolution: function() {
+    return currentState.resolutionIndex != null ?
+              resolutions[currentState.resolutionIndex] :
+              null;
+  },
+  setResolutionIndex: setResolutionIndex,
+  resolutionChanging: function() {
+    return currentState.resolutionChanging;
+  },
+  addEventListener: emitter2.addEventListener.bind(emitter2),
 
   // events from proxy to videoElement
   addEventListenerVideo: videoEmitter.addEventListener.bind(videoEmitter)
@@ -224,12 +259,4 @@ document.addEventListener('click', function (e) {
   var tagAlertBoxElement = document.getElementById("tagAlertBox");
   tagAlertBoxElement.innerHTML = text;
   localizedData.push(datapoint);
-  // var hotspot = {
-  //         "yaw": clickCoords.yaw,
-  //         "pitch": clickCoords.pitch,
-  //         "title": "Sound source",
-  //         "text": "at " + currentTimeUnformatted.toString() + " sec"
-  // }
-  // var hotspotElement = createInfoHotspotElement(hotspot);
-  // scene.hotspotContainer().createHotspot(hotspotElement, { yaw: hotspot.yaw, pitch: hotspot.pitch });
 }, false);

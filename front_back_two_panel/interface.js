@@ -17,6 +17,7 @@
 
 var currentTimeUnformatted = null;
 var video = multiResVideo.element;
+var video2 = multiResVideo2.element;
 var progressFillElement = document.getElementById('progress-fill');
 var progressBackgroundElement = document.getElementById('progress-background');
 var currentTimeIndicatorElement = document.getElementById('current-time-indicator');
@@ -56,8 +57,10 @@ playPauseElement.addEventListener('click', function() {
   }
   if (video().paused) {
     video().play();
+    video2().play();
   } else {
     video().pause();
+    video2().pause();
   }
 });
 
