@@ -1,0 +1,49 @@
+body {
+  background: #333;
+}
+.video-container {
+  position: relative;
+}
+video {
+  height: auto;
+  vertical-align: middle;
+  width: 100%;
+}
+.overlay-desc {
+  background: rgba(0,0,0,0.8);
+  position: absolute;
+  top: 0; right: 0; bottom: 2; left: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  text-align: center;
+  font-size: 2vw;
+  color: white;
+  font-family: 'Nobile', sans-serif;
+}
+
+.overlay-desc {
+  background: rgba(0,0,0,0.8);
+  position: absolute;
+  top: 0; right: 0; bottom: 2; left: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  text-align: center;
+  font-size: 1.5rem;
+  color: white;
+  font-family: 'Nobile', sans-serif;
+}
+
+
+main {
+  margin: 0 auto;
+  width: 80%;
+}
+
+p {
+  color: white;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 1.1rem;
+  line-height: 1.7rem;
+}
