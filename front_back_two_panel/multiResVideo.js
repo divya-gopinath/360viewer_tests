@@ -51,11 +51,11 @@ var view2 = scene2.view();
 
 view.setYaw(0 * Math.PI/180);
 view.setPitch(0 * Math.PI/180);
-view.setFov(0 * Math.PI/180);
+view.setFov(50 * Math.PI/180);
 
 view2.setYaw(-180 * Math.PI/180);
 view2.setPitch(0 * Math.PI/180);
-view2.setFov(0 * Math.PI/180);
+view2.setFov(50* Math.PI/180);
 
 scene.switchTo({ transitionDuration: 0 });
 scene2.switchTo({ transitionDuration: 0 });
