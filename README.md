@@ -8,3 +8,12 @@ Current options
 * ~~__Panolens.js__ Based on `three.js` which is another JS library for viewing panoramas. Arrow key movement a bit choppy and documentation very sparse.~~   
 * ~~__Panellum__ Most lightweight of all four. Similar to Panolens.~~
 * ~~__GoogleVR Web Viewer__ Weird point mass/black hole artifact when rendering (all have this, but Google VR is definitely worse) Issues playing on some browsers. Also has issues with Chrome autoplaying videos so the user has to press space (or trigger some event in the DOM) before the videos are played which is annoying.~~
+
+
+Things we need: 
+Ability to click somewhere and add annotation/dot, or delete, or move the dot (colored or numbered) 
+Click and move marker 
+Maybe think about whether bounding box is necessary?
+Set some variable to be the frame break 
+Look at mTurk APIs and make sure its compatible 
+Crop top and bottom with black boxes 
